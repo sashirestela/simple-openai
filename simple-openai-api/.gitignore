@@ -1,0 +1,8 @@
+.settings/
+target/
+
+.project
+.classpath
+
+dependency-reduced-pom.xml
+.flattened-pom.xml

@@ -1,0 +1,9 @@
+.settings/
+.cache/
+.upm/
+
+.project
+.classpath
+.breakpoints
+
+.flattened-pom.xml
