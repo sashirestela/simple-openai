@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.chat;
+package io.github.sashirestela.openai.domain.chat;
 
 import java.util.List;
 

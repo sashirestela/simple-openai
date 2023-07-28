@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.model;
+package io.github.sashirestela.openai.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

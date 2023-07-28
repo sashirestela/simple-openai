@@ -11,16 +11,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import io.github.sashirestela.openai.FunctionExecutor;
 import io.github.sashirestela.openai.OpenAIApi;
-import io.github.sashirestela.openai.chat.ChatService;
-import io.github.sashirestela.openai.chat.ChatFunction;
-import io.github.sashirestela.openai.chat.ChatMessage;
-import io.github.sashirestela.openai.chat.ChatRequest;
-import io.github.sashirestela.openai.chat.ChatResponse;
-import io.github.sashirestela.openai.chat.Role;
-import io.github.sashirestela.openai.model.Model;
-import io.github.sashirestela.openai.model.ModelResponse;
-import io.github.sashirestela.openai.model.ModelService;
-import io.github.sashirestela.openai.utils.JsonUtil;
+import io.github.sashirestela.openai.domain.chat.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.domain.chat.Role;
+import io.github.sashirestela.openai.domain.model.Model;
+import io.github.sashirestela.openai.domain.model.ModelResponse;
+import io.github.sashirestela.openai.service.ChatService;
+import io.github.sashirestela.openai.service.ModelService;
+import io.github.sashirestela.openai.support.JsonUtil;
 
 public class App {
   private OpenAIApi openAIApi;

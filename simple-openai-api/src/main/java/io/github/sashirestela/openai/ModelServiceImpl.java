@@ -7,12 +7,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-import io.github.sashirestela.openai.model.Model;
-import io.github.sashirestela.openai.model.ModelResponse;
-import io.github.sashirestela.openai.model.ModelService;
-import io.github.sashirestela.openai.utils.Constant;
-import io.github.sashirestela.openai.utils.JsonUtil;
-import io.github.sashirestela.openai.utils.Url;
+import io.github.sashirestela.openai.domain.model.Model;
+import io.github.sashirestela.openai.domain.model.ModelResponse;
+import io.github.sashirestela.openai.service.ModelService;
+import io.github.sashirestela.openai.support.Constant;
+import io.github.sashirestela.openai.support.JsonUtil;
+import io.github.sashirestela.openai.support.Url;
 
 class ModelServiceImpl implements ModelService {
   private String apiKey;

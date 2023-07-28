@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.chat;
+package io.github.sashirestela.openai.domain.chat;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;

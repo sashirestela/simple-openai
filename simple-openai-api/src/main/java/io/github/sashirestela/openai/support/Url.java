@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.utils;
+package io.github.sashirestela.openai.support;
 
 public enum Url {
   

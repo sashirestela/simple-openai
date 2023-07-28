@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.utils;
+package io.github.sashirestela.openai.support;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

@@ -1,11 +1,11 @@
-package io.github.sashirestela.openai.chat;
+package io.github.sashirestela.openai.domain.chat;
 
 import java.util.function.Function;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.github.sashirestela.openai.chat.serializer.ParametersSerializer;
+import io.github.sashirestela.openai.domain.chat.serializer.ParametersSerializer;
 
 public class ChatFunction {
   private String name;

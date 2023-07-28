@@ -9,12 +9,12 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.stream.Stream;
 
-import io.github.sashirestela.openai.chat.ChatService;
-import io.github.sashirestela.openai.chat.ChatRequest;
-import io.github.sashirestela.openai.chat.ChatResponse;
-import io.github.sashirestela.openai.utils.Constant;
-import io.github.sashirestela.openai.utils.JsonUtil;
-import io.github.sashirestela.openai.utils.Url;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.service.ChatService;
+import io.github.sashirestela.openai.support.Constant;
+import io.github.sashirestela.openai.support.JsonUtil;
+import io.github.sashirestela.openai.support.Url;
 
 class ChatServiceImpl implements ChatService {
   private String apiKey;

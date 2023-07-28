@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.model;
+package io.github.sashirestela.openai.domain.model;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public class Model {
   public Model() {}
 
   public Model(String id,
-                       String object,
-                       long created,
-                       String ownedBy,
-                       List<ModelPermission> permission,
-                       String root,
-                       String parent) {
+               String object,
+               long created,
+               String ownedBy,
+               List<ModelPermission> permission,
+               String root,
+               String parent) {
     this.id = id;
     this.object = object;
     this.created = created;

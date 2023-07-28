@@ -1,9 +1,9 @@
-git package io.github.sashirestela.openai;
+package io.github.sashirestela.openai;
 
 import java.net.http.HttpClient;
 
-import io.github.sashirestela.openai.chat.ChatService;
-import io.github.sashirestela.openai.model.ModelService;
+import io.github.sashirestela.openai.service.ChatService;
+import io.github.sashirestela.openai.service.ModelService;
 
 public final class OpenAIApi {
 

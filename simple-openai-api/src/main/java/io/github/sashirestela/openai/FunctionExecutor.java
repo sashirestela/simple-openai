@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.sashirestela.openai.chat.ChatFunction;
-import io.github.sashirestela.openai.chat.ChatFunctionCall;
-import io.github.sashirestela.openai.utils.JsonUtil;
+import io.github.sashirestela.openai.domain.chat.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.support.JsonUtil;
 
 public class FunctionExecutor {
   private Map<String, ChatFunction> mapFunctions = new HashMap<>();

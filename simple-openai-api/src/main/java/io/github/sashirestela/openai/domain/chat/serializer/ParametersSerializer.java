@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.chat.serializer;
+package io.github.sashirestela.openai.domain.chat.serializer;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import io.github.sashirestela.openai.utils.JsonUtil;
+import io.github.sashirestela.openai.support.JsonUtil;
 
 public class ParametersSerializer extends JsonSerializer<Class<?>> {
 

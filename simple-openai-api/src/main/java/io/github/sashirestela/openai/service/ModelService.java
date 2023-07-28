@@ -1,6 +1,9 @@
-package io.github.sashirestela.openai.model;
+package io.github.sashirestela.openai.service;
 
 import java.io.IOException;
+
+import io.github.sashirestela.openai.domain.model.Model;
+import io.github.sashirestela.openai.domain.model.ModelResponse;
 
 public interface ModelService {
 
