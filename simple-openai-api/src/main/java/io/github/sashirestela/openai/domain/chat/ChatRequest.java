@@ -2,7 +2,9 @@ package io.github.sashirestela.openai.domain.chat;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class ChatRequest {
   
@@ -12,7 +14,9 @@ public class ChatRequest {
   private boolean stream = false;
   @JsonProperty("max_tokens")
   private int maxTokens = Integer.MAX_VALUE;
+  @JsonInclude(Include.NON_NULL)
   private List<ChatFunction> functions;
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("function_call")
   private String functionCall;
 

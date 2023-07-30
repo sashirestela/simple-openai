@@ -50,7 +50,7 @@ public class App {
       .model("gpt-3.5-turbo-16k-0613")
       .messages(List.of(
         new ChatMessage(Role.SYSTEM, "Generate Java code with no comments."),
-        new ChatMessage(Role.USER, "# Function to get the max of an array of integers.")
+        new ChatMessage(Role.USER, "// Function to get the max of an array of integers.")
       ))
       .temperature(0.0)
       .maxTokens(100)
@@ -68,6 +68,7 @@ public class App {
     System.out.println(response);
     
     System.out.println("\n===== Normal Chat Completion =====");
+
     ChatResponse chatResponse = chatService.callChatCompletion(chatRequest);
     System.out.println(chatResponse.firstContent());
   }
@@ -128,7 +129,7 @@ public class App {
   
   public static void main( String[] args ) throws IOException, InterruptedException {
     App app = new App();
-    app.runChatServiceWithFunctions();
+    app.runChatService();
     System.exit(0);
   }
   

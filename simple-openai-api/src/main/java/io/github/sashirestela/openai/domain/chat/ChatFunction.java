@@ -74,7 +74,7 @@ public class ChatFunction {
 
     public <T> Builder functionToExecute(Class<T> parametersClass, Function<T, Object> functionToExecute) {
       this.parameters = parametersClass != null ? parametersClass : Empty.class;
-      this.functionToExecute = (Function<Object, Object>)functionToExecute;
+      this.functionToExecute = (Function<Object, Object>) functionToExecute;
       return this;
     }
 
