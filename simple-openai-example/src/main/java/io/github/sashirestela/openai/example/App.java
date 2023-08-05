@@ -17,7 +17,6 @@ import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
-import io.github.sashirestela.openai.exception.SimpleUncheckedException;
 import io.github.sashirestela.openai.service.ChatService;
 import io.github.sashirestela.openai.service.ModelService;
 
@@ -28,7 +27,7 @@ public class App {
     openAIApi = new SimpleOpenAIApi(System.getenv("OPENAI_API_KEY"));
   }
 
-  public void runModelService() throws SimpleUncheckedException {
+  public void runModelService() {
     ModelService modelService = openAIApi.createModelService();
 
     System.out.println("\n===== List of Models =====");
@@ -42,7 +41,7 @@ public class App {
     System.out.println(model);
   }
 
-  public void runChatService() throws SimpleUncheckedException {
+  public void runChatService() {
     ChatService chatService = openAIApi.createChatService();
 
     ChatRequest chatRequest = ChatRequest.builder()
@@ -71,7 +70,7 @@ public class App {
     System.out.println(chatResponse.firstContent());
   }
 
-  public void runChatServiceWithFunctions() throws SimpleUncheckedException {
+  public void runChatServiceWithFunctions() {
     ChatService chatService = openAIApi.createChatService();
 
     SimpleFunctionExecutor functionExecutor = new SimpleFunctionExecutor();
@@ -116,7 +115,7 @@ public class App {
     System.out.println(result);
   }
 
-  public static void main(String[] args) throws SimpleUncheckedException {
+  public static void main(String[] args) {
     App app = new App();
     app.runModelService();
     app.runChatService();

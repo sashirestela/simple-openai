@@ -14,7 +14,6 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import io.github.sashirestela.openai.domain.OpenAIError;
@@ -79,8 +78,10 @@ public class HttpHandler implements InvocationHandler {
 
   private Class<? extends Annotation> calculateHttpMethod(Method method) {
     Class<? extends Annotation> httpMethod = ReflectUtil.one().getFirstAnnotationTypeInList(method, HTTP_METHODS);
-    return Optional.of(httpMethod).orElseThrow(
-        () -> new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null));
+    if (httpMethod == null) {
+      throw new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null);
+    }
+    return httpMethod;
   }
 
   private String calculateUrl(Method method, Object[] arguments, Class<? extends Annotation> httpMethod) {
