@@ -1,12 +1,12 @@
 package io.github.sashirestela.openai;
 
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.net.http.HttpClient;
 
 import io.github.sashirestela.openai.http.HttpHandler;
 import io.github.sashirestela.openai.service.ChatService;
 import io.github.sashirestela.openai.service.ModelService;
+import io.github.sashirestela.openai.support.ReflectUtil;
 
 public final class SimpleOpenAIApi {
 
@@ -34,16 +34,10 @@ public final class SimpleOpenAIApi {
     return service;
   }
 
-  @SuppressWarnings("unchecked")
+  
   private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
-
     InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE);
-
-    T service = (T) Proxy.newProxyInstance(
-        serviceClass.getClassLoader(),
-        new Class<?>[] { serviceClass },
-        httpHandler);
-
+    T service = ReflectUtil.get().createProxy(serviceClass, httpHandler);
     return service;
   }
 }

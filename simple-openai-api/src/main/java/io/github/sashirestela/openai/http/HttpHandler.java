@@ -50,10 +50,10 @@ public class HttpHandler implements InvocationHandler {
     try {
       Class<? extends Annotation> httpMethod = calculateHttpMethod(method);
       String url = calculateUrl(method, arguments, httpMethod);
-      Pair<Parameter, Object> pairBody = ReflectUtil.get().getArgumentAnnotatedWith(method, arguments, Body.class);
+      Pair<Parameter, Object> pairBody = ReflectUtil.get().getPairAnnotatedWith(method, arguments, Body.class);
       setStreamInBodyIfApplicable(method, pairBody);
       HttpRequest.BodyPublisher bodyPublisher = calculateBodyPublisher(method, pairBody);
-      Class<?> responseClass = ReflectUtil.get().getReturnClassOf(method);
+      Class<?> responseClass = ReflectUtil.get().getBaseClassOf(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
       builder = builder.uri(URI.create(urlBase + url));
@@ -77,7 +77,7 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private Class<? extends Annotation> calculateHttpMethod(Method method) {
-    Class<? extends Annotation> httpMethod = ReflectUtil.get().getFirstAnnotationTypeInList(method, HTTP_METHODS);
+    Class<? extends Annotation> httpMethod = ReflectUtil.get().getFirstAnnotTypeInList(method, HTTP_METHODS);
     if (httpMethod == null) {
       throw new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null);
     }
@@ -85,17 +85,17 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private String calculateUrl(Method method, Object[] arguments, Class<? extends Annotation> httpMethod) {
-    String url = (String) ReflectUtil.get().getAnnotationAttribute(method, httpMethod, "value");
+    String url = (String) ReflectUtil.get().getAnnotAttribValue(method, httpMethod, "value");
     if (arguments == null || arguments.length == 0) {
       return url;
     }
-    Pair<Parameter, Object> pairPath = ReflectUtil.get().getArgumentAnnotatedWith(method, arguments, Path.class);
+    Pair<Parameter, Object> pairPath = ReflectUtil.get().getPairAnnotatedWith(method, arguments, Path.class);
     if (pairPath == null) {
       return url;
     }
     Parameter parameter = pairPath.getFirst();
     Object argument = pairPath.getSecond();
-    String paramName = (String) ReflectUtil.get().getAnnotationAttribute(parameter, Path.class, "value");
+    String paramName = (String) ReflectUtil.get().getAnnotAttribValue(parameter, Path.class, "value");
     String argumentValue = argument.toString();
     String pattern = "{" + paramName + "}";
     return url.replace(pattern, argumentValue);
@@ -110,10 +110,10 @@ public class HttpHandler implements InvocationHandler {
     String setStreamMethodName = "setStream";
     boolean streamValue = method.isAnnotationPresent(Streaming.class);
     try {
-      Method setStreamMethod = parameter.getType().getMethod(setStreamMethodName, boolean.class);
-      setStreamMethod.invoke(object, streamValue);
+      ReflectUtil.get().executeSetMethod(parameter.getType(), setStreamMethodName, new Class<?>[] { boolean.class },
+          object, streamValue);
       pairBody.setSecond(object);
-    } catch (Exception e) {
+    } catch (UncheckedException e) {
       // 'setStream' method does not exist
       return;
     }

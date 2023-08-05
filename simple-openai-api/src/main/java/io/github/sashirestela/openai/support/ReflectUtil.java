@@ -2,9 +2,11 @@ package io.github.sashirestela.openai.support;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,45 +26,54 @@ public class ReflectUtil {
     return reflection;
   }
 
-  public Class<? extends Annotation> getFirstAnnotationTypeInList(Method method,
-      List<Class<? extends Annotation>> listAnnotationType) {
-    Class<? extends Annotation> annotationType = listAnnotationType
-        .stream()
-        .filter(annotType -> annotType != null && method.isAnnotationPresent(annotType))
-        .findFirst()
-        .orElse(null);
-    return annotationType;
+  @SuppressWarnings("unchecked")
+  public <T> T createProxy(Class<T> interfaceClass, InvocationHandler handler) {
+    T proxy = (T) Proxy.newProxyInstance(
+        interfaceClass.getClassLoader(),
+        new Class<?>[] { interfaceClass },
+        handler);
+    return proxy;
   }
 
-  public Object getAnnotationAttribute(AnnotatedElement element, Class<? extends Annotation> annotationType,
-      String annotationMethodName) {
+  public Class<? extends Annotation> getFirstAnnotTypeInList(Method method,
+      List<Class<? extends Annotation>> listAnnotType) {
+    Class<? extends Annotation> annotType = listAnnotType
+        .stream()
+        .filter(type -> type != null && method.isAnnotationPresent(type))
+        .findFirst()
+        .orElse(null);
+    return annotType;
+  }
+
+  public Object getAnnotAttribValue(AnnotatedElement element, Class<? extends Annotation> annotType,
+      String annotMethodName) {
     Object value = null;
-    Annotation annotation = element.getAnnotation(annotationType);
+    Annotation annotation = element.getAnnotation(annotType);
     if (annotation != null) {
-      Method annotationMethod = null;
+      Method annotMethod = null;
       try {
-        annotationMethod = annotationType.getMethod(annotationMethodName);
+        annotMethod = annotType.getMethod(annotMethodName);
       } catch (NoSuchMethodException | SecurityException e) {
-        throw new UncheckedException("Cannot found the method {0} in the annotation {1}.", annotationMethodName,
-            annotationType.getName(), e);
+        throw new UncheckedException("Cannot found the method {0} in the annotation {1}.", annotMethodName,
+            annotType.getName(), e);
       }
       try {
-        value = annotationMethod.invoke(annotation, (Object[]) null);
+        value = annotMethod.invoke(annotation, (Object[]) null);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new UncheckedException("Cannot execute the method {0} in the annotation {1}.", annotationMethodName,
-            annotationType.getName(), e);
+        throw new UncheckedException("Cannot execute the method {0} in the annotation {1}.", annotMethodName,
+            annotType.getName(), e);
       }
     }
     return value;
   }
 
-  public Pair<Parameter, Object> getArgumentAnnotatedWith(Method method, Object[] arguments,
-      Class<? extends Annotation> annotationType) {
+  public Pair<Parameter, Object> getPairAnnotatedWith(Method method, Object[] arguments,
+      Class<? extends Annotation> annotType) {
     Pair<Parameter, Object> pairParameterArgument = null;
     int i = 0;
     Parameter[] parameters = method.getParameters();
     for (Parameter parameter : parameters) {
-      if (parameter.isAnnotationPresent(annotationType)) {
+      if (parameter.isAnnotationPresent(annotType)) {
         pairParameterArgument = new Pair<>(parameter, arguments[i]);
         break;
       }
@@ -71,7 +82,7 @@ public class ReflectUtil {
     return pairParameterArgument;
   }
 
-  public Class<?> getReturnClassOf(Method method) {
+  public Class<?> getBaseClassOf(Method method) {
     String className = method.getGenericReturnType().getTypeName();
     Matcher matcher = Pattern.compile("<(.*?)>").matcher(className);
     className = matcher.find() ? matcher.group(1) : className;
@@ -79,9 +90,25 @@ public class ReflectUtil {
     try {
       methodReturnClass = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      throw new UncheckedException("Cannot found the return class {0} for the method {1}.", className,
+      throw new UncheckedException("Cannot found the base class {0} for the method {1}.", className,
           method.getName(), e);
     }
     return methodReturnClass;
+  }
+
+  public void executeSetMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes, Object object, Object value) {
+    Method method = null;
+    try {
+      method = clazz.getMethod(methodName, paramTypes);
+    } catch (NoSuchMethodException | SecurityException e) {
+      throw new UncheckedException("Cannot found the method {0} in the class {1}", methodName, clazz.getSimpleName(),
+          e);
+    }
+    try {
+      method.invoke(object, value);
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+      throw new UncheckedException("Cannot execute the method {0} in the class {1}", methodName, clazz.getSimpleName(),
+          e);
+    }
   }
 }
