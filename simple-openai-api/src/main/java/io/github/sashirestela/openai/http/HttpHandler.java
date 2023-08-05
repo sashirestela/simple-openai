@@ -50,10 +50,10 @@ public class HttpHandler implements InvocationHandler {
     try {
       Class<? extends Annotation> httpMethod = calculateHttpMethod(method);
       String url = calculateUrl(method, arguments, httpMethod);
-      Pair<Parameter, Object> pairBody = ReflectUtil.one().getArgumentAnnotatedWith(method, arguments, Body.class);
+      Pair<Parameter, Object> pairBody = ReflectUtil.get().getArgumentAnnotatedWith(method, arguments, Body.class);
       setStreamInBodyIfApplicable(method, pairBody);
       HttpRequest.BodyPublisher bodyPublisher = calculateBodyPublisher(method, pairBody);
-      Class<?> responseClass = ReflectUtil.one().getReturnClassOf(method);
+      Class<?> responseClass = ReflectUtil.get().getReturnClassOf(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
       builder = builder.uri(URI.create(urlBase + url));
@@ -77,7 +77,7 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private Class<? extends Annotation> calculateHttpMethod(Method method) {
-    Class<? extends Annotation> httpMethod = ReflectUtil.one().getFirstAnnotationTypeInList(method, HTTP_METHODS);
+    Class<? extends Annotation> httpMethod = ReflectUtil.get().getFirstAnnotationTypeInList(method, HTTP_METHODS);
     if (httpMethod == null) {
       throw new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null);
     }
@@ -85,17 +85,17 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private String calculateUrl(Method method, Object[] arguments, Class<? extends Annotation> httpMethod) {
-    String url = (String) ReflectUtil.one().getAnnotationAttribute(method, httpMethod, "value");
+    String url = (String) ReflectUtil.get().getAnnotationAttribute(method, httpMethod, "value");
     if (arguments == null || arguments.length == 0) {
       return url;
     }
-    Pair<Parameter, Object> pairPath = ReflectUtil.one().getArgumentAnnotatedWith(method, arguments, Path.class);
+    Pair<Parameter, Object> pairPath = ReflectUtil.get().getArgumentAnnotatedWith(method, arguments, Path.class);
     if (pairPath == null) {
       return url;
     }
     Parameter parameter = pairPath.getFirst();
     Object argument = pairPath.getSecond();
-    String paramName = (String) ReflectUtil.one().getAnnotationAttribute(parameter, Path.class, "value");
+    String paramName = (String) ReflectUtil.get().getAnnotationAttribute(parameter, Path.class, "value");
     String argumentValue = argument.toString();
     String pattern = "{" + paramName + "}";
     return url.replace(pattern, argumentValue);
@@ -124,7 +124,7 @@ public class HttpHandler implements InvocationHandler {
       return null;
     }
     Object object = pairBody.getSecond();
-    String requestJson = JsonUtil.one().objectToJson(object);
+    String requestJson = JsonUtil.get().objectToJson(object);
     return BodyPublishers.ofString(requestJson);
   }
 
@@ -158,7 +158,7 @@ public class HttpHandler implements InvocationHandler {
     Stream<T> responseObject = httpResponse.body()
         .filter(data -> data.contains(CONSUMABLE_TEXT))
         .map(data -> data.substring(CONSUMABLE_INDEX))
-        .map(data -> JsonUtil.one().jsonToObject(data, responseClass));
+        .map(data -> JsonUtil.get().jsonToObject(data, responseClass));
     return responseObject;
   }
 
@@ -171,14 +171,14 @@ public class HttpHandler implements InvocationHandler {
     }
     throwExceptionIfErrorIsPresent(httpResponse);
     String data = httpResponse.body();
-    T responseObject = JsonUtil.one().jsonToObject(data, responseClass);
+    T responseObject = JsonUtil.get().jsonToObject(data, responseClass);
     return responseObject;
   }
 
   private void throwExceptionIfErrorIsPresent(HttpResponse<?> httpResponse) {
     if (httpResponse.statusCode() != HttpURLConnection.HTTP_OK) {
       String data = (String) httpResponse.body();
-      OpenAIError error = JsonUtil.one().jsonToObject(data, OpenAIError.class);
+      OpenAIError error = JsonUtil.get().jsonToObject(data, OpenAIError.class);
       throw new UncheckedException("Error from server: {0}.", error.getError(), null);
     }
   }

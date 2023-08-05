@@ -38,7 +38,7 @@ public class SimpleFunctionExecutor {
     try {
       ChatFunction function = mapFunctions.get(call.getName());
       String jsonArguments = call.getArguments();
-      Object objArgument = JsonUtil.one().jsonToObject(jsonArguments, function.getParameters());
+      Object objArgument = JsonUtil.get().jsonToObject(jsonArguments, function.getParameters());
       T result = (T) function.getFunctionToExecute().apply(objArgument);
       return result;
     } catch (RuntimeException e) {

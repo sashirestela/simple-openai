@@ -25,7 +25,7 @@ public class JsonUtil {
     objectMapper = new ObjectMapper();
   }
 
-  public static JsonUtil one() {
+  public static JsonUtil get() {
     if (jsonUtil == null) {
       jsonUtil = new JsonUtil();
     }

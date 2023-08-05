@@ -17,7 +17,7 @@ public class ReflectUtil {
   private ReflectUtil() {
   }
 
-  public static ReflectUtil one() {
+  public static ReflectUtil get() {
     if (reflection == null) {
       reflection = new ReflectUtil();
     }
