@@ -11,11 +11,11 @@ import io.github.sashirestela.openai.support.JsonUtil;
 
 public class ParametersSerializer extends JsonSerializer<Class<?>> {
 
-	@Override
-	public void serialize(Class<?> params,
-                        JsonGenerator jsonGen,
-                        SerializerProvider serializer) throws IOException {
+  @Override
+  public void serialize(Class<?> params,
+      JsonGenerator jsonGen,
+      SerializerProvider serializer) throws IOException {
     JsonNode jsonSchema = JsonUtil.one().classToJsonSchema(params);
     jsonGen.writeObject(jsonSchema);
-	}
+  }
 }

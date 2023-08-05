@@ -7,28 +7,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class ChatRequest {
-  
+
   private String model;
+
   private List<ChatMessage> messages;
+
   private double temperature = 1.0;
+
   private boolean stream = false;
+
   @JsonProperty("max_tokens")
   private int maxTokens = Integer.MAX_VALUE;
+
   @JsonInclude(Include.NON_NULL)
   private List<ChatFunction> functions;
+
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("function_call")
   private String functionCall;
 
-  public ChatRequest() {}
+  public ChatRequest() {
+  }
 
-  public ChatRequest(String model,
-                     List<ChatMessage> messages,
-                     float temperature,
-                     boolean stream,
-                     int maxTokens,
-                     List<ChatFunction> functions,
-                     String functionCall) {
+  public ChatRequest(String model, List<ChatMessage> messages, float temperature, boolean stream, int maxTokens,
+      List<ChatFunction> functions, String functionCall) {
     this.model = model;
     this.messages = messages;
     this.temperature = temperature;
@@ -49,19 +51,19 @@ public class ChatRequest {
   }
 
   public String getModel() {
-  	return model;
+    return model;
   }
 
   public List<ChatMessage> getMessages() {
-  	return messages;
+    return messages;
   }
 
   public double getTemperature() {
-  	return temperature;
+    return temperature;
   }
 
   public boolean isStream() {
-  	return stream;
+    return stream;
   }
 
   public void setStream(boolean stream) {
@@ -69,7 +71,7 @@ public class ChatRequest {
   }
 
   public int getMaxTokens() {
-  	return maxTokens;
+    return maxTokens;
   }
 
   public List<ChatFunction> getFunctions() {
@@ -93,7 +95,8 @@ public class ChatRequest {
     private List<ChatFunction> functions;
     private String functionCall;
 
-    public Builder() {}
+    public Builder() {
+    }
 
     public Builder model(String model) {
       this.model = model;
@@ -144,5 +147,11 @@ public class ChatRequest {
         throw new RuntimeException("The messages are required for ChatRequest.");
       }
     }
+  }
+
+  @Override
+  public String toString() {
+    return "ChatRequest [model=" + model + ", messages=" + messages + ", temperature=" + temperature + ", stream="
+        + stream + ", maxTokens=" + maxTokens + ", functions=" + functions + ", functionCall=" + functionCall + "]";
   }
 }

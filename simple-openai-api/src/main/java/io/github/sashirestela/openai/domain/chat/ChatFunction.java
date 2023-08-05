@@ -8,19 +8,22 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.github.sashirestela.openai.domain.chat.serializer.ParametersSerializer;
 
 public class ChatFunction {
+
   private String name;
+
   private String description;
+
   @JsonSerialize(using = ParametersSerializer.class)
   private Class<?> parameters;
+
   @JsonIgnore
   Function<Object, Object> functionToExecute;
 
-  public ChatFunction() {}
+  public ChatFunction() {
+  }
 
-  public ChatFunction(String name,
-                      String description,
-                      Class<?> parameters,
-                      Function<Object, Object> functionToExecute) {
+  public ChatFunction(String name, String description, Class<?> parameters,
+      Function<Object, Object> functionToExecute) {
     this.name = name;
     this.description = description;
     this.parameters = parameters;
@@ -60,7 +63,8 @@ public class ChatFunction {
     private Class<?> parameters;
     Function<Object, Object> functionToExecute;
 
-    public Builder() {}
+    public Builder() {
+    }
 
     public Builder name(String name) {
       this.name = name;
@@ -72,6 +76,7 @@ public class ChatFunction {
       return this;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> Builder functionToExecute(Class<T> parametersClass, Function<T, Object> functionToExecute) {
       this.parameters = parametersClass != null ? parametersClass : Empty.class;
       this.functionToExecute = (Function<Object, Object>) functionToExecute;
@@ -94,5 +99,12 @@ public class ChatFunction {
     }
   }
 
-  class Empty {}
+  class Empty {
+  }
+
+  @Override
+  public String toString() {
+    return "ChatFunction [name=" + name + ", description=" + description + ", parameters=" + parameters
+        + ", functionToExecute=" + functionToExecute + "]";
+  }
 }

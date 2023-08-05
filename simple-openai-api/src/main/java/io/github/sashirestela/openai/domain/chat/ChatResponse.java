@@ -3,22 +3,23 @@ package io.github.sashirestela.openai.domain.chat;
 import java.util.List;
 
 public class ChatResponse {
-  
+
   private String id;
+
   private String object;
+
   private long created;
+
   private String model;
+
   private List<Choice> choices;
+
   private Usage usage;
 
-  public ChatResponse() {}
+  public ChatResponse() {
+  }
 
-  public ChatResponse(String id,
-                      String object,
-                      long created,
-                      String model,
-                      List<Choice> choices,
-                      Usage usage) {
+  public ChatResponse(String id, String object, long created, String model, List<Choice> choices, Usage usage) {
     this.id = id;
     this.object = object;
     this.created = created;
@@ -26,29 +27,29 @@ public class ChatResponse {
     this.choices = choices;
     this.usage = usage;
   }
-  
+
   public String getId() {
-  	return id;
+    return id;
   }
-  
+
   public String getObject() {
-  	return object;
+    return object;
   }
-  
+
   public long getCreated() {
-  	return created;
+    return created;
   }
-  
+
   public String getModel() {
-  	return model;
+    return model;
   }
-  
+
   public List<Choice> getChoices() {
-  	return choices;
+    return choices;
   }
-  
+
   public Usage getUsage() {
-  	return usage;
+    return usage;
   }
 
   public ChatMessage firstMessage() {
@@ -57,5 +58,11 @@ public class ChatResponse {
 
   public String firstContent() {
     return firstMessage().getContent();
+  }
+
+  @Override
+  public String toString() {
+    return "ChatResponse [id=" + id + ", object=" + object + ", created=" + created + ", model=" + model + ", choices="
+        + choices + ", usage=" + usage + "]";
   }
 }

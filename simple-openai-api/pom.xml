@@ -10,7 +10,7 @@
   <artifactId>simple-openai-api</artifactId>
   
   <properties>
-    <jackson.version>2.15.2</jackson.version>
+    <jackson.version>2.14.2</jackson.version>
     <json.schema.version>4.31.1</json.schema.version>
     <junit.version>4.11</junit.version>
   </properties>
@@ -46,24 +46,6 @@
 				<artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
 			</plugin>
-      <!--
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>3.5.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <minimizeJar>true</minimizeJar>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      -->
     </plugins>
   </build>
 </project>

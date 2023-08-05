@@ -7,14 +7,16 @@ import java.util.Map;
 
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.exception.SimpleUncheckedException;
 import io.github.sashirestela.openai.support.JsonUtil;
 
-public class FunctionExecutor {
+public class SimpleFunctionExecutor {
   private Map<String, ChatFunction> mapFunctions = new HashMap<>();
 
-  public FunctionExecutor() {}
+  public SimpleFunctionExecutor() {
+  }
 
-  public FunctionExecutor(List<ChatFunction> functions) {
+  public SimpleFunctionExecutor(List<ChatFunction> functions) {
     setFunctions(functions);
   }
 
@@ -33,10 +35,14 @@ public class FunctionExecutor {
 
   @SuppressWarnings("unchecked")
   public <T> T execute(ChatFunctionCall call) {
-    ChatFunction function = mapFunctions.get(call.getName());
-    String jsonArguments = call.getArguments();
-    Object objArgument = JsonUtil.one().jsonToObject(jsonArguments, function.getParameters());
-    T result = (T) function.getFunctionToExecute().apply(objArgument);
-    return result;
+    try {
+      ChatFunction function = mapFunctions.get(call.getName());
+      String jsonArguments = call.getArguments();
+      Object objArgument = JsonUtil.one().jsonToObject(jsonArguments, function.getParameters());
+      T result = (T) function.getFunctionToExecute().apply(objArgument);
+      return result;
+    } catch (RuntimeException e) {
+      throw new SimpleUncheckedException("Cannot execute the function {0}.", call.getName(), e);
+    }
   }
 }

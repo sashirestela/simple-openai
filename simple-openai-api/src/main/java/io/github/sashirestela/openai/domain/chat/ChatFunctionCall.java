@@ -1,13 +1,15 @@
 package io.github.sashirestela.openai.domain.chat;
 
 public class ChatFunctionCall {
+
   private String name;
+
   private String arguments;
 
-  public ChatFunctionCall() {}
+  public ChatFunctionCall() {
+  }
 
-  public ChatFunctionCall(String name,
-                          String arguments) {
+  public ChatFunctionCall(String name, String arguments) {
     this.name = name;
     this.arguments = arguments;
   }
@@ -18,5 +20,10 @@ public class ChatFunctionCall {
 
   public String getArguments() {
     return arguments;
+  }
+
+  @Override
+  public String toString() {
+    return "ChatFunctionCall [name=" + name + ", arguments=" + arguments + "]";
   }
 }

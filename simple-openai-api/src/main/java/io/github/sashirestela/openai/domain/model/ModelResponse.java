@@ -6,18 +6,20 @@ public class ModelResponse {
   private String object;
   private List<Model> data;
 
-  public ModelResponse() {}
+  public ModelResponse() {
+  }
 
   public ModelResponse(String object,
-                       List<Model> data) {
+      List<Model> data) {
     this.object = object;
     this.data = data;
   }
-  
+
   public String getObject() {
-  	return object;
+    return object;
   }
+
   public List<Model> getData() {
-  	return data;
+    return data;
   }
 }

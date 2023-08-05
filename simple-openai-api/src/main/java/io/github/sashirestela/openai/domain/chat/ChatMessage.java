@@ -5,37 +5,35 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ChatMessage {
-  
+
   private Role role;
+
   private String content;
+
   @JsonInclude(Include.NON_NULL)
   private String name;
+
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("function_call")
   private ChatFunctionCall functionCall;
 
-  public ChatMessage () {}
+  public ChatMessage() {
+  }
 
-  public ChatMessage (Role role,
-                      String content) {
+  public ChatMessage(Role role, String content) {
     this.role = role;
     this.content = content;
     validate();
   }
 
-  public ChatMessage (Role role,
-                      String content,
-                      String name) {
+  public ChatMessage(Role role, String content, String name) {
     this.role = role;
     this.content = content;
     this.name = name;
     validate();
   }
 
-  public ChatMessage (Role role,
-                      String content,
-                      String name,
-                      ChatFunctionCall functionCall) {
+  public ChatMessage(Role role, String content, String name, ChatFunctionCall functionCall) {
     this.role = role;
     this.content = content;
     this.name = name;
@@ -44,11 +42,11 @@ public class ChatMessage {
   }
 
   public Role getRole() {
-  	return role;
+    return role;
   }
-  
+
   public String getContent() {
-  	return content;
+    return content;
   }
 
   public String getName() {
@@ -69,5 +67,11 @@ public class ChatMessage {
     if (role == Role.FUNCTION && name == null) {
       throw new RuntimeException("The name is required for ChatMessage when role is function.");
     }
+  }
+
+  @Override
+  public String toString() {
+    return "ChatMessage [role=" + role + ", content=" + content + ", name=" + name + ", functionCall=" + functionCall
+        + "]";
   }
 }

@@ -1,6 +1,8 @@
 .settings/
 .cache/
 .upm/
+.vscode/
+target
 
 .project
 .classpath
