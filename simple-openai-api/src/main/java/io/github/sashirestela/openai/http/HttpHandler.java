@@ -85,7 +85,7 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private String calculateUrl(Method method, Object[] arguments, Class<? extends Annotation> httpMethod) {
-    String url = (String) ReflectUtil.get().getAnnotAttribValue(method, httpMethod, "value");
+    String url = (String) ReflectUtil.get().getAnnotAttribValue(method, httpMethod, Constant.DEF_ANNOT_ATTRIB);
     if (arguments == null || arguments.length == 0) {
       return url;
     }
@@ -95,7 +95,7 @@ public class HttpHandler implements InvocationHandler {
     }
     Parameter parameter = pairPath.getFirst();
     Object argument = pairPath.getSecond();
-    String paramName = (String) ReflectUtil.get().getAnnotAttribValue(parameter, Path.class, "value");
+    String paramName = (String) ReflectUtil.get().getAnnotAttribValue(parameter, Path.class, Constant.DEF_ANNOT_ATTRIB);
     String argumentValue = argument.toString();
     String pattern = "{" + paramName + "}";
     return url.replace(pattern, argumentValue);
@@ -105,12 +105,12 @@ public class HttpHandler implements InvocationHandler {
     if (pairBody == null) {
       return;
     }
+    final String SET_STREAM_METHOD = "setStream";
     Parameter parameter = pairBody.getFirst();
     Object object = pairBody.getSecond();
-    String setStreamMethodName = "setStream";
     boolean streamValue = method.isAnnotationPresent(Streaming.class);
     try {
-      ReflectUtil.get().executeSetMethod(parameter.getType(), setStreamMethodName, new Class<?>[] { boolean.class },
+      ReflectUtil.get().executeSetMethod(parameter.getType(), SET_STREAM_METHOD, new Class<?>[] { boolean.class },
           object, streamValue);
       pairBody.setSecond(object);
     } catch (UncheckedException e) {
