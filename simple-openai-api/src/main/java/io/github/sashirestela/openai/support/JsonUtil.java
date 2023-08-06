@@ -1,11 +1,12 @@
 package io.github.sashirestela.openai.support;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.github.victools.jsonschema.generator.Option;
 import com.github.victools.jsonschema.generator.OptionPreset;
 import com.github.victools.jsonschema.generator.SchemaGenerator;
@@ -50,9 +51,8 @@ public class JsonUtil {
 
   public <T> List<T> jsonToList(String json, Class<T> clazz) {
     try {
-      TypeReference<List<T>> typeReference = new TypeReference<List<T>>() {
-      };
-      return objectMapper.readValue(json, typeReference);
+      CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz);
+      return objectMapper.readValue(json, listType);
     } catch (JsonProcessingException e) {
       throw new UncheckedException("Cannot convert the Json {0} to List of {1}.", json, clazz.getName(), e);
     }
