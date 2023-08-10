@@ -13,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,8 +36,8 @@ import io.github.sashirestela.openai.support.MethodElement;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
 public class HttpHandler implements InvocationHandler {
-  private final static List<Class<? extends Annotation>> HTTP_METHODS = Arrays.asList(GET.class, POST.class, PUT.class,
-      DELETE.class);
+  private final static List<Class<? extends Annotation>> HTTP_METHODS = Arrays.asList(
+      GET.class, POST.class, PUT.class, DELETE.class);
 
   private HttpClient httpClient;
   private String apiKey;
@@ -53,21 +54,21 @@ public class HttpHandler implements InvocationHandler {
     try {
       Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
       String url = this.calculateUrl(method, arguments, httpMethod);
-      MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class, false);
-      this.setStreamInBodyIfApplicable(method, elementBody);
+      MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class);
+      boolean isStreaming = method.isAnnotationPresent(Streaming.class);
+      this.setStreamInBodyIfApplicable(method, elementBody, isStreaming);
       HttpRequest.BodyPublisher bodyPublisher = this.calculateBodyPublisher(method, elementBody);
       Class<?> responseClass = ReflectUtil.get().getBaseClassOf(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
       builder = builder.uri(URI.create(urlBase + url));
-      builder = builder.header(Constant.HEADER_ACCEPT, Constant.APP_JSON);
       builder = builder.header(Constant.HEADER_CONTENT_TYPE, Constant.APP_JSON);
       builder = builder.header(Constant.HEADER_AUTHORIZATION, Constant.AUTH_BEARER + apiKey);
       builder = setHttpMethodForRequet(builder, httpMethod, bodyPublisher);
       HttpRequest httpRequest = builder.build();
 
       CompletableFuture<?> responseObject = null;
-      if (method.isAnnotationPresent(Streaming.class)) {
+      if (isStreaming) {
         responseObject = this.calculateResponseStream(httpRequest, responseClass);
       } else {
         responseObject = this.calculateResponse(httpRequest, responseClass);
@@ -80,10 +81,9 @@ public class HttpHandler implements InvocationHandler {
   }
 
   private Class<? extends Annotation> calculateHttpMethod(Method method) {
-    Class<? extends Annotation> httpMethod = ReflectUtil.get().getFirstAnnotTypeInList(method, HTTP_METHODS);
-    if (httpMethod == null) {
-      throw new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null);
-    }
+    Class<? extends Annotation> httpMethod = Optional
+        .ofNullable(ReflectUtil.get().getFirstAnnotTypeInList(method, HTTP_METHODS)).orElseThrow(
+            () -> new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null));
     return httpMethod;
   }
 
@@ -100,7 +100,7 @@ public class HttpHandler implements InvocationHandler {
 
     List<CommonUtil.Match> listPathParams = CommonUtil.get().findAllMatches(url, Constant.REGEX_PATH_PARAM_URL);
     List<MethodElement> listMethodElement = ReflectUtil.get().getMethodElementsAnnotatedWith(method, arguments,
-        Path.class, true);
+        Path.class);
     if (CommonUtil.get().isNullOrEmpty(listMethodElement)) {
       throw new UncheckedException("Path param in the url requires at least an annotated argument in the method {0}.",
           method.getName(), null);
@@ -118,17 +118,16 @@ public class HttpHandler implements InvocationHandler {
     return url;
   }
 
-  private void setStreamInBodyIfApplicable(Method method, MethodElement elementBody) {
+  private void setStreamInBodyIfApplicable(Method method, MethodElement elementBody, boolean isStreaming) {
     if (elementBody == null) {
       return;
     }
     final String SET_STREAM_METHOD = "setStream";
     Parameter parameter = elementBody.getParameter();
     Object object = elementBody.getArgumentValue();
-    boolean streamValue = method.isAnnotationPresent(Streaming.class);
     try {
       ReflectUtil.get().executeSetMethod(parameter.getType(), SET_STREAM_METHOD, new Class<?>[] { boolean.class },
-          object, streamValue);
+          object, isStreaming);
       elementBody.setArgumentValue(object);
     } catch (UncheckedException e) {
       // 'setStream' method does not exist

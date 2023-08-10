@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -79,7 +78,7 @@ public class ReflectUtilTest {
   void shouldReturnMethodElementWhenAnnotationIsInTheMethod() {
     Method method = getMethod(TestInterface.class, "testMethod");
     MethodElement actualElement = ReflectUtil.get().getMethodElementAnnotatedWith(method, new Object[] { "example" },
-        Path.class, true);
+        Path.class);
     MethodElement expectedElement = new MethodElement(method.getParameters()[0], "arg", "example");
     assertEquals(expectedElement, actualElement);
   }
@@ -88,7 +87,7 @@ public class ReflectUtilTest {
   void shouldReturnNullMethodElementWhenAnnotationIsNotInTheMethod() {
     Method method = getMethod(TestInterface.class, "testMethod");
     MethodElement element = ReflectUtil.get().getMethodElementAnnotatedWith(method, new Object[] { "example" },
-        Body.class, false);
+        Body.class);
     assertNull(element);
   }
 
@@ -96,7 +95,7 @@ public class ReflectUtilTest {
   void shouldReturnMethodElementsWhenAnnotationsAreInTheMethod() {
     Method method = getMethod(TestInterface.class, "streamMethod");
     List<MethodElement> actualElements = ReflectUtil.get().getMethodElementsAnnotatedWith(method,
-        new Object[] { 10, "Text", false }, Path.class, true);
+        new Object[] { 10, "Text", false }, Path.class);
     List<MethodElement> expectedElements = Arrays.asList(
         new MethodElement(method.getParameters()[0], "argInt", 10),
         new MethodElement(method.getParameters()[1], "argStr", "Text"));
@@ -107,7 +106,7 @@ public class ReflectUtilTest {
   void shouldReturnEmptyMethodElementsWhenAnnotationsAreNotInTheMethod() {
     Method method = getMethod(TestInterface.class, "streamMethod");
     List<MethodElement> elements = ReflectUtil.get().getMethodElementsAnnotatedWith(method,
-        new Object[] { 10, "Text", false }, Body.class, false);
+        new Object[] { 10, "Text", false }, Body.class);
     int actualSize = elements.size();
     int expectedSize = 0;
     assertEquals(expectedSize, actualSize);

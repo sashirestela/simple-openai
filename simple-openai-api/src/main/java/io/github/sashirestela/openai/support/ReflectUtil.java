@@ -45,21 +45,21 @@ public class ReflectUtil {
   }
 
   public Object getAnnotAttribValue(AnnotatedElement element, Class<? extends Annotation> annotType,
-      String annotMethodName) {
+      String annotAttribName) {
     Object value = null;
     Annotation annotation = element.getAnnotation(annotType);
     if (annotation != null) {
-      Method annotMethod = null;
+      Method annotAttrib = null;
       try {
-        annotMethod = annotType.getMethod(annotMethodName);
+        annotAttrib = annotType.getMethod(annotAttribName);
       } catch (NoSuchMethodException | SecurityException e) {
-        throw new UncheckedException("Cannot found the method {0} in the annotation {1}.", annotMethodName,
+        throw new UncheckedException("Cannot found the method {0} in the annotation {1}.", annotAttribName,
             annotType.getName(), e);
       }
       try {
-        value = annotMethod.invoke(annotation, (Object[]) null);
+        value = annotAttrib.invoke(annotation, (Object[]) null);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new UncheckedException("Cannot execute the method {0} in the annotation {1}.", annotMethodName,
+        throw new UncheckedException("Cannot execute the method {0} in the annotation {1}.", annotAttribName,
             annotType.getName(), e);
       }
     }
@@ -67,36 +67,34 @@ public class ReflectUtil {
   }
 
   public MethodElement getMethodElementAnnotatedWith(Method method, Object[] arguments,
-      Class<? extends Annotation> annotType, boolean shouldReadAnnotAttrValue) {
-    MethodElement methodElement = null;
-    int i = 0;
-    Parameter[] parameters = method.getParameters();
-    for (Parameter parameter : parameters) {
-      if (parameter.isAnnotationPresent(annotType)) {
-        Object defAnnotValue = null;
-        if (shouldReadAnnotAttrValue) {
-          defAnnotValue = getAnnotAttribValue(parameter, annotType, Constant.DEF_ANNOT_ATTRIB);
-        }
-        methodElement = new MethodElement(parameter, defAnnotValue, arguments[i]);
-        break;
-      }
-      i++;
-    }
+      Class<? extends Annotation> annotType) {
+    List<MethodElement> methodElements = getMethodElementsAnnotatedWith(method, arguments, annotType, false);
+    MethodElement methodElement = methodElements.size() > 0 ? methodElements.get(0) : null;
     return methodElement;
   }
 
   public List<MethodElement> getMethodElementsAnnotatedWith(Method method, Object[] arguments,
-      Class<? extends Annotation> annotType, boolean shouldReadAnnotAttrValue) {
+      Class<? extends Annotation> annotType) {
+    List<MethodElement> methodElements = getMethodElementsAnnotatedWith(method, arguments, annotType, false);
+    return methodElements;
+  }
+
+  private List<MethodElement> getMethodElementsAnnotatedWith(Method method, Object[] arguments,
+      Class<? extends Annotation> annotType, boolean firstOnly) {
     List<MethodElement> methodElements = new ArrayList<>();
+    boolean existsDefAnnotAttrib = this.existsAnnotAttrib(annotType, Constant.DEF_ANNOT_ATTRIB);
     int i = 0;
     Parameter[] parameters = method.getParameters();
     for (Parameter parameter : parameters) {
       if (parameter.isAnnotationPresent(annotType)) {
         Object defAnnotValue = null;
-        if (shouldReadAnnotAttrValue) {
+        if (existsDefAnnotAttrib) {
           defAnnotValue = getAnnotAttribValue(parameter, annotType, Constant.DEF_ANNOT_ATTRIB);
         }
         methodElements.add(new MethodElement(parameter, defAnnotValue, arguments[i]));
+        if (firstOnly) {
+          break;
+        }
       }
       i++;
     }
@@ -130,5 +128,15 @@ public class ReflectUtil {
       throw new UncheckedException("Cannot execute the method {0} in the class {1}", methodName, clazz.getSimpleName(),
           e);
     }
+  }
+
+  private boolean existsAnnotAttrib(Class<? extends Annotation> annotType, String annotAttribName) {
+    boolean exists = true;
+    try {
+      annotType.getMethod(annotAttribName);
+    } catch (NoSuchMethodException | SecurityException e) {
+      exists = false;
+    }
+    return exists;
   }
 }

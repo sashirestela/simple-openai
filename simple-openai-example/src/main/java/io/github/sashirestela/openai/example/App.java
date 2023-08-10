@@ -36,6 +36,7 @@ public class App {
         .map(model -> model.getId())
         .filter(modelId -> modelId.contains("gpt"))
         .forEach(System.out::println);
+
     System.out.println("\n===== A Model =====");
     Model model = modelService.callModel(modelResponse.getData().get(0).getId()).join();
     System.out.println(model);
@@ -48,25 +49,21 @@ public class App {
         .model("gpt-3.5-turbo-16k-0613")
         .messages(List.of(
             new ChatMessage(Role.SYSTEM, "Generate Java code with no comments."),
-            new ChatMessage(Role.USER, "// Create a function to get the second highest max of an array of integers. Do not use predefined libraries.")))
+            new ChatMessage(Role.USER,
+                "// Create a function to get the second highest max of an array of integers. Do not use predefined libraries.")))
         .temperature(0)
         .maxTokens(300)
         .build();
 
     System.out.println("\n===== Stream Chat Completion =====");
     Stream<ChatResponse> chatResponseStream = chatService.callChatCompletionStream(chatRequest).join();
-    System.out.println("---- Token by Token");
     String response = chatResponseStream
         .filter(chatResponse -> chatResponse.firstContent() != null)
         .map(chatResponse -> chatResponse.firstContent())
         .peek(System.out::print)
         .collect(Collectors.joining());
-    System.out.println();
-    System.out.println("----- Accumulated");
-    System.out.println(response);
 
     System.out.println("\n===== Normal Chat Completion =====");
-
     ChatResponse chatResponse = chatService.callChatCompletion(chatRequest).join();
     System.out.println(chatResponse.firstContent());
   }
@@ -109,8 +106,9 @@ public class App {
         .functionCall("auto")
         .build();
 
+    System.out.println("\n===== Chat Completion with Call Function =====");
     ChatResponse chatResponse = chatService.callChatCompletion(chatRequest).join();
-    
+
     ChatMessage chatMessage = chatResponse.firstMessage();
     Object result = functionExecutor.execute(chatMessage.getFunctionCall());
     System.out.println(result);
@@ -118,10 +116,10 @@ public class App {
 
   public static void main(String[] args) {
     App app = new App();
-    //app.runModelService();
+    app.runModelService();
     app.runChatService();
-    //app.runChatServiceWithFunctions();
-    //System.exit(0);
+    app.runChatServiceWithFunctions();
+    System.exit(0);
   }
 
   public static class Weather {
