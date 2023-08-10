@@ -8,12 +8,14 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.http.ResponseType;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;
@@ -115,7 +117,7 @@ public class ReflectUtilTest {
   @Test
   void shouldReturnTheMethodClassWhenItIsNotGeneric() {
     Method method = getMethod(TestInterface.class, "testMethod");
-    Class<?> actualClass = ReflectUtil.get().getBaseClassOf(method);
+    Class<?> actualClass = ReflectUtil.get().getBaseClass(method);
     Class<?> expectedClass = String.class;
     assertEquals(expectedClass, actualClass);
   }
@@ -123,7 +125,7 @@ public class ReflectUtilTest {
   @Test
   void shouldReturnTheInternalMethodClassWhenItIsGenericAtFirstLevel() {
     Method method = getMethod(TestInterface.class, "streamMethod");
-    Class<?> actualClass = ReflectUtil.get().getBaseClassOf(method);
+    Class<?> actualClass = ReflectUtil.get().getBaseClass(method);
     Class<?> expectedClass = Integer.class;
     assertEquals(expectedClass, actualClass);
   }
@@ -131,9 +133,21 @@ public class ReflectUtilTest {
   @Test
   void shouldReturnTheInternalMethodClassWhenItIsGenericAtSecondLevel() {
     Method method = getMethod(TestInterface.class, "futureMethod");
-    Class<?> actualClass = ReflectUtil.get().getBaseClassOf(method);
+    Class<?> actualClass = ReflectUtil.get().getBaseClass(method);
     Class<?> expectedClass = Double.class;
     assertEquals(expectedClass, actualClass);
+  }
+
+  @Test
+  void shouldReturnTheRightResponseTypeWhenAMethodIsRequested() {
+    Object[][] testData = { { "methodObject", ResponseType.OBJECT }, { "methodList", ResponseType.LIST },
+        { "methodStream", ResponseType.STREAM }, { "methodUnknown", ResponseType.UNKNOWN } };
+    for (Object[] data : testData) {
+      Method method = this.getMethod(TestInterface.class, (String) data[0]);
+      ResponseType actualResponseType = ReflectUtil.get().getResponseType(method);
+      ResponseType expectedResponseType = (ResponseType) data[1];
+      assertEquals(expectedResponseType, actualResponseType);
+    }
   }
 
   @Test
@@ -175,6 +189,13 @@ public class ReflectUtilTest {
 
     CompletableFuture<Stream<Double>> futureMethod();
 
+    CompletableFuture<TestClass> methodObject();
+
+    CompletableFuture<List<TestClass>> methodList();
+
+    CompletableFuture<Stream<TestClass>> methodStream();
+
+    CompletableFuture<Set<TestClass>> methodUnknown();
   }
 
   static class TestClass {

@@ -16,7 +16,6 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.model.Model;
-import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.service.ChatService;
 import io.github.sashirestela.openai.service.ModelService;
 
@@ -31,14 +30,14 @@ public class App {
     ModelService modelService = openAIApi.createModelService();
 
     System.out.println("\n===== List of Models =====");
-    ModelResponse modelResponse = modelService.callModels().join();
-    modelResponse.getData().stream()
+    List<Model> models = modelService.callModels().join();
+    models.stream()
         .map(model -> model.getId())
         .filter(modelId -> modelId.contains("gpt"))
         .forEach(System.out::println);
 
     System.out.println("\n===== A Model =====");
-    Model model = modelService.callModel(modelResponse.getData().get(0).getId()).join();
+    Model model = modelService.callModel(models.get(0).getId()).join();
     System.out.println(model);
   }
 

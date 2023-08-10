@@ -64,6 +64,33 @@ public class JsonUtilTest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
+  void shouldConvertJsonToParametricObjectWhenJsonHasNoIssues() {
+    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10},{\"first\":\"test2\",\"second\":20}]}";
+    TestGeneric<TestClass> actualObject = JsonUtil.get().jsonToParametricObject(json, TestGeneric.class,
+        TestClass.class);
+    List<TestClass> actualList = actualObject.getData();
+    List<TestClass> expectedList = Arrays.asList(
+        new TestClass("test1", 10),
+        new TestClass("test2", 20));
+    TestGeneric<TestClass> expectedObject = new TestGeneric<>("abc", expectedList);
+
+    assertEquals(expectedObject.getId(), actualObject.getId());
+    assertEquals(expectedList.size(), actualList.size());
+    assertEquals(expectedList.get(0).getFirst(), actualList.get(0).getFirst());
+    assertEquals(expectedList.get(0).getSecond(), actualList.get(0).getSecond());
+    assertEquals(expectedList.get(1).getFirst(), actualList.get(1).getFirst());
+    assertEquals(expectedList.get(1).getSecond(), actualList.get(1).getSecond());
+  }
+
+  @Test
+  void shouldThrowExceptionWhenConvertingJsonToParametricObjectWithIssues() {
+    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10},{\"firstish\":\"test2\",\"secondish\":20}]}";
+    assertThrows(UncheckedException.class,
+        () -> JsonUtil.get().jsonToParametricObject(json, TestGeneric.class, TestClass.class));
+  }
+
+  @Test
   void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
     String actualJsonSchema = JsonUtil.get().classToJsonSchema(TestClass.class).toString();
     String expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"},\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
@@ -97,6 +124,28 @@ public class JsonUtilTest {
     public Integer getSecond() {
       return second;
     }
+  }
+
+  static class TestGeneric<T> {
+    private String id;
+    private List<T> data;
+
+    public TestGeneric() {
+    }
+
+    public TestGeneric(String id, List<T> data) {
+      this.id = id;
+      this.data = data;
+    }
+
+    public String getId() {
+      return id;
+    }
+
+    public List<T> getData() {
+      return data;
+    }
+
   }
 
   static class FailClass {

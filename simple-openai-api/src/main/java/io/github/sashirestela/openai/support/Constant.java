@@ -15,6 +15,7 @@ public class Constant {
   public final static String DEF_ANNOT_ATTRIB = "value";
 
   public final static String REGEX_GENERIC_CLASS = "<(.*)>";
+  public final static String REGEX_MIDDLE_CLASS = "<(.*)<";
   public final static String REGEX_PATH_PARAM_URL = "\\{(.*?)\\}";
 
 }

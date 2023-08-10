@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Stream;
@@ -29,7 +30,6 @@ import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.Path;
-import io.github.sashirestela.openai.http.annotation.Streaming;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,13 +77,30 @@ public class HttpHandlerTest {
 
   @Test
   @SuppressWarnings("unchecked")
+  void shouldReturnAListWhenEverythingIsFine() throws IOException, InterruptedException {
+    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
+        .thenReturn(CompletableFuture.completedFuture(httpResponse));
+    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    when(httpResponse.body()).thenReturn("{\"object\":\"list\",\"data\":[{\"id\":100,\"description\":\"Description\",\"active\":true}]}");
+
+    List<Demo> actualListDemo = service.getDemos().join();
+    Demo actualDemo = actualListDemo.get(0);
+    Demo expectedDemo = new Demo(100, "Description", true);
+
+    assertEquals(expectedDemo.getId(), actualDemo.getId());
+    assertEquals(expectedDemo.getDescription(), actualDemo.getDescription());
+    assertEquals(expectedDemo.isActive(), actualDemo.isActive());
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   void shouldReturnAStreamWhenEverythingIsFine() throws IOException, InterruptedException {
     when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
         .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
     when(httpResponseStream.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
     when(httpResponseStream.body()).thenReturn(Stream.of("data: {\"id\":100,\"content\":\"Description\",\"active\":true}"));
 
-    Stream<Demo> actualStreamDemo = service.getDemos(new RequestDemo("Descr", true)).join();
+    Stream<Demo> actualStreamDemo = service.getDemoStream(new RequestDemo("Descr", true)).join();
     Demo actualDemo = actualStreamDemo.findFirst().get();
     Demo expectedDemo = new Demo(100, "Description", true);
 
@@ -107,14 +124,17 @@ public class HttpHandlerTest {
   }
 
   static interface TestService {
+
     String getTestDataNotAnnotated();
 
     @GET("/demos/{demoId}")
     CompletableFuture<Demo> getDemo(@Path("demoId") int demoId);
 
-    @Streaming
+    @GET("/demos")
+    CompletableFuture<List<Demo>> getDemos();
+
     @POST("/demos")
-    CompletableFuture<Stream<Demo>> getDemos(@Body RequestDemo request);
+    CompletableFuture<Stream<Demo>> getDemoStream(@Body RequestDemo request);
   }
 
   static class Demo {

@@ -9,8 +9,10 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.http.ResponseType;
 
 public class ReflectUtil {
   private static ReflectUtil reflection = null;
@@ -101,7 +103,7 @@ public class ReflectUtil {
     return methodElements;
   }
 
-  public Class<?> getBaseClassOf(Method method) {
+  public Class<?> getBaseClass(Method method) {
     String className = method.getGenericReturnType().getTypeName();
     className = CommonUtil.get().findInnerGroup(className, Constant.REGEX_GENERIC_CLASS);
     Class<?> methodReturnClass = null;
@@ -112,6 +114,19 @@ public class ReflectUtil {
           method.getName(), e);
     }
     return methodReturnClass;
+  }
+
+  public ResponseType getResponseType(Method method) {
+    String className = method.getGenericReturnType().getTypeName();
+    className = Optional.ofNullable(CommonUtil.get().findFirstMatch(className, Constant.REGEX_MIDDLE_CLASS)).orElse("");
+    ResponseType responseType = ResponseType.UNKNOWN;
+    for (ResponseType respType : ResponseType.values()) {
+      if (respType.getClassName().equals(className)) {
+        responseType = respType;
+        break;
+      }
+    }
+    return responseType;
   }
 
   public void executeSetMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes, Object object, Object value) {

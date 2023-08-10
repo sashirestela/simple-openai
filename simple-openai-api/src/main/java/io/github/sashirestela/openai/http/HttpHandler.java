@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import io.github.sashirestela.openai.domain.OpenAIError;
 import io.github.sashirestela.openai.domain.OpenAIEvent;
+import io.github.sashirestela.openai.domain.OpenAIGeneric;
 import io.github.sashirestela.openai.exception.SimpleUncheckedException;
 import io.github.sashirestela.openai.exception.UncheckedException;
 import io.github.sashirestela.openai.http.annotation.Body;
@@ -28,7 +29,6 @@ import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.PUT;
 import io.github.sashirestela.openai.http.annotation.Path;
-import io.github.sashirestela.openai.http.annotation.Streaming;
 import io.github.sashirestela.openai.support.CommonUtil;
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.JsonUtil;
@@ -55,10 +55,11 @@ public class HttpHandler implements InvocationHandler {
       Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
       String url = this.calculateUrl(method, arguments, httpMethod);
       MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class);
-      boolean isStreaming = method.isAnnotationPresent(Streaming.class);
+      ResponseType responseType = ReflectUtil.get().getResponseType(method);
+      boolean isStreaming = (responseType == ResponseType.STREAM);
       this.setStreamInBodyIfApplicable(method, elementBody, isStreaming);
       HttpRequest.BodyPublisher bodyPublisher = this.calculateBodyPublisher(method, elementBody);
-      Class<?> responseClass = ReflectUtil.get().getBaseClassOf(method);
+      Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
       builder = builder.uri(URI.create(urlBase + url));
@@ -68,10 +69,19 @@ public class HttpHandler implements InvocationHandler {
       HttpRequest httpRequest = builder.build();
 
       CompletableFuture<?> responseObject = null;
-      if (isStreaming) {
-        responseObject = this.calculateResponseStream(httpRequest, responseClass);
-      } else {
-        responseObject = this.calculateResponse(httpRequest, responseClass);
+      switch (responseType) {
+        case OBJECT:
+          responseObject = this.calculateResponse(httpRequest, responseClass);
+          break;
+        case LIST:
+          responseObject = this.calculateResponseList(httpRequest, responseClass);
+          break;
+        case STREAM:
+          responseObject = this.calculateResponseStream(httpRequest, responseClass);
+          break;
+        default:
+          throw new SimpleUncheckedException("Unsupported return type for method {0} of the class {1}.",
+              method.getName(), method.getDeclaringClass().getSimpleName(), null);
       }
       return responseObject;
     } catch (Exception e) {
@@ -161,6 +171,30 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
+  private <T> CompletableFuture<T> calculateResponse(HttpRequest httpRequest, Class<T> responseClass) {
+    CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
+        BodyHandlers.ofString());
+    CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
+      throwExceptionIfErrorIsPresent(response, false);
+      T objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
+      return objResponse;
+    });
+    return objResponseFuture;
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> CompletableFuture<List<T>> calculateResponseList(HttpRequest httpRequest, Class<T> responseClass) {
+    CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
+        BodyHandlers.ofString());
+    CompletableFuture<List<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
+      throwExceptionIfErrorIsPresent(response, false);
+      OpenAIGeneric<T> objResponse = JsonUtil.get().jsonToParametricObject(response.body(), OpenAIGeneric.class,
+          responseClass);
+      return objResponse.getData();
+    });
+    return objResponseFuture;
+  }
+
   private <T> CompletableFuture<Stream<T>> calculateResponseStream(HttpRequest httpRequest, Class<T> responseClass) {
     CompletableFuture<HttpResponse<Stream<String>>> httpResponseFuture = httpClient.sendAsync(httpRequest,
         BodyHandlers.ofLines());
@@ -170,17 +204,6 @@ public class HttpHandler implements InvocationHandler {
           .map(rawData -> new OpenAIEvent(rawData))
           .filter(event -> event.isActualData())
           .map(event -> JsonUtil.get().jsonToObject(event.getActualData(), responseClass));
-      return objResponse;
-    });
-    return objResponseFuture;
-  }
-
-  private <T> CompletableFuture<T> calculateResponse(HttpRequest httpRequest, Class<T> responseClass) {
-    CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
-        BodyHandlers.ofString());
-    CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
-      throwExceptionIfErrorIsPresent(response, false);
-      T objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
       return objResponse;
     });
     return objResponseFuture;

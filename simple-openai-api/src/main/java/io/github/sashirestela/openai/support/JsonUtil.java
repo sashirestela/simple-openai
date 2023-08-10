@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -55,6 +56,15 @@ public class JsonUtil {
       return objectMapper.readValue(json, listType);
     } catch (JsonProcessingException e) {
       throw new UncheckedException("Cannot convert the Json {0} to List of {1}.", json, clazz.getName(), e);
+    }
+  }
+
+  public <T, U> T jsonToParametricObject(String json, Class<T> clazzT, Class<U> clazzU) {
+    try {
+      JavaType javaType = objectMapper.getTypeFactory().constructParametricType(clazzT, clazzU);
+      return objectMapper.readValue(json, javaType);
+    } catch (JsonProcessingException e) {
+      throw new UncheckedException("Cannot convert the Json {0} to class of {1}.", json, clazzT.getName(), e);
     }
   }
 
