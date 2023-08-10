@@ -48,7 +48,7 @@ public class OpenAIEventTest {
 
   @Test
   void shouldReturnTheActualDataWhenRawDataMeetsConditions() {
-    OpenAIEvent event = new OpenAIEvent("data :   This is the actual data.  ");
+    OpenAIEvent event = new OpenAIEvent("data:   This is the actual data.  ");
     String actualData = event.getActualData();
     String expectedData = "This is the actual data.";
     assertEquals(expectedData, actualData);
