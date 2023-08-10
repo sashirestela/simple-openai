@@ -7,9 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.github.sashirestela.openai.exception.UncheckedException;
 
@@ -67,25 +66,46 @@ public class ReflectUtil {
     return value;
   }
 
-  public Pair<Parameter, Object> getPairAnnotatedWith(Method method, Object[] arguments,
-      Class<? extends Annotation> annotType) {
-    Pair<Parameter, Object> pairParameterArgument = null;
+  public MethodElement getMethodElementAnnotatedWith(Method method, Object[] arguments,
+      Class<? extends Annotation> annotType, boolean shouldReadAnnotAttrValue) {
+    MethodElement methodElement = null;
     int i = 0;
     Parameter[] parameters = method.getParameters();
     for (Parameter parameter : parameters) {
       if (parameter.isAnnotationPresent(annotType)) {
-        pairParameterArgument = new Pair<>(parameter, arguments[i]);
+        Object defAnnotValue = null;
+        if (shouldReadAnnotAttrValue) {
+          defAnnotValue = getAnnotAttribValue(parameter, annotType, Constant.DEF_ANNOT_ATTRIB);
+        }
+        methodElement = new MethodElement(parameter, defAnnotValue, arguments[i]);
         break;
       }
       i++;
     }
-    return pairParameterArgument;
+    return methodElement;
+  }
+
+  public List<MethodElement> getMethodElementsAnnotatedWith(Method method, Object[] arguments,
+      Class<? extends Annotation> annotType, boolean shouldReadAnnotAttrValue) {
+    List<MethodElement> methodElements = new ArrayList<>();
+    int i = 0;
+    Parameter[] parameters = method.getParameters();
+    for (Parameter parameter : parameters) {
+      if (parameter.isAnnotationPresent(annotType)) {
+        Object defAnnotValue = null;
+        if (shouldReadAnnotAttrValue) {
+          defAnnotValue = getAnnotAttribValue(parameter, annotType, Constant.DEF_ANNOT_ATTRIB);
+        }
+        methodElements.add(new MethodElement(parameter, defAnnotValue, arguments[i]));
+      }
+      i++;
+    }
+    return methodElements;
   }
 
   public Class<?> getBaseClassOf(Method method) {
     String className = method.getGenericReturnType().getTypeName();
-    Matcher matcher = Pattern.compile("<(.*?)>").matcher(className);
-    className = matcher.find() ? matcher.group(1) : className;
+    className = CommonUtil.get().findInnerGroup(className, Constant.REGEX_GENERIC_CLASS);
     Class<?> methodReturnClass = null;
     try {
       methodReturnClass = Class.forName(className);

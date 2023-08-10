@@ -1,6 +1,5 @@
 package io.github.sashirestela.openai.http;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -14,9 +13,12 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.github.sashirestela.openai.domain.OpenAIError;
+import io.github.sashirestela.openai.domain.OpenAIEvent;
 import io.github.sashirestela.openai.exception.SimpleUncheckedException;
 import io.github.sashirestela.openai.exception.UncheckedException;
 import io.github.sashirestela.openai.http.annotation.Body;
@@ -26,9 +28,10 @@ import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.PUT;
 import io.github.sashirestela.openai.http.annotation.Path;
 import io.github.sashirestela.openai.http.annotation.Streaming;
+import io.github.sashirestela.openai.support.CommonUtil;
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.JsonUtil;
-import io.github.sashirestela.openai.support.Pair;
+import io.github.sashirestela.openai.support.MethodElement;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
 public class HttpHandler implements InvocationHandler {
@@ -48,11 +51,11 @@ public class HttpHandler implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
     try {
-      Class<? extends Annotation> httpMethod = calculateHttpMethod(method);
-      String url = calculateUrl(method, arguments, httpMethod);
-      Pair<Parameter, Object> pairBody = ReflectUtil.get().getPairAnnotatedWith(method, arguments, Body.class);
-      setStreamInBodyIfApplicable(method, pairBody);
-      HttpRequest.BodyPublisher bodyPublisher = calculateBodyPublisher(method, pairBody);
+      Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
+      String url = this.calculateUrl(method, arguments, httpMethod);
+      MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class, false);
+      this.setStreamInBodyIfApplicable(method, elementBody);
+      HttpRequest.BodyPublisher bodyPublisher = this.calculateBodyPublisher(method, elementBody);
       Class<?> responseClass = ReflectUtil.get().getBaseClassOf(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
@@ -63,14 +66,14 @@ public class HttpHandler implements InvocationHandler {
       builder = setHttpMethodForRequet(builder, httpMethod, bodyPublisher);
       HttpRequest httpRequest = builder.build();
 
-      Object responseObject = null;
+      CompletableFuture<?> responseObject = null;
       if (method.isAnnotationPresent(Streaming.class)) {
-        responseObject = calculateResponseStream(httpRequest, responseClass);
+        responseObject = this.calculateResponseStream(httpRequest, responseClass);
       } else {
-        responseObject = calculateResponse(httpRequest, responseClass);
+        responseObject = this.calculateResponse(httpRequest, responseClass);
       }
       return responseObject;
-    } catch (RuntimeException e) {
+    } catch (Exception e) {
       throw new SimpleUncheckedException("Error trying to execute the method {0} of the class {1}.", method.getName(),
           method.getDeclaringClass().getSimpleName(), e);
     }
@@ -86,44 +89,58 @@ public class HttpHandler implements InvocationHandler {
 
   private String calculateUrl(Method method, Object[] arguments, Class<? extends Annotation> httpMethod) {
     String url = (String) ReflectUtil.get().getAnnotAttribValue(method, httpMethod, Constant.DEF_ANNOT_ATTRIB);
-    if (arguments == null || arguments.length == 0) {
+    boolean urlContainsPathParam = CommonUtil.get().matches(url, Constant.REGEX_PATH_PARAM_URL);
+
+    if (!urlContainsPathParam) {
       return url;
+    } else if (CommonUtil.get().isNullOrEmpty(arguments)) {
+      throw new UncheckedException("Path param in the url requires at least an argument in the method {0}.",
+          method.getName(), null);
     }
-    Pair<Parameter, Object> pairPath = ReflectUtil.get().getPairAnnotatedWith(method, arguments, Path.class);
-    if (pairPath == null) {
-      return url;
+
+    List<CommonUtil.Match> listPathParams = CommonUtil.get().findAllMatches(url, Constant.REGEX_PATH_PARAM_URL);
+    List<MethodElement> listMethodElement = ReflectUtil.get().getMethodElementsAnnotatedWith(method, arguments,
+        Path.class, true);
+    if (CommonUtil.get().isNullOrEmpty(listMethodElement)) {
+      throw new UncheckedException("Path param in the url requires at least an annotated argument in the method {0}.",
+          method.getName(), null);
     }
-    Parameter parameter = pairPath.getFirst();
-    Object argument = pairPath.getSecond();
-    String paramName = (String) ReflectUtil.get().getAnnotAttribValue(parameter, Path.class, Constant.DEF_ANNOT_ATTRIB);
-    String argumentValue = argument.toString();
-    String pattern = "{" + paramName + "}";
-    return url.replace(pattern, argumentValue);
+
+    for (CommonUtil.Match pathParam : listPathParams) {
+      MethodElement methodElement = listMethodElement.stream()
+          .filter(methElem -> methElem.getDefAnnotValue().equals(pathParam.getTextToSearch()))
+          .findFirst()
+          .orElseThrow(() -> new UncheckedException(
+              "Path param {0} in the url cannot find an annotated argument in the method {1}.",
+              pathParam.getTextToSearch(), method.getName(), null));
+      url = url.replace(pathParam.getTextToReplace(), methodElement.getArgumentValue().toString());
+    }
+    return url;
   }
 
-  private void setStreamInBodyIfApplicable(Method method, Pair<Parameter, Object> pairBody) {
-    if (pairBody == null) {
+  private void setStreamInBodyIfApplicable(Method method, MethodElement elementBody) {
+    if (elementBody == null) {
       return;
     }
     final String SET_STREAM_METHOD = "setStream";
-    Parameter parameter = pairBody.getFirst();
-    Object object = pairBody.getSecond();
+    Parameter parameter = elementBody.getParameter();
+    Object object = elementBody.getArgumentValue();
     boolean streamValue = method.isAnnotationPresent(Streaming.class);
     try {
       ReflectUtil.get().executeSetMethod(parameter.getType(), SET_STREAM_METHOD, new Class<?>[] { boolean.class },
           object, streamValue);
-      pairBody.setSecond(object);
+      elementBody.setArgumentValue(object);
     } catch (UncheckedException e) {
       // 'setStream' method does not exist
       return;
     }
   }
 
-  private HttpRequest.BodyPublisher calculateBodyPublisher(Method method, Pair<Parameter, Object> pairBody) {
-    if (pairBody == null) {
+  private HttpRequest.BodyPublisher calculateBodyPublisher(Method method, MethodElement elementBody) {
+    if (elementBody == null) {
       return null;
     }
-    Object object = pairBody.getSecond();
+    Object object = elementBody.getArgumentValue();
     String requestJson = JsonUtil.get().objectToJson(object);
     return BodyPublishers.ofString(requestJson);
   }
@@ -145,39 +162,40 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
-  private <T> Stream<T> calculateResponseStream(HttpRequest httpRequest, Class<T> responseClass) {
-    HttpResponse<Stream<String>> httpResponse;
-    try {
-      httpResponse = httpClient.send(httpRequest, BodyHandlers.ofLines());
-    } catch (IOException | InterruptedException e) {
-      throw new UncheckedException("Error trying to communicate to {0}.", httpRequest.uri(), e);
-    }
-    throwExceptionIfErrorIsPresent(httpResponse);
-    final String CONSUMABLE_TEXT = "\"content\":";
-    final int CONSUMABLE_INDEX = 6;
-    Stream<T> responseObject = httpResponse.body()
-        .filter(data -> data.contains(CONSUMABLE_TEXT))
-        .map(data -> data.substring(CONSUMABLE_INDEX))
-        .map(data -> JsonUtil.get().jsonToObject(data, responseClass));
-    return responseObject;
+  private <T> CompletableFuture<Stream<T>> calculateResponseStream(HttpRequest httpRequest, Class<T> responseClass) {
+    CompletableFuture<HttpResponse<Stream<String>>> httpResponseFuture = httpClient.sendAsync(httpRequest,
+        BodyHandlers.ofLines());
+    CompletableFuture<Stream<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
+      throwExceptionIfErrorIsPresent(response, true);
+      Stream<T> objResponse = response.body()
+          .map(rawData -> new OpenAIEvent(rawData))
+          .filter(event -> event.isActualData())
+          .map(event -> JsonUtil.get().jsonToObject(event.getActualData(), responseClass));
+      return objResponse;
+    });
+    return objResponseFuture;
   }
 
-  private <T> T calculateResponse(HttpRequest httpRequest, Class<T> responseClass) {
-    HttpResponse<String> httpResponse;
-    try {
-      httpResponse = httpClient.send(httpRequest, BodyHandlers.ofString());
-    } catch (IOException | InterruptedException e) {
-      throw new UncheckedException("Error trying to communicate to {0}.", httpRequest.uri(), e);
-    }
-    throwExceptionIfErrorIsPresent(httpResponse);
-    String data = httpResponse.body();
-    T responseObject = JsonUtil.get().jsonToObject(data, responseClass);
-    return responseObject;
+  private <T> CompletableFuture<T> calculateResponse(HttpRequest httpRequest, Class<T> responseClass) {
+    CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
+        BodyHandlers.ofString());
+    CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
+      throwExceptionIfErrorIsPresent(response, false);
+      T objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
+      return objResponse;
+    });
+    return objResponseFuture;
   }
 
-  private void throwExceptionIfErrorIsPresent(HttpResponse<?> httpResponse) {
-    if (httpResponse.statusCode() != HttpURLConnection.HTTP_OK) {
-      String data = (String) httpResponse.body();
+  @SuppressWarnings("unchecked")
+  private void throwExceptionIfErrorIsPresent(HttpResponse<?> response, boolean isStream) {
+    if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+      String data = null;
+      if (isStream) {
+        data = ((Stream<String>) response.body()).collect(Collectors.joining());
+      } else {
+        data = (String) response.body();
+      }
       OpenAIError error = JsonUtil.get().jsonToObject(data, OpenAIError.class);
       throw new UncheckedException("Error from server: {0}.", error.getError(), null);
     }

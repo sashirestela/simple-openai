@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.service;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
@@ -11,10 +12,10 @@ import io.github.sashirestela.openai.http.annotation.Streaming;
 public interface ChatService {
 
   @POST("/v1/chat/completions")
-  ChatResponse callChatCompletion(@Body ChatRequest chatRequest);
+  CompletableFuture<ChatResponse> callChatCompletion(@Body ChatRequest chatRequest);
 
   @Streaming
   @POST("/v1/chat/completions")
-  Stream<ChatResponse> callChatCompletionStream(@Body ChatRequest chatRequest);
+  CompletableFuture<Stream<ChatResponse>> callChatCompletionStream(@Body ChatRequest chatRequest);
 
 }

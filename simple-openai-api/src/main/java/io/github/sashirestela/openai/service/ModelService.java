@@ -1,5 +1,7 @@
 package io.github.sashirestela.openai.service;
 
+import java.util.concurrent.CompletableFuture;
+
 import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -8,9 +10,9 @@ import io.github.sashirestela.openai.http.annotation.Path;
 public interface ModelService {
 
   @GET("/v1/models")
-  ModelResponse callModels();
+  CompletableFuture<ModelResponse> callModels();
 
   @GET("/v1/models/{modelId}")
-  Model callModel(@Path("modelId") String modelId);
+  CompletableFuture<Model> callModel(@Path("modelId") String modelId);
 
 }

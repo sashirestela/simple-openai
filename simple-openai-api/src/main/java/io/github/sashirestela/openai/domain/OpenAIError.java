@@ -2,29 +2,29 @@ package io.github.sashirestela.openai.domain;
 
 public class OpenAIError {
   
-  private OpenAIErrorDetail error;
+  private ErrorDetail error;
 
   public OpenAIError() {
   }
 
-  public OpenAIError(OpenAIErrorDetail error) {
+  public OpenAIError(ErrorDetail error) {
     this.error = error;
   }
 
-  public OpenAIErrorDetail getError() {
+  public ErrorDetail getError() {
     return error;
   }
 
-  public static class OpenAIErrorDetail {
+  public static class ErrorDetail {
     private String message;
     private String type;
     private String param;
     private String code;
 
-    public OpenAIErrorDetail() {
+    public ErrorDetail() {
     }
 
-    public OpenAIErrorDetail(String message, String type, String param, String code) {
+    public ErrorDetail(String message, String type, String param, String code) {
       this.message = message;
       this.type = type;
       this.param = param;
@@ -49,7 +49,7 @@ public class OpenAIError {
 
     @Override
     public String toString() {
-      return "OpenAIErrorDetail [message=" + message + ", type=" + type + ", param=" + param + ", code=" + code + "]";
+      return "ErrorDetail [message=" + message + ", type=" + type + ", param=" + param + ", code=" + code + "]";
     }
   }
 
