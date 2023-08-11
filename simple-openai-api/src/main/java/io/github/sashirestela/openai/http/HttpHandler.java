@@ -70,13 +70,13 @@ public class HttpHandler implements InvocationHandler {
       CompletableFuture<?> responseObject = null;
       switch (responseType) {
         case OBJECT:
-          responseObject = this.calculateResponse(httpRequest, responseClass);
+          responseObject = this.callToReceiveFutureObject(httpRequest, responseClass);
           break;
         case LIST:
-          responseObject = this.calculateResponseList(httpRequest, responseClass);
+          responseObject = this.callToReceiveFutureList(httpRequest, responseClass);
           break;
         case STREAM:
-          responseObject = this.calculateResponseStream(httpRequest, responseClass);
+          responseObject = this.callToReceiveFutureStream(httpRequest, responseClass);
           break;
         default:
           throw new SimpleUncheckedException("Unsupported return type for method {0} of the class {1}.",
@@ -170,7 +170,7 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
-  private <T> CompletableFuture<T> calculateResponse(HttpRequest httpRequest, Class<T> responseClass) {
+  private <T> CompletableFuture<T> callToReceiveFutureObject(HttpRequest httpRequest, Class<T> responseClass) {
     CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
         BodyHandlers.ofString());
     CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
@@ -182,7 +182,7 @@ public class HttpHandler implements InvocationHandler {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> CompletableFuture<List<T>> calculateResponseList(HttpRequest httpRequest, Class<T> responseClass) {
+  private <T> CompletableFuture<List<T>> callToReceiveFutureList(HttpRequest httpRequest, Class<T> responseClass) {
     CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
         BodyHandlers.ofString());
     CompletableFuture<List<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
@@ -194,7 +194,7 @@ public class HttpHandler implements InvocationHandler {
     return objResponseFuture;
   }
 
-  private <T> CompletableFuture<Stream<T>> calculateResponseStream(HttpRequest httpRequest, Class<T> responseClass) {
+  private <T> CompletableFuture<Stream<T>> callToReceiveFutureStream(HttpRequest httpRequest, Class<T> responseClass) {
     CompletableFuture<HttpResponse<Stream<String>>> httpResponseFuture = httpClient.sendAsync(httpRequest,
         BodyHandlers.ofLines());
     CompletableFuture<Stream<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
