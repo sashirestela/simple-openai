@@ -41,6 +41,7 @@ public class App {
     System.out.println(model);
   }
 
+  @SuppressWarnings("unused")
   public void runChatService() {
     ChatService chatService = openAIApi.createChatService();
 

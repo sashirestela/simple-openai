@@ -3,6 +3,15 @@ package io.github.sashirestela.openai.domain.chat;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class Choice {
 
   private int index;
@@ -13,29 +22,4 @@ public class Choice {
   @JsonProperty("finish_reason")
   private String finishReason;
 
-  public Choice() {
-  }
-
-  public Choice(int index, ChatMessage message, String finishReason) {
-    this.index = index;
-    this.message = message;
-    this.finishReason = finishReason;
-  }
-
-  public int getIndex() {
-    return index;
-  }
-
-  public ChatMessage getMessage() {
-    return message;
-  }
-
-  public String getFinishReason() {
-    return finishReason;
-  }
-
-  @Override
-  public String toString() {
-    return "Choice [index=" + index + ", message=" + message + ", finishReason=" + finishReason + "]";
-  }
 }

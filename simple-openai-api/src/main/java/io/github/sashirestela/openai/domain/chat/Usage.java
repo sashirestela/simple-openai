@@ -2,6 +2,15 @@ package io.github.sashirestela.openai.domain.chat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class Usage {
 
   @JsonProperty("prompt_tokens")
@@ -13,30 +22,4 @@ public class Usage {
   @JsonProperty("total_tokens")
   private int totalTokens;
 
-  public Usage() {
-  }
-
-  public Usage(int promptTokens, int completionTokens, int totalTokens) {
-    this.promptTokens = promptTokens;
-    this.completionTokens = completionTokens;
-    this.totalTokens = totalTokens;
-  }
-
-  public int getPromptTokens() {
-    return promptTokens;
-  }
-
-  public int getCompletionTokens() {
-    return completionTokens;
-  }
-
-  public int getTotalTokens() {
-    return totalTokens;
-  }
-
-  @Override
-  public String toString() {
-    return "Usage [promptTokens=" + promptTokens + ", completionTokens=" + completionTokens + ", totalTokens="
-        + totalTokens + "]";
-  }
 }

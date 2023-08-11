@@ -21,6 +21,8 @@ import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.PUT;
 import io.github.sashirestela.openai.http.annotation.Path;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ReflectUtilTest {
 
@@ -198,15 +200,12 @@ public class ReflectUtilTest {
     CompletableFuture<Set<TestClass>> methodUnknown();
   }
 
+  @Getter
+  @Setter
   static class TestClass {
+
     private Integer property;
 
-    public Integer getProperty() {
-      return property;
-    }
-
-    public void setProperty(Integer property) {
-      this.property = property;
-    }
   }
+
 }

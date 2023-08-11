@@ -4,6 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@Getter
+@ToString
 public class ChatMessage {
 
   private Role role;
@@ -16,9 +23,6 @@ public class ChatMessage {
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("function_call")
   private ChatFunctionCall functionCall;
-
-  public ChatMessage() {
-  }
 
   public ChatMessage(Role role, String content) {
     this.role = role;
@@ -41,22 +45,6 @@ public class ChatMessage {
     validate();
   }
 
-  public Role getRole() {
-    return role;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public ChatFunctionCall getFunctionCall() {
-    return functionCall;
-  }
-
   private void validate() {
     if (role == null) {
       throw new RuntimeException("The role is required for ChatMessage.");
@@ -69,9 +57,4 @@ public class ChatMessage {
     }
   }
 
-  @Override
-  public String toString() {
-    return "ChatMessage [role=" + role + ", content=" + content + ", name=" + name + ", functionCall=" + functionCall
-        + "]";
-  }
 }

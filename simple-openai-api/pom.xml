@@ -12,6 +12,7 @@
   <artifactId>simple-openai-api</artifactId>
 
   <properties>
+    <lombok.version>1.18.28</lombok.version>
     <jackson.version>2.14.2</jackson.version>
     <json.schema.version>4.31.1</json.schema.version>
     <junit.version>5.10.0</junit.version>
@@ -19,6 +20,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>

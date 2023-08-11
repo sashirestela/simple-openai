@@ -2,6 +2,15 @@ package io.github.sashirestela.openai.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class ModelPermission {
 
   private String id;
@@ -35,79 +44,4 @@ public class ModelPermission {
   @JsonProperty("is_blocking")
   private boolean isBlocking;
 
-  public ModelPermission() {
-  }
-
-  public ModelPermission(String id, String object, long created, boolean allowCreateEngine, boolean allowSampling,
-      boolean allowLogProbs, boolean allowSearchIndices, boolean allowView, boolean allowFineTuning,
-      String organization, String group, boolean isBlocking) {
-    this.id = id;
-    this.object = object;
-    this.created = created;
-    this.allowCreateEngine = allowCreateEngine;
-    this.allowSampling = allowSampling;
-    this.allowLogProbs = allowLogProbs;
-    this.allowSearchIndices = allowSearchIndices;
-    this.allowView = allowView;
-    this.allowFineTuning = allowFineTuning;
-    this.organization = organization;
-    this.group = group;
-    this.isBlocking = isBlocking;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getObject() {
-    return object;
-  }
-
-  public long getCreated() {
-    return created;
-  }
-
-  public boolean isAllowCreateEngine() {
-    return allowCreateEngine;
-  }
-
-  public boolean isAllowSampling() {
-    return allowSampling;
-  }
-
-  public boolean isAllowLogProbs() {
-    return allowLogProbs;
-  }
-
-  public boolean isAllowSearchIndices() {
-    return allowSearchIndices;
-  }
-
-  public boolean isAllowView() {
-    return allowView;
-  }
-
-  public boolean isAllowFineTuning() {
-    return allowFineTuning;
-  }
-
-  public String getOrganization() {
-    return organization;
-  }
-
-  public String getGroup() {
-    return group;
-  }
-
-  public boolean isBlocking() {
-    return isBlocking;
-  }
-
-  @Override
-  public String toString() {
-    return "ModelPermission [id=" + id + ", object=" + object + ", created=" + created + ", allowCreateEngine="
-        + allowCreateEngine + ", allowSampling=" + allowSampling + ", allowLogProbs=" + allowLogProbs
-        + ", allowSearchIndices=" + allowSearchIndices + ", allowView=" + allowView + ", allowFineTuning="
-        + allowFineTuning + ", organization=" + organization + ", group=" + group + ", isBlocking=" + isBlocking + "]";
-  }
 }

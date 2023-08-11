@@ -31,6 +31,9 @@ import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.Path;
 import io.github.sashirestela.openai.support.ReflectUtil;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @ExtendWith(MockitoExtension.class)
 public class HttpHandlerTest {
@@ -137,52 +140,28 @@ public class HttpHandlerTest {
     CompletableFuture<Stream<Demo>> getDemoStream(@Body RequestDemo request);
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
   static class Demo {
+
     private int id;
+
     @JsonAlias({ "content" })
     private String description;
+
     private boolean active;
-
-    public Demo() {
-    }
-
-    public Demo(int id, String description, boolean active) {
-      this.id = id;
-      this.description = description;
-      this.active = active;
-    }
-
-    public int getId() {
-      return id;
-    }
-
-    public String getDescription() {
-      return description;
-    }
-
-    public boolean isActive() {
-      return active;
-    }
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
   static class RequestDemo {
+
     private String prefix;
+
     private boolean active;
 
-    public RequestDemo() {
-    }
-
-    public RequestDemo(String prefix, boolean active) {
-      this.prefix = prefix;
-      this.active = active;
-    }
-
-    public String getPrefix() {
-      return prefix;
-    }
-
-    public boolean isActive() {
-      return active;
-    }
   }
+
 }

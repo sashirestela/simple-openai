@@ -2,6 +2,15 @@ package io.github.sashirestela.openai.domain.chat;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class ChatResponse {
 
   private String id;
@@ -16,42 +25,6 @@ public class ChatResponse {
 
   private Usage usage;
 
-  public ChatResponse() {
-  }
-
-  public ChatResponse(String id, String object, long created, String model, List<Choice> choices, Usage usage) {
-    this.id = id;
-    this.object = object;
-    this.created = created;
-    this.model = model;
-    this.choices = choices;
-    this.usage = usage;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getObject() {
-    return object;
-  }
-
-  public long getCreated() {
-    return created;
-  }
-
-  public String getModel() {
-    return model;
-  }
-
-  public List<Choice> getChoices() {
-    return choices;
-  }
-
-  public Usage getUsage() {
-    return usage;
-  }
-
   public ChatMessage firstMessage() {
     return getChoices().get(0).getMessage();
   }
@@ -60,9 +33,4 @@ public class ChatResponse {
     return firstMessage().getContent();
   }
 
-  @Override
-  public String toString() {
-    return "ChatResponse [id=" + id + ", object=" + object + ", created=" + created + ", model=" + model + ", choices="
-        + choices + ", usage=" + usage + "]";
-  }
 }

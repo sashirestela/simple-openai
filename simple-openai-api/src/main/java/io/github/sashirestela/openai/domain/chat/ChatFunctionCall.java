@@ -1,29 +1,18 @@
 package io.github.sashirestela.openai.domain.chat;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class ChatFunctionCall {
 
   private String name;
 
   private String arguments;
 
-  public ChatFunctionCall() {
-  }
-
-  public ChatFunctionCall(String name, String arguments) {
-    this.name = name;
-    this.arguments = arguments;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getArguments() {
-    return arguments;
-  }
-
-  @Override
-  public String toString() {
-    return "ChatFunctionCall [name=" + name + ", arguments=" + arguments + "]";
-  }
 }

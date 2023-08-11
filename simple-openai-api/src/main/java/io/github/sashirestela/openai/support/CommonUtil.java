@@ -5,6 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 public class CommonUtil {
   private static CommonUtil commonUtil = null;
 
@@ -51,44 +55,14 @@ public class CommonUtil {
     return result;
   }
 
+  @AllArgsConstructor
+  @Getter
+  @EqualsAndHashCode
   public static class Match {
+    
     private String textToReplace;
+    
     private String textToSearch;
-
-    public Match(String textToReplace, String textToSearch) {
-      this.textToReplace = textToReplace;
-      this.textToSearch = textToSearch;
-    }
-
-    public String getTextToReplace() {
-      return textToReplace;
-    }
-
-    public String getTextToSearch() {
-      return textToSearch;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
-      Match other = (Match) obj;
-      if (textToReplace == null) {
-        if (other.textToReplace != null)
-          return false;
-      } else if (!textToReplace.equals(other.textToReplace))
-        return false;
-      if (textToSearch == null) {
-        if (other.textToSearch != null)
-          return false;
-      } else if (!textToSearch.equals(other.textToSearch))
-        return false;
-      return true;
-    }
 
   }
 }

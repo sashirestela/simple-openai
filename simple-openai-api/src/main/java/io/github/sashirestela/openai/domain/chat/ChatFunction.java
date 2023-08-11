@@ -6,7 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.github.sashirestela.openai.domain.chat.serializer.ParametersSerializer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@ToString
 public class ChatFunction {
 
   private String name;
@@ -19,38 +27,11 @@ public class ChatFunction {
   @JsonIgnore
   Function<Object, Object> functionToExecute;
 
-  public ChatFunction() {
-  }
-
-  public ChatFunction(String name, String description, Class<?> parameters,
-      Function<Object, Object> functionToExecute) {
-    this.name = name;
-    this.description = description;
-    this.parameters = parameters;
-    this.functionToExecute = functionToExecute;
-  }
-
   private ChatFunction(Builder builder) {
     this.name = builder.name;
     this.description = builder.description;
     this.parameters = builder.parameters;
     this.functionToExecute = builder.functionToExecute;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public Class<?> getParameters() {
-    return parameters;
-  }
-
-  public Function<Object, Object> getFunctionToExecute() {
-    return functionToExecute;
   }
 
   public static Builder builder() {
@@ -102,9 +83,4 @@ public class ChatFunction {
   class Empty {
   }
 
-  @Override
-  public String toString() {
-    return "ChatFunction [name=" + name + ", description=" + description + ", parameters=" + parameters
-        + ", functionToExecute=" + functionToExecute + "]";
-  }
 }

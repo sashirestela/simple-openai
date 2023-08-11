@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.github.sashirestela.openai.exception.UncheckedException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class JsonUtilTest {
 
@@ -104,63 +107,41 @@ public class JsonUtilTest {
     assertEquals(expectedJsonSchema, actualJsonSchema);
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
   static class TestClass {
+
     @JsonProperty(required = true)
     public String first;
+
     public Integer second;
 
-    public TestClass() {
-    }
-
-    public TestClass(String first, Integer second) {
-      this.first = first;
-      this.second = second;
-    }
-
-    public String getFirst() {
-      return first;
-    }
-
-    public Integer getSecond() {
-      return second;
-    }
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
   static class TestGeneric<T> {
+
     private String id;
+
     private List<T> data;
 
-    public TestGeneric() {
-    }
-
-    public TestGeneric(String id, List<T> data) {
-      this.id = id;
-      this.data = data;
-    }
-
-    public String getId() {
-      return id;
-    }
-
-    public List<T> getData() {
-      return data;
-    }
-
   }
 
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @SuppressWarnings("unused")
   static class FailClass {
+
     private String first;
+
     private Integer second;
 
-    public FailClass() {
-    }
-
-    public FailClass(String first, Integer second) {
-      this.first = first;
-      this.second = second;
-    }
   }
 
   static class EmptyClass {
   }
+
 }
