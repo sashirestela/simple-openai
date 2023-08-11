@@ -8,7 +8,7 @@
 
   <modules>
     <module>simple-openai-api</module>
-    <module>simple-openai-example</module>
+    <module>simple-openai-demo</module>
   </modules>
   
   <properties>
@@ -36,7 +36,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>1.1.0</version>
+        <version>1.5.0</version>
         <configuration>
           <updatePomFile>true</updatePomFile>
           <flattenMode>resolveCiFriendliesOnly</flattenMode>

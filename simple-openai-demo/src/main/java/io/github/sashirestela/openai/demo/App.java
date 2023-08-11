@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.example;
+package io.github.sashirestela.openai.demo;
 
 import java.util.ArrayList;
 import java.util.List;
