@@ -72,21 +72,21 @@ public class App {
     ChatService chatService = openAIApi.createChatService();
 
     SimpleFunctionExecutor functionExecutor = new SimpleFunctionExecutor();
-    functionExecutor.addFunction(
+    functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("get_weather")
             .description("Get the current weather of a location")
             .functionToExecute(Weather.class,
                 weather -> weather.location + " - 29 " + weather.unit + " degrees")
             .build());
-    functionExecutor.addFunction(
+    functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("product")
             .description("Get the product of two numbers")
             .functionToExecute(Product.class,
                 p -> p.multiplicand * p.multiplier)
             .build());
-    functionExecutor.addFunction(
+    functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("run_alarm")
             .description("Run an alarm")

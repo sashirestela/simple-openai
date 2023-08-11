@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.support.CommonUtil;
 import io.github.sashirestela.openai.support.JsonUtil;
 
 public class SimpleFunctionExecutor {
@@ -16,32 +17,41 @@ public class SimpleFunctionExecutor {
   }
 
   public SimpleFunctionExecutor(List<ChatFunction> functions) {
-    setFunctions(functions);
+    enrollFunctions(functions);
   }
 
   public List<ChatFunction> getFunctions() {
     return new ArrayList<>(mapFunctions.values());
   }
 
-  public void setFunctions(List<ChatFunction> functions) {
-    mapFunctions.clear();
-    functions.forEach(function -> addFunction(function));
-  }
-
-  public void addFunction(ChatFunction function) {
+  public void enrollFunction(ChatFunction function) {
     mapFunctions.put(function.getName(), function);
   }
 
+  public void enrollFunctions(List<ChatFunction> functions) {
+    if (functions == null) {
+      throw new SimpleUncheckedException("No functions were entered.", "", null);
+    }
+    mapFunctions.clear();
+    functions.forEach(function -> enrollFunction(function));
+  }
+
   @SuppressWarnings("unchecked")
-  public <T> T execute(ChatFunctionCall call) {
+  public <T> T execute(ChatFunctionCall functionToCall) {
+    if (functionToCall == null || CommonUtil.get().isNullOrEmpty(functionToCall.getName())) {
+      throw new SimpleUncheckedException("No function was entered or it does not has a name.", "", null);
+    }
+    String functionName = functionToCall.getName();
+    if (!mapFunctions.containsKey(functionName)) {
+      throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName, null);
+    }
     try {
-      ChatFunction function = mapFunctions.get(call.getName());
-      String jsonArguments = call.getArguments();
-      Object objArgument = JsonUtil.get().jsonToObject(jsonArguments, function.getParameters());
-      T result = (T) function.getFunctionToExecute().apply(objArgument);
+      ChatFunction function = mapFunctions.get(functionName);
+      Object argumentsObj = JsonUtil.get().jsonToObject(functionToCall.getArguments(), function.getParameters());
+      T result = (T) function.getFunctionToExecute().apply(argumentsObj);
       return result;
     } catch (RuntimeException e) {
-      throw new SimpleUncheckedException("Cannot execute the function {0}.", call.getName(), e);
+      throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
     }
   }
 }

@@ -46,6 +46,23 @@ public class CommonUtilTest {
   }
 
   @Test
+  void shouldReturnTrueWhenStringIsNullOrEmptyOrBlank() {
+    String[] testData = {null, "", " "};
+    for (String data : testData) {
+      boolean actualCondition = CommonUtil.get().isNullOrEmpty(data);
+      boolean expectedCondition = true;
+      assertEquals(expectedCondition, actualCondition);
+    }
+  }
+
+  @Test
+  void shouldReturnFalseWhenStringIsNotEmpty() {
+    boolean actualCondition = CommonUtil.get().isNullOrEmpty("text");
+    boolean expectedCondition = false;
+    assertEquals(expectedCondition, actualCondition);
+  }
+
+  @Test
   void shouldReturnTrueWhenSomeTextMatchesRegex() {
     String[][] testData = {
         { "/one/url/{pathvar}", Constant.REGEX_PATH_PARAM_URL },

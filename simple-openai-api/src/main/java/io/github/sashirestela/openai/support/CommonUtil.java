@@ -30,6 +30,10 @@ public class CommonUtil {
     return list == null || list.size() == 0;
   }
 
+  public boolean isNullOrEmpty(String text) {
+    return text == null || text.isBlank();
+  }
+
   public boolean matches(String text, String regex) {
     Matcher matcher = Pattern.compile(regex).matcher(text);
     return matcher.find();
