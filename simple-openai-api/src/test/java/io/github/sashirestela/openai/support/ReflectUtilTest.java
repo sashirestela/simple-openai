@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
-import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.http.ResponseType;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -74,7 +74,7 @@ public class ReflectUtilTest {
   @Test
   void shouldReturnExceptionWhenAnnotAttribDoesNotExistInAnnotation() {
     Method method = getMethod(TestInterface.class, "testMethod");
-    assertThrows(UncheckedException.class,
+    assertThrows(SimpleUncheckedException.class,
         () -> ReflectUtil.get().getAnnotAttribValue(method, GET.class, "otherAttribute"));
   }
 
@@ -164,14 +164,14 @@ public class ReflectUtilTest {
   @Test
   void shouldReturnExceptionWhenExecutingSetMethodThatDoesNotExist() {
     TestClass object = new TestClass();
-    assertThrows(UncheckedException.class, () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setAttribute",
+    assertThrows(SimpleUncheckedException.class, () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setAttribute",
         new Class<?>[] { Integer.class }, object, 7));
   }
 
   @Test
   void shouldReturnExceptionWhenExecutingSetMethodWithInvalidArgument() {
     TestClass object = new TestClass();
-    assertThrows(UncheckedException.class, () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setProperty",
+    assertThrows(SimpleUncheckedException.class, () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setProperty",
         new Class<?>[] { Integer.class }, object, "seven"));
   }
 

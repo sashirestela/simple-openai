@@ -7,7 +7,6 @@ import java.util.Map;
 
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
-import io.github.sashirestela.openai.exception.SimpleUncheckedException;
 import io.github.sashirestela.openai.support.JsonUtil;
 
 public class SimpleFunctionExecutor {

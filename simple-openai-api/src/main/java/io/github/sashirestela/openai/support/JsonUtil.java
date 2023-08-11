@@ -17,7 +17,7 @@ import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
 
-import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 
 public class JsonUtil {
   private static JsonUtil jsonUtil = null;
@@ -38,7 +38,7 @@ public class JsonUtil {
     try {
       return objectMapper.writeValueAsString(object);
     } catch (JsonProcessingException e) {
-      throw new UncheckedException("Cannot convert the object {0} to Json.", object, e);
+      throw new SimpleUncheckedException("Cannot convert the object {0} to Json.", object, e);
     }
   }
 
@@ -46,7 +46,7 @@ public class JsonUtil {
     try {
       return objectMapper.readValue(json, clazz);
     } catch (JsonProcessingException e) {
-      throw new UncheckedException("Cannot convert the Json {0} to class {1}.", json, clazz.getName(), e);
+      throw new SimpleUncheckedException("Cannot convert the Json {0} to class {1}.", json, clazz.getName(), e);
     }
   }
 
@@ -55,7 +55,7 @@ public class JsonUtil {
       CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clazz);
       return objectMapper.readValue(json, listType);
     } catch (JsonProcessingException e) {
-      throw new UncheckedException("Cannot convert the Json {0} to List of {1}.", json, clazz.getName(), e);
+      throw new SimpleUncheckedException("Cannot convert the Json {0} to List of {1}.", json, clazz.getName(), e);
     }
   }
 
@@ -64,7 +64,7 @@ public class JsonUtil {
       JavaType javaType = objectMapper.getTypeFactory().constructParametricType(clazzT, clazzU);
       return objectMapper.readValue(json, javaType);
     } catch (JsonProcessingException e) {
-      throw new UncheckedException("Cannot convert the Json {0} to class of {1}.", json, clazzT.getName(), e);
+      throw new SimpleUncheckedException("Cannot convert the Json {0} to class of {1}.", json, clazzT.getName(), e);
     }
   }
 
@@ -82,13 +82,13 @@ public class JsonUtil {
         jsonSchema = generator.generateSchema(clazz);
 
       } catch (Exception e) {
-        throw new UncheckedException("Cannot generate the Json Schema for the class {0}.", clazz.getName(), e);
+        throw new SimpleUncheckedException("Cannot generate the Json Schema for the class {0}.", clazz.getName(), e);
       }
     } else {
       try {
         jsonSchema = objectMapper.readTree(Constant.JSON_EMPTY_CLASS);
       } catch (JsonProcessingException e) {
-        throw new UncheckedException("Cannot generate the Json Schema for the class {0}.", clazz.getName(), e);
+        throw new SimpleUncheckedException("Cannot generate the Json Schema for the class {0}.", clazz.getName(), e);
       }
     }
     return jsonSchema;

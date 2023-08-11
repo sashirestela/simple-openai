@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
-import io.github.sashirestela.openai.exception.SimpleUncheckedException;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.POST;

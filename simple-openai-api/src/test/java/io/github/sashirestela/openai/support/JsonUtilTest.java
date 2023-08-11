@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class JsonUtilTest {
   @Test
   void shouldThrowExceptionWhenConvertingAnObjectOfClassWithIssues() {
     FailClass object = new FailClass("test", 10);
-    assertThrows(UncheckedException.class, () -> JsonUtil.get().objectToJson(object));
+    assertThrows(SimpleUncheckedException.class, () -> JsonUtil.get().objectToJson(object));
   }
 
   @Test
@@ -43,7 +43,7 @@ public class JsonUtilTest {
   @Test
   void shouldThrowExceptionWhenConvertingJsonToObjectWithIssues() {
     String json = "{\"first\":\"test\",\"secondish\":10}";
-    assertThrows(UncheckedException.class, () -> JsonUtil.get().jsonToObject(json, TestClass.class));
+    assertThrows(SimpleUncheckedException.class, () -> JsonUtil.get().jsonToObject(json, TestClass.class));
   }
 
   @Test
@@ -63,7 +63,7 @@ public class JsonUtilTest {
   @Test
   void shouldThrowExceptionWhenConvertingJsonToListWithIssues() {
     String json = "[{\"first\":\"test1\",\"second\":10},{\"firstish\":\"test2\",\"secondish\":20}]";
-    assertThrows(UncheckedException.class, () -> JsonUtil.get().jsonToList(json, TestClass.class));
+    assertThrows(SimpleUncheckedException.class, () -> JsonUtil.get().jsonToList(json, TestClass.class));
   }
 
   @Test
@@ -89,7 +89,7 @@ public class JsonUtilTest {
   @Test
   void shouldThrowExceptionWhenConvertingJsonToParametricObjectWithIssues() {
     String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10},{\"firstish\":\"test2\",\"secondish\":20}]}";
-    assertThrows(UncheckedException.class,
+    assertThrows(SimpleUncheckedException.class,
         () -> JsonUtil.get().jsonToParametricObject(json, TestGeneric.class, TestClass.class));
   }
 

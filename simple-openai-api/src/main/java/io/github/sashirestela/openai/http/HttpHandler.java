@@ -18,11 +18,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.OpenAIError;
 import io.github.sashirestela.openai.domain.OpenAIEvent;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
-import io.github.sashirestela.openai.exception.SimpleUncheckedException;
-import io.github.sashirestela.openai.exception.UncheckedException;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -93,7 +92,7 @@ public class HttpHandler implements InvocationHandler {
   private Class<? extends Annotation> calculateHttpMethod(Method method) {
     Class<? extends Annotation> httpMethod = Optional
         .ofNullable(ReflectUtil.get().getFirstAnnotTypeInList(method, HTTP_METHODS)).orElseThrow(
-            () -> new UncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null));
+            () -> new SimpleUncheckedException("Missing HTTP anotation for the method {0}.", method.getName(), null));
     return httpMethod;
   }
 
@@ -104,7 +103,7 @@ public class HttpHandler implements InvocationHandler {
     if (!urlContainsPathParam) {
       return url;
     } else if (CommonUtil.get().isNullOrEmpty(arguments)) {
-      throw new UncheckedException("Path param in the url requires at least an argument in the method {0}.",
+      throw new SimpleUncheckedException("Path param in the url requires at least an argument in the method {0}.",
           method.getName(), null);
     }
 
@@ -112,7 +111,7 @@ public class HttpHandler implements InvocationHandler {
     List<MethodElement> listMethodElement = ReflectUtil.get().getMethodElementsAnnotatedWith(method, arguments,
         Path.class);
     if (CommonUtil.get().isNullOrEmpty(listMethodElement)) {
-      throw new UncheckedException("Path param in the url requires at least an annotated argument in the method {0}.",
+      throw new SimpleUncheckedException("Path param in the url requires at least an annotated argument in the method {0}.",
           method.getName(), null);
     }
 
@@ -120,7 +119,7 @@ public class HttpHandler implements InvocationHandler {
       MethodElement methodElement = listMethodElement.stream()
           .filter(methElem -> methElem.getDefAnnotValue().equals(pathParam.getTextToSearch()))
           .findFirst()
-          .orElseThrow(() -> new UncheckedException(
+          .orElseThrow(() -> new SimpleUncheckedException(
               "Path param {0} in the url cannot find an annotated argument in the method {1}.",
               pathParam.getTextToSearch(), method.getName(), null));
       url = url.replace(pathParam.getTextToReplace(), methodElement.getArgumentValue().toString());
@@ -139,7 +138,7 @@ public class HttpHandler implements InvocationHandler {
       ReflectUtil.get().executeSetMethod(parameter.getType(), SET_STREAM_METHOD, new Class<?>[] { boolean.class },
           object, isStreaming);
       elementBody.setArgumentValue(object);
-    } catch (UncheckedException e) {
+    } catch (SimpleUncheckedException e) {
       // 'setStream' method does not exist
       return;
     }
@@ -219,7 +218,7 @@ public class HttpHandler implements InvocationHandler {
         data = (String) response.body();
       }
       OpenAIError error = JsonUtil.get().jsonToObject(data, OpenAIError.class);
-      throw new UncheckedException("Error from server: {0}.", error.getError(), null);
+      throw new SimpleUncheckedException("Error from server: {0}.", error.getError(), null);
     }
   }
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.sashirestela.openai.exception.UncheckedException;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.http.ResponseType;
 
 public class ReflectUtil {
@@ -55,13 +55,13 @@ public class ReflectUtil {
       try {
         annotAttrib = annotType.getMethod(annotAttribName);
       } catch (NoSuchMethodException | SecurityException e) {
-        throw new UncheckedException("Cannot found the method {0} in the annotation {1}.", annotAttribName,
+        throw new SimpleUncheckedException("Cannot found the method {0} in the annotation {1}.", annotAttribName,
             annotType.getName(), e);
       }
       try {
         value = annotAttrib.invoke(annotation, (Object[]) null);
       } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-        throw new UncheckedException("Cannot execute the method {0} in the annotation {1}.", annotAttribName,
+        throw new SimpleUncheckedException("Cannot execute the method {0} in the annotation {1}.", annotAttribName,
             annotType.getName(), e);
       }
     }
@@ -110,7 +110,7 @@ public class ReflectUtil {
     try {
       methodReturnClass = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      throw new UncheckedException("Cannot found the base class {0} for the method {1}.", className,
+      throw new SimpleUncheckedException("Cannot found the base class {0} for the method {1}.", className,
           method.getName(), e);
     }
     return methodReturnClass;
@@ -134,13 +134,13 @@ public class ReflectUtil {
     try {
       method = clazz.getMethod(methodName, paramTypes);
     } catch (NoSuchMethodException | SecurityException e) {
-      throw new UncheckedException("Cannot found the method {0} in the class {1}", methodName, clazz.getSimpleName(),
+      throw new SimpleUncheckedException("Cannot found the method {0} in the class {1}", methodName, clazz.getSimpleName(),
           e);
     }
     try {
       method.invoke(object, value);
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      throw new UncheckedException("Cannot execute the method {0} in the class {1}", methodName, clazz.getSimpleName(),
+      throw new SimpleUncheckedException("Cannot execute the method {0} in the class {1}", methodName, clazz.getSimpleName(),
           e);
     }
   }
