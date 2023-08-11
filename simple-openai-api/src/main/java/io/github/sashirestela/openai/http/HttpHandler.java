@@ -64,7 +64,7 @@ public class HttpHandler implements InvocationHandler {
       builder = builder.uri(URI.create(urlBase + url));
       builder = builder.header(Constant.HEADER_CONTENT_TYPE, Constant.APP_JSON);
       builder = builder.header(Constant.HEADER_AUTHORIZATION, Constant.AUTH_BEARER + apiKey);
-      builder = setHttpMethodForRequet(builder, httpMethod, bodyPublisher);
+      builder = this.setHttpMethodForRequet(builder, httpMethod, bodyPublisher);
       HttpRequest httpRequest = builder.build();
 
       CompletableFuture<?> responseObject = null;
