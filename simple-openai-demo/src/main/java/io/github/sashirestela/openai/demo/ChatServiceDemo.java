@@ -2,75 +2,55 @@ package io.github.sashirestela.openai.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import io.github.sashirestela.openai.SimpleFunctionExecutor;
-import io.github.sashirestela.openai.SimpleOpenAIApi;
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.Role;
-import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.service.ChatService;
-import io.github.sashirestela.openai.service.ModelService;
 
-public class App {
-  private SimpleOpenAIApi openAIApi;
+public class ChatServiceDemo extends AbstractDemo {
 
-  public App() {
-    openAIApi = new SimpleOpenAIApi(System.getenv("OPENAI_API_KEY"));
+  private ChatService chatService;
+  private ChatRequest chatRequest;
+  private String modelIdToUse;
+
+  public ChatServiceDemo() {
+    chatService = openAIApi.createChatService();
+    modelIdToUse = "gpt-3.5-turbo-16k-0613";
   }
 
-  public void runModelService() {
-    ModelService modelService = openAIApi.createModelService();
-
-    System.out.println("\n===== List of Models =====");
-    List<Model> models = modelService.callModels().join();
-    models.stream()
-        .map(model -> model.getId())
-        .filter(modelId -> modelId.contains("gpt"))
-        .forEach(System.out::println);
-
-    System.out.println("\n===== A Model =====");
-    Model model = modelService.callModel(models.get(0).getId()).join();
-    System.out.println(model);
-  }
-
-  @SuppressWarnings("unused")
-  public void runChatService() {
-    ChatService chatService = openAIApi.createChatService();
-
-    ChatRequest chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-16k-0613")
+  public void demoCallChatStreaming() {
+    chatRequest = ChatRequest.builder()
+        .model(modelIdToUse)
         .messages(List.of(
-            new ChatMessage(Role.SYSTEM, "Generate Java code with no comments."),
-            new ChatMessage(Role.USER,
-                "// Create a function to get the second highest max of an array of integers. Do not use predefined libraries.")))
-        .temperature(0)
+            new ChatMessage(Role.SYSTEM, "You are an expert in AI."),
+            new ChatMessage(Role.USER, "Write a technical article about ChatGPT, no more than 100 words.")))
+        .temperature(0.0)
         .maxTokens(300)
         .build();
+    CompletableFuture<Stream<ChatResponse>> futureChat = chatService.callChatCompletionStream(chatRequest);
+    Stream<ChatResponse> chatResponse = futureChat.join();
+    chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+        .map(chatResp -> chatResp.firstContent())
+        .forEach(System.out::print);
+    System.out.println();
+  }
 
-    System.out.println("\n===== Stream Chat Completion =====");
-    Stream<ChatResponse> chatResponseStream = chatService.callChatCompletionStream(chatRequest).join();
-    String response = chatResponseStream
-        .filter(chatResponse -> chatResponse.firstContent() != null)
-        .map(chatResponse -> chatResponse.firstContent())
-        .peek(System.out::print)
-        .collect(Collectors.joining());
-
-    System.out.println("\n===== Normal Chat Completion =====");
-    ChatResponse chatResponse = chatService.callChatCompletion(chatRequest).join();
+  public void demoCallChatBlocking() {
+    CompletableFuture<ChatResponse> futureChat = chatService.callChatCompletion(chatRequest);
+    ChatResponse chatResponse = futureChat.join();
     System.out.println(chatResponse.firstContent());
   }
 
-  public void runChatServiceWithFunctions() {
-    ChatService chatService = openAIApi.createChatService();
-
+  public void demoCallChatWithFunctions() {
     SimpleFunctionExecutor functionExecutor = new SimpleFunctionExecutor();
     functionExecutor.enrollFunction(
         ChatFunction.builder()
@@ -93,33 +73,29 @@ public class App {
             .functionToExecute(null,
                 none -> "DONE")
             .build());
-
     List<ChatMessage> messages = new ArrayList<>();
     messages.add(new ChatMessage(Role.USER, "What is the product of 123 and 456?"));
-
     ChatRequest chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-16k-0613")
+        .model(modelIdToUse)
         .messages(messages)
-        .temperature(0.0)
-        .maxTokens(1000)
         .functions(functionExecutor.getFunctions())
         .functionCall("auto")
         .build();
-
-    System.out.println("\n===== Chat Completion with Call Function =====");
-    ChatResponse chatResponse = chatService.callChatCompletion(chatRequest).join();
-
+    CompletableFuture<ChatResponse> futureChat = chatService.callChatCompletion(chatRequest);
+    ChatResponse chatResponse = futureChat.join();
     ChatMessage chatMessage = chatResponse.firstMessage();
     Object result = functionExecutor.execute(chatMessage.getFunctionCall());
-    System.out.println(result);
-  }
-
-  public static void main(String[] args) {
-    App app = new App();
-    app.runModelService();
-    app.runChatService();
-    app.runChatServiceWithFunctions();
-    System.exit(0);
+    messages.add(chatMessage);
+    messages.add(new ChatMessage(Role.FUNCTION, result.toString(), chatMessage.getFunctionCall().getName()));
+    chatRequest = ChatRequest.builder()
+        .model(modelIdToUse)
+        .messages(messages)
+        .functions(functionExecutor.getFunctions())
+        .functionCall("auto")
+        .build();
+    futureChat = chatService.callChatCompletion(chatRequest);
+    chatResponse = futureChat.join();
+    System.out.println(chatResponse.firstContent());
   }
 
   public static class Weather {
@@ -139,5 +115,15 @@ public class App {
     @JsonPropertyDescription("The multiplier part of a product")
     @JsonProperty(required = true)
     public double multiplier;
+  }
+
+  public static void main(String[] args) {
+    ChatServiceDemo demo = new ChatServiceDemo();
+
+    demo.addTitleAction("Call Chat (Streaming Approach)", () -> demo.demoCallChatStreaming());
+    demo.addTitleAction("Call Chat (Blocking Approach)", () -> demo.demoCallChatBlocking());
+    demo.addTitleAction("Call Chat with Functions", () -> demo.demoCallChatWithFunctions());
+
+    demo.run();
   }
 }
