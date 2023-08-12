@@ -35,29 +35,39 @@ public class ChatRequest {
   @JsonProperty("function_call")
   private String functionCall;
 
-  private double temperature;
+  @JsonInclude(Include.NON_NULL)
+  private Double temperature;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("top_p")
-  private double topP;
+  private Double topP;
 
-  private int n;
+  @JsonInclude(Include.NON_NULL)
+  private Integer n;
 
-  private boolean stream;
+  @JsonInclude(Include.NON_NULL)
+  private Boolean stream;
 
+  @JsonInclude(Include.NON_NULL)
   private List<String> stop;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("max_tokens")
-  private int maxTokens;
+  private Integer maxTokens;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("presence_penalty")
-  private double presencePenalty;
+  private Double presencePenalty;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("frequency_penalty")
-  private double frequencyPenalty;
+  private Double frequencyPenalty;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("logit_bias")
   private Map<String, Integer> logitBias;
 
+  @JsonInclude(Include.NON_NULL)
   private String user;
 
   public void setStream(boolean stream) {
