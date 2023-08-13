@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -17,6 +18,9 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.OpenAIError;
@@ -35,6 +39,8 @@ import io.github.sashirestela.openai.support.MethodElement;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
 public class HttpHandler implements InvocationHandler {
+  private static Logger LOGGER = LoggerFactory.getLogger(HttpHandler.class);
+
   private final static List<Class<? extends Annotation>> HTTP_METHODS = Arrays.asList(
       GET.class, POST.class, PUT.class, DELETE.class);
 
@@ -50,6 +56,7 @@ public class HttpHandler implements InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
+    LOGGER.debug("Invoking {}.{}()", method.getDeclaringClass().getSimpleName(), method.getName());
     try {
       Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
       String url = this.calculateUrl(method, arguments, httpMethod);
@@ -57,7 +64,7 @@ public class HttpHandler implements InvocationHandler {
       ResponseType responseType = ReflectUtil.get().getResponseType(method);
       boolean isStreaming = (responseType == ResponseType.STREAM);
       this.setStreamInBodyIfApplicable(method, elementBody, isStreaming);
-      HttpRequest.BodyPublisher bodyPublisher = this.calculateBodyPublisher(method, elementBody);
+      BodyPublisher bodyPublisher = this.calculateBodyPublisher(elementBody);
       Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
@@ -83,7 +90,8 @@ public class HttpHandler implements InvocationHandler {
               method.getName(), method.getDeclaringClass().getSimpleName(), null);
       }
       return responseObject;
-    } catch (Exception e) {
+    } catch (Throwable e) {
+      LOGGER.error("Cannot complete http request.", e);
       throw new SimpleUncheckedException("Error trying to execute the method {0} of the class {1}.", method.getName(),
           method.getDeclaringClass().getSimpleName(), e);
     }
@@ -111,7 +119,8 @@ public class HttpHandler implements InvocationHandler {
     List<MethodElement> listMethodElement = ReflectUtil.get().getMethodElementsAnnotatedWith(method, arguments,
         Path.class);
     if (CommonUtil.get().isNullOrEmpty(listMethodElement)) {
-      throw new SimpleUncheckedException("Path param in the url requires at least an annotated argument in the method {0}.",
+      throw new SimpleUncheckedException(
+          "Path param in the url requires at least an annotated argument in the method {0}.",
           method.getName(), null);
     }
 
@@ -144,17 +153,18 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
-  private HttpRequest.BodyPublisher calculateBodyPublisher(Method method, MethodElement elementBody) {
+  private BodyPublisher calculateBodyPublisher(MethodElement elementBody) {
     if (elementBody == null) {
       return null;
     }
     Object object = elementBody.getArgumentValue();
     String requestJson = JsonUtil.get().objectToJson(object);
+    LOGGER.debug("Request: {}", requestJson);
     return BodyPublishers.ofString(requestJson);
   }
 
   private HttpRequest.Builder setHttpMethodForRequet(HttpRequest.Builder builder,
-      Class<? extends Annotation> httpMethod, HttpRequest.BodyPublisher publisher) {
+      Class<? extends Annotation> httpMethod, BodyPublisher publisher) {
     String httpMethodName = httpMethod.getSimpleName();
     switch (httpMethodName) {
       case "GET":
@@ -175,6 +185,7 @@ public class HttpHandler implements InvocationHandler {
         BodyHandlers.ofString());
     CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
       throwExceptionIfErrorIsPresent(response, false);
+      LOGGER.debug("Response: {}", response.body());
       T objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
       return objResponse;
     });
@@ -187,6 +198,7 @@ public class HttpHandler implements InvocationHandler {
         BodyHandlers.ofString());
     CompletableFuture<List<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
       throwExceptionIfErrorIsPresent(response, false);
+      LOGGER.debug("Response: {}", response.body());
       OpenAIGeneric<T> objResponse = JsonUtil.get().jsonToParametricObject(response.body(), OpenAIGeneric.class,
           responseClass);
       return objResponse.getData();
@@ -200,6 +212,7 @@ public class HttpHandler implements InvocationHandler {
     CompletableFuture<Stream<T>> objResponseFuture = httpResponseFuture.thenApply(response -> {
       throwExceptionIfErrorIsPresent(response, true);
       Stream<T> objResponse = response.body()
+          .peek(rawData -> LOGGER.debug("Response: {}", rawData))
           .map(rawData -> new OpenAIEvent(rawData))
           .filter(event -> event.isActualData())
           .map(event -> JsonUtil.get().jsonToObject(event.getActualData(), responseClass));
@@ -213,12 +226,15 @@ public class HttpHandler implements InvocationHandler {
     if (response.statusCode() != HttpURLConnection.HTTP_OK) {
       String data = null;
       if (isStream) {
-        data = ((Stream<String>) response.body()).collect(Collectors.joining());
+        data = ((Stream<String>) response.body())
+            .peek(error -> LOGGER.debug("Response: {}", error))
+            .collect(Collectors.joining());
       } else {
         data = (String) response.body();
+        LOGGER.debug("Response: {}", data);
       }
-      OpenAIError error = JsonUtil.get().jsonToObject(data, OpenAIError.class);
-      throw new SimpleUncheckedException("Error from server: {0}.", error.getError(), null);
+      OpenAIError openAIError = JsonUtil.get().jsonToObject(data, OpenAIError.class);
+      throw new SimpleUncheckedException("Error from server: {0}.", openAIError.getError(), null);
     }
   }
 }

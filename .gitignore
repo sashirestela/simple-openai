@@ -9,3 +9,4 @@ target
 .breakpoints
 
 .flattened-pom.xml
+*.log
