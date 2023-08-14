@@ -70,7 +70,7 @@ public class ReflectUtil {
 
   public MethodElement getMethodElementAnnotatedWith(Method method, Object[] arguments,
       Class<? extends Annotation> annotType) {
-    List<MethodElement> methodElements = getMethodElementsAnnotatedWith(method, arguments, annotType, false);
+    List<MethodElement> methodElements = getMethodElementsAnnotatedWith(method, arguments, annotType, true);
     MethodElement methodElement = methodElements.size() > 0 ? methodElements.get(0) : null;
     return methodElement;
   }
