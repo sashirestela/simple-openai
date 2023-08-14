@@ -71,7 +71,7 @@ public class HttpHandler implements InvocationHandler {
       builder = builder.uri(URI.create(urlBase + url));
       builder = builder.header(Constant.HEADER_CONTENT_TYPE, Constant.APP_JSON);
       builder = builder.header(Constant.HEADER_AUTHORIZATION, Constant.AUTH_BEARER + apiKey);
-      builder = this.setHttpMethodForRequet(builder, httpMethod, bodyPublisher);
+      builder = builder.method(httpMethod.getSimpleName(), bodyPublisher);
       HttpRequest httpRequest = builder.build();
 
       CompletableFuture<?> responseObject = null;
@@ -155,29 +155,12 @@ public class HttpHandler implements InvocationHandler {
 
   private BodyPublisher calculateBodyPublisher(MethodElement elementBody) {
     if (elementBody == null) {
-      return null;
+      return BodyPublishers.noBody();
     }
     Object object = elementBody.getArgumentValue();
     String requestJson = JsonUtil.get().objectToJson(object);
     LOGGER.debug("Request: {}", requestJson);
     return BodyPublishers.ofString(requestJson);
-  }
-
-  private HttpRequest.Builder setHttpMethodForRequet(HttpRequest.Builder builder,
-      Class<? extends Annotation> httpMethod, BodyPublisher publisher) {
-    String httpMethodName = httpMethod.getSimpleName();
-    switch (httpMethodName) {
-      case "GET":
-        return builder.GET();
-      case "POST":
-        return builder.POST(publisher);
-      case "PUT":
-        return builder.PUT(publisher);
-      case "DELETE":
-        return builder.DELETE();
-      default:
-        return null;
-    }
   }
 
   private <T> CompletableFuture<T> callToReceiveFutureObject(HttpRequest httpRequest, Class<T> responseClass) {
