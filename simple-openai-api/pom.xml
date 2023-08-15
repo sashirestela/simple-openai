@@ -3,6 +3,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>simple-openai</artifactId>
     <groupId>io.github.sashirestela</groupId>
@@ -11,53 +12,42 @@
 
   <artifactId>simple-openai-api</artifactId>
 
-  <properties>
-    <lombok.version>1.18.28</lombok.version>
-    <jackson.version>2.14.2</jackson.version>
-    <json.schema.version>4.31.1</json.schema.version>
-    <junit.version>5.10.0</junit.version>
-    <mockito.version>5.4.0</mockito.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
     </dependency>
     <dependency>
       <groupId>com.github.victools</groupId>
       <artifactId>jsonschema-generator</artifactId>
-      <version>${json.schema.version}</version>
     </dependency>
     <dependency>
       <groupId>com.github.victools</groupId>
       <artifactId>jsonschema-module-jackson</artifactId>
-      <version>${json.schema.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
-      <version>${mockito.version}</version>
-      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
     </dependency>
   </dependencies>
 

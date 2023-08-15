@@ -3,35 +3,92 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
-  <modules>
-    <module>simple-openai-api</module>
-    <module>simple-openai-demo</module>
-  </modules>
-
   <properties>
     <revision>0.0.1-SNAPSHOT</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
-    <slf4j.version>2.0.3</slf4j.version>
+    <slf4j.version>[2.0.7,3.0.0)</slf4j.version>
+    <lombok.version>[1.18.28,2.0.0)</lombok.version>
+    <jackson.version>[2.15.2,3.0.0)</jackson.version>
+    <json.schema.version>[4.31.1,5.0.0)</json.schema.version>
+    <junit.version>[5.10.0,6.0.0)</junit.version>
+    <mockito.version>[5.4.0,6.0.0)</mockito.version>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.victools</groupId>
+        <artifactId>jsonschema-generator</artifactId>
+        <version>${json.schema.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.github.victools</groupId>
+        <artifactId>jsonschema-module-jackson</artifactId>
+        <version>${json.schema.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <modules>
+    <module>simple-openai-api</module>
+    <module>simple-openai-demo</module>
+  </modules>
 
   <build>
     <plugins>
