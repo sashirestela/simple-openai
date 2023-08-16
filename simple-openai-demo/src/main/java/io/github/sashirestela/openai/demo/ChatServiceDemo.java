@@ -86,7 +86,12 @@ public class ChatServiceDemo extends AbstractDemo {
     ChatMessage chatMessage = chatResponse.firstMessage();
     Object result = functionExecutor.execute(chatMessage.getFunctionCall());
     messages.add(chatMessage);
-    messages.add(new ChatMessage(Role.FUNCTION, result.toString(), chatMessage.getFunctionCall().getName()));
+    messages.add(
+        ChatMessage.builder()
+            .role(Role.FUNCTION)
+            .content(result.toString())
+            .name(chatMessage.getFunctionCall().getName())
+            .build());
     chatRequest = ChatRequest.builder()
         .model(modelIdToUse)
         .messages(messages)

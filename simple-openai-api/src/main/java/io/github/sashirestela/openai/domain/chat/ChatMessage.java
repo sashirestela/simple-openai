@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 @NoArgsConstructor
@@ -13,6 +15,7 @@ import lombok.ToString;
 @ToString
 public class ChatMessage {
 
+  @NonNull
   private Role role;
 
   private String content;
@@ -30,14 +33,8 @@ public class ChatMessage {
     validate();
   }
 
-  public ChatMessage(Role role, String content, String name) {
-    this.role = role;
-    this.content = content;
-    this.name = name;
-    validate();
-  }
-
-  public ChatMessage(Role role, String content, String name, ChatFunctionCall functionCall) {
+  @Builder
+  public ChatMessage(@NonNull Role role, String content, String name, ChatFunctionCall functionCall) {
     this.role = role;
     this.content = content;
     this.name = name;
@@ -46,9 +43,6 @@ public class ChatMessage {
   }
 
   private void validate() {
-    if (role == null) {
-      throw new RuntimeException("The role is required for ChatMessage.");
-    }
     if (role != Role.ASSISTANT && content == null) {
       throw new RuntimeException("The content is required for ChatMessage when role is other than assistant.");
     }
