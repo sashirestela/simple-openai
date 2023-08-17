@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.support;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +57,16 @@ public class CommonUtil {
     List<Match> result = matcher.results()
         .map(mr -> new Match(mr.group(0), mr.group(1)))
         .collect(Collectors.toList());
+    return result;
+  }
+
+  public String capitalize(String text) {
+    return text.substring(0, 1).toUpperCase() + text.substring(1);
+  }
+
+  public <T> T[] concatArrays(T[] array1, T[] array2) {
+    T[] result = Arrays.copyOf(array1, array1.length + array2.length);
+    System.arraycopy(array2, 0, result, array1.length, array2.length);
     return result;
   }
 

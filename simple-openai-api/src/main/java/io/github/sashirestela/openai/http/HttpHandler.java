@@ -14,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import io.github.sashirestela.openai.domain.OpenAIGeneric;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
+import io.github.sashirestela.openai.http.annotation.Multipart;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.PUT;
 import io.github.sashirestela.openai.http.annotation.Path;
@@ -64,12 +66,13 @@ public class HttpHandler implements InvocationHandler {
       ResponseType responseType = ReflectUtil.get().getResponseType(method);
       boolean isStreaming = (responseType == ResponseType.STREAM);
       this.setStreamInBodyIfApplicable(method, elementBody, isStreaming);
-      BodyPublisher bodyPublisher = this.calculateBodyPublisher(elementBody);
+      boolean isMultipart = method.isAnnotationPresent(Multipart.class);
+      BodyPublisher bodyPublisher = this.calculateBodyPublisher(elementBody, isMultipart);
       Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
 
       HttpRequest.Builder builder = HttpRequest.newBuilder();
       builder = builder.uri(URI.create(urlBase + url));
-      builder = builder.header(Constant.HEADER_CONTENT_TYPE, Constant.APP_JSON);
+      builder = builder.header(Constant.HEADER_CONTENT_TYPE, this.calculateContentType(isMultipart));
       builder = builder.header(Constant.HEADER_AUTHORIZATION, Constant.AUTH_BEARER + apiKey);
       builder = builder.method(httpMethod.getSimpleName(), bodyPublisher);
       HttpRequest httpRequest = builder.build();
@@ -153,14 +156,31 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
-  private BodyPublisher calculateBodyPublisher(MethodElement elementBody) {
+  private String calculateContentType(boolean isMultipart) {
+    String contentType = null;
+    if (isMultipart) {
+      contentType = Constant.TYPE_MULTIPART + Constant.BOUNDARY_TITLE + "\"" + Constant.BOUNDARY_VALUE + "\"";
+    } else {
+      contentType = Constant.TYPE_APP_JSON;
+    }
+    return contentType;
+  }
+
+  private BodyPublisher calculateBodyPublisher(MethodElement elementBody, boolean isMultipart) {
     if (elementBody == null) {
       return BodyPublishers.noBody();
     }
     Object object = elementBody.getArgumentValue();
-    String requestJson = JsonUtil.get().objectToJson(object);
-    LOGGER.debug("Request: {}", requestJson);
-    return BodyPublishers.ofString(requestJson);
+    if (isMultipart) {
+      Map<String, Object> data = ReflectUtil.get().getMapFields(object);
+      List<byte[]> requestBytes = MultipartFormData.get().toByteArrays(data);
+      LOGGER.debug("Request: {}", data);
+      return BodyPublishers.ofByteArrays(requestBytes);
+    } else {
+      String requestString = JsonUtil.get().objectToJson(object);
+      LOGGER.debug("Request: {}", requestString);
+      return BodyPublishers.ofString(requestString);
+    }
   }
 
   private <T> CompletableFuture<T> callToReceiveFutureObject(HttpRequest httpRequest, Class<T> responseClass) {

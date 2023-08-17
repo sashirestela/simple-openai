@@ -2,13 +2,16 @@ package io.github.sashirestela.openai.support;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
@@ -55,7 +58,7 @@ public class ReflectUtil {
       try {
         annotAttrib = annotType.getMethod(annotAttribName);
       } catch (NoSuchMethodException | SecurityException e) {
-        throw new SimpleUncheckedException("Cannot found the method {0} in the annotation {1}.", annotAttribName,
+        throw new SimpleUncheckedException("Cannot find the method {0} in the annotation {1}.", annotAttribName,
             annotType.getName(), e);
       }
       try {
@@ -110,7 +113,7 @@ public class ReflectUtil {
     try {
       methodReturnClass = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      throw new SimpleUncheckedException("Cannot found the base class {0} for the method {1}.", className,
+      throw new SimpleUncheckedException("Cannot find the base class {0} for the method {1}.", className,
           method.getName(), e);
     }
     return methodReturnClass;
@@ -134,14 +137,15 @@ public class ReflectUtil {
     try {
       method = clazz.getMethod(methodName, paramTypes);
     } catch (NoSuchMethodException | SecurityException e) {
-      throw new SimpleUncheckedException("Cannot found the method {0} in the class {1}", methodName, clazz.getSimpleName(),
+      throw new SimpleUncheckedException("Cannot find the method {0} in the class {1}", methodName,
+          clazz.getSimpleName(),
           e);
     }
     try {
       method.invoke(object, value);
     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      throw new SimpleUncheckedException("Cannot execute the method {0} in the class {1}", methodName, clazz.getSimpleName(),
-          e);
+      throw new SimpleUncheckedException("Cannot execute the method {0} in the class {1}", methodName,
+          clazz.getSimpleName(), e);
     }
   }
 
@@ -153,5 +157,39 @@ public class ReflectUtil {
       exists = false;
     }
     return exists;
+  }
+
+  public Map<String, Object> getMapFields(Object object) {
+    final String GET_PREFIX = "get";
+    Map<String, Object> structure = new HashMap<>();
+    Class<?> clazz = object.getClass();
+    Field[] fields = getFields(clazz);
+    for (Field field : fields) {
+      String fieldName = field.getName();
+      String methodName = GET_PREFIX + CommonUtil.get().capitalize(fieldName);
+      Object fieldValue;
+      try {
+        Method getMethod = clazz.getMethod(methodName, new Class<?>[] {});
+        fieldValue = getMethod.invoke(object);
+      } catch (Exception e) {
+        throw new SimpleUncheckedException("Cannot find the method {0} in the class {1}", methodName,
+            clazz.getSimpleName(), e);
+      }
+      if (fieldValue != null) {
+        structure.put(fieldName, fieldValue);
+      }
+    }
+    return structure;
+  }
+
+  private Field[] getFields(Class<?> clazz) {
+    final String CLASS_OBJECT = "Object";
+    Field[] fields = new Field[] {};
+    Class<?> nextClazz = clazz;
+    while (!nextClazz.getSimpleName().equals(CLASS_OBJECT)) {
+      fields = CommonUtil.get().concatArrays(fields, nextClazz.getDeclaredFields());
+      nextClazz = nextClazz.getSuperclass();
+    }
+    return fields;
   }
 }

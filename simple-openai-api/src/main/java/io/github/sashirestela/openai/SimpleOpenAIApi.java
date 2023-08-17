@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.net.http.HttpClient;
 
 import io.github.sashirestela.openai.http.HttpHandler;
+import io.github.sashirestela.openai.service.AudioService;
 import io.github.sashirestela.openai.service.ChatService;
 import io.github.sashirestela.openai.service.ModelService;
 import io.github.sashirestela.openai.support.ReflectUtil;
@@ -34,6 +35,10 @@ public final class SimpleOpenAIApi {
     return service;
   }
 
+  public AudioService createAudioService() {
+    AudioService service = createService(AudioService.class, httpClient, apiKey);
+    return service;
+  }
   
   private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
     InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE);
