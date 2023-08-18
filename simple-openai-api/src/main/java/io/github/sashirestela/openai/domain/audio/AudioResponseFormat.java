@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.audio;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum TranscriptFormat {
+public enum AudioResponseFormat {
 
   @JsonProperty("json")
   JSON,

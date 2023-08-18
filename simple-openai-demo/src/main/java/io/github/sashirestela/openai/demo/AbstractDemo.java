@@ -3,19 +3,19 @@ package io.github.sashirestela.openai.demo;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.sashirestela.openai.SimpleOpenAIApi;
+import io.github.sashirestela.openai.SimpleOpenAI;
 
 public abstract class AbstractDemo {
 
   private String apiKey;
-  protected SimpleOpenAIApi openAIApi;
+  protected SimpleOpenAI openAI;
 
   private static List<TitleAction> titleActions = new ArrayList<>();
   private int times = 80;
 
   public AbstractDemo() {
     apiKey = System.getenv("OPENAI_API_KEY");
-    openAIApi = new SimpleOpenAIApi(apiKey);
+    openAI = new SimpleOpenAI(apiKey);
   }
 
   public void addTitleAction(String title, Action action) {

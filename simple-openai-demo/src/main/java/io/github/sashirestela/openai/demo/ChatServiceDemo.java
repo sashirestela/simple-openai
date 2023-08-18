@@ -14,16 +14,13 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.Role;
-import io.github.sashirestela.openai.service.ChatService;
 
 public class ChatServiceDemo extends AbstractDemo {
 
-  private ChatService chatService;
   private ChatRequest chatRequest;
   private String modelIdToUse;
 
   public ChatServiceDemo() {
-    chatService = openAIApi.createChatService();
     modelIdToUse = "gpt-3.5-turbo-16k-0613";
   }
 
@@ -36,7 +33,7 @@ public class ChatServiceDemo extends AbstractDemo {
         .temperature(0.0)
         .maxTokens(300)
         .build();
-    CompletableFuture<Stream<ChatResponse>> futureChat = chatService.callChatCompletionStream(chatRequest);
+    CompletableFuture<Stream<ChatResponse>> futureChat = openAI.chatCompletions().createStream(chatRequest);
     Stream<ChatResponse> chatResponse = futureChat.join();
     chatResponse.filter(chatResp -> chatResp.firstContent() != null)
         .map(chatResp -> chatResp.firstContent())
@@ -45,7 +42,7 @@ public class ChatServiceDemo extends AbstractDemo {
   }
 
   public void demoCallChatBlocking() {
-    CompletableFuture<ChatResponse> futureChat = chatService.callChatCompletion(chatRequest);
+    CompletableFuture<ChatResponse> futureChat = openAI.chatCompletions().create(chatRequest);
     ChatResponse chatResponse = futureChat.join();
     System.out.println(chatResponse.firstContent());
   }
@@ -81,7 +78,7 @@ public class ChatServiceDemo extends AbstractDemo {
         .functions(functionExecutor.getFunctions())
         .functionCall("auto")
         .build();
-    CompletableFuture<ChatResponse> futureChat = chatService.callChatCompletion(chatRequest);
+    CompletableFuture<ChatResponse> futureChat = openAI.chatCompletions().create(chatRequest);
     ChatResponse chatResponse = futureChat.join();
     ChatMessage chatMessage = chatResponse.firstMessage();
     Object result = functionExecutor.execute(chatMessage.getFunctionCall());
@@ -98,7 +95,7 @@ public class ChatServiceDemo extends AbstractDemo {
         .functions(functionExecutor.getFunctions())
         .functionCall("auto")
         .build();
-    futureChat = chatService.callChatCompletion(chatRequest);
+    futureChat = openAI.chatCompletions().create(chatRequest);
     chatResponse = futureChat.join();
     System.out.println(chatResponse.firstContent());
   }

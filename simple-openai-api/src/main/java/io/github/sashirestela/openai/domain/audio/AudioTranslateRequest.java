@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-public class TranslationRequest {
+public class AudioTranslateRequest {
 
   @NonNull
   protected File file;
@@ -31,7 +31,7 @@ public class TranslationRequest {
 
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("response_format")
-  protected TranscriptFormat responseFormat;
+  protected AudioResponseFormat responseFormat;
 
   @JsonInclude(Include.NON_NULL)
   protected Double temperature;

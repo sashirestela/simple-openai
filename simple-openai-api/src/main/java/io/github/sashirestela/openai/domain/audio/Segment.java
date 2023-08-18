@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class AudioSegment {
+public class Segment {
 
   private Integer id;
 

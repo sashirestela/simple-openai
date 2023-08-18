@@ -3,29 +3,26 @@ package io.github.sashirestela.openai.demo;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import io.github.sashirestela.openai.domain.model.Model;
-import io.github.sashirestela.openai.service.ModelService;
+import io.github.sashirestela.openai.domain.model.ModelResponse;
 
 public class ModelServiceDemo extends AbstractDemo {
 
-  private ModelService modelService;
   private String modelId;
 
   public ModelServiceDemo() {
-    modelService = openAIApi.createModelService();
   }
 
   public void demoGetModels() {
-    CompletableFuture<List<Model>> futureModels = modelService.callModels();
-    List<Model> models = futureModels.join();
+    CompletableFuture<List<ModelResponse>> futureModels = openAI.models().getList();
+    List<ModelResponse> models = futureModels.join();
     models.forEach(model -> System.out.println(model));
 
     modelId = models.get(0).getId();
   }
 
   public void demoGetModel() {
-    CompletableFuture<Model> futureModel = modelService.callModel(modelId);
-    Model model = futureModel.join();
+    CompletableFuture<ModelResponse> futureModel = openAI.models().getOne(modelId);
+    ModelResponse model = futureModel.join();
     System.out.println(model);
   }
 

@@ -4,39 +4,36 @@ import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
-import io.github.sashirestela.openai.domain.audio.TranscriptFormat;
-import io.github.sashirestela.openai.domain.audio.TranscriptionRequest;
-import io.github.sashirestela.openai.domain.audio.TranslationRequest;
-import io.github.sashirestela.openai.service.AudioService;
+import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
+import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
+import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 
 public class AudioServiceDemo extends AbstractDemo {
 
-  private AudioService audioService;
   private String fileName;
 
   public AudioServiceDemo(String fileName) {
-    audioService = openAIApi.createAudioService();
     this.fileName = fileName;
   }
 
   public void demoCallAudioTranscription() {
-    TranscriptionRequest audioRequest = TranscriptionRequest.builder()
+    AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
         .file(new File(fileName))
         .model("whisper-1")
-        .responseFormat(TranscriptFormat.VERBOSE_JSON)
+        .responseFormat(AudioResponseFormat.VERBOSE_JSON)
         .build();
-    CompletableFuture<AudioResponse> futureAudio = audioService.callAudioTranscription(audioRequest);
+    CompletableFuture<AudioResponse> futureAudio = openAI.audios().transcribe(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
     System.out.println(audioResponse.getText());
   }
 
   public void demoCallAudioTranslation() {
-    TranslationRequest audioRequest = TranslationRequest.builder()
+    AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
         .file(new File(fileName))
         .model("whisper-1")
-        .responseFormat(TranscriptFormat.VERBOSE_JSON)
+        .responseFormat(AudioResponseFormat.VERBOSE_JSON)
         .build();
-    CompletableFuture<AudioResponse> futureAudio = audioService.callAudioTranslation(audioRequest);
+    CompletableFuture<AudioResponse> futureAudio = openAI.audios().translate(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
     System.out.println(audioResponse.getText());
   }

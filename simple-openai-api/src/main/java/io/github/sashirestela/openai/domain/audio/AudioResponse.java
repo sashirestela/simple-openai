@@ -21,6 +21,6 @@ public class AudioResponse {
 
   private Double duration;
 
-  private List<AudioSegment> segments;
+  private List<Segment> segments;
 
 }

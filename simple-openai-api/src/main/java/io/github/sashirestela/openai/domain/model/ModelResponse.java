@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class Model {
+public class ModelResponse {
 
   private String id;
 
@@ -24,7 +24,7 @@ public class Model {
   @JsonProperty("owned_by")
   private String ownedBy;
 
-  private List<ModelPermission> permission;
+  private List<Permission> permission;
 
   private String root;
 

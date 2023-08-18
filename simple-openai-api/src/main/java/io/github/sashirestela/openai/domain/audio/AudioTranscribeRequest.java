@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @ToString
 @SuperBuilder
-public class TranscriptionRequest extends TranslationRequest {
+public class AudioTranscribeRequest extends AudioTranslateRequest {
 
   @JsonInclude(Include.NON_NULL)
   private String language;

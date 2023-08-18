@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class ModelPermission {
+public class Permission {
 
   private String id;
 
