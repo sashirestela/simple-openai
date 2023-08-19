@@ -31,7 +31,7 @@ public class AudioTranslateRequest {
 
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("response_format")
-  protected AudioResponseFormat responseFormat;
+  protected AudioRespFmt responseFormat;
 
   @JsonInclude(Include.NON_NULL)
   protected Double temperature;

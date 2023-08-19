@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
-import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
+import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 
@@ -20,7 +20,7 @@ public class AudioServiceDemo extends AbstractDemo {
     AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
         .file(new File(fileName))
         .model("whisper-1")
-        .responseFormat(AudioResponseFormat.VERBOSE_JSON)
+        .responseFormat(AudioRespFmt.VERBOSE_JSON)
         .build();
     CompletableFuture<AudioResponse> futureAudio = openAI.audios().transcribe(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
@@ -31,7 +31,7 @@ public class AudioServiceDemo extends AbstractDemo {
     AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
         .file(new File(fileName))
         .model("whisper-1")
-        .responseFormat(AudioResponseFormat.VERBOSE_JSON)
+        .responseFormat(AudioRespFmt.VERBOSE_JSON)
         .build();
     CompletableFuture<AudioResponse> futureAudio = openAI.audios().translate(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
