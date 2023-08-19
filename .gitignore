@@ -1,12 +1,14 @@
 .settings/
+target/
 .cache/
 .upm/
 .vscode/
-target
 
 .project
 .classpath
 .breakpoints
 
+dependency-reduced-pom.xml
 .flattened-pom.xml
+.factorypath
 *.log
