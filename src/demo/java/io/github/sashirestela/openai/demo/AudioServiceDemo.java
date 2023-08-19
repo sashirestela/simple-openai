@@ -12,8 +12,8 @@ public class AudioServiceDemo extends AbstractDemo {
 
   private String fileName;
 
-  public AudioServiceDemo(String fileName) {
-    this.fileName = fileName;
+  public AudioServiceDemo() {
+    this.fileName = "src/demo/resources/hello_audio.mp3";
   }
 
   public void demoCallAudioTranscription() {
@@ -39,8 +39,7 @@ public class AudioServiceDemo extends AbstractDemo {
   }
 
   public static void main(String[] args) {
-    String fileName = args[0];
-    AudioServiceDemo demo = new AudioServiceDemo(fileName);
+    AudioServiceDemo demo = new AudioServiceDemo();
 
     demo.addTitleAction("Call Audio Transcription", () -> demo.demoCallAudioTranscription());
     demo.addTitleAction("Call Audio Translation", () -> demo.demoCallAudioTranslation());
