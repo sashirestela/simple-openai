@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.http.ResponseType;
 
@@ -172,11 +174,11 @@ public class ReflectUtil {
         Method getMethod = clazz.getMethod(methodName, new Class<?>[] {});
         fieldValue = getMethod.invoke(object);
       } catch (Exception e) {
-        throw new SimpleUncheckedException("Cannot find the method {0} in the class {1}", methodName,
+        throw new SimpleUncheckedException("Cannot find the method {0} in the class {1}.", methodName,
             clazz.getSimpleName(), e);
       }
       if (fieldValue != null) {
-        structure.put(fieldName, fieldValue);
+        structure.put(getFieldName(field), getFieldValue(fieldValue));
       }
     }
     return structure;
@@ -191,5 +193,26 @@ public class ReflectUtil {
       nextClazz = nextClazz.getSuperclass();
     }
     return fields;
+  }
+
+  private String getFieldName(Field field) {
+    final String JSON_PROPERTY_METHOD_NAME = "value";
+    String fieldName = field.getName();
+    if (field.isAnnotationPresent(JsonProperty.class)) {
+      fieldName = (String) getAnnotAttribValue(field, JsonProperty.class, JSON_PROPERTY_METHOD_NAME);
+    }
+    return fieldName;
+  }
+
+  private Object getFieldValue(Object fieldValue) {
+    if (fieldValue.getClass().isEnum()) {
+      String enumConstantName = ((Enum<?>) fieldValue).name();
+      try {
+        fieldValue = fieldValue.getClass().getField(enumConstantName).getAnnotation(JsonProperty.class).value();
+      } catch (NoSuchFieldException | SecurityException e) {
+        throw new SimpleUncheckedException("Cannot find the enum constant {0}.", enumConstantName, e);
+      }
+    }
+    return fieldValue;
   }
 }
