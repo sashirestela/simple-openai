@@ -11,6 +11,8 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
 import io.github.sashirestela.openai.domain.image.ImageResponse;
@@ -51,7 +53,7 @@ interface OpenAI {
 
     @POST("/v1/completions")
     CompletableFuture<Stream<CompletionResponse>> createStream(@Body CompletionRequest completionRequest);
-    
+
   }
 
   interface Images {
@@ -66,6 +68,13 @@ interface OpenAI {
     @Multipart
     @POST("/v1/images/variations")
     CompletableFuture<List<ImageResponse>> createVariations(@Body ImageVariationsRequest imageRequest);
+
+  }
+
+  interface Embeddings {
+
+    @POST("/v1/embeddings")
+    CompletableFuture<EmbeddingResponse> create(@Body EmbeddingRequest embeddingRequest);
 
   }
 

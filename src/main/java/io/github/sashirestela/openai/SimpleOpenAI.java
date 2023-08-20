@@ -17,6 +17,7 @@ public class SimpleOpenAI {
   private OpenAI.ChatCompletions chatCompletionService;
   private OpenAI.Completions completionService;
   private OpenAI.Images imageService;
+  private OpenAI.Embeddings embeddingService;
   private OpenAI.Audios audioService;
 
   public SimpleOpenAI(String apiKey) {
@@ -51,6 +52,12 @@ public class SimpleOpenAI {
     imageService = Optional.ofNullable(imageService)
         .orElse(createService(OpenAI.Images.class, httpClient, apiKey));
     return imageService;
+  }
+
+  public OpenAI.Embeddings embeddings() {
+    embeddingService = Optional.ofNullable(embeddingService)
+        .orElse(createService(OpenAI.Embeddings.class, httpClient, apiKey));
+    return embeddingService;
   }
 
   public OpenAI.Audios audios() {
