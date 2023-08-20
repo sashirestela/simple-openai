@@ -13,6 +13,8 @@ public class OpenAIGeneric<T> {
 
   private String object;
 
+  private Long created;
+
   private List<T> data;
 
 }

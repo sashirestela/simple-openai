@@ -16,6 +16,7 @@ public class SimpleOpenAI {
   private OpenAI.Models modelService;
   private OpenAI.ChatCompletions chatCompletionService;
   private OpenAI.Completions completionService;
+  private OpenAI.Images imageService;
   private OpenAI.Audios audioService;
 
   public SimpleOpenAI(String apiKey) {
@@ -44,6 +45,12 @@ public class SimpleOpenAI {
     completionService = Optional.ofNullable(completionService)
         .orElse(createService(OpenAI.Completions.class, httpClient, apiKey));
     return completionService;
+  }
+
+  public OpenAI.Images images() {
+    imageService = Optional.ofNullable(imageService)
+        .orElse(createService(OpenAI.Images.class, httpClient, apiKey));
+    return imageService;
   }
 
   public OpenAI.Audios audios() {
