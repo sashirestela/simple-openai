@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import io.github.sashirestela.openai.filter.AudioFilter;
 import io.github.sashirestela.openai.filter.FilterInvocation;
+import io.github.sashirestela.openai.filter.StreamFilter;
 import io.github.sashirestela.openai.http.HttpHandler;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
@@ -43,13 +44,13 @@ public class SimpleOpenAI {
 
   public OpenAI.ChatCompletions chatCompletions() {
     chatCompletionService = Optional.ofNullable(chatCompletionService)
-        .orElse(createService(OpenAI.ChatCompletions.class, httpClient, apiKey));
+        .orElse(createService(OpenAI.ChatCompletions.class, httpClient, apiKey, new StreamFilter()));
     return chatCompletionService;
   }
 
   public OpenAI.Completions completions() {
     completionService = Optional.ofNullable(completionService)
-        .orElse(createService(OpenAI.Completions.class, httpClient, apiKey));
+        .orElse(createService(OpenAI.Completions.class, httpClient, apiKey, new StreamFilter()));
     return completionService;
   }
 

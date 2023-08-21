@@ -19,9 +19,4 @@ public class MethodElement {
 
   private Object argumentValue;
 
-  // Only this property could be modified
-  public void setArgumentValue(Object argumentValue) {
-    this.argumentValue = argumentValue;
-  }
-
 }

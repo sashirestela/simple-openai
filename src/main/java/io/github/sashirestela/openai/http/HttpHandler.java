@@ -3,7 +3,6 @@ package io.github.sashirestela.openai.http;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -74,8 +73,6 @@ public class HttpHandler implements InvocationHandler {
       String url = this.calculateUrl(method, arguments, httpMethod);
       MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class);
       ResponseType responseType = ReflectUtil.get().getResponseType(method);
-      boolean isStreaming = (responseType == ResponseType.STREAM);
-      this.setStreamInBodyIfApplicable(method, elementBody, isStreaming);
       boolean isMultipart = method.isAnnotationPresent(Multipart.class);
       BodyPublisher bodyPublisher = this.calculateBodyPublisher(elementBody, isMultipart);
       Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
@@ -147,23 +144,6 @@ public class HttpHandler implements InvocationHandler {
       url = url.replace(pathParam.getTextToReplace(), methodElement.getArgumentValue().toString());
     }
     return url;
-  }
-
-  private void setStreamInBodyIfApplicable(Method method, MethodElement elementBody, boolean isStreaming) {
-    if (elementBody == null) {
-      return;
-    }
-    final String SET_STREAM_METHOD = "setStream";
-    Parameter parameter = elementBody.getParameter();
-    Object object = elementBody.getArgumentValue();
-    try {
-      ReflectUtil.get().executeSetMethod(parameter.getType(), SET_STREAM_METHOD, new Class<?>[] { boolean.class },
-          object, isStreaming);
-      elementBody.setArgumentValue(object);
-    } catch (SimpleUncheckedException e) {
-      // 'setStream' method does not exist
-      return;
-    }
   }
 
   private String calculateContentType(boolean isMultipart) {

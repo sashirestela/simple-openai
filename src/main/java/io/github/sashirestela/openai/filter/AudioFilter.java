@@ -16,17 +16,19 @@ public class AudioFilter implements FilterInvocation {
   public void filterArguments(Object proxy, Method method, Object[] arguments) {
     Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
     AudioTranslateRequest requestObj = (AudioTranslateRequest) arguments[0];
+    AudioRespFmt responseFormat = requestObj.getResponseFormat();
+    
     if (responseClass.getSimpleName().equals("String")) {
-      if (requestObj.getResponseFormat() != null) {
-        if (!TEXT_FMT.contains(requestObj.getResponseFormat())) {
+      if (responseFormat != null) {
+        if (!TEXT_FMT.contains(responseFormat)) {
           throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", method.getName(), null);
         }
       } else {
         requestObj.setResponseFormat(AudioRespFmt.TEXT);
       }
     } else {
-      if (requestObj.getResponseFormat() != null) {
-        if (!JSON_FMT.contains(requestObj.getResponseFormat())) {
+      if (responseFormat != null) {
+        if (!JSON_FMT.contains(responseFormat)) {
           throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", method.getName(), null);
         }
       } else {

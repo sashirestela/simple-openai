@@ -7,7 +7,6 @@ public class Constant {
 
   public final static String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{}}";
 
-  public final static String HEADER_ACCEPT = "Accept";
   public final static String HEADER_CONTENT_TYPE = "Content-Type";
   public final static String HEADER_AUTHORIZATION = "Authorization";
 
