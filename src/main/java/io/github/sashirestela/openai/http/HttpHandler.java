@@ -183,13 +183,19 @@ public class HttpHandler implements InvocationHandler {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private <T> CompletableFuture<T> callToReceiveFutureObject(HttpRequest httpRequest, Class<T> responseClass) {
     CompletableFuture<HttpResponse<String>> httpResponseFuture = httpClient.sendAsync(httpRequest,
         BodyHandlers.ofString());
     CompletableFuture<T> objResponseFuture = httpResponseFuture.thenApply(response -> {
       throwExceptionIfErrorIsPresent(response, false);
       LOGGER.debug("Response: {}", response.body());
-      T objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
+      T objResponse = null;
+      if (responseClass.getSimpleName().equals("String")) {
+        objResponse = (T) response.body();
+      } else {
+        objResponse = JsonUtil.get().jsonToObject(response.body(), responseClass);
+      }
       return objResponse;
     });
     return objResponseFuture;

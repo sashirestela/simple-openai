@@ -59,6 +59,12 @@ public class FileServiceDemo extends AbstractDemo {
     System.out.println(fileResponse);
   }
 
+  public void demoCallFileGetContent() {
+    CompletableFuture<String> futureFile = openAI.files().getContent(fileId);
+    String fileContent = futureFile.join();
+    System.out.println(fileContent);
+  }
+
   public void demoCallFileDelete() {
     FileDeletedResponse fileDeleted = deleteFileResponse(fileId);
     System.out.println(fileDeleted);
@@ -70,6 +76,7 @@ public class FileServiceDemo extends AbstractDemo {
     demo.addTitleAction("Call File Create", () -> demo.demoCallFileCreate());
     demo.addTitleAction("Call File List", () -> demo.demoCallFileGetList());
     demo.addTitleAction("Call File One", () -> demo.demoCallFileGetOne());
+    demo.addTitleAction("Call File Content", () -> demo.demoCallFileGetContent());
     demo.addTitleAction("Call File Delete", () -> demo.demoCallFileDelete());
 
     demo.run();

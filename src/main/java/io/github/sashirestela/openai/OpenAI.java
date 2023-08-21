@@ -111,7 +111,6 @@ interface OpenAI {
     @GET("/v1/files/{fileId}")
     CompletableFuture<FileResponse> getOne(@Path("fileId") String fileId);
 
-    // TO-DO: handle response content type or InputStream as response type.
     @GET("/v1/files/{fileId}/content")
     CompletableFuture<String> getContent(@Path("fileId") String fileId);
 
