@@ -13,12 +13,16 @@ import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
+import io.github.sashirestela.openai.domain.file.FileDeletedResponse;
+import io.github.sashirestela.openai.domain.file.FileRequest;
+import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
 import io.github.sashirestela.openai.domain.image.ImageResponse;
 import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.http.annotation.Body;
+import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.Multipart;
 import io.github.sashirestela.openai.http.annotation.POST;
@@ -87,6 +91,27 @@ interface OpenAI {
     @Multipart
     @POST("/v1/audio/translations")
     CompletableFuture<AudioResponse> translate(@Body AudioTranslateRequest audioRequest);
+
+  }
+
+  interface Files {
+
+    @Multipart
+    @POST("/v1/files")
+    CompletableFuture<FileResponse> create(@Body FileRequest fileRequest);
+
+    @GET("/v1/files")
+    CompletableFuture<List<FileResponse>> getList();
+
+    @GET("/v1/files/{fileId}")
+    CompletableFuture<FileResponse> getOne(@Path("fileId") String fileId);
+
+    // TO-DO: handle response content type or InputStream as response type.
+    @GET("/v1/files/{fileId}/content")
+    CompletableFuture<String> getContent(@Path("fileId") String fileId);
+
+    @DELETE("/v1/files/{fileId}")
+    CompletableFuture<FileDeletedResponse> delete(@Path("fileId") String fileId);
 
   }
 

@@ -19,6 +19,7 @@ public class SimpleOpenAI {
   private OpenAI.Images imageService;
   private OpenAI.Embeddings embeddingService;
   private OpenAI.Audios audioService;
+  private OpenAI.Files fileService;
 
   public SimpleOpenAI(String apiKey) {
     this.httpClient = HttpClient.newHttpClient();
@@ -64,6 +65,12 @@ public class SimpleOpenAI {
     audioService = Optional.ofNullable(audioService)
         .orElse(createService(OpenAI.Audios.class, httpClient, apiKey));
     return audioService;
+  }
+
+  public OpenAI.Files files() {
+    fileService = Optional.ofNullable(fileService)
+        .orElse(createService(OpenAI.Files.class, httpClient, apiKey));
+    return fileService;
   }
 
   private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
