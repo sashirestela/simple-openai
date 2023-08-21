@@ -22,34 +22,34 @@ public class FinetuneServiceDemo extends AbstractDemo {
     FineTuneRequest fineTuneRequest = FineTuneRequest.builder()
         .trainingFile(fileId)
         .build();
-    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTuneService().create(fineTuneRequest);
+    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTunes().create(fineTuneRequest);
     FineTuneResponse fineTuneResponse = futureFineTune.join();
     fineTuneId = fineTuneResponse.getId();
     System.out.println(fineTuneResponse);
   }
 
   public void demoCallFineTuneGetList() {
-    CompletableFuture<List<FineTuneResponse>> futureFineTune = openAI.fineTuneService().getList();
+    CompletableFuture<List<FineTuneResponse>> futureFineTune = openAI.fineTunes().getList();
     List<FineTuneResponse> fineTuneResponses = futureFineTune.join();
     fineTuneResponses.stream()
         .forEach(System.out::println);
   }
 
   public void demoCallFineTuneGetOne() {
-    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTuneService().getOne(fineTuneId);
+    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTunes().getOne(fineTuneId);
     FineTuneResponse fineTuneResponse = futureFineTune.join();
     System.out.println(fineTuneResponse);
   }
 
   public void demoCallFineTuneGetEvents() {
-    CompletableFuture<List<FineTuneEvent>> futureEvents = openAI.fineTuneService().getEvents(fineTuneId);
+    CompletableFuture<List<FineTuneEvent>> futureEvents = openAI.fineTunes().getEvents(fineTuneId);
     List<FineTuneEvent> fineTuneEvents = futureEvents.join();
     fineTuneEvents.stream()
         .forEach(System.out::println);
   }
 
   public void demoCallFineTuneCancel() {
-    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTuneService().cancel(fineTuneId);
+    CompletableFuture<FineTuneResponse> futureFineTune = openAI.fineTunes().cancel(fineTuneId);
     FineTuneResponse fineTuneResponse = futureFineTune.join();
     System.out.println(fineTuneResponse);
     fileServiceDemo.deleteFileResponse(fileId);

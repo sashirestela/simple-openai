@@ -24,6 +24,8 @@ import io.github.sashirestela.openai.domain.image.ImageRequest;
 import io.github.sashirestela.openai.domain.image.ImageResponse;
 import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
+import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
+import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -134,6 +136,13 @@ interface OpenAI {
 
     @POST("/v1/fine-tunes/{fineTuneId}/cancel")
     CompletableFuture<FineTuneResponse> cancel(@Path("fineTuneId") String fineTuneId);
+
+  }
+
+  interface Moderations {
+
+    @POST("/v1/moderations")
+    CompletableFuture<ModerationResponse> create(@Body ModerationRequest moderationRequest);
 
   }
 
