@@ -16,6 +16,9 @@ import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
 import io.github.sashirestela.openai.domain.file.FileDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
+import io.github.sashirestela.openai.domain.finetune.FineTuneEvent;
+import io.github.sashirestela.openai.domain.finetune.FineTuneRequest;
+import io.github.sashirestela.openai.domain.finetune.FineTuneResponse;
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
 import io.github.sashirestela.openai.domain.image.ImageResponse;
@@ -112,6 +115,25 @@ interface OpenAI {
 
     @DELETE("/v1/files/{fileId}")
     CompletableFuture<FileDeletedResponse> delete(@Path("fileId") String fileId);
+
+  }
+
+  interface FineTunes {
+
+    @POST("/v1/fine-tunes")
+    CompletableFuture<FineTuneResponse> create(@Body FineTuneRequest fineTuneRequest);
+
+    @GET("/v1/fine-tunes")
+    CompletableFuture<List<FineTuneResponse>> getList();
+
+    @GET("/v1/fine-tunes/{fineTuneId}")
+    CompletableFuture<FineTuneResponse> getOne(@Path("fineTuneId") String fineTuneId);
+
+    @GET("/v1/fine-tunes/{fineTuneId}/events")
+    CompletableFuture<List<FineTuneEvent>> getEvents(@Path("fineTuneId") String fineTuneId);
+
+    @POST("/v1/fine-tunes/{fineTuneId}/cancel")
+    CompletableFuture<FineTuneResponse> cancel(@Path("fineTuneId") String fineTuneId);
 
   }
 

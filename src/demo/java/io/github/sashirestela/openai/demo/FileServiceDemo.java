@@ -15,13 +15,33 @@ public class FileServiceDemo extends AbstractDemo {
   public FileServiceDemo() {
   }
 
-  public void demoCallFileCreate() {
+  public FileResponse createFileResponse() {
     FileRequest fileRequest = FileRequest.builder()
         .file(new File("src/demo/resources/test_data.jsonl"))
         .purpose("fine-tune")
         .build();
     CompletableFuture<FileResponse> futureFile = openAI.files().create(fileRequest);
     FileResponse fileResponse = futureFile.join();
+    return fileResponse;
+  }
+
+  public FileDeletedResponse deleteFileResponse(String fileId) {
+    FileResponse fileResponse = null;
+    do {
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
+      fileResponse = openAI.files().getOne(fileId).join();
+    } while (!fileResponse.getStatus().equals("processed"));
+    CompletableFuture<FileDeletedResponse> futureFile = openAI.files().delete(fileId);
+    FileDeletedResponse fileDeleted = futureFile.join();
+    return fileDeleted;
+  }
+
+  public void demoCallFileCreate() {
+    FileResponse fileResponse = createFileResponse();
     fileId = fileResponse.getId();
     System.out.println(fileResponse);
   }
@@ -40,17 +60,7 @@ public class FileServiceDemo extends AbstractDemo {
   }
 
   public void demoCallFileDelete() {
-    FileResponse fileResponse = null;
-    do {
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-      fileResponse = openAI.files().getOne(fileId).join();
-    } while (!fileResponse.getStatus().equals("processed"));
-    CompletableFuture<FileDeletedResponse> futureFile = openAI.files().delete(fileId);
-    FileDeletedResponse fileDeleted = futureFile.join();
+    FileDeletedResponse fileDeleted = deleteFileResponse(fileId);
     System.out.println(fileDeleted);
   }
 

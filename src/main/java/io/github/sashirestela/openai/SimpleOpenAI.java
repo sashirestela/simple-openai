@@ -20,6 +20,7 @@ public class SimpleOpenAI {
   private OpenAI.Embeddings embeddingService;
   private OpenAI.Audios audioService;
   private OpenAI.Files fileService;
+  private OpenAI.FineTunes fineTuneService;
 
   public SimpleOpenAI(String apiKey) {
     this.httpClient = HttpClient.newHttpClient();
@@ -71,6 +72,12 @@ public class SimpleOpenAI {
     fileService = Optional.ofNullable(fileService)
         .orElse(createService(OpenAI.Files.class, httpClient, apiKey));
     return fileService;
+  }
+
+  public OpenAI.FineTunes fineTuneService() {
+    fineTuneService = Optional.ofNullable(fineTuneService)
+        .orElse(createService(OpenAI.FineTunes.class, httpClient, apiKey));
+    return fineTuneService;
   }
 
   private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
