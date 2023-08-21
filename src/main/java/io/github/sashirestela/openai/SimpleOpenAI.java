@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationHandler;
 import java.net.http.HttpClient;
 import java.util.Optional;
 
+import io.github.sashirestela.openai.filter.AudioFilter;
+import io.github.sashirestela.openai.filter.FilterInvocation;
 import io.github.sashirestela.openai.http.HttpHandler;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
@@ -65,7 +67,7 @@ public class SimpleOpenAI {
 
   public OpenAI.Audios audios() {
     audioService = Optional.ofNullable(audioService)
-        .orElse(createService(OpenAI.Audios.class, httpClient, apiKey));
+        .orElse(createService(OpenAI.Audios.class, httpClient, apiKey, new AudioFilter()));
     return audioService;
   }
 
@@ -89,6 +91,12 @@ public class SimpleOpenAI {
 
   private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
     InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE);
+    T service = ReflectUtil.get().createProxy(serviceClass, httpHandler);
+    return service;
+  }
+
+  private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey, FilterInvocation filter) {
+    InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE, filter);
     T service = ReflectUtil.get().createProxy(serviceClass, httpHandler);
     return service;
   }

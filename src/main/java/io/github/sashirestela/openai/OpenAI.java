@@ -97,6 +97,14 @@ interface OpenAI {
     @POST("/v1/audio/translations")
     CompletableFuture<AudioResponse> translate(@Body AudioTranslateRequest audioRequest);
 
+    @Multipart
+    @POST("/v1/audio/transcriptions")
+    CompletableFuture<String> transcribePlain(@Body AudioTranscribeRequest audioRequest);
+
+    @Multipart
+    @POST("/v1/audio/translations")
+    CompletableFuture<String> translatePlain(@Body AudioTranslateRequest audioRequest);
+
   }
 
   interface Files {

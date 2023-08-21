@@ -24,18 +24,38 @@ public class AudioServiceDemo extends AbstractDemo {
         .build();
     CompletableFuture<AudioResponse> futureAudio = openAI.audios().transcribe(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
-    System.out.println(audioResponse.getText());
+    System.out.println(audioResponse);
   }
 
   public void demoCallAudioTranslation() {
     AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
         .file(new File(fileName))
         .model("whisper-1")
-        .responseFormat(AudioRespFmt.VERBOSE_JSON)
         .build();
     CompletableFuture<AudioResponse> futureAudio = openAI.audios().translate(audioRequest);
     AudioResponse audioResponse = futureAudio.join();
-    System.out.println(audioResponse.getText());
+    System.out.println(audioResponse);
+  }
+
+  public void demoCallAudioTranscriptionPlain() {
+    AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
+        .file(new File(fileName))
+        .model("whisper-1")
+        .build();
+    CompletableFuture<String> futureAudio = openAI.audios().transcribePlain(audioRequest);
+    String audioResponse = futureAudio.join();
+    System.out.println(audioResponse);
+  }
+
+  public void demoCallAudioTranslationPlain() {
+    AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
+        .file(new File(fileName))
+        .model("whisper-1")
+        .responseFormat(AudioRespFmt.VTT)
+        .build();
+    CompletableFuture<String> futureAudio = openAI.audios().translatePlain(audioRequest);
+    String audioResponse = futureAudio.join();
+    System.out.println(audioResponse);
   }
 
   public static void main(String[] args) {
@@ -43,6 +63,8 @@ public class AudioServiceDemo extends AbstractDemo {
 
     demo.addTitleAction("Call Audio Transcription", () -> demo.demoCallAudioTranscription());
     demo.addTitleAction("Call Audio Translation", () -> demo.demoCallAudioTranslation());
+    demo.addTitleAction("Call Audio Transcription Plain", () -> demo.demoCallAudioTranscriptionPlain());
+    demo.addTitleAction("Call Audio Translation Plain", () -> demo.demoCallAudioTranslationPlain());
 
     demo.run();
   }

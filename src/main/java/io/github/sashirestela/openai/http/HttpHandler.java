@@ -27,6 +27,7 @@ import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.OpenAIError;
 import io.github.sashirestela.openai.domain.OpenAIEvent;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
+import io.github.sashirestela.openai.filter.FilterInvocation;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -49,6 +50,7 @@ public class HttpHandler implements InvocationHandler {
   private HttpClient httpClient;
   private String apiKey;
   private String urlBase;
+  private FilterInvocation filter;
 
   public HttpHandler(HttpClient httpClient, String apiKey, String urlBase) {
     this.httpClient = httpClient;
@@ -56,10 +58,18 @@ public class HttpHandler implements InvocationHandler {
     this.urlBase = urlBase;
   }
 
+  public HttpHandler(HttpClient httpClient, String apiKey, String urlBase, FilterInvocation filter) {
+    this(httpClient, apiKey, urlBase);
+    this.filter = filter;
+  }
+
   @Override
   public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
     LOGGER.debug("Invoking {}.{}()", method.getDeclaringClass().getSimpleName(), method.getName());
     try {
+      if (filter != null) {
+        filter.filterArguments(proxy, method, arguments);
+      }
       Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
       String url = this.calculateUrl(method, arguments, httpMethod);
       MethodElement elementBody = ReflectUtil.get().getMethodElementAnnotatedWith(method, arguments, Body.class);
