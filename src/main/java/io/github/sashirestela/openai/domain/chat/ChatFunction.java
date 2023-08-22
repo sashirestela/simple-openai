@@ -27,6 +27,7 @@ public class ChatFunction {
   @JsonInclude(Include.NON_NULL)
   private String description;
 
+  @NonNull
   @JsonSerialize(using = ParametersSerializer.class)
   @JsonProperty("parameters")
   private Class<? extends Functional> functionalClass;
