@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.chat.serializer;
+package io.github.sashirestela.openai.function;
 
 import java.io.IOException;
 

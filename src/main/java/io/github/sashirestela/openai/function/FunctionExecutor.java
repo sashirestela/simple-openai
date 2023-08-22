@@ -1,22 +1,23 @@
-package io.github.sashirestela.openai;
+package io.github.sashirestela.openai.function;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
 import io.github.sashirestela.openai.support.CommonUtil;
 import io.github.sashirestela.openai.support.JsonUtil;
 
-public class SimpleFunctionExecutor {
+public class FunctionExecutor {
   private Map<String, ChatFunction> mapFunctions = new HashMap<>();
 
-  public SimpleFunctionExecutor() {
+  public FunctionExecutor() {
   }
 
-  public SimpleFunctionExecutor(List<ChatFunction> functions) {
+  public FunctionExecutor(List<ChatFunction> functions) {
     enrollFunctions(functions);
   }
 
@@ -47,8 +48,8 @@ public class SimpleFunctionExecutor {
     }
     try {
       ChatFunction function = mapFunctions.get(functionName);
-      Object argumentsObj = JsonUtil.get().jsonToObject(functionToCall.getArguments(), function.getParameters());
-      T result = (T) function.getFunctionToExecute().apply(argumentsObj);
+      Functional object = JsonUtil.get().jsonToObject(functionToCall.getArguments(), function.getFunctionalClass());
+      T result = (T) object.execute();
       return result;
     } catch (RuntimeException e) {
       throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);

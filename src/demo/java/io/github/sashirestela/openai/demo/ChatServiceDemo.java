@@ -8,12 +8,13 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-import io.github.sashirestela.openai.SimpleFunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.Role;
+import io.github.sashirestela.openai.function.FunctionExecutor;
+import io.github.sashirestela.openai.function.Functional;
 
 public class ChatServiceDemo extends AbstractDemo {
 
@@ -48,27 +49,24 @@ public class ChatServiceDemo extends AbstractDemo {
   }
 
   public void demoCallChatWithFunctions() {
-    SimpleFunctionExecutor functionExecutor = new SimpleFunctionExecutor();
+    FunctionExecutor functionExecutor = new FunctionExecutor();
     functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("get_weather")
             .description("Get the current weather of a location")
-            .functionToExecute(Weather.class,
-                weather -> weather.location + " - 29 " + weather.unit + " degrees")
+            .functionalClass(Weather.class)
             .build());
     functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("product")
             .description("Get the product of two numbers")
-            .functionToExecute(Product.class,
-                p -> p.multiplicand * p.multiplier)
+            .functionalClass(Product.class)
             .build());
     functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("run_alarm")
             .description("Run an alarm")
-            .functionToExecute(null,
-                none -> "DONE")
+            .functionalClass(RunAlarm.class)
             .build());
     List<ChatMessage> messages = new ArrayList<>();
     messages.add(new ChatMessage(Role.USER, "What is the product of 123 and 456?"));
@@ -100,16 +98,21 @@ public class ChatServiceDemo extends AbstractDemo {
     System.out.println(chatResponse.firstContent());
   }
 
-  public static class Weather {
+  public static class Weather implements Functional {
     @JsonPropertyDescription("City and state, for example: León, Guanajuato")
     public String location;
 
     @JsonPropertyDescription("The temperature unit, can be 'celsius' or 'fahrenheit'")
     @JsonProperty(required = true)
     public String unit;
+
+    @Override
+    public Object execute() {
+      return Math.random() * 45;
+    }
   }
 
-  public static class Product {
+  public static class Product implements Functional {
     @JsonPropertyDescription("The multiplicand part of a product")
     @JsonProperty(required = true)
     public double multiplicand;
@@ -117,6 +120,18 @@ public class ChatServiceDemo extends AbstractDemo {
     @JsonPropertyDescription("The multiplier part of a product")
     @JsonProperty(required = true)
     public double multiplier;
+
+    @Override
+    public Object execute() {
+      return multiplicand * multiplier;
+    }
+  }
+
+  public static class RunAlarm implements Functional {
+    @Override
+    public Object execute() {
+      return "DONE";
+    }
   }
 
   public static void main(String[] args) {
