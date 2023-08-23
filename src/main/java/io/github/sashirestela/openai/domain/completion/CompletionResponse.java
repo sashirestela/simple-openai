@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.github.sashirestela.openai.domain.common.Usage;
+import io.github.sashirestela.openai.domain.OpenAIUsage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class CompletionResponse {
 
   private List<Choice> choices;
 
-  private Usage usage;
+  private OpenAIUsage usage;
 
   public String firstText() {
     return getChoices().get(0).getText();

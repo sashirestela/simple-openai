@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.embedding;
 
 import java.util.List;
 
-import io.github.sashirestela.openai.domain.common.Usage;
+import io.github.sashirestela.openai.domain.OpenAIUsage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,6 @@ public class EmbeddingResponse {
 
   private String model;
 
-  private Usage usage;
+  private OpenAIUsage usage;
   
 }

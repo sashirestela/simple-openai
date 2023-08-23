@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.chat;
 
 import java.util.List;
 
-import io.github.sashirestela.openai.domain.common.Usage;
+import io.github.sashirestela.openai.domain.OpenAIUsage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class ChatResponse {
 
   private List<Choice> choices;
 
-  private Usage usage;
+  private OpenAIUsage usage;
 
   public ChatMessage firstMessage() {
     return getChoices().get(0).getMessage();

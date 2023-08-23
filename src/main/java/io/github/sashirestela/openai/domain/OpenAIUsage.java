@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.common;
+package io.github.sashirestela.openai.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class Usage {
+public class OpenAIUsage {
 
   @JsonProperty("prompt_tokens")
   private Integer promptTokens;
