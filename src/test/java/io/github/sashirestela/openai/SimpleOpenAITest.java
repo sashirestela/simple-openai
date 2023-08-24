@@ -14,21 +14,21 @@ public class SimpleOpenAITest {
 
   @Test
   void shouldCreateAnInstanceOfModelServiceWhenCallingSimpleOpenAI() {
-    SimpleOpenAI simpleOpenAI = new SimpleOpenAI("apiKey", httpClient);
+    SimpleOpenAI simpleOpenAI = SimpleOpenAI.builder().apiKey("apiKey").httpClient(httpClient).build();
     OpenAI.Models modelService = simpleOpenAI.models();
     assertNotNull(modelService);
   }
 
   @Test
   void shouldCreateAnInstanceOfChatServiceWhenCallingSimpleOpenAI() {
-    SimpleOpenAI simpleOpenAI = new SimpleOpenAI("apiKey");
+    SimpleOpenAI simpleOpenAI = SimpleOpenAI.builder().apiKey("apiKey").build();
     OpenAI.ChatCompletions chatService = simpleOpenAI.chatCompletions();
     assertNotNull(chatService);
   }
 
   @Test
   void shouldCreateAnIstanceOfAudioServiceWhenCallingSimpleOpenAI() {
-    SimpleOpenAI simpleOpenAI = new SimpleOpenAI("apiKey");
+    SimpleOpenAI simpleOpenAI = SimpleOpenAI.builder().apiKey("apiKey").build();
     OpenAI.Audios audioService = simpleOpenAI.audios();
     assertNotNull(audioService);
   }

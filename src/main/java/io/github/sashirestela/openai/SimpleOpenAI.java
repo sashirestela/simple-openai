@@ -7,99 +7,116 @@ import java.util.Optional;
 import io.github.sashirestela.openai.filter.AudioFilter;
 import io.github.sashirestela.openai.filter.FilterInvocation;
 import io.github.sashirestela.openai.filter.StreamFilter;
+import io.github.sashirestela.openai.http.HttpConfig;
 import io.github.sashirestela.openai.http.HttpHandler;
 import io.github.sashirestela.openai.support.ReflectUtil;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+@NoArgsConstructor
+@Getter
 public class SimpleOpenAI {
 
   private final String OPENAI_URL_BASE = "https://api.openai.com";
-  private HttpClient httpClient;
+  private final String ORGANIZATION_HEADER = "OpenAI-Organization";
+
+  @NonNull
   private String apiKey;
 
-  private OpenAI.Models modelService;
+  private String organizationId;
+  private String urlBase;
+  private HttpClient httpClient;
+
+  private HttpConfig httpConfig;
+
+  private OpenAI.Audios audioService;
   private OpenAI.ChatCompletions chatCompletionService;
   private OpenAI.Completions completionService;
-  private OpenAI.Images imageService;
   private OpenAI.Embeddings embeddingService;
-  private OpenAI.Audios audioService;
   private OpenAI.Files fileService;
-  private OpenAI.FineTunes fineTuneService;
+  private OpenAI.Images imageService;
+  private OpenAI.Models modelService;
   private OpenAI.Moderations moderationService;
+  private OpenAI.FineTunes fineTuneService;
 
-  public SimpleOpenAI(String apiKey) {
-    this.httpClient = HttpClient.newHttpClient();
+  @Builder
+  public SimpleOpenAI(String apiKey, String organizationId, String urlBase, HttpClient httpClient) {
     this.apiKey = apiKey;
+    this.organizationId = organizationId;
+    this.urlBase = Optional.ofNullable(urlBase).orElse(OPENAI_URL_BASE);
+    this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
+
+    String[] headers = organizationId == null
+        ? new String[] {}
+        : new String[] { ORGANIZATION_HEADER, organizationId };
+    this.httpConfig = HttpConfig.builder()
+        .apiKey(this.apiKey)
+        .urlBase(this.urlBase)
+        .httpClient(this.httpClient)
+        .headers(headers)
+        .build();
   }
 
-  public SimpleOpenAI(String apiKey, HttpClient httpClient) {
-    this.httpClient = httpClient;
-    this.apiKey = apiKey;
-  }
-
-  public OpenAI.Models models() {
-    modelService = Optional.ofNullable(modelService)
-        .orElse(createService(OpenAI.Models.class, httpClient, apiKey));
-    return modelService;
+  public OpenAI.Audios audios() {
+    audioService = Optional.ofNullable(audioService)
+        .orElse(createServiceProxy(OpenAI.Audios.class, new AudioFilter()));
+    return audioService;
   }
 
   public OpenAI.ChatCompletions chatCompletions() {
     chatCompletionService = Optional.ofNullable(chatCompletionService)
-        .orElse(createService(OpenAI.ChatCompletions.class, httpClient, apiKey, new StreamFilter()));
+        .orElse(createServiceProxy(OpenAI.ChatCompletions.class, new StreamFilter()));
     return chatCompletionService;
   }
 
   public OpenAI.Completions completions() {
     completionService = Optional.ofNullable(completionService)
-        .orElse(createService(OpenAI.Completions.class, httpClient, apiKey, new StreamFilter()));
+        .orElse(createServiceProxy(OpenAI.Completions.class, new StreamFilter()));
     return completionService;
-  }
-
-  public OpenAI.Images images() {
-    imageService = Optional.ofNullable(imageService)
-        .orElse(createService(OpenAI.Images.class, httpClient, apiKey));
-    return imageService;
   }
 
   public OpenAI.Embeddings embeddings() {
     embeddingService = Optional.ofNullable(embeddingService)
-        .orElse(createService(OpenAI.Embeddings.class, httpClient, apiKey));
+        .orElse(createServiceProxy(OpenAI.Embeddings.class, null));
     return embeddingService;
-  }
-
-  public OpenAI.Audios audios() {
-    audioService = Optional.ofNullable(audioService)
-        .orElse(createService(OpenAI.Audios.class, httpClient, apiKey, new AudioFilter()));
-    return audioService;
   }
 
   public OpenAI.Files files() {
     fileService = Optional.ofNullable(fileService)
-        .orElse(createService(OpenAI.Files.class, httpClient, apiKey));
+        .orElse(createServiceProxy(OpenAI.Files.class, null));
     return fileService;
   }
 
-  public OpenAI.FineTunes fineTunes() {
-    fineTuneService = Optional.ofNullable(fineTuneService)
-        .orElse(createService(OpenAI.FineTunes.class, httpClient, apiKey));
-    return fineTuneService;
+  public OpenAI.Images images() {
+    imageService = Optional.ofNullable(imageService)
+        .orElse(createServiceProxy(OpenAI.Images.class, null));
+    return imageService;
+  }
+
+  public OpenAI.Models models() {
+    modelService = Optional.ofNullable(modelService)
+        .orElse(createServiceProxy(OpenAI.Models.class, null));
+    return modelService;
   }
 
   public OpenAI.Moderations moderations() {
     moderationService = Optional.ofNullable(moderationService)
-        .orElse(createService(OpenAI.Moderations.class, httpClient, apiKey));
+        .orElse(createServiceProxy(OpenAI.Moderations.class, null));
     return moderationService;
   }
 
-  private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey) {
-    InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE);
-    T service = ReflectUtil.get().createProxy(serviceClass, httpHandler);
-    return service;
+  public OpenAI.FineTunes fineTunes() {
+    fineTuneService = Optional.ofNullable(fineTuneService)
+        .orElse(createServiceProxy(OpenAI.FineTunes.class, null));
+    return fineTuneService;
   }
 
-  private <T> T createService(Class<T> serviceClass, HttpClient httpClient, String apiKey, FilterInvocation filter) {
-    InvocationHandler httpHandler = new HttpHandler(httpClient, apiKey, OPENAI_URL_BASE, filter);
-    T service = ReflectUtil.get().createProxy(serviceClass, httpHandler);
-    return service;
+  private <T> T createServiceProxy(Class<T> serviceClass, FilterInvocation filter) {
+    InvocationHandler httpHandler = new HttpHandler(httpConfig, filter);
+    T serviceProxy = ReflectUtil.get().createProxy(serviceClass, httpHandler);
+    return serviceProxy;
   }
 
 }

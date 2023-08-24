@@ -46,20 +46,22 @@ public class HttpHandler implements InvocationHandler {
   private final static List<Class<? extends Annotation>> HTTP_METHODS = Arrays.asList(
       GET.class, POST.class, PUT.class, DELETE.class);
 
+  private HttpConfig httpConfig;
+  private FilterInvocation filter;
+
   private HttpClient httpClient;
   private String apiKey;
   private String urlBase;
-  private FilterInvocation filter;
+  private String[] headers;
 
-  public HttpHandler(HttpClient httpClient, String apiKey, String urlBase) {
-    this.httpClient = httpClient;
-    this.apiKey = apiKey;
-    this.urlBase = urlBase;
-  }
-
-  public HttpHandler(HttpClient httpClient, String apiKey, String urlBase, FilterInvocation filter) {
-    this(httpClient, apiKey, urlBase);
+  public HttpHandler(HttpConfig httpConfig, FilterInvocation filter) {
+    this.httpConfig = httpConfig;
     this.filter = filter;
+
+    this.httpClient = httpConfig.getHttpClient();
+    this.apiKey = httpConfig.getApiKey();
+    this.urlBase = httpConfig.getUrlBase();
+    this.headers = httpConfig.getHeaders();
   }
 
   @Override
@@ -82,6 +84,9 @@ public class HttpHandler implements InvocationHandler {
       builder = builder.header(Constant.HEADER_CONTENT_TYPE, this.calculateContentType(isMultipart));
       builder = builder.header(Constant.HEADER_AUTHORIZATION, Constant.AUTH_BEARER + apiKey);
       builder = builder.method(httpMethod.getSimpleName(), bodyPublisher);
+      if ( ! CommonUtil.get().isNullOrEmpty(headers)) {
+        builder = builder.headers(headers);
+      }
       HttpRequest httpRequest = builder.build();
 
       CompletableFuture<?> responseObject = null;

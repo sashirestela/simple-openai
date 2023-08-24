@@ -8,6 +8,7 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 public abstract class AbstractDemo {
 
   private String apiKey;
+  private String organizationId;
   protected SimpleOpenAI openAI;
 
   private static List<TitleAction> titleActions = new ArrayList<>();
@@ -15,7 +16,11 @@ public abstract class AbstractDemo {
 
   public AbstractDemo() {
     apiKey = System.getenv("OPENAI_API_KEY");
-    openAI = new SimpleOpenAI(apiKey);
+    organizationId = System.getenv("OPENAI_ORGANIZATION_ID");
+    openAI = SimpleOpenAI.builder()
+        .apiKey(apiKey)
+        .organizationId(organizationId)
+        .build();
   }
 
   public void addTitleAction(String title, Action action) {
@@ -29,7 +34,7 @@ public abstract class AbstractDemo {
       System.out.println(ta.title);
       System.out.println("-".repeat(times));
       ta.action.execute();
-      System.out.println("~".repeat(times/2));
+      System.out.println("~".repeat(times / 2));
       long endTime = System.currentTimeMillis();
       long duration = endTime - startTime;
       System.out.println("Duration in milliseconds: " + duration);

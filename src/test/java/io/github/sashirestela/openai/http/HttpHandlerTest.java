@@ -53,7 +53,13 @@ public class HttpHandlerTest {
 
   @BeforeEach
   void setup() {
-    handler = new HttpHandler(httpClient, "apiKey", "https://api");
+    handler = new HttpHandler(
+        HttpConfig.builder()
+            .apiKey("apiKey")
+            .urlBase("https://api")
+            .httpClient(httpClient)
+            .build(),
+        null);
     service = ReflectUtil.get().createProxy(TestService.class, handler);
   }
 
