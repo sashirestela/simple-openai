@@ -128,8 +128,8 @@ interface OpenAI {
   }
 
   /**
-   * Given a prompt, the model will return one or more predicted completions.<br/>
-   * It is recommend most users to use the Chat Completion.
+   * Given a prompt, the model will return one or more predicted completions. It
+   * is recommend most users to use the Chat Completion.
    * 
    * @see <a href=
    *      "https://platform.openai.com/docs/api-reference/completions">OpenAI
