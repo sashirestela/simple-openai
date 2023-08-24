@@ -37,6 +37,8 @@ import io.github.sashirestela.openai.http.annotation.Path;
  * The OpenAI API can be applied to virtually any task that requires
  * understanding or generating natural language and code. The OpenAI API can
  * also be used to generate and edit images or convert speech into text.
+ * 
+ * @see <a href="https://platform.openai.com/docs/api-reference">OpenAI API</a>
  */
 interface OpenAI {
 
@@ -334,7 +336,8 @@ interface OpenAI {
   }
 
   /**
-   * Manage legacy fine-tuning jobs to tailor a model to your specific training data.
+   * Manage legacy fine-tuning jobs to tailor a model to your specific training
+   * data.
    * 
    * @see <a href=
    *      "https://platform.openai.com/docs/api-reference/fine-tunes">OpenAI
