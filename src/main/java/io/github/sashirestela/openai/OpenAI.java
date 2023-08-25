@@ -342,7 +342,6 @@ interface OpenAI {
    * @see <a href=
    *      "https://platform.openai.com/docs/api-reference/fine-tunes">OpenAI
    *      Fine-Tune</a>
-   * @deprecated
    */
   interface FineTunes {
 
