@@ -11,8 +11,8 @@ import java.util.Map;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.support.Constant;
 
-public class MultipartFormData {
-  private static MultipartFormData multipart = null;
+public class HttpMultipart {
+  private static HttpMultipart multipart = null;
 
   private final static String DASH = "--";
   private final static String DQ = "\"";
@@ -22,12 +22,12 @@ public class MultipartFormData {
   private final static String FILE_NAME = "; filename=";
   private final static String CONTENT_TYPE = "Content-Type: ";
 
-  private MultipartFormData() {
+  private HttpMultipart() {
   }
 
-  public static MultipartFormData get() {
+  public static HttpMultipart get() {
     if (multipart == null) {
-      multipart = new MultipartFormData();
+      multipart = new HttpMultipart();
     }
     return multipart;
   }

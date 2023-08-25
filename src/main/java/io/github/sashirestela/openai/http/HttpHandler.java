@@ -167,7 +167,7 @@ public class HttpHandler implements InvocationHandler {
     Object object = elementBody.getArgumentValue();
     if (isMultipart) {
       Map<String, Object> data = ReflectUtil.get().getMapFields(object);
-      List<byte[]> requestBytes = MultipartFormData.get().toByteArrays(data);
+      List<byte[]> requestBytes = HttpMultipart.get().toByteArrays(data);
       LOGGER.debug("Request: {}", data);
       return BodyPublishers.ofByteArrays(requestBytes);
     } else {
