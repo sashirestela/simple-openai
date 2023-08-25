@@ -11,9 +11,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class ServiceMetadata {
+@Builder
+public class Metadata {
 
-  private Map<String, ServiceMetadata.Method> methodsMap;
+  private String name;
+
+  private List<Metadata.Annotation> annotations;
+
+  private Map<String, Metadata.Method> methods;
 
   @AllArgsConstructor
   @Getter
@@ -25,9 +30,9 @@ public class ServiceMetadata {
 
     private String fullClassName;
 
-    private List<ServiceMetadata.Parameter> parameters;
+    private List<Metadata.Parameter> parameters;
 
-    private List<ServiceMetadata.Annotation> annotations;
+    private List<Metadata.Annotation> annotations;
 
   }
 
