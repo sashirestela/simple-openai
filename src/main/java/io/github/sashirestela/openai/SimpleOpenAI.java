@@ -5,10 +5,10 @@ import java.net.http.HttpClient;
 import java.util.Optional;
 
 import io.github.sashirestela.openai.filter.AudioFilter;
-import io.github.sashirestela.openai.filter.FilterInvocation;
 import io.github.sashirestela.openai.filter.StreamFilter;
 import io.github.sashirestela.openai.http.HttpConfig;
 import io.github.sashirestela.openai.http.HttpHandler;
+import io.github.sashirestela.openai.http.InvocationFilter;
 import io.github.sashirestela.openai.support.ReflectUtil;
 import lombok.Builder;
 import lombok.Getter;
@@ -183,7 +183,7 @@ public class SimpleOpenAI {
    *                       {@link HttpHandler HttpHandler}.
    * @return A "virtual" instance for the interface.
    */
-  private <T> T create(Class<T> interfaceClass, FilterInvocation filter) {
+  private <T> T create(Class<T> interfaceClass, InvocationFilter filter) {
     InvocationHandler httpHandler = new HttpHandler(httpConfig, filter);
     T aProxy = ReflectUtil.get().createProxy(interfaceClass, httpHandler);
     return aProxy;

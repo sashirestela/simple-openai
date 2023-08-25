@@ -26,7 +26,6 @@ import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.OpenAIError;
 import io.github.sashirestela.openai.domain.OpenAIEvent;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
-import io.github.sashirestela.openai.filter.FilterInvocation;
 import io.github.sashirestela.openai.http.annotation.Body;
 import io.github.sashirestela.openai.http.annotation.DELETE;
 import io.github.sashirestela.openai.http.annotation.GET;
@@ -47,14 +46,14 @@ public class HttpHandler implements InvocationHandler {
       GET.class, POST.class, PUT.class, DELETE.class);
 
   private HttpConfig httpConfig;
-  private FilterInvocation filter;
+  private InvocationFilter filter;
 
   private HttpClient httpClient;
   private String apiKey;
   private String urlBase;
   private String[] headers;
 
-  public HttpHandler(HttpConfig httpConfig, FilterInvocation filter) {
+  public HttpHandler(HttpConfig httpConfig, InvocationFilter filter) {
     this.httpConfig = httpConfig;
     this.filter = filter;
 
@@ -69,7 +68,7 @@ public class HttpHandler implements InvocationHandler {
     LOGGER.debug("Invoking {}.{}()", method.getDeclaringClass().getSimpleName(), method.getName());
     try {
       if (filter != null) {
-        filter.filterArguments(proxy, method, arguments);
+        filter.apply(method, arguments);
       }
       Class<? extends Annotation> httpMethod = this.calculateHttpMethod(method);
       String url = this.calculateUrl(method, arguments, httpMethod);

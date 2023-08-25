@@ -3,13 +3,14 @@ package io.github.sashirestela.openai.filter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import io.github.sashirestela.openai.http.InvocationFilter;
 import io.github.sashirestela.openai.http.ResponseType;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
-public class StreamFilter implements FilterInvocation {
+public class StreamFilter implements InvocationFilter {
 
   @Override
-  public void filterArguments(Object proxy, Method method, Object[] arguments) {
+  public void apply(Method method, Object[] arguments) {
     ResponseType responseType = ReflectUtil.get().getResponseType(method);
     boolean isStreaming = (responseType == ResponseType.STREAM);
     final String SET_STREAM_METHOD = "setStream";

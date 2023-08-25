@@ -6,14 +6,15 @@ import java.util.EnumSet;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
+import io.github.sashirestela.openai.http.InvocationFilter;
 import io.github.sashirestela.openai.support.ReflectUtil;
 
-public class AudioFilter implements FilterInvocation {
+public class AudioFilter implements InvocationFilter {
   private final static EnumSet<AudioRespFmt> JSON_FMT = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
   private final static EnumSet<AudioRespFmt> TEXT_FMT = EnumSet.complementOf(JSON_FMT);
 
   @Override
-  public void filterArguments(Object proxy, Method method, Object[] arguments) {
+  public void apply(Method method, Object[] arguments) {
     Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
     AudioTranslateRequest requestObj = (AudioTranslateRequest) arguments[0];
     AudioRespFmt responseFormat = requestObj.getResponseFormat();
