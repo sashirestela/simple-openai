@@ -16,9 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
- * The factory class that implements the {@link OpenAI OpenAI} inner interfaces.
- * Actually it provides dynamic proxies that intercepts methods invocations to
- * be resolved by the {@link HttpHandler HttpHandler} class.
+ * The factory that generates implementations of the {@link OpenAI OpenAI}
+ * interfaces.
  */
 @NoArgsConstructor
 @Getter
@@ -33,7 +32,6 @@ public class SimpleOpenAI {
   private String organizationId;
   private String urlBase;
   private HttpClient httpClient;
-
   private HttpConfig httpConfig;
 
   private OpenAI.Audios audioService;
@@ -47,7 +45,7 @@ public class SimpleOpenAI {
   private OpenAI.FineTunes fineTuneService;
 
   /**
-   * Base constructor for a builder to create an object of this class.
+   * Constructor used to generate a builder.
    * 
    * @param apiKey         Identifier to be used for authentication. Mandatory.
    * @param organizationId Organization's id to be charged for usage. Optional.
@@ -75,101 +73,102 @@ public class SimpleOpenAI {
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Audios interface.
+   * Generates an implementation of the Audios interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Audios audios() {
     audioService = Optional.ofNullable(audioService)
-        .orElse(createServiceProxy(OpenAI.Audios.class, new AudioFilter()));
+        .orElse(create(OpenAI.Audios.class, new AudioFilter()));
     return audioService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the ChatCompletions interface.
+   * Generates an implementation of the ChatCompletions interface to handle
+   * requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.ChatCompletions chatCompletions() {
     chatCompletionService = Optional.ofNullable(chatCompletionService)
-        .orElse(createServiceProxy(OpenAI.ChatCompletions.class, new StreamFilter()));
+        .orElse(create(OpenAI.ChatCompletions.class, new StreamFilter()));
     return chatCompletionService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Completions interface.
+   * Generates an implementation of the Completions interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Completions completions() {
     completionService = Optional.ofNullable(completionService)
-        .orElse(createServiceProxy(OpenAI.Completions.class, new StreamFilter()));
+        .orElse(create(OpenAI.Completions.class, new StreamFilter()));
     return completionService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Embeddings interface.
+   * Generates an implementation of the Embeddings interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Embeddings embeddings() {
     embeddingService = Optional.ofNullable(embeddingService)
-        .orElse(createServiceProxy(OpenAI.Embeddings.class, null));
+        .orElse(create(OpenAI.Embeddings.class, null));
     return embeddingService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Files interface.
+   * Generates an implementation of the Files interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Files files() {
     fileService = Optional.ofNullable(fileService)
-        .orElse(createServiceProxy(OpenAI.Files.class, null));
+        .orElse(create(OpenAI.Files.class, null));
     return fileService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Images interface.
+   * Generates an implementation of the Images interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Images images() {
     imageService = Optional.ofNullable(imageService)
-        .orElse(createServiceProxy(OpenAI.Images.class, null));
+        .orElse(create(OpenAI.Images.class, null));
     return imageService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Models interface.
+   * Generates an implementation of the Models interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Models models() {
     modelService = Optional.ofNullable(modelService)
-        .orElse(createServiceProxy(OpenAI.Models.class, null));
+        .orElse(create(OpenAI.Models.class, null));
     return modelService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the Moderations interface.
+   * Generates an implementation of the Moderations interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Moderations moderations() {
     moderationService = Optional.ofNullable(moderationService)
-        .orElse(createServiceProxy(OpenAI.Moderations.class, null));
+        .orElse(create(OpenAI.Moderations.class, null));
     return moderationService;
   }
 
   /**
-   * Creates a dynamic proxy to handle requests to the FineTunes interface.
+   * Generates an implementation of the FineTunes interface to handle requests.
    * 
-   * @return A "virtual" instance for the interface. It is created only once.
+   * @return An instance of the interface. It is created only once.
    */
   public OpenAI.FineTunes fineTunes() {
     fineTuneService = Optional.ofNullable(fineTuneService)
-        .orElse(createServiceProxy(OpenAI.FineTunes.class, null));
+        .orElse(create(OpenAI.FineTunes.class, null));
     return fineTuneService;
   }
 
@@ -177,17 +176,17 @@ public class SimpleOpenAI {
    * Creates a generic dynamic proxy with a new {@link HttpHandler HttpHandler}
    * object which will resolve the requests.
    * 
-   * @param <T>              A generic interface.
-   * @param serviceInterface Service of a generic interface
-   * @param filter           Object that could modify the arguments passed to the
-   *                         method invocation, before to be handled by
-   *                         {@link HttpHandler HttpHandler}.
+   * @param <T>            A generic interface.
+   * @param interfaceClass Service of a generic interface
+   * @param filter         Object that could modify the arguments passed to the
+   *                       method invocation, before to be handled by
+   *                       {@link HttpHandler HttpHandler}.
    * @return A "virtual" instance for the interface.
    */
-  private <T> T createServiceProxy(Class<T> serviceInterface, FilterInvocation filter) {
+  private <T> T create(Class<T> interfaceClass, FilterInvocation filter) {
     InvocationHandler httpHandler = new HttpHandler(httpConfig, filter);
-    T serviceProxy = ReflectUtil.get().createProxy(serviceInterface, httpHandler);
-    return serviceProxy;
+    T aProxy = ReflectUtil.get().createProxy(interfaceClass, httpHandler);
+    return aProxy;
   }
 
 }
