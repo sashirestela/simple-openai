@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.domain.image;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +17,6 @@ import lombok.experimental.SuperBuilder;
 public class ImageVariationsRequest extends AbstractImageRequest {
 
   @NonNull
-  private File image;
+  private Path image;
 
 }

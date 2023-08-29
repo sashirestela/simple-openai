@@ -1,7 +1,6 @@
 package io.github.sashirestela.openai.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +46,7 @@ public class CommonUtilTest {
 
   @Test
   void shouldReturnTrueWhenStringIsNullOrEmptyOrBlank() {
-    String[] testData = {null, "", " "};
+    String[] testData = { null, "", " " };
     for (String data : testData) {
       boolean actualCondition = CommonUtil.get().isNullOrEmpty(data);
       boolean expectedCondition = true;
@@ -89,58 +88,16 @@ public class CommonUtilTest {
   }
 
   @Test
-  void shouldReturnMatchingTextWhenSomeTextMatchesRegex() {
-    String[][] testData = {
-        { "/one/url/{pathvar}", Constant.REGEX_PATH_PARAM_URL, "pathvar" },
-        { "Stream<String>", Constant.REGEX_GENERIC_CLASS, "String" },
-        { "Stream<List<String>>", Constant.REGEX_GENERIC_CLASS, "List<String>" }
-    };
-    for (String[] data : testData) {
-      String actualMatchingText = CommonUtil.get().findFirstMatch(data[0], data[1]);
-      String expectedMatchingText = data[2];
-      assertEquals(expectedMatchingText, actualMatchingText);
-    }
-  }
-
-  @Test
-  void shouldReturnNullWhenSomeTextDoesNotMatchRegex() {
-    String[][] testData = {
-        { "/one/url/pathvar", Constant.REGEX_PATH_PARAM_URL },
-        { "String", Constant.REGEX_GENERIC_CLASS }
-    };
-    for (String[] data : testData) {
-      assertNull(CommonUtil.get().findFirstMatch(data[0], data[1]));
-    }
-  }
-
-  @Test
-  void shouldReturnInnerGroupWhenPassingAnyTextAndRegex() {
-    String[][] testData = {
-        { "String", Constant.REGEX_GENERIC_CLASS, "String" },
-        { "Stream<Double>", Constant.REGEX_GENERIC_CLASS, "Double" },
-        { "Stream<List<Integer>>", Constant.REGEX_GENERIC_CLASS, "Integer" }
-    };
-    for (String[] data : testData) {
-      String actualMatchingGroup = CommonUtil.get().findInnerGroup(data[0], data[1]);
-      String expectedMatchingGroup = data[2];
-      assertEquals(expectedMatchingGroup, actualMatchingGroup);
-    }
-  }
-
-  @Test
   @SuppressWarnings("unchecked")
-  void shouldReturnAllMatchesWhenSomeTextMatchesRegex() {
+  void shouldReturnFullMatchesWhenSomeTextMatchesRegex() {
     Object[][] testData = {
         { "/api/service", Constant.REGEX_PATH_PARAM_URL, Arrays.asList() },
-        { "/api/service/{path1}", Constant.REGEX_PATH_PARAM_URL, Arrays.asList(
-            new CommonUtil.Match("{path1}", "path1")) },
-        { "/api/service/{path1}/{path2}", Constant.REGEX_PATH_PARAM_URL, Arrays.asList(
-            new CommonUtil.Match("{path1}", "path1"),
-            new CommonUtil.Match("{path2}", "path2")) }
+        { "/api/service/{path1}", Constant.REGEX_PATH_PARAM_URL, Arrays.asList("path1") },
+        { "/api/service/{path1}/{path2}", Constant.REGEX_PATH_PARAM_URL, Arrays.asList("path1", "path2") }
     };
     for (Object[] data : testData) {
-      List<CommonUtil.Match> actualListMatches = CommonUtil.get().findAllMatches((String) data[0], (String) data[1]);
-      List<CommonUtil.Match> expectedListMatches = (List<CommonUtil.Match>) data[2];
+      List<String> actualListMatches = CommonUtil.get().findFullMatches((String) data[0], (String) data[1]);
+      List<String> expectedListMatches = (List<String>) data[2];
       assertEquals(expectedListMatches, actualListMatches);
     }
   }

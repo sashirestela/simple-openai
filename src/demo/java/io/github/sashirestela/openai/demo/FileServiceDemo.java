@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -17,7 +17,7 @@ public class FileServiceDemo extends AbstractDemo {
 
   public FileResponse createFileResponse() {
     FileRequest fileRequest = FileRequest.builder()
-        .file(new File("src/demo/resources/test_data.jsonl"))
+        .file(Paths.get("src/demo/resources/test_data.jsonl"))
         .purpose("fine-tune")
         .build();
     CompletableFuture<FileResponse> futureFile = openAI.files().create(fileRequest);

@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai.http;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +38,15 @@ public class HttpMultipart {
       byteArrays.add(toBytes(DASH + Constant.BOUNDARY_VALUE + NL));
       byteArrays.add(toBytes(DISPOSITION));
       String fieldName = entry.getKey();
-      if (entry.getValue() instanceof File) {
+      if (entry.getValue() instanceof Path) {
         String fileName = null;
         String mimeType = null;
         byte[] fileContent = null;
         try {
-          File file = (File) entry.getValue();
-          fileName = file.getName();
-          mimeType = Files.probeContentType(file.toPath());
-          fileContent = Files.readAllBytes(file.toPath());
+          Path path = (Path) entry.getValue();
+          fileName = path.toString();
+          mimeType = Files.probeContentType(path);
+          fileContent = Files.readAllBytes(path);
         } catch (IOException e) {
           throw new SimpleUncheckedException("Error trying to read the file {0}.", fileName, e);
         }

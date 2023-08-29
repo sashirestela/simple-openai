@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.domain.file;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import lombok.ToString;
 public class FileRequest {
 
   @NonNull
-  private File file;
+  private Path file;
 
   @NonNull
   private String purpose;

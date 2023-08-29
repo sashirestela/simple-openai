@@ -1,15 +1,13 @@
 package io.github.sashirestela.openai;
 
-import java.lang.reflect.InvocationHandler;
 import java.net.http.HttpClient;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import io.github.sashirestela.openai.filter.AudioFilter;
 import io.github.sashirestela.openai.filter.StreamFilter;
-import io.github.sashirestela.openai.http.HttpConfig;
-import io.github.sashirestela.openai.http.HttpHandler;
-import io.github.sashirestela.openai.http.InvocationFilter;
-import io.github.sashirestela.openai.support.ReflectUtil;
+import io.github.sashirestela.openai.http.HttpProcessor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,9 @@ import lombok.NonNull;
 public class SimpleOpenAI {
 
   private final String OPENAI_URL_BASE = "https://api.openai.com";
+  public final String AUTHORIZATION_HEADER = "Authorization";
   private final String ORGANIZATION_HEADER = "OpenAI-Organization";
+  public final String BEARER_AUTHORIZATION = "Bearer ";
 
   @NonNull
   private String apiKey;
@@ -32,7 +32,7 @@ public class SimpleOpenAI {
   private String organizationId;
   private String urlBase;
   private HttpClient httpClient;
-  private HttpConfig httpConfig;
+  private HttpProcessor httpProcessor;
 
   private OpenAI.Audios audioService;
   private OpenAI.ChatCompletions chatCompletionService;
@@ -61,13 +61,16 @@ public class SimpleOpenAI {
     this.urlBase = Optional.ofNullable(urlBase).orElse(OPENAI_URL_BASE);
     this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
-    String[] headers = organizationId == null
-        ? new String[] {}
-        : new String[] { ORGANIZATION_HEADER, organizationId };
-    this.httpConfig = HttpConfig.builder()
-        .apiKey(this.apiKey)
-        .urlBase(this.urlBase)
+    List<String> headers = new ArrayList<>();
+    headers.add(AUTHORIZATION_HEADER);
+    headers.add(BEARER_AUTHORIZATION + apiKey);
+    if (organizationId != null) {
+      headers.add(ORGANIZATION_HEADER);
+      headers.add(organizationId);
+    }
+    this.httpProcessor = HttpProcessor.builder()
         .httpClient(this.httpClient)
+        .urlBase(this.urlBase)
         .headers(headers)
         .build();
   }
@@ -78,8 +81,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Audios audios() {
-    audioService = Optional.ofNullable(audioService)
-        .orElse(create(OpenAI.Audios.class, new AudioFilter()));
+    if (audioService == null) {
+      audioService = httpProcessor.create(OpenAI.Audios.class, new AudioFilter());
+    }
     return audioService;
   }
 
@@ -90,8 +94,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.ChatCompletions chatCompletions() {
-    chatCompletionService = Optional.ofNullable(chatCompletionService)
-        .orElse(create(OpenAI.ChatCompletions.class, new StreamFilter()));
+    if (chatCompletionService == null) {
+      chatCompletionService = httpProcessor.create(OpenAI.ChatCompletions.class, new StreamFilter());
+    }
     return chatCompletionService;
   }
 
@@ -101,8 +106,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Completions completions() {
-    completionService = Optional.ofNullable(completionService)
-        .orElse(create(OpenAI.Completions.class, new StreamFilter()));
+    if (completionService == null) {
+      completionService = httpProcessor.create(OpenAI.Completions.class, new StreamFilter());
+    }
     return completionService;
   }
 
@@ -112,8 +118,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Embeddings embeddings() {
-    embeddingService = Optional.ofNullable(embeddingService)
-        .orElse(create(OpenAI.Embeddings.class, null));
+    if (embeddingService == null) {
+      embeddingService = httpProcessor.create(OpenAI.Embeddings.class, null);
+    }
     return embeddingService;
   }
 
@@ -123,8 +130,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Files files() {
-    fileService = Optional.ofNullable(fileService)
-        .orElse(create(OpenAI.Files.class, null));
+    if (fileService == null) {
+      fileService = httpProcessor.create(OpenAI.Files.class, null);
+    }
     return fileService;
   }
 
@@ -134,8 +142,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Images images() {
-    imageService = Optional.ofNullable(imageService)
-        .orElse(create(OpenAI.Images.class, null));
+    if (imageService == null) {
+      imageService = httpProcessor.create(OpenAI.Images.class, null);
+    }
     return imageService;
   }
 
@@ -145,8 +154,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Models models() {
-    modelService = Optional.ofNullable(modelService)
-        .orElse(create(OpenAI.Models.class, null));
+    if (modelService == null) {
+      modelService = httpProcessor.create(OpenAI.Models.class, null);
+    }
     return modelService;
   }
 
@@ -156,8 +166,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.Moderations moderations() {
-    moderationService = Optional.ofNullable(moderationService)
-        .orElse(create(OpenAI.Moderations.class, null));
+    if (moderationService == null) {
+      moderationService = httpProcessor.create(OpenAI.Moderations.class, null);
+    }
     return moderationService;
   }
 
@@ -167,26 +178,9 @@ public class SimpleOpenAI {
    * @return An instance of the interface. It is created only once.
    */
   public OpenAI.FineTunes fineTunes() {
-    fineTuneService = Optional.ofNullable(fineTuneService)
-        .orElse(create(OpenAI.FineTunes.class, null));
+    if (fineTuneService == null) {
+      fineTuneService = httpProcessor.create(OpenAI.FineTunes.class, null);
+    }
     return fineTuneService;
   }
-
-  /**
-   * Creates a generic dynamic proxy with a new {@link HttpHandler HttpHandler}
-   * object which will resolve the requests.
-   * 
-   * @param <T>            A generic interface.
-   * @param interfaceClass Service of a generic interface
-   * @param filter         Object that could modify the arguments passed to the
-   *                       method invocation, before to be handled by
-   *                       {@link HttpHandler HttpHandler}.
-   * @return A "virtual" instance for the interface.
-   */
-  private <T> T create(Class<T> interfaceClass, InvocationFilter filter) {
-    InvocationHandler httpHandler = new HttpHandler(httpConfig, filter);
-    T aProxy = ReflectUtil.get().createProxy(interfaceClass, httpHandler);
-    return aProxy;
-  }
-
 }

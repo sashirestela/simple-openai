@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.domain.image;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -20,10 +20,10 @@ import lombok.experimental.SuperBuilder;
 public class ImageEditsRequest extends AbstractImageRequest {
 
   @NonNull
-  private File image;
+  private Path image;
 
   @JsonInclude(Include.NON_NULL)
-  private File mask;
+  private Path mask;
 
   @NonNull
   private String prompt;

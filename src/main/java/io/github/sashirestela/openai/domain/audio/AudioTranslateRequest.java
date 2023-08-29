@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.domain.audio;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 public class AudioTranslateRequest {
 
   @NonNull
-  protected File file;
+  protected Path file;
 
   @NonNull
   protected String model;

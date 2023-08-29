@@ -7,7 +7,7 @@ import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 import io.github.sashirestela.openai.http.InvocationFilter;
-import io.github.sashirestela.openai.support.ReflectUtil;
+import io.github.sashirestela.openai.http.ReturnType;
 
 public class AudioFilter implements InvocationFilter {
   private final static EnumSet<AudioRespFmt> JSON_FMT = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
@@ -15,7 +15,7 @@ public class AudioFilter implements InvocationFilter {
 
   @Override
   public void apply(Method method, Object[] arguments) {
-    Class<?> responseClass = ReflectUtil.get().getBaseClass(method);
+    Class<?> responseClass = new ReturnType(method).getBaseClass();
     AudioTranslateRequest requestObj = (AudioTranslateRequest) arguments[0];
     AudioRespFmt responseFormat = requestObj.getResponseFormat();
     

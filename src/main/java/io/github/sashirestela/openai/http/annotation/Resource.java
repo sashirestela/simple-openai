@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface GET {
-  String value() default "";
+@Target(ElementType.TYPE)
+public @interface Resource {
+  String value();
 }

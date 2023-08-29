@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -30,7 +30,7 @@ public class ImageServiceDemo extends AbstractDemo {
 
   public void demoCallImageEdits() {
     ImageEditsRequest imageEditsRequest = ImageEditsRequest.builder()
-        .image(new File("src/demo/resources/little_cat_rgba.png"))
+        .image(Paths.get("src/demo/resources/little_cat_rgba.png"))
         .prompt("A cartoon of a little cute cat playing with a ball in the grass.")
         .n(1)
         .size(Size.X256)
@@ -43,7 +43,7 @@ public class ImageServiceDemo extends AbstractDemo {
 
   public void demoCallImageVariations() {
     ImageVariationsRequest imageVariationsRequest = ImageVariationsRequest.builder()
-        .image(new File("src/demo/resources/little_cat.png"))
+        .image(Paths.get("src/demo/resources/little_cat.png"))
         .n(1)
         .size(Size.X256)
         .responseFormat(ImageRespFmt.URL)

@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
@@ -18,7 +18,7 @@ public class AudioServiceDemo extends AbstractDemo {
 
   public void demoCallAudioTranscription() {
     AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
-        .file(new File(fileName))
+        .file(Paths.get(fileName))
         .model("whisper-1")
         .responseFormat(AudioRespFmt.VERBOSE_JSON)
         .build();
@@ -29,7 +29,7 @@ public class AudioServiceDemo extends AbstractDemo {
 
   public void demoCallAudioTranslation() {
     AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
-        .file(new File(fileName))
+        .file(Paths.get(fileName))
         .model("whisper-1")
         .build();
     CompletableFuture<AudioResponse> futureAudio = openAI.audios().translate(audioRequest);
@@ -39,7 +39,7 @@ public class AudioServiceDemo extends AbstractDemo {
 
   public void demoCallAudioTranscriptionPlain() {
     AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
-        .file(new File(fileName))
+        .file(Paths.get(fileName))
         .model("whisper-1")
         .build();
     CompletableFuture<String> futureAudio = openAI.audios().transcribePlain(audioRequest);
@@ -49,7 +49,7 @@ public class AudioServiceDemo extends AbstractDemo {
 
   public void demoCallAudioTranslationPlain() {
     AudioTranslateRequest audioRequest = AudioTranslateRequest.builder()
-        .file(new File(fileName))
+        .file(Paths.get(fileName))
         .model("whisper-1")
         .responseFormat(AudioRespFmt.VTT)
         .build();

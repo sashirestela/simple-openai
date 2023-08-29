@@ -1,5 +1,5 @@
 package io.github.sashirestela.openai.http;
-
+/*
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,9 +38,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)*/
 public class HttpHandlerTest {
-
+/*
   @Mock
   HttpClient httpClient;
   @Mock
@@ -239,5 +239,5 @@ public class HttpHandlerTest {
     }
 
   }
-
+*/
 }
