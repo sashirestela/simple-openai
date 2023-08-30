@@ -9,15 +9,63 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
+  <name>simple-openai</name>
+  <description>A Simple Java Http Client to OpenAI Api</description>
+  <url>https://github.com/sashirestela/simple-openai</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Sashir Estela</name>
+      <email>sashirestela@yahoo.com</email>
+      <organization>Sashir Estela</organization>
+      <organizationUrl>https://www.linkedin.com/in/sashirestela/</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/sashirestela/simple-openai.git</connection>
+    <developerConnection>scm:git:ssh://github.com/sashirestela/simple-openai.git</developerConnection>
+    <url>https://github.com/sashirestela/simple-openai/tree/main</url>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <properties>
+    <!-- General -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
+    <!-- Dependencies Versions -->
     <slf4j.version>[2.0.7,3.0.0)</slf4j.version>
     <lombok.version>[1.18.28,2.0.0)</lombok.version>
     <jackson.version>[2.15.2,3.0.0)</jackson.version>
     <json.schema.version>[4.31.1,5.0.0)</json.schema.version>
     <junit.version>[5.10.0,6.0.0)</junit.version>
     <mockito.version>[5.4.0,6.0.0)</mockito.version>
+    <!-- Plugins Versions -->
+    <compiler.version>3.11.0</compiler.version>
+    <surefire.version>3.1.2</surefire.version>
+    <exec.version>3.1.0</exec.version>
+    <jacoco.version>0.8.10</jacoco.version>
+    <source.version>3.3.0</source.version>
+    <javadoc.version>3.5.0</javadoc.version>
+    <gpg.version>3.1.0</gpg.version>
+    <sonatype.version>1.6.13</sonatype.version>
   </properties>
 
   <profiles>
@@ -187,17 +235,17 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>${compiler.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>${surefire.version}</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>${exec.version}</version>
         <configuration>
           <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>
@@ -205,7 +253,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.10</version>
+        <version>${jacoco.version}</version>
         <executions>
           <execution>
             <goals>
@@ -223,11 +271,57 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${source.version}</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>${javadoc.version}</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <show>package</show>
           <nohelp>true</nohelp>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${gpg.version}</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${sonatype.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
     </plugins>
