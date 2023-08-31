@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -62,6 +62,7 @@
     <surefire.version>3.1.2</surefire.version>
     <exec.version>3.1.0</exec.version>
     <jacoco.version>0.8.10</jacoco.version>
+    <helper.version>3.4.0</helper.version>
     <source.version>3.3.0</source.version>
     <javadoc.version>3.5.0</javadoc.version>
     <gpg.version>3.1.0</gpg.version>
@@ -79,7 +80,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.4.0</version>
+            <version>${helper.version}</version>
             <executions>
               <execution>
                 <id>add-source</id>
