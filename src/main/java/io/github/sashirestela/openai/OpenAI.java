@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
@@ -13,7 +14,6 @@ import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
-import io.github.sashirestela.openai.domain.file.FileDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.finetune.FineTuneEvent;
@@ -236,7 +236,7 @@ interface OpenAI {
      * @return Deletion status.
      */
     @DELETE("/v1/files/{fileId}")
-    CompletableFuture<FileDeletedResponse> delete(@Path("fileId") String fileId);
+    CompletableFuture<OpenAIDeletedResponse> delete(@Path("fileId") String fileId);
 
   }
 

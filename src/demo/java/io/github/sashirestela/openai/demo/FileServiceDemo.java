@@ -4,7 +4,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import io.github.sashirestela.openai.domain.file.FileDeletedResponse;
+import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 
@@ -25,7 +25,7 @@ public class FileServiceDemo extends AbstractDemo {
     return fileResponse;
   }
 
-  public FileDeletedResponse deleteFileResponse(String fileId) {
+  public OpenAIDeletedResponse deleteFileResponse(String fileId) {
     FileResponse fileResponse = null;
     do {
       try {
@@ -35,8 +35,8 @@ public class FileServiceDemo extends AbstractDemo {
       }
       fileResponse = openAI.files().getOne(fileId).join();
     } while (!fileResponse.getStatus().equals("processed"));
-    CompletableFuture<FileDeletedResponse> futureFile = openAI.files().delete(fileId);
-    FileDeletedResponse fileDeleted = futureFile.join();
+    CompletableFuture<OpenAIDeletedResponse> futureFile = openAI.files().delete(fileId);
+    OpenAIDeletedResponse fileDeleted = futureFile.join();
     return fileDeleted;
   }
 
@@ -66,7 +66,7 @@ public class FileServiceDemo extends AbstractDemo {
   }
 
   public void demoCallFileDelete() {
-    FileDeletedResponse fileDeleted = deleteFileResponse(fileId);
+    OpenAIDeletedResponse fileDeleted = deleteFileResponse(fileId);
     System.out.println(fileDeleted);
   }
 

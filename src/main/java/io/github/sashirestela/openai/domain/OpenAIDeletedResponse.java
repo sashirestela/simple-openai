@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.file;
+package io.github.sashirestela.openai.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class FileDeletedResponse {
+public class OpenAIDeletedResponse {
 
   private String id;
 
