@@ -2,7 +2,6 @@
     deps = [
         pkgs.nvi
         pkgs.gnupg
-        pkgs.pinentry
         pkgs.pinentry-curses
         pkgs.zip
         pkgs.graalvm11-ce
