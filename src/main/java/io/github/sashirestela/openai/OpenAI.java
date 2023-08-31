@@ -311,6 +311,9 @@ interface OpenAI {
     @GET("/v1/models/{modelId}")
     CompletableFuture<ModelResponse> getOne(@Path("modelId") String modelId);
 
+    @DELETE("/v1/models/{modelId}")
+    CompletableFuture<OpenAIDeletedResponse> delete(@Path("modelId") String modelId);
+
   }
 
   /**
