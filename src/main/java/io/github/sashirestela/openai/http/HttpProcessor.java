@@ -44,14 +44,14 @@ public class HttpProcessor {
   }
 
   /**
-   * Creates a generic dynamic proxy with a new {@link HttpHandler HttpHandler}
+   * Creates a generic dynamic proxy with a new {@link HttpInvocationHandler HttpInvocationHandler}
    * object which will resolve the requests.
    * 
    * @param <T>            A generic interface.
    * @param interfaceClass Service of a generic interface
    * @param filter         Object that could modify the arguments passed to the
    *                       method invocation, before to be handled by
-   *                       {@link HttpHandler HttpHandler}.
+   *                       {@link HttpInvocationHandler HttpInvocationHandler}.
    * @return A "virtual" instance for the interface.
    */
   public <T> T create(Class<T> interfaceClass, InvocationFilter filter) {
