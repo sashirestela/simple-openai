@@ -25,7 +25,7 @@ public class FileServiceDemo extends AbstractDemo {
     return fileResponse;
   }
 
-  public OpenAIDeletedResponse deleteFileResponse(String fileId) {
+  public void waitUntilFileIsProcessed(String fileId) {
     FileResponse fileResponse = null;
     do {
       try {
@@ -35,6 +35,10 @@ public class FileServiceDemo extends AbstractDemo {
       }
       fileResponse = openAI.files().getOne(fileId).join();
     } while (!fileResponse.getStatus().equals("processed"));
+  }
+
+  public OpenAIDeletedResponse deleteFileResponse(String fileId) {
+    waitUntilFileIsProcessed(fileId);
     CompletableFuture<OpenAIDeletedResponse> futureFile = openAI.files().delete(fileId);
     OpenAIDeletedResponse fileDeleted = futureFile.join();
     return fileDeleted;

@@ -1,10 +1,9 @@
-package io.github.sashirestela.openai.domain.finetune;
+package io.github.sashirestela.openai.domain.finetuning;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.github.sashirestela.openai.domain.file.FileResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class FineTuneResponse {
+public class FineTuningResponse {
 
   private String id;
 
@@ -23,8 +22,8 @@ public class FineTuneResponse {
   @JsonProperty("created_at")
   private Long createdAt;
 
-  @JsonProperty("updated_at")
-  private Long updatedAt;
+  @JsonProperty("finished_at")
+  private Long finishedAt;
 
   private String model;
 
@@ -36,17 +35,19 @@ public class FineTuneResponse {
 
   private String status;
 
-  private HyperParams hyperparams;
+  @JsonProperty("hyperparameters")
+  private HyperParams hyperParameters;
 
-  @JsonProperty("training_files")
-  private List<FileResponse> trainingFiles;
+  @JsonProperty("training_file")
+  private String trainingFile;
 
-  @JsonProperty("validation_files")
-  private List<FileResponse> validationFiles;
+  @JsonProperty("validation_file")
+  private String validationFile;
 
   @JsonProperty("result_files")
-  private List<FileResponse> resultFiles;
+  private List<String> resultFiles;
 
-  private List<FineTuneEvent> events;
+  @JsonProperty("trained_tokens")
+  private Integer trainedTokens;
 
 }

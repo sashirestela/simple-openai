@@ -22,4 +22,7 @@ public class OpenAIGeneric<T> {
   @JsonProperty("next_starting_after")
   private String nextStartingAfter;
 
+  @JsonProperty("has_more")
+  private boolean hasMore;
+
 }

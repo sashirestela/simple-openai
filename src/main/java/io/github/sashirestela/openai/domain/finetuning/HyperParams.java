@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.finetune;
+package io.github.sashirestela.openai.domain.finetuning;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,15 +11,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class FineTuneEvent {
+public class HyperParams {
 
-  private String object;
-
-  @JsonProperty("created_at")
-  private Long createdAt;
-
-  private String level;
-
-  private String message;
+  @JsonProperty("n_epochs")
+  private Integer numberEpochs;
 
 }
