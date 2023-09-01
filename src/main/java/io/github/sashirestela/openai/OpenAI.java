@@ -32,6 +32,7 @@ import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.Multipart;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.Path;
+import io.github.sashirestela.openai.http.annotation.Query;
 
 /**
  * The OpenAI API can be applied to virtually any task that requires
@@ -241,6 +242,70 @@ interface OpenAI {
   }
 
   /**
+   * Manage fine-tuning jobs to tailor a model to your specific training data.
+   * 
+   * @see <a href=
+   *      "https://platform.openai.com/docs/api-reference/fine-tuning">OpenAI
+   *      Fine-Tuning</a>
+   */
+  interface FineTunings {
+
+    /**
+     * Creates a job that fine-tunes a specified model from a given dataset.
+     * 
+     * @param fineTuningRequest Includes the trainig file in format jsonl and the
+     *                          base model to fine-tune.
+     * @return Response includes details of the enqueued job including job status
+     *         and the name of the fine-tuned models once complete.
+     */
+    @POST("/v1/fine_tuning/jobs")
+    CompletableFuture<FineTuningResponse> create(@Body FineTuningRequest fineTuningRequest);
+
+    /**
+     * List your organization's fine-tuning jobs.
+     * 
+     * @param limit Number of fine-tuning jobs to retrieve.
+     * @param after Identifier for the last job from the previous pagination
+     *              request.
+     * @return A list of paginated fine-tuning job objects.
+     */
+    @GET("/v1/fine_tuning/jobs")
+    CompletableFuture<List<FineTuningResponse>> getList(@Query("limit") Integer limit, @Query("after") String after);
+
+    /**
+     * Get info about a fine-tuning job.
+     * 
+     * @param fineTuningId The id of the fine-tuning job.
+     * @return The fine-tuning object with the given id.
+     */
+    @GET("/v1/fine_tuning/jobs/{fineTuningId}")
+    CompletableFuture<FineTuningResponse> getOne(@Path("fineTuningId") String fineTuningId);
+
+    /**
+     * Get status updates for a fine-tuning job.
+     * 
+     * @param fineTuningId The id of the fine-tuning job to get events for.
+     * @param limit        Number of fine-tuning jobs to retrieve.
+     * @param after        Identifier for the last job from the previous pagination
+     *                     request.
+     * @return A list of fine-tuning event objects.
+     */
+    @GET("/v1/fine_tuning/jobs/{fineTuningId}/events")
+    CompletableFuture<List<FineTuningEvent>> getEvents(@Path("fineTuningId") String fineTuningId,
+        @Query("limit") Integer limit, @Query("after") String after);
+
+    /**
+     * Immediately cancel a fine-tune job.
+     * 
+     * @param fineTuningId The id of the fine-tuning job to cancel.
+     * @return The cancelled fine-tuning object.
+     */
+    @POST("/v1/fine_tuning/jobs/{fineTuningId}/cancel")
+    CompletableFuture<FineTuningResponse> cancel(@Path("fineTuningId") String fineTuningId);
+
+  }
+
+  /**
    * Given a prompt and/or an input image, the model will generate a new image.
    * 
    * @see <a href=
@@ -341,63 +406,6 @@ interface OpenAI {
      */
     @POST("/v1/moderations")
     CompletableFuture<ModerationResponse> create(@Body ModerationRequest moderationRequest);
-
-  }
-
-  /**
-   * Manage fine-tuning jobs to tailor a model to your specific training data.
-   * 
-   * @see <a href=
-   *      "https://platform.openai.com/docs/api-reference/fine-tuning">OpenAI
-   *      Fine-Tuning</a>
-   */
-  interface FineTunings {
-
-    /**
-     * Creates a job that fine-tunes a specified model from a given dataset.
-     * 
-     * @param fineTuningRequest Includes the trainig file in format jsonl and the
-     *                          base model to fine-tune.
-     * @return Response includes details of the enqueued job including job status
-     *         and the name of the fine-tuned models once complete.
-     */
-    @POST("/v1/fine_tuning/jobs")
-    CompletableFuture<FineTuningResponse> create(@Body FineTuningRequest fineTuningRequest);
-
-    /**
-     * List your organization's fine-tuning jobs.
-     * 
-     * @return A list of paginated fine-tuning job objects.
-     */
-    @GET("/v1/fine_tuning/jobs")
-    CompletableFuture<List<FineTuningResponse>> getList(Integer limit, String after);
-
-    /**
-     * Get info about a fine-tuning job.
-     * 
-     * @param fineTuningId The id of the fine-tuning job.
-     * @return The fine-tuning object with the given id.
-     */
-    @GET("/v1/fine_tuning/jobs/{fineTuningId}")
-    CompletableFuture<FineTuningResponse> getOne(@Path("fineTuningId") String fineTuningId);
-
-    /**
-     * Get status updates for a fine-tuning job.
-     * 
-     * @param fineTuningId The id of the fine-tuning job to get events for.
-     * @return A list of fine-tuning event objects.
-     */
-    @GET("/v1/fine_tuning/jobs/{fineTuningId}/events")
-    CompletableFuture<List<FineTuningEvent>> getEvents(@Path("fineTuningId") String fineTuningId, Integer limit, String after);
-
-    /**
-     * Immediately cancel a fine-tune job.
-     * 
-     * @param fineTuningId The id of the fine-tuning job to cancel.
-     * @return The cancelled fine-tuning object.
-     */
-    @POST("/v1/fine_tuning/jobs/{fineTuningId}/cancel")
-    CompletableFuture<FineTuningResponse> cancel(@Path("fineTuningId") String fineTuningId);
 
   }
 

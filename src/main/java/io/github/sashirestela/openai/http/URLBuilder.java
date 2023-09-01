@@ -43,6 +43,11 @@ public class URLBuilder {
   private String includeQueryParams(String url, List<Metadata.Parameter> paramList, Object[] arguments) {
     boolean first = true;
     for (Metadata.Parameter paramMetadata : paramList) {
+      int index = paramMetadata.getIndex();
+      Object value = arguments[index];
+      if (value == null) {
+        continue;
+      }
       String prefix;
       if (first) {
         prefix = "?";
@@ -50,9 +55,8 @@ public class URLBuilder {
       } else {
         prefix = "&";
       }
-      int index = paramMetadata.getIndex();
       String queryParam = paramMetadata.getAnnotationValue();
-      url = url + prefix + queryParam + "=" + arguments[index].toString();
+      url = url + prefix + queryParam + "=" + value.toString();
     }
     return url;
   }
