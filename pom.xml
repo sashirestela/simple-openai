@@ -6,11 +6,11 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
-  <description>A Simple Java Http Client to OpenAI Api</description>
+  <description>A Java library to use the OpenAI API in the simplest possible way.</description>
   <url>https://github.com/sashirestela/simple-openai</url>
 
   <licenses>
