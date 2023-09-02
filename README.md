@@ -3,7 +3,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 
 
 ## 💡 Description
-Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI Api](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs.
+Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI Api](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's a _community-maintained_ library.
 
 Simple-OpenAI uses the standard Java library [HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html) for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code.
 
@@ -23,7 +23,7 @@ You can install Simple-OpenAI by adding the following dependency to your Maven p
 <dependency>
     <groupId>io.github.sashirestela</groupId>
     <artifactId>simple-openai</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ Or alternatively using Gradle:
 
 ```groovy
 dependencies {
-    implementation 'io.github.sashirestela:simple-openai:0.1.0'
+    implementation 'io.github.sashirestela:simple-openai:0.2.1'
 }
 ```
 
