@@ -1,5 +1,5 @@
 # 📌 Simple-OpenAI
-A Java library to use the OpenAI API in the simplest possible way.
+A Java library to use the OpenAI Api in the simplest possible way.
 
 
 ## 💡 Description
@@ -13,7 +13,7 @@ Full support for all of the OpenAI services:
 
 ![Services](media/supported_services.png)
 
-NOTE: All the responses are ```CompletableFuture<ResponseObject>```, so they are asynchronous.
+NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 
 
 ## 🛠️ Installation
@@ -52,7 +52,7 @@ SimpleOpenAI openai = SimpleOpenAI.builder()
     .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
     .build();
 ```
-Optionally as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
+Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
 ```java
 HttpClient httpClient = HttpClient.newBuilder()
     .version(Version.HTTP_1_1)
@@ -68,9 +68,10 @@ SimpleOpenAI openai = SimpleOpenAI.builder()
 ```
 
 ### Calling the SimpleOpenAI Services
-After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API. Let's see some examples.
+After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI Api. Let's see some examples.
 
-* Example to call the Audio service to transcribe an audio to text. We are requesting to receive the transcription in plain text format (see the name of the method):
+#### Audio Service
+Example to call the Audio service to transcribe an audio to text. We are requesting to receive the transcription in plain text format (see the name of the method):
 ```java
 AudioTranscribeRequest audioRequest = AudioTranscribeRequest.builder()
     .file(Paths.get("hello_audio.mp3"))
@@ -80,7 +81,8 @@ CompletableFuture<String> futureAudio = openai.audios().transcribePlain(audioReq
 String audioResponse = futureAudio.join();
 System.out.println(audioResponse);
 ```
-* Example to call the Image service to generate two images in response to our prompt. We are requesting to receive the images' urls and we are printing out them in the console:
+#### Image Service
+Example to call the Image service to generate two images in response to our prompt. We are requesting to receive the images' urls and we are printing out them in the console:
 ```java
 ImageRequest imageRequest = ImageRequest.builder()
     .prompt("A cartoon of a hummingbird that is flying around a flower.")
@@ -92,7 +94,8 @@ CompletableFuture<List<ImageResponse>> futureImage = openai.images().create(imag
 List<ImageResponse> imageResponse = futureImage.join();
 imageResponse.stream().forEach(img -> System.out.println("\n" + img.getUrl()));
 ```
-* Example to call the Chat Completion service to asking a question and wait for an answer. We are printing out it in the console:
+#### Chat Completion Service
+Example to call the Chat Completion service to ask a question and wait for an answer. We are printing out it in the console:
 ```java
 ChatRequest chatRequest = ChatRequest.builder()
     .model("gpt-3.5-turbo-16k-0613")
@@ -106,9 +109,8 @@ CompletableFuture<ChatResponse> futureChat = openai.chatCompletions().create(cha
 ChatResponse chatResponse = futureChat.join();
 System.out.println(chatResponse.firstContent());
 ```
-
-### Calling the Chat Service with Functions
-This funcionality empowers the Chat Completion service to solve specific problems to our context. Let's see an example:
+#### Chat Completion Service with Functions
+This funcionality empowers the Chat Completion service to solve specific problems to our context. In this example we are setting three functions and we are entering a prompt that will require to call one of them (the function Product). For setting functions we are using additional classes which implements the interface _Functional_. Those classes define a property by each function argument, annotating them to describe them and each class must override the _execute_ method with function's logic:
 ```java
 public void demoCallChatWithFunctions() {
     FunctionExecutor functionExecutor = new FunctionExecutor();
