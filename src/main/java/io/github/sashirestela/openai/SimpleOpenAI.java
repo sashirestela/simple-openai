@@ -39,10 +39,10 @@ public class SimpleOpenAI {
   private OpenAI.Completions completionService;
   private OpenAI.Embeddings embeddingService;
   private OpenAI.Files fileService;
+  private OpenAI.FineTunings fineTuningService;
   private OpenAI.Images imageService;
   private OpenAI.Models modelService;
   private OpenAI.Moderations moderationService;
-  private OpenAI.FineTunings fineTuningService;
 
   /**
    * Constructor used to generate a builder.
@@ -137,6 +137,18 @@ public class SimpleOpenAI {
   }
 
   /**
+   * Generates an implementation of the FineTunings interface to handle requests.
+   * 
+   * @return An instance of the interface. It is created only once.
+   */
+  public OpenAI.FineTunings fineTunings() {
+    if (fineTuningService == null) {
+      fineTuningService = httpProcessor.create(OpenAI.FineTunings.class, null);
+    }
+    return fineTuningService;
+  }
+
+  /**
    * Generates an implementation of the Images interface to handle requests.
    * 
    * @return An instance of the interface. It is created only once.
@@ -170,17 +182,5 @@ public class SimpleOpenAI {
       moderationService = httpProcessor.create(OpenAI.Moderations.class, null);
     }
     return moderationService;
-  }
-
-  /**
-   * Generates an implementation of the FineTunings interface to handle requests.
-   * 
-   * @return An instance of the interface. It is created only once.
-   */
-  public OpenAI.FineTunings fineTunings() {
-    if (fineTuningService == null) {
-      fineTuningService = httpProcessor.create(OpenAI.FineTunings.class, null);
-    }
-    return fineTuningService;
   }
 }
