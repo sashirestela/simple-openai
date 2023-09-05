@@ -72,6 +72,7 @@ public class HttpProcessor {
     ReturnType returnType = methodMetadata.getReturnType();
     boolean isMultipart = methodMetadata.isMultipart();
     Object bodyObject = calculateBodyObject(methodMetadata, arguments);
+    List<String> headers = new ArrayList<>(this.headers);
     headers.addAll(calculateHeaderContentType(bodyObject, isMultipart));
     String[] headersArray = headers.toArray(new String[0]);
     HttpConnector httpConnector = HttpConnector.builder()
