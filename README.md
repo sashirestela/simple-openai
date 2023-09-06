@@ -23,7 +23,7 @@ You can install Simple-OpenAI by adding the following dependency to your Maven p
 <dependency>
     <groupId>io.github.sashirestela</groupId>
     <artifactId>simple-openai</artifactId>
-    <version>0.2.1</version>
+    <version>[latest version]</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ Or alternatively using Gradle:
 
 ```groovy
 dependencies {
-    implementation 'io.github.sashirestela:simple-openai:0.2.1'
+    implementation 'io.github.sashirestela:simple-openai:[latest version]'
 }
 ```
 
