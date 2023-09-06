@@ -4,20 +4,21 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
-import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
 
 public class SimpleOpenAITest {
 
@@ -39,6 +40,7 @@ public class SimpleOpenAITest {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   void shouldNotDuplicateContentTypeHeaderWhenCallingSimpleOpenAI() {
     var chatService = SimpleOpenAI.builder()
             .apiKey("apiKey")

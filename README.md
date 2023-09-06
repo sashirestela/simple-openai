@@ -23,7 +23,7 @@ You can install Simple-OpenAI by adding the following dependency to your Maven p
 <dependency>
     <groupId>io.github.sashirestela</groupId>
     <artifactId>simple-openai</artifactId>
-    <version>0.2.1</version>
+    <version>[latest version]</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ Or alternatively using Gradle:
 
 ```groovy
 dependencies {
-    implementation 'io.github.sashirestela:simple-openai:0.2.1'
+    implementation 'io.github.sashirestela:simple-openai:[latest version]'
 }
 ```
 
@@ -52,12 +52,13 @@ SimpleOpenAI openai = SimpleOpenAI.builder()
     .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
     .build();
 ```
-Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
+Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as executor, proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
 ```java
 HttpClient httpClient = HttpClient.newBuilder()
     .version(Version.HTTP_1_1)
     .followRedirects(Redirect.NORMAL)
     .connectTimeout(Duration.ofSeconds(20))
+    .executor(Executors.newFixedThreadPool(3))
     .proxy(ProxySelector.of(new InetSocketAddress("proxy.example.com", 80)))
     .build();
 
@@ -200,11 +201,49 @@ public static class RunAlarm implements Functional {
 ```
 
 
-
 ## 🎬 Demo
 Demonstration of the Chat functionality in streaming mode. The application prints the information to the console as soon as it is received from the server token by token, in response to our prompt:
 
 ![Demo](media/demo_chat_stream.gif)
+
+
+## ✳ Run Examples
+Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
+* Clone this respository:
+  ```bash
+  git clone https://github.com/sashirestela/simple-openai.git
+  cd simple-openai
+  ```
+* Build the project:
+  ```bash
+  mvn clean install
+  ```
+* Create an environment variable for your OpenAI Api Key:
+  ```bash
+  export OPENAI_API_KEY=<here goes your api key>
+  ```
+* Grant execution permission to the script file:
+  ```bash
+  chmod +x rundemo.sh
+  ```
+* Run examples:
+  ```bash
+  ./rundemo.sh <demo> [debug]
+  ```
+  Where:
+
+  * ```<demo>``` Is mandatory and must be one of the values:
+    * audio
+    * chat
+    * completion
+    * embedding
+    * file
+    * finetuning
+    * image
+    * model
+    * moderation
+  
+  * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
 
 
 ## 📄 License
