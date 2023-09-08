@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai;
+package io.github.sashirestela.openai.function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,10 +9,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
-import io.github.sashirestela.openai.function.FunctionExecutor;
-import io.github.sashirestela.openai.function.Functional;
 
 public class SimpleFunctionExecutorTest {
 
