@@ -20,9 +20,11 @@ import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.ReflectUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 
 @AllArgsConstructor
+@Getter
 public class HttpProcessor {
   private static Logger LOGGER = LoggerFactory.getLogger(HttpProcessor.class);
 
