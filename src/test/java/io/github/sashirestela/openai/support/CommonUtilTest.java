@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.support;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -99,6 +100,35 @@ public class CommonUtilTest {
       List<String> actualListMatches = CommonUtil.get().findFullMatches((String) data[0], (String) data[1]);
       List<String> expectedListMatches = (List<String>) data[2];
       assertEquals(expectedListMatches, actualListMatches);
+    }
+  }
+
+  @Test
+  void shouldReturnCapitalizedTextWhenOneIsPassed() {
+    String[][] testData = {
+        { "university", "University" },
+        { "National", "National" },
+        { "g", "G" }
+    };
+    for (String[] data : testData) {
+      String actualText = CommonUtil.get().capitalize(data[0]);
+      String expectedText = data[1];
+      assertEquals(expectedText, actualText);
+    }
+  }
+
+  @Test
+  void shouldReturnJoinedArraysWhenTwoArePassed() {
+    Object[][][] testData = {
+        { { 1, 2, 3 }, { 4, 5, 6 }, { 1, 2, 3, 4, 5, 6 } },
+        { { "ab", "cd", "ef", "gh" }, {}, { "ab", "cd", "ef", "gh" } },
+        { {}, {"abc", "cde"}, {"abc", "cde"} },
+        { {}, {}, {} }
+    };
+    for (Object[][] data : testData) {
+      Object[] actualArray = CommonUtil.get().concatArrays(data[0], data[1]);
+      Object[] expectedArray = data[2];
+      assertArrayEquals(expectedArray, actualArray);
     }
   }
 }
