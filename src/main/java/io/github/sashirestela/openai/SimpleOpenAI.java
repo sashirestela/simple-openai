@@ -8,6 +8,7 @@ import java.util.Optional;
 import io.github.sashirestela.openai.filter.AudioFilter;
 import io.github.sashirestela.openai.filter.StreamFilter;
 import io.github.sashirestela.openai.http.HttpProcessor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,10 @@ import lombok.NonNull;
 @Getter
 public class SimpleOpenAI {
 
-  private final String OPENAI_URL_BASE = "https://api.openai.com";
-  public final String AUTHORIZATION_HEADER = "Authorization";
-  private final String ORGANIZATION_HEADER = "OpenAI-Organization";
-  public final String BEARER_AUTHORIZATION = "Bearer ";
+  public final static String OPENAI_URL_BASE = "https://api.openai.com";
+  private final static String AUTHORIZATION_HEADER = "Authorization";
+  private final static String ORGANIZATION_HEADER = "OpenAI-Organization";
+  private final static String BEARER_AUTHORIZATION = "Bearer ";
 
   @NonNull
   private String apiKey;
@@ -34,14 +35,31 @@ public class SimpleOpenAI {
   private HttpClient httpClient;
   private HttpProcessor httpProcessor;
 
+  @Getter(AccessLevel.NONE)
   private OpenAI.Audios audioService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.ChatCompletions chatCompletionService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Completions completionService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Embeddings embeddingService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Files fileService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.FineTunings fineTuningService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Images imageService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Models modelService;
+  
+  @Getter(AccessLevel.NONE)
   private OpenAI.Moderations moderationService;
 
   /**
@@ -73,6 +91,10 @@ public class SimpleOpenAI {
         .urlBase(this.urlBase)
         .headers(headers)
         .build();
+  }
+
+  public void setHttpProcessor(HttpProcessor httpProcessor) {
+    this.httpProcessor = httpProcessor;
   }
 
   /**
