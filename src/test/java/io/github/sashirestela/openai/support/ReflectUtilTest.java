@@ -1,7 +1,6 @@
 package io.github.sashirestela.openai.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.http.annotation.GET;
 import io.github.sashirestela.openai.http.annotation.Path;
 import lombok.AllArgsConstructor;
@@ -33,31 +31,6 @@ public class ReflectUtilTest {
     String actualValue = test.testMethod("example");
     String expectedValue = "Text from handler.";
     assertEquals(expectedValue, actualValue);
-  }
-
-  @Test
-  void shouldExecuteSetMethodWhenItExistsInClass() {
-    TestClass object = new TestClass();
-    ReflectUtil.get().executeSetMethod(TestClass.class, "setProperty", new Class<?>[] { Integer.class }, object, 7);
-    Integer actualValue = object.getProperty();
-    Integer expectedValue = 7;
-    assertEquals(expectedValue, actualValue);
-  }
-
-  @Test
-  void shouldReturnExceptionWhenExecutingSetMethodThatDoesNotExist() {
-    TestClass object = new TestClass();
-    assertThrows(SimpleUncheckedException.class,
-        () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setAttribute",
-            new Class<?>[] { Integer.class }, object, 7));
-  }
-
-  @Test
-  void shouldReturnExceptionWhenExecutingSetMethodWithInvalidArgument() {
-    TestClass object = new TestClass();
-    assertThrows(SimpleUncheckedException.class,
-        () -> ReflectUtil.get().executeSetMethod(TestClass.class, "setProperty",
-            new Class<?>[] { Integer.class }, object, "seven"));
   }
 
   @Test

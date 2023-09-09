@@ -36,23 +36,6 @@ public class ReflectUtil {
     return proxy;
   }
 
-  public void executeSetMethod(Class<?> clazz, String methodName, Class<?>[] paramTypes, Object object, Object value) {
-    Method method = null;
-    try {
-      method = clazz.getMethod(methodName, paramTypes);
-    } catch (NoSuchMethodException | SecurityException e) {
-      throw new SimpleUncheckedException("Cannot find the method {0} in the class {1}", methodName,
-          clazz.getSimpleName(),
-          e);
-    }
-    try {
-      method.invoke(object, value);
-    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-      throw new SimpleUncheckedException("Cannot execute the method {0} in the class {1}", methodName,
-          clazz.getSimpleName(), e);
-    }
-  }
-
   public Map<String, Object> getMapFields(Object object) {
     final String GET_PREFIX = "get";
     Map<String, Object> structure = new HashMap<>();
