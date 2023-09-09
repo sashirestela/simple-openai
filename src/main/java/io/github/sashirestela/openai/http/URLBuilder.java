@@ -5,8 +5,6 @@ import java.util.List;
 import io.github.sashirestela.openai.http.annotation.Path;
 import io.github.sashirestela.openai.http.annotation.Query;
 import io.github.sashirestela.openai.metadata.Metadata;
-import io.github.sashirestela.openai.support.CommonUtil;
-import io.github.sashirestela.openai.support.Constant;
 
 public class URLBuilder {
 
@@ -22,12 +20,13 @@ public class URLBuilder {
 
     Metadata.Method methodMetadata = metadata.getMethods().get(methodName);
     String url = methodMetadata.getUrl();
-    boolean urlContainsPathParam = CommonUtil.get().matches(url, Constant.REGEX_PATH_PARAM_URL);
-    if (!urlContainsPathParam) {
+    var pathParamList = methodMetadata.getParametersByType().get(PATH);
+    var queryParamList = methodMetadata.getParametersByType().get(QUERY);
+    if (pathParamList.size() < 1 && queryParamList.size() < 1) {
       return url;
     }
-    url = replacePathParams(url, methodMetadata.getParametersByType().get(PATH), arguments);
-    url = includeQueryParams(url, methodMetadata.getParametersByType().get(QUERY), arguments);
+    url = replacePathParams(url, pathParamList, arguments);
+    url = includeQueryParams(url, queryParamList, arguments);
     return url;
   }
 
