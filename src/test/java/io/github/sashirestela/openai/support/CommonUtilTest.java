@@ -63,32 +63,6 @@ public class CommonUtilTest {
   }
 
   @Test
-  void shouldReturnTrueWhenSomeTextMatchesRegex() {
-    String[][] testData = {
-        { "/one/url/{pathvar}", Constant.REGEX_PATH_PARAM_URL },
-        { "Stream<List<String>>", Constant.REGEX_GENERIC_CLASS }
-    };
-    for (String[] data : testData) {
-      boolean actualMatch = CommonUtil.get().matches(data[0], data[1]);
-      boolean expectedMatch = true;
-      assertEquals(expectedMatch, actualMatch);
-    }
-  }
-
-  @Test
-  void shouldReturnFalseWhenSomeTextDoesNotMatchRegex() {
-    String[][] testData = {
-        { "/one/url/pathvar", Constant.REGEX_PATH_PARAM_URL },
-        { "CompletableFuture", Constant.REGEX_GENERIC_CLASS }
-    };
-    for (String[] data : testData) {
-      boolean actualMatch = CommonUtil.get().matches(data[0], data[1]);
-      boolean expectedMatch = false;
-      assertEquals(expectedMatch, actualMatch);
-    }
-  }
-
-  @Test
   @SuppressWarnings("unchecked")
   void shouldReturnFullMatchesWhenSomeTextMatchesRegex() {
     Object[][] testData = {

@@ -31,11 +31,6 @@ public class CommonUtil {
     return text == null || text.isBlank();
   }
 
-  public boolean matches(String text, String regex) {
-    Matcher matcher = Pattern.compile(regex).matcher(text);
-    return matcher.find();
-  }
-
   public List<String> findFullMatches(String text, String regex) {
     Matcher matcher = Pattern.compile(regex).matcher(text);
     List<String> result = matcher.results()
