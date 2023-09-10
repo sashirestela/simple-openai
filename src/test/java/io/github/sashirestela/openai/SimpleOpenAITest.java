@@ -37,7 +37,7 @@ public class SimpleOpenAITest {
     @Test
     void shouldSetPropertiesToDefaultValuesWhenBuilderIsCalledWithoutThoseProperties() {
       SimpleOpenAI openAI = SimpleOpenAI.builder()
-          .apiKey("apiLKey")
+          .apiKey("apiKey")
           .build();
       assertEquals(SimpleOpenAI.OPENAI_URL_BASE, openAI.getUrlBase());
       assertEquals(HttpClient.Version.HTTP_2, openAI.getHttpClient().version());
@@ -48,18 +48,19 @@ public class SimpleOpenAITest {
     void shouldSetPropertiesWhenBuilderIsCalledWithThoseProperties() {
       String otherUrl = "https://openai.com/api";
       SimpleOpenAI openAI = SimpleOpenAI.builder()
-          .apiKey("apiLKey")
+          .apiKey("apiKey")
           .urlBase(otherUrl)
           .httpClient(httpClient)
           .build();
-      assertEquals(otherUrl, openAI.getUrlBase());
-      assertEquals(httpClient, openAI.getHttpClient());
+          assertEquals("apiKey", openAI.getApiKey());
+          assertEquals(otherUrl, openAI.getUrlBase());
+          assertEquals(httpClient, openAI.getHttpClient());
     }
 
     @Test
     void shouldNotAddOrganizationToHeadersWhenBuilderIsCalledWithoutOrganizationId() {
       SimpleOpenAI openAI = SimpleOpenAI.builder()
-          .apiKey("apiLKey")
+          .apiKey("apiKey")
           .build();
       assertFalse(openAI.getHttpProcessor().getHeaders().contains(openAI.getOrganizationId()));
     }
@@ -67,7 +68,7 @@ public class SimpleOpenAITest {
     @Test
     void shouldAddOrganizationToHeadersWhenBuilderIsCalledWithOrganizationId() {
       SimpleOpenAI openAI = SimpleOpenAI.builder()
-          .apiKey("apiLKey")
+          .apiKey("apiKey")
           .organizationId("orgId")
           .build();
       assertTrue(openAI.getHttpProcessor().getHeaders().contains(openAI.getOrganizationId()));
@@ -116,7 +117,7 @@ public class SimpleOpenAITest {
     @BeforeEach
     void init() {
       openAI = SimpleOpenAI.builder()
-          .apiKey("apiLKey")
+          .apiKey("apiKey")
           .httpClient(httpClient)
           .build();
       openAI.setHttpProcessor(httpProcessor);
