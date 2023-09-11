@@ -14,6 +14,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ public class HttpProcessorTest {
   HttpProcessor httpProcessor;
   HttpClient httpClient = mock(HttpClient.class);
   HttpResponse<String> httpResponse = mock(HttpResponse.class);
+  HttpResponse<Stream<String>> httpResponseStream = mock(HttpResponse.class);
 
   @BeforeEach
   void init() {
@@ -60,6 +63,28 @@ public class HttpProcessorTest {
   }
 
   @Test
+  void shouldThownExceptionWhenCallingMethodReturnTypeIsUnsupported() {
+    var service = httpProcessor.create(ITest.GoodService.class, null);
+    Exception exception = assertThrows(SimpleUncheckedException.class,
+        () -> service.unsupportedMethod());
+    assertTrue(exception.getMessage().contains("Unsupported return type"));
+  }
+
+  @Test
+  void shouldReturnAStringWhenMethodReturnTypeIsAString() {
+    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
+        .thenReturn(CompletableFuture.completedFuture(httpResponse));
+    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    when(httpResponse.body()).thenReturn("{\"id\":100,\"description\":\"Description\",\"active\":true}");
+    
+    var service = httpProcessor.create(ITest.GoodService.class, null);
+    var actualDemo = service.getDemoPlain(100).join();
+    var expectedDemo = "{\"id\":100,\"description\":\"Description\",\"active\":true}";
+    
+    assertEquals(expectedDemo, actualDemo);
+  }
+
+  @Test
   void shouldReturnAnObjectWhenMethodReturnTypeIsAnObject() {
     when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
         .thenReturn(CompletableFuture.completedFuture(httpResponse));
@@ -86,5 +111,48 @@ public class HttpProcessorTest {
     var expectedDemo = new ITest.Demo(100, "Description", true);
     
     assertEquals(expectedDemo, actualDemo);
+  }
+
+  @Test
+  void shouldReturnAStreamWhenMethodReturnTypeIsAStream() {
+    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
+        .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
+    when(httpResponseStream.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    when(httpResponseStream.body()).thenReturn(Stream.of("data: {\"id\":100,\"description\":\"Description\",\"active\":true}"));
+
+    var service = httpProcessor.create(ITest.GoodService.class, null);
+    var actualStreamDemo = service.getDemoStream(new ITest.RequestDemo("Descr")).join();
+    var actualDemo = actualStreamDemo.findFirst().get();
+    var expectedDemo = new ITest.Demo(100, "Description", true);
+    
+    assertEquals(expectedDemo, actualDemo);
+  }
+
+  @Test
+  void shouldThrownExceptionWhenCallingNoStreamingMethodAndServerRespondsWithError() {
+    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
+        .thenReturn(CompletableFuture.completedFuture(httpResponse));
+    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_NOT_FOUND);
+    when(httpResponse.body()).thenReturn(
+      "{\"error\": {\"message\": \"The resource does not exist\", \"type\": \"T\", \"param\": \"P\", \"code\": \"C\"}}");
+    
+    var service = httpProcessor.create(ITest.GoodService.class, null);
+    Exception exception = assertThrows(CompletionException.class,
+        () -> service.getDemo(100).join());
+    assertTrue(exception.getMessage().contains("The resource does not exist"));
+  }
+
+  @Test
+  void shouldThrownExceptionWhenCallingStreamingMethodAndServerRespondsWithError() {
+    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
+        .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
+    when(httpResponseStream.statusCode()).thenReturn(HttpURLConnection.HTTP_NOT_FOUND);
+    when(httpResponseStream.body()).thenReturn(Stream.of(
+      "{\"error\": {\"message\": \"The resource does not exist\", \"type\": \"T\", \"param\": \"P\", \"code\": \"C\"}}"));
+    
+    var service = httpProcessor.create(ITest.GoodService.class, null);
+    Exception exception = assertThrows(CompletionException.class,
+        () -> service.getDemoStream(new ITest.RequestDemo("Descr")).join());
+    assertTrue(exception.getMessage().contains("The resource does not exist"));
   }
 }

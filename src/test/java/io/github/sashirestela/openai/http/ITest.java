@@ -19,23 +19,29 @@ interface ITest {
   interface NotAnnotatedService {
 
     @GET("/demos")
-    CompletableFuture<List<Demo>> getDemos();
+    CompletableFuture<List<Demo>> goodMethod();
 
-    String getDemoPlainText();
+    String unannotatedMethod();
 
   }
 
   interface BadPathParamService {
 
     @GET("/demos")
-    CompletableFuture<List<Demo>> getDemos();
+    CompletableFuture<List<Demo>> goodMethod();
 
     @POST("/demos/{demoId}")
-    CompletableFuture<Demo> createDemo(@Body RequestDemo request, @Path("demo_id") int demoId);
+    CompletableFuture<Demo> unmatchedPathParamMethod(@Path("demo_id") int demoId);
 
   }
 
   interface GoodService {
+
+    @GET("/demos")
+    List<Demo> unsupportedMethod();
+
+    @GET("/demos/{demoId}")
+    CompletableFuture<String> getDemoPlain(@Path("demoId") Integer demoId);
 
     @GET("/demos/{demoId}")
     CompletableFuture<Demo> getDemo(@Path("demoId") Integer demoId);
