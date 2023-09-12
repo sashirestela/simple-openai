@@ -69,7 +69,8 @@ public class JsonUtilTest {
   @Test
   @SuppressWarnings("unchecked")
   void shouldConvertJsonToParametricObjectWhenJsonHasNoIssues() {
-    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10},{\"first\":\"test2\",\"second\":20}]}";
+    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10}," +
+        "{\"first\":\"test2\",\"second\":20}]}";
     TestGeneric<TestClass> actualObject = JsonUtil.get().jsonToParametricObject(json, TestGeneric.class,
         TestClass.class);
     List<TestClass> actualList = actualObject.getData();
@@ -88,7 +89,8 @@ public class JsonUtilTest {
 
   @Test
   void shouldThrowExceptionWhenConvertingJsonToParametricObjectWithIssues() {
-    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10},{\"firstish\":\"test2\",\"secondish\":20}]}";
+    String json = "{\"id\":\"abc\",\"data\":[{\"first\":\"test1\",\"second\":10}," +
+        "{\"firstish\":\"test2\",\"secondish\":20}]}";
     assertThrows(SimpleUncheckedException.class,
         () -> JsonUtil.get().jsonToParametricObject(json, TestGeneric.class, TestClass.class));
   }
@@ -96,7 +98,8 @@ public class JsonUtilTest {
   @Test
   void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
     String actualJsonSchema = JsonUtil.get().classToJsonSchema(TestClass.class).toString();
-    String expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"},\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
+    String expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
+        "\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
     assertEquals(expectedJsonSchema, actualJsonSchema);
   }
 
