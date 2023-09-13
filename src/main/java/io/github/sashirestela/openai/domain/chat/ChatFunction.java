@@ -7,12 +7,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.github.sashirestela.openai.function.Functional;
 import io.github.sashirestela.openai.function.ParametersSerializer;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
-@AllArgsConstructor
 @Getter
 @Builder
 public class ChatFunction {

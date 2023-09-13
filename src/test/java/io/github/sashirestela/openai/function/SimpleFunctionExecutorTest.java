@@ -18,10 +18,12 @@ public class SimpleFunctionExecutorTest {
   private List<ChatFunction> functionList = Arrays.asList(
       ChatFunction.builder()
           .name("convert_to_celsius")
+          .description("Convert Fahrenheit to Celsius degrees")
           .functionalClass(ConvertToCelsius.class)
           .build(),
       ChatFunction.builder()
           .name("exponentiation")
+          .description("Multiply a base number a number n times")
           .functionalClass(MathPower.class)
           .build());
 
