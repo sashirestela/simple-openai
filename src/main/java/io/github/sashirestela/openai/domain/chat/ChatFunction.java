@@ -10,14 +10,10 @@ import io.github.sashirestela.openai.function.ParametersSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 @Builder
 public class ChatFunction {
 
