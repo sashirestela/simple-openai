@@ -4,20 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,10 +17,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
 
-@SuppressWarnings("unchecked")
 public class ChatDomainTest {
 
   static HttpClient httpClient;
@@ -63,13 +54,7 @@ public class ChatDomainTest {
 
   @Test
   void testChatCompletionsCreateStream() throws IOException {
-    HttpResponse<Stream<String>> httpResponse = mock(HttpResponse.class);
-    var listResponse = Files.readAllLines(Paths.get("src/test/resources/chatcompletions_create_stream.txt"));
-    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
-        .thenReturn(CompletableFuture.completedFuture(httpResponse));
-    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-    when(httpResponse.body()).thenReturn(listResponse.stream());
-
+    DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/chatcompletions_create_stream.txt");
     var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
     chatResponse.filter(chatResp -> chatResp.firstContent() != null)
         .map(chatResp -> chatResp.firstContent())
@@ -79,13 +64,7 @@ public class ChatDomainTest {
 
   @Test
   void testChatCompletionsCreate() throws IOException {
-    HttpResponse<String> httpResponse = mock(HttpResponse.class);
-    var jsonResponse = Files.readAllLines(Paths.get("src/test/resources/chatcompletions_create.json")).get(0);
-    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
-        .thenReturn(CompletableFuture.completedFuture(httpResponse));
-    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-    when(httpResponse.body()).thenReturn(jsonResponse);
-
+    DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create.json");
     var chatResponse = openAI.chatCompletions().create(chatRequest).join();
     System.out.println(chatResponse);
     assertNotNull(chatResponse);
@@ -93,13 +72,7 @@ public class ChatDomainTest {
 
   @Test
   void testChatCompletionsCreateWithFunction() throws IOException {
-    HttpResponse<String> httpResponse = mock(HttpResponse.class);
-    var jsonResponse = Files.readAllLines(Paths.get("src/test/resources/chatcompletions_create_functions.json")).get(0);
-    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
-        .thenReturn(CompletableFuture.completedFuture(httpResponse));
-    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-    when(httpResponse.body()).thenReturn(jsonResponse);
-
+    DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create_functions.json");
     var functionExecutor = new FunctionExecutor();
     functionExecutor.enrollFunction(
         ChatFunction.builder()

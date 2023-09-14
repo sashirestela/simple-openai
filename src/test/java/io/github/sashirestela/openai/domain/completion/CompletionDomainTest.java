@@ -1,26 +1,17 @@
 package io.github.sashirestela.openai.domain.completion;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
-@SuppressWarnings("unchecked")
 public class CompletionDomainTest {
 
   static HttpClient httpClient;
@@ -55,13 +46,7 @@ public class CompletionDomainTest {
 
   @Test
   void testCompletionsCreateStream() throws IOException {
-    HttpResponse<Stream<String>> httpResponse = mock(HttpResponse.class);
-    var listResponse = Files.readAllLines(Paths.get("src/test/resources/completions_create_stream.txt"));
-    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
-        .thenReturn(CompletableFuture.completedFuture(httpResponse));
-    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-    when(httpResponse.body()).thenReturn(listResponse.stream());
-
+    DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/completions_create_stream.txt");
     var completionResponse = openAI.completions().createStream(completionRequest).join();
     completionResponse.filter(chatResp -> chatResp.firstText() != null)
         .map(chatResp -> chatResp.firstText())
@@ -71,13 +56,7 @@ public class CompletionDomainTest {
 
   @Test
   void testCompletionsCreate() throws IOException {
-    HttpResponse<String> httpResponse = mock(HttpResponse.class);
-    var jsonResponse = Files.readAllLines(Paths.get("src/test/resources/completions_create.json")).get(0);
-    when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
-        .thenReturn(CompletableFuture.completedFuture(httpResponse));
-    when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
-    when(httpResponse.body()).thenReturn(jsonResponse);
-
+    DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/completions_create.json");
     var completionResponse = openAI.completions().create(completionRequest).join();
     System.out.println(completionResponse);
     assertNotNull(completionResponse);
