@@ -5,13 +5,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.github.sashirestela.openai.domain.OpenAIUsage;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @ToString
 public class CompletionResponse {

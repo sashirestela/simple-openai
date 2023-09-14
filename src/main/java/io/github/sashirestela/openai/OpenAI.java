@@ -33,6 +33,7 @@ import io.github.sashirestela.openai.http.annotation.Multipart;
 import io.github.sashirestela.openai.http.annotation.POST;
 import io.github.sashirestela.openai.http.annotation.Path;
 import io.github.sashirestela.openai.http.annotation.Query;
+import io.github.sashirestela.openai.http.annotation.Resource;
 
 /**
  * The OpenAI API can be applied to virtually any task that requires
@@ -49,7 +50,8 @@ interface OpenAI {
    * @see <a href="https://platform.openai.com/docs/api-reference/audio">OpenAI
    *      Audio</a>
    */
-  interface Audios {
+  @Resource("/v1/audio")
+   interface Audios {
 
     /**
      * Transcribes audio into the input language. Response as object.
@@ -59,7 +61,7 @@ interface OpenAI {
      * @return Transcription as an object.
      */
     @Multipart
-    @POST("/v1/audio/transcriptions")
+    @POST("/transcriptions")
     CompletableFuture<AudioResponse> transcribe(@Body AudioTranscribeRequest audioRequest);
 
     /**
@@ -70,7 +72,7 @@ interface OpenAI {
      * @return Translation as an object.
      */
     @Multipart
-    @POST("/v1/audio/translations")
+    @POST("/translations")
     CompletableFuture<AudioResponse> translate(@Body AudioTranslateRequest audioRequest);
 
     /**
@@ -81,7 +83,7 @@ interface OpenAI {
      * @return Transcription as plain text.
      */
     @Multipart
-    @POST("/v1/audio/transcriptions")
+    @POST("/transcriptions")
     CompletableFuture<String> transcribePlain(@Body AudioTranscribeRequest audioRequest);
 
     /**
@@ -92,7 +94,7 @@ interface OpenAI {
      * @return Translation as plain text.
      */
     @Multipart
-    @POST("/v1/audio/translations")
+    @POST("/translations")
     CompletableFuture<String> translatePlain(@Body AudioTranslateRequest audioRequest);
 
   }
@@ -104,6 +106,7 @@ interface OpenAI {
    * @see <a href="https://platform.openai.com/docs/api-reference/chat">OpenAI
    *      Chat</a>
    */
+  @Resource("/v1/chat/completions")
   interface ChatCompletions {
 
     /**
@@ -113,7 +116,7 @@ interface OpenAI {
      *                    Its 'stream' attribute is setted to false automatically.
      * @return Response is delivered as a full text when is ready.
      */
-    @POST("/v1/chat/completions")
+    @POST
     CompletableFuture<ChatResponse> create(@Body ChatRequest chatRequest);
 
     /**
@@ -123,7 +126,7 @@ interface OpenAI {
      *                    Its 'stream' attribute is setted to true automatically.
      * @return Response is delivered as a continuos flow of tokens.
      */
-    @POST("/v1/chat/completions")
+    @POST
     CompletableFuture<Stream<ChatResponse>> createStream(@Body ChatRequest chatRequest);
 
   }
@@ -136,6 +139,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/completions">OpenAI
    *      Completion</a>
    */
+  @Resource("/v1/completions")
   interface Completions {
 
     /**
@@ -146,7 +150,7 @@ interface OpenAI {
      *                          automatically.
      * @return Response is delivered as a full text when is ready.
      */
-    @POST("/v1/completions")
+    @POST
     CompletableFuture<CompletionResponse> create(@Body CompletionRequest completionRequest);
 
     /**
@@ -157,7 +161,7 @@ interface OpenAI {
      *                          automatically.
      * @return Response is delivered as a continuos flow of tokens.
      */
-    @POST("/v1/completions")
+    @POST
     CompletableFuture<Stream<CompletionResponse>> createStream(@Body CompletionRequest completionRequest);
 
   }
@@ -170,6 +174,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/embeddings">OpenAI
    *      Embedding</a>
    */
+  @Resource("/v1/embeddings")
   interface Embeddings {
 
     /**
@@ -178,7 +183,7 @@ interface OpenAI {
      * @param embeddingRequest The input text to embed and the model to use.
      * @return Represents an embedding vector.
      */
-    @POST("/v1/embeddings")
+    @POST
     CompletableFuture<EmbeddingResponse> create(@Body EmbeddingRequest embeddingRequest);
 
   }
@@ -191,6 +196,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/files">OpenAI
    *      Files</a>
    */
+  @Resource("/v1/files")
   interface Files {
 
     /**
@@ -201,7 +207,7 @@ interface OpenAI {
      * @return Represents a document that has been uploaded.
      */
     @Multipart
-    @POST("/v1/files")
+    @POST
     CompletableFuture<FileResponse> create(@Body FileRequest fileRequest);
 
     /**
@@ -209,7 +215,7 @@ interface OpenAI {
      * 
      * @return List of files.
      */
-    @GET("/v1/files")
+    @GET
     CompletableFuture<List<FileResponse>> getList();
 
     /**
@@ -218,7 +224,7 @@ interface OpenAI {
      * @param fileId The id of the file to use for this request.
      * @return Specific file.
      */
-    @GET("/v1/files/{fileId}")
+    @GET("/{fileId}")
     CompletableFuture<FileResponse> getOne(@Path("fileId") String fileId);
 
     /**
@@ -227,7 +233,7 @@ interface OpenAI {
      * @param fileId The id of the file to use for this request.
      * @return Content of specific file.
      */
-    @GET("/v1/files/{fileId}/content")
+    @GET("/{fileId}/content")
     CompletableFuture<String> getContent(@Path("fileId") String fileId);
 
     /**
@@ -236,7 +242,7 @@ interface OpenAI {
      * @param fileId The id of the file to use for this request.
      * @return Deletion status.
      */
-    @DELETE("/v1/files/{fileId}")
+    @DELETE("/{fileId}")
     CompletableFuture<OpenAIDeletedResponse> delete(@Path("fileId") String fileId);
 
   }
@@ -248,6 +254,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/fine-tuning">OpenAI
    *      Fine-Tuning</a>
    */
+  @Resource("/v1/fine_tuning/jobs")
   interface FineTunings {
 
     /**
@@ -258,7 +265,7 @@ interface OpenAI {
      * @return Response includes details of the enqueued job including job status
      *         and the name of the fine-tuned models once complete.
      */
-    @POST("/v1/fine_tuning/jobs")
+    @POST
     CompletableFuture<FineTuningResponse> create(@Body FineTuningRequest fineTuningRequest);
 
     /**
@@ -269,7 +276,7 @@ interface OpenAI {
      *              request.
      * @return A list of paginated fine-tuning job objects.
      */
-    @GET("/v1/fine_tuning/jobs")
+    @GET
     CompletableFuture<List<FineTuningResponse>> getList(@Query("limit") Integer limit, @Query("after") String after);
 
     /**
@@ -278,7 +285,7 @@ interface OpenAI {
      * @param fineTuningId The id of the fine-tuning job.
      * @return The fine-tuning object with the given id.
      */
-    @GET("/v1/fine_tuning/jobs/{fineTuningId}")
+    @GET("/{fineTuningId}")
     CompletableFuture<FineTuningResponse> getOne(@Path("fineTuningId") String fineTuningId);
 
     /**
@@ -290,7 +297,7 @@ interface OpenAI {
      *                     request.
      * @return A list of fine-tuning event objects.
      */
-    @GET("/v1/fine_tuning/jobs/{fineTuningId}/events")
+    @GET("/{fineTuningId}/events")
     CompletableFuture<List<FineTuningEvent>> getEvents(@Path("fineTuningId") String fineTuningId,
         @Query("limit") Integer limit, @Query("after") String after);
 
@@ -300,7 +307,7 @@ interface OpenAI {
      * @param fineTuningId The id of the fine-tuning job to cancel.
      * @return The cancelled fine-tuning object.
      */
-    @POST("/v1/fine_tuning/jobs/{fineTuningId}/cancel")
+    @POST("/{fineTuningId}/cancel")
     CompletableFuture<FineTuningResponse> cancel(@Path("fineTuningId") String fineTuningId);
 
   }
@@ -312,6 +319,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/images">OpenAI
    *      Image</a>
    */
+  @Resource("/v1/images")
   interface Images {
 
     /**
@@ -321,7 +329,7 @@ interface OpenAI {
      *                     parameters such as number, size or responseFormat.
      * @return Returns a list of image objects (the url or the binary content).
      */
-    @POST("/v1/images/generations")
+    @POST("/generations")
     CompletableFuture<List<ImageResponse>> create(@Body ImageRequest imageRequest);
 
     /**
@@ -332,7 +340,7 @@ interface OpenAI {
      * @return Returns a list of image objects (the url or the binary content).
      */
     @Multipart
-    @POST("/v1/images/edits")
+    @POST("/edits")
     CompletableFuture<List<ImageResponse>> createEdits(@Body ImageEditsRequest imageRequest);
 
     /**
@@ -343,7 +351,7 @@ interface OpenAI {
      * @return Returns a list of image objects (the url or the binary content).
      */
     @Multipart
-    @POST("/v1/images/variations")
+    @POST("/variations")
     CompletableFuture<List<ImageResponse>> createVariations(@Body ImageVariationsRequest imageRequest);
 
   }
@@ -355,6 +363,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/models">OpenAI
    *      Model</a>
    */
+  @Resource("/v1/models")
   interface Models {
 
     /**
@@ -363,7 +372,7 @@ interface OpenAI {
      * 
      * @return A list of model objects.
      */
-    @GET("/v1/models")
+    @GET
     CompletableFuture<List<ModelResponse>> getList();
 
     /**
@@ -373,7 +382,7 @@ interface OpenAI {
      * @param modelId The id of the model to use for this request.
      * @return The model object matching the specified id.
      */
-    @GET("/v1/models/{modelId}")
+    @GET("/{modelId}")
     CompletableFuture<ModelResponse> getOne(@Path("modelId") String modelId);
 
     /**
@@ -382,7 +391,7 @@ interface OpenAI {
      * @param modelId The id of the dine tuned model to use for this request.
      * @return Deletion status.
      */
-    @DELETE("/v1/models/{modelId}")
+    @DELETE("/{modelId}")
     CompletableFuture<OpenAIDeletedResponse> delete(@Path("modelId") String modelId);
 
   }
@@ -395,6 +404,7 @@ interface OpenAI {
    *      "https://platform.openai.com/docs/api-reference/moderations">OpenAI
    *      Moderation</a>
    */
+  @Resource("/v1/moderations")
   interface Moderations {
 
     /**
@@ -404,7 +414,7 @@ interface OpenAI {
      *                          be used.
      * @return Response including a list of moderation objects.
      */
-    @POST("/v1/moderations")
+    @POST
     CompletableFuture<ModerationResponse> create(@Body ModerationRequest moderationRequest);
 
   }

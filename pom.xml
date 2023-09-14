@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>0.2.2</version>
+  <version>0.3.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -308,6 +308,11 @@
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>${jacoco.version}</version>
+        <configuration>
+          <excludes>
+            <exclude>**/demo/**</exclude>
+          </excludes>
+        </configuration>
         <executions>
           <execution>
             <goals>

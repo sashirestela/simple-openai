@@ -7,11 +7,9 @@ import io.github.sashirestela.openai.http.ReturnType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
-@ToString
 @Builder
 public class Metadata {
 
@@ -20,7 +18,6 @@ public class Metadata {
 
   @AllArgsConstructor
   @Getter
-  @ToString
   @Builder
   public static class Method {
 
@@ -35,7 +32,6 @@ public class Metadata {
 
   @AllArgsConstructor
   @Getter
-  @ToString
   @Builder
   public static class Parameter {
 
@@ -47,7 +43,6 @@ public class Metadata {
 
   @AllArgsConstructor
   @Getter
-  @ToString
   public static class Annotation {
 
     private String name;

@@ -18,11 +18,13 @@ import io.github.sashirestela.openai.metadata.MetadataCollector;
 import io.github.sashirestela.openai.support.CommonUtil;
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.ReflectUtil;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class HttpProcessor {
   private static Logger LOGGER = LoggerFactory.getLogger(HttpProcessor.class);
 

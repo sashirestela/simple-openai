@@ -24,13 +24,11 @@ public abstract class HttpSender {
     if (response.statusCode() != HttpURLConnection.HTTP_OK) {
       String data = null;
       if (isStream) {
-        data = ((Stream<String>) response.body())
-            .peek(error -> LOGGER.debug("Response : {}", error))
-            .collect(Collectors.joining());
+        data = ((Stream<String>) response.body()).collect(Collectors.joining(System.getProperty("line.separator")));
       } else {
         data = (String) response.body();
-        LOGGER.debug("Response : {}", data);
       }
+      LOGGER.error("Response : {}", data);
       OpenAIError openAIError = JsonUtil.get().jsonToObject(data, OpenAIError.class);
       throw new SimpleUncheckedException("ERROR : {0}", openAIError.getError(), null);
     }
