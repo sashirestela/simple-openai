@@ -1,3 +1,8 @@
+[![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/maven.yml)
+
+
 # 📌 Simple-OpenAI
 A Java library to use the OpenAI Api in the simplest possible way.
 
@@ -111,7 +116,7 @@ ChatResponse chatResponse = futureChat.join();
 System.out.println(chatResponse.firstContent());
 ```
 #### Chat Completion Service with Functions
-This funcionality empowers the Chat Completion service to solve specific problems to our context. In this example we are setting three functions and we are entering a prompt that will require to call one of them (the function Product). For setting functions we are using additional classes which implements the interface _Functional_. Those classes define a property by each function argument, annotating them to describe them and each class must override the _execute_ method with function's logic:
+This functionality empowers the Chat Completion service to solve specific problems to our context. In this example we are setting three functions and we are entering a prompt that will require to call one of them (the function ```product```). For setting functions we are using additional classes which implements the interface ```Functional```. Those classes define a field by each function argument, annotating them to describe them and each class must override the ```execute``` method with the function's logic. Note that we are using the ```FunctionExecutor``` utility class to enroll the functions and to execute the function selected by the ```openai.chatCompletions()``` calling:
 ```java
 public void demoCallChatWithFunctions() {
     FunctionExecutor functionExecutor = new FunctionExecutor();
@@ -210,24 +215,24 @@ Demonstration of the Chat functionality in streaming mode. The application print
 ## ✳ Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
 * Clone this respository:
-  ```bash
+  ```
   git clone https://github.com/sashirestela/simple-openai.git
   cd simple-openai
   ```
 * Build the project:
-  ```bash
+  ```
   mvn clean install
   ```
 * Create an environment variable for your OpenAI Api Key:
-  ```bash
+  ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
 * Grant execution permission to the script file:
-  ```bash
+  ```
   chmod +x rundemo.sh
   ```
 * Run examples:
-  ```bash
+  ```
   ./rundemo.sh <demo> [debug]
   ```
   Where:
@@ -244,7 +249,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * moderation
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
-
+  * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
 
 ## 📄 License
 Simple-OpenAI is licensed under the MIT License. See the
