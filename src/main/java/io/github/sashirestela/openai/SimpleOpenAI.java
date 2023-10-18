@@ -2,30 +2,26 @@ package io.github.sashirestela.openai;
 
 import java.net.http.HttpClient;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import io.github.sashirestela.openai.filter.AudioFilter;
-import io.github.sashirestela.openai.filter.StreamFilter;
-import io.github.sashirestela.openai.http.HttpProcessor;
+import io.github.sashirestela.cleverclient.CleverClient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
  * interfaces.
  */
-@NoArgsConstructor
 @Getter
 public class SimpleOpenAI {
 
-  public final static String OPENAI_URL_BASE = "https://api.openai.com";
-  private final static String AUTHORIZATION_HEADER = "Authorization";
-  private final static String ORGANIZATION_HEADER = "OpenAI-Organization";
-  private final static String BEARER_AUTHORIZATION = "Bearer ";
+  private static final String OPENAI_URL_BASE = "https://api.openai.com";
+  private static final String AUTHORIZATION_HEADER = "Authorization";
+  private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
+  private static final String BEARER_AUTHORIZATION = "Bearer ";
+  private static final String END_OF_STREAM = "[DONE]";
 
   @NonNull
   private String apiKey;
@@ -33,32 +29,33 @@ public class SimpleOpenAI {
   private String organizationId;
   private String urlBase;
   private HttpClient httpClient;
-  private HttpProcessor httpProcessor;
+
+  private CleverClient cleverClient;
 
   @Getter(AccessLevel.NONE)
   private OpenAI.Audios audioService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.ChatCompletions chatCompletionService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Completions completionService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Embeddings embeddingService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Files fileService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.FineTunings fineTuningService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Images imageService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Models modelService;
-  
+
   @Getter(AccessLevel.NONE)
   private OpenAI.Moderations moderationService;
 
@@ -79,22 +76,23 @@ public class SimpleOpenAI {
     this.urlBase = Optional.ofNullable(urlBase).orElse(OPENAI_URL_BASE);
     this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
-    List<String> headers = new ArrayList<>();
+    var headers = new ArrayList<String>();
     headers.add(AUTHORIZATION_HEADER);
     headers.add(BEARER_AUTHORIZATION + apiKey);
     if (organizationId != null) {
       headers.add(ORGANIZATION_HEADER);
       headers.add(organizationId);
     }
-    this.httpProcessor = HttpProcessor.builder()
+    this.cleverClient = CleverClient.builder()
         .httpClient(this.httpClient)
         .urlBase(this.urlBase)
         .headers(headers)
+        .endOfStream(END_OF_STREAM)
         .build();
   }
 
-  public void setHttpProcessor(HttpProcessor httpProcessor) {
-    this.httpProcessor = httpProcessor;
+  public void setCleverClient(CleverClient cleverClient) {
+    this.cleverClient = cleverClient;
   }
 
   /**
@@ -104,7 +102,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Audios audios() {
     if (audioService == null) {
-      audioService = httpProcessor.create(OpenAI.Audios.class, new AudioFilter());
+      audioService = cleverClient.create(OpenAI.Audios.class);
     }
     return audioService;
   }
@@ -117,7 +115,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.ChatCompletions chatCompletions() {
     if (chatCompletionService == null) {
-      chatCompletionService = httpProcessor.create(OpenAI.ChatCompletions.class, new StreamFilter());
+      chatCompletionService = cleverClient.create(OpenAI.ChatCompletions.class);
     }
     return chatCompletionService;
   }
@@ -129,7 +127,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Completions completions() {
     if (completionService == null) {
-      completionService = httpProcessor.create(OpenAI.Completions.class, new StreamFilter());
+      completionService = cleverClient.create(OpenAI.Completions.class);
     }
     return completionService;
   }
@@ -141,7 +139,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Embeddings embeddings() {
     if (embeddingService == null) {
-      embeddingService = httpProcessor.create(OpenAI.Embeddings.class, null);
+      embeddingService = cleverClient.create(OpenAI.Embeddings.class);
     }
     return embeddingService;
   }
@@ -153,7 +151,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Files files() {
     if (fileService == null) {
-      fileService = httpProcessor.create(OpenAI.Files.class, null);
+      fileService = cleverClient.create(OpenAI.Files.class);
     }
     return fileService;
   }
@@ -165,7 +163,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.FineTunings fineTunings() {
     if (fineTuningService == null) {
-      fineTuningService = httpProcessor.create(OpenAI.FineTunings.class, null);
+      fineTuningService = cleverClient.create(OpenAI.FineTunings.class);
     }
     return fineTuningService;
   }
@@ -177,7 +175,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Images images() {
     if (imageService == null) {
-      imageService = httpProcessor.create(OpenAI.Images.class, null);
+      imageService = cleverClient.create(OpenAI.Images.class);
     }
     return imageService;
   }
@@ -189,7 +187,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Models models() {
     if (modelService == null) {
-      modelService = httpProcessor.create(OpenAI.Models.class, null);
+      modelService = cleverClient.create(OpenAI.Models.class);
     }
     return modelService;
   }
@@ -201,7 +199,7 @@ public class SimpleOpenAI {
    */
   public OpenAI.Moderations moderations() {
     if (moderationService == null) {
-      moderationService = httpProcessor.create(OpenAI.Moderations.class, null);
+      moderationService = cleverClient.create(OpenAI.Moderations.class);
     }
     return moderationService;
   }

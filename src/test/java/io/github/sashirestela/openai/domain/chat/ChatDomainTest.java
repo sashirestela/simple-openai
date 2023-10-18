@@ -17,11 +17,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
 
-public class ChatDomainTest {
+class ChatDomainTest {
 
   static HttpClient httpClient;
   static SimpleOpenAI openAI;
@@ -109,15 +110,17 @@ public class ChatDomainTest {
 
   @Test
   void shouldThrownExceptionWhenChatMessageIsCreatedWithoutContentAndRoleIsDifferentThanAssistant() {
-    var exception = assertThrows(RuntimeException.class,
-        () -> ChatMessage.builder().role(Role.USER).build());
+    var chatMessageBuilder = ChatMessage.builder().role(Role.USER);
+    var exception = assertThrows(SimpleUncheckedException.class,
+        () -> chatMessageBuilder.build());
     assertEquals("The content is required for ChatMessage when role is other than assistant.", exception.getMessage());
   }
 
   @Test
   void shouldThrownExceptionWhenChatMessageIsCreatedWithoutNameAndRoleIsFunction() {
-    var exception = assertThrows(RuntimeException.class,
-        () -> ChatMessage.builder().role(Role.FUNCTION).content("content").build());
+    var chatMessageBuilder = ChatMessage.builder().role(Role.FUNCTION).content("content");
+    var exception = assertThrows(SimpleUncheckedException.class,
+        () -> chatMessageBuilder.build());
     assertEquals("The name is required for ChatMessage when role is function.", exception.getMessage());
   }
 

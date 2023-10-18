@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.image;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder

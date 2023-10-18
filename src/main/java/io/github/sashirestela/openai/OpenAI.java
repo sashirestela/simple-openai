@@ -1,10 +1,21 @@
 package io.github.sashirestela.openai;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+import io.github.sashirestela.cleverclient.annotation.Body;
+import io.github.sashirestela.cleverclient.annotation.DELETE;
+import io.github.sashirestela.cleverclient.annotation.GET;
+import io.github.sashirestela.cleverclient.annotation.Multipart;
+import io.github.sashirestela.cleverclient.annotation.POST;
+import io.github.sashirestela.cleverclient.annotation.Path;
+import io.github.sashirestela.cleverclient.annotation.Query;
+import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
+import io.github.sashirestela.openai.domain.OpenAIGeneric;
+import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
@@ -26,14 +37,6 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
 import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
-import io.github.sashirestela.openai.http.annotation.Body;
-import io.github.sashirestela.openai.http.annotation.DELETE;
-import io.github.sashirestela.openai.http.annotation.GET;
-import io.github.sashirestela.openai.http.annotation.Multipart;
-import io.github.sashirestela.openai.http.annotation.POST;
-import io.github.sashirestela.openai.http.annotation.Path;
-import io.github.sashirestela.openai.http.annotation.Query;
-import io.github.sashirestela.openai.http.annotation.Resource;
 
 /**
  * The OpenAI API can be applied to virtually any task that requires
@@ -51,7 +54,31 @@ interface OpenAI {
    *      Audio</a>
    */
   @Resource("/v1/audio")
-   interface Audios {
+  interface Audios {
+
+    private void setResponseFormatIfApplyOrThrownException(Object audioRequest, boolean isText, String methodName) {
+      final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
+      final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
+      var requestObj = (AudioTranslateRequest) audioRequest;
+      var responseFormat = requestObj.getResponseFormat();
+      if (isText) {
+        if (responseFormat != null) {
+          if (!textEnumSet.contains(responseFormat)) {
+            throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName, null);
+          }
+        } else {
+          requestObj.setResponseFormat(AudioRespFmt.TEXT);
+        }
+      } else {
+        if (responseFormat != null) {
+          if (!jsonEnumSet.contains(responseFormat)) {
+            throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName, null);
+          }
+        } else {
+          requestObj.setResponseFormat(AudioRespFmt.JSON);
+        }
+      }
+    }
 
     /**
      * Transcribes audio into the input language. Response as object.
@@ -60,9 +87,14 @@ interface OpenAI {
      *                     verbose_json. Includes the audio file.
      * @return Transcription as an object.
      */
+    default CompletableFuture<AudioResponse> transcribe(AudioTranscribeRequest audioRequest) {
+      setResponseFormatIfApplyOrThrownException(audioRequest, false, "transcribe");
+      return notUseTranscribe(audioRequest);
+    }
+
     @Multipart
     @POST("/transcriptions")
-    CompletableFuture<AudioResponse> transcribe(@Body AudioTranscribeRequest audioRequest);
+    CompletableFuture<AudioResponse> notUseTranscribe(@Body AudioTranscribeRequest audioRequest);
 
     /**
      * Translates audio into English. Response as object.
@@ -71,9 +103,14 @@ interface OpenAI {
      *                     verbose_json. Includes the audio file.
      * @return Translation as an object.
      */
+    default CompletableFuture<AudioResponse> translate(AudioTranslateRequest audioRequest) {
+      setResponseFormatIfApplyOrThrownException(audioRequest, false, "translate");
+      return notUseTranslate(audioRequest);
+    }
+
     @Multipart
     @POST("/translations")
-    CompletableFuture<AudioResponse> translate(@Body AudioTranslateRequest audioRequest);
+    CompletableFuture<AudioResponse> notUseTranslate(@Body AudioTranslateRequest audioRequest);
 
     /**
      * Transcribes audio into the input language. Response as plain text.
@@ -82,9 +119,14 @@ interface OpenAI {
      *                     Includes the audio file.
      * @return Transcription as plain text.
      */
+    default CompletableFuture<String> transcribePlain(AudioTranscribeRequest audioRequest) {
+      setResponseFormatIfApplyOrThrownException(audioRequest, true, "transcribePlain");
+      return notUseTranscribePlain(audioRequest);
+    }
+
     @Multipart
     @POST("/transcriptions")
-    CompletableFuture<String> transcribePlain(@Body AudioTranscribeRequest audioRequest);
+    CompletableFuture<String> notUseTranscribePlain(@Body AudioTranscribeRequest audioRequest);
 
     /**
      * Translates audio into English. Response as plain text.
@@ -93,9 +135,14 @@ interface OpenAI {
      *                     Includes the audio file.
      * @return Translation as plain text.
      */
+    default CompletableFuture<String> translatePlain(AudioTranslateRequest audioRequest) {
+      setResponseFormatIfApplyOrThrownException(audioRequest, true, "translatePlain");
+      return notUseTranslatePlain(audioRequest);
+    }
+
     @Multipart
     @POST("/translations")
-    CompletableFuture<String> translatePlain(@Body AudioTranslateRequest audioRequest);
+    CompletableFuture<String> notUseTranslatePlain(@Body AudioTranslateRequest audioRequest);
 
   }
 
@@ -116,8 +163,13 @@ interface OpenAI {
      *                    Its 'stream' attribute is setted to false automatically.
      * @return Response is delivered as a full text when is ready.
      */
+    default CompletableFuture<ChatResponse> create(ChatRequest chatRequest) {
+      chatRequest.setStream(false);
+      return notUseCreate(chatRequest);
+    }
+
     @POST
-    CompletableFuture<ChatResponse> create(@Body ChatRequest chatRequest);
+    CompletableFuture<ChatResponse> notUseCreate(@Body ChatRequest chatRequest);
 
     /**
      * Creates a model response for the given chat conversation. Streaming Mode.
@@ -126,8 +178,13 @@ interface OpenAI {
      *                    Its 'stream' attribute is setted to true automatically.
      * @return Response is delivered as a continuos flow of tokens.
      */
+    default CompletableFuture<Stream<ChatResponse>> createStream(ChatRequest chatRequest) {
+      chatRequest.setStream(true);
+      return notUseCreateStream(chatRequest);
+    }
+
     @POST
-    CompletableFuture<Stream<ChatResponse>> createStream(@Body ChatRequest chatRequest);
+    CompletableFuture<Stream<ChatResponse>> notUseCreateStream(@Body ChatRequest chatRequest);
 
   }
 
@@ -150,8 +207,13 @@ interface OpenAI {
      *                          automatically.
      * @return Response is delivered as a full text when is ready.
      */
+    default CompletableFuture<CompletionResponse> create(CompletionRequest completionRequest) {
+      completionRequest.setStream(false);
+      return notUseCreate(completionRequest);
+    }
+
     @POST
-    CompletableFuture<CompletionResponse> create(@Body CompletionRequest completionRequest);
+    CompletableFuture<CompletionResponse> notUseCreate(@Body CompletionRequest completionRequest);
 
     /**
      * Creates a completion for the provided prompt and parameters. Streaming mode.
@@ -161,8 +223,13 @@ interface OpenAI {
      *                          automatically.
      * @return Response is delivered as a continuos flow of tokens.
      */
+    default CompletableFuture<Stream<CompletionResponse>> createStream(CompletionRequest completionRequest) {
+      completionRequest.setStream(true);
+      return notUseCreateStream(completionRequest);
+    }
+
     @POST
-    CompletableFuture<Stream<CompletionResponse>> createStream(@Body CompletionRequest completionRequest);
+    CompletableFuture<Stream<CompletionResponse>> notUseCreateStream(@Body CompletionRequest completionRequest);
 
   }
 
@@ -215,8 +282,12 @@ interface OpenAI {
      * 
      * @return List of files.
      */
+    default CompletableFuture<List<FileResponse>> getList() {
+      return notUseGetGenericFile().thenApply(OpenAIGeneric::getData);
+    }
+
     @GET
-    CompletableFuture<List<FileResponse>> getList();
+    CompletableFuture<OpenAIGeneric<FileResponse>> notUseGetGenericFile();
 
     /**
      * Returns information about a specific file.
@@ -276,8 +347,13 @@ interface OpenAI {
      *              request.
      * @return A list of paginated fine-tuning job objects.
      */
+    default CompletableFuture<List<FineTuningResponse>> getList(Integer limit, String after) {
+      return notUseGetGenericFineTuning(limit, after).thenApply(OpenAIGeneric::getData);
+    }
+
     @GET
-    CompletableFuture<List<FineTuningResponse>> getList(@Query("limit") Integer limit, @Query("after") String after);
+    CompletableFuture<OpenAIGeneric<FineTuningResponse>> notUseGetGenericFineTuning(@Query("limit") Integer limit,
+        @Query("after") String after);
 
     /**
      * Get info about a fine-tuning job.
@@ -297,8 +373,13 @@ interface OpenAI {
      *                     request.
      * @return A list of fine-tuning event objects.
      */
+    default CompletableFuture<List<FineTuningEvent>> getEvents(String fineTuningId, Integer limit, String after) {
+      return notUseGetGenericFineTuningEvent(fineTuningId, limit, after).thenApply(OpenAIGeneric::getData);
+    }
+
     @GET("/{fineTuningId}/events")
-    CompletableFuture<List<FineTuningEvent>> getEvents(@Path("fineTuningId") String fineTuningId,
+    CompletableFuture<OpenAIGeneric<FineTuningEvent>> notUseGetGenericFineTuningEvent(
+        @Path("fineTuningId") String fineTuningId,
         @Query("limit") Integer limit, @Query("after") String after);
 
     /**
@@ -329,8 +410,12 @@ interface OpenAI {
      *                     parameters such as number, size or responseFormat.
      * @return Returns a list of image objects (the url or the binary content).
      */
+    default CompletableFuture<List<ImageResponse>> create(ImageRequest imageRequest) {
+      return notUseCreate(imageRequest).thenApply(OpenAIGeneric::getData);
+    }
+
     @POST("/generations")
-    CompletableFuture<List<ImageResponse>> create(@Body ImageRequest imageRequest);
+    CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreate(@Body ImageRequest imageRequest);
 
     /**
      * Creates an edited or extended image given an original image and a prompt.
@@ -339,9 +424,13 @@ interface OpenAI {
      *                     the desired image(s).
      * @return Returns a list of image objects (the url or the binary content).
      */
+    default CompletableFuture<List<ImageResponse>> createEdits(ImageEditsRequest imageRequest) {
+      return notUseCreateEdits(imageRequest).thenApply(OpenAIGeneric::getData);
+    }
+
     @Multipart
     @POST("/edits")
-    CompletableFuture<List<ImageResponse>> createEdits(@Body ImageEditsRequest imageRequest);
+    CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreateEdits(@Body ImageEditsRequest imageRequest);
 
     /**
      * Creates a variation of a given image.
@@ -350,10 +439,13 @@ interface OpenAI {
      *                     variation(s).
      * @return Returns a list of image objects (the url or the binary content).
      */
+    default CompletableFuture<List<ImageResponse>> createVariations(ImageVariationsRequest imageRequest) {
+      return notUseCreateVariations(imageRequest).thenApply(OpenAIGeneric::getData);
+    }
+
     @Multipart
     @POST("/variations")
-    CompletableFuture<List<ImageResponse>> createVariations(@Body ImageVariationsRequest imageRequest);
-
+    CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreateVariations(@Body ImageVariationsRequest imageRequest);
   }
 
   /**
@@ -372,8 +464,12 @@ interface OpenAI {
      * 
      * @return A list of model objects.
      */
+    default CompletableFuture<List<ModelResponse>> getList() {
+      return notUseGetGenericModel().thenApply(OpenAIGeneric::getData);
+    }
+
     @GET
-    CompletableFuture<List<ModelResponse>> getList();
+    CompletableFuture<OpenAIGeneric<ModelResponse>> notUseGetGenericModel();
 
     /**
      * Retrieves a model instance, providing basic information about the model such

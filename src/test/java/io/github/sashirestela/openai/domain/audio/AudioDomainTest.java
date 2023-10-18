@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
-public class AudioDomainTest {
+class AudioDomainTest {
 
   static HttpClient httpClient;
   static SimpleOpenAI openAI;

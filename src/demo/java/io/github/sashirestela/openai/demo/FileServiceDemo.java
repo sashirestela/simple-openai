@@ -1,8 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
@@ -12,17 +10,13 @@ public class FileServiceDemo extends AbstractDemo {
 
   private String fileId;
 
-  public FileServiceDemo() {
-  }
-
   public FileResponse createFileResponse() {
-    FileRequest fileRequest = FileRequest.builder()
+    var fileRequest = FileRequest.builder()
         .file(Paths.get("src/demo/resources/test_data.jsonl"))
         .purpose("fine-tune")
         .build();
-    CompletableFuture<FileResponse> futureFile = openAI.files().create(fileRequest);
-    FileResponse fileResponse = futureFile.join();
-    return fileResponse;
+    var futureFile = openAI.files().create(fileRequest);
+    return futureFile.join();
   }
 
   public void waitUntilFileIsProcessed(String fileId) {
@@ -39,49 +33,48 @@ public class FileServiceDemo extends AbstractDemo {
 
   public OpenAIDeletedResponse deleteFileResponse(String fileId) {
     waitUntilFileIsProcessed(fileId);
-    CompletableFuture<OpenAIDeletedResponse> futureFile = openAI.files().delete(fileId);
-    OpenAIDeletedResponse fileDeleted = futureFile.join();
-    return fileDeleted;
+    var futureFile = openAI.files().delete(fileId);
+    return futureFile.join();
   }
 
   public void demoCallFileCreate() {
-    FileResponse fileResponse = createFileResponse();
+    var fileResponse = createFileResponse();
     fileId = fileResponse.getId();
     System.out.println(fileResponse);
   }
 
   public void demoCallFileGetList() {
-    CompletableFuture<List<FileResponse>> futureFile = openAI.files().getList();
-    List<FileResponse> fileResponses = futureFile.join();
+    var futureFile = openAI.files().getList();
+    var fileResponses = futureFile.join();
     fileResponses.stream()
         .forEach(System.out::println);
   }
 
   public void demoCallFileGetOne() {
-    CompletableFuture<FileResponse> futureFile = openAI.files().getOne(fileId);
-    FileResponse fileResponse = futureFile.join();
+    var futureFile = openAI.files().getOne(fileId);
+    var fileResponse = futureFile.join();
     System.out.println(fileResponse);
   }
 
   public void demoCallFileGetContent() {
-    CompletableFuture<String> futureFile = openAI.files().getContent(fileId);
-    String fileContent = futureFile.join();
+    var futureFile = openAI.files().getContent(fileId);
+    var fileContent = futureFile.join();
     System.out.println(fileContent);
   }
 
   public void demoCallFileDelete() {
-    OpenAIDeletedResponse fileDeleted = deleteFileResponse(fileId);
+    var fileDeleted = deleteFileResponse(fileId);
     System.out.println(fileDeleted);
   }
 
   public static void main(String[] args) {
-    FileServiceDemo demo = new FileServiceDemo();
+    var demo = new FileServiceDemo();
 
-    demo.addTitleAction("Call File Create", () -> demo.demoCallFileCreate());
-    demo.addTitleAction("Call File List", () -> demo.demoCallFileGetList());
-    demo.addTitleAction("Call File One", () -> demo.demoCallFileGetOne());
-    demo.addTitleAction("Call File Content", () -> demo.demoCallFileGetContent());
-    demo.addTitleAction("Call File Delete", () -> demo.demoCallFileDelete());
+    demo.addTitleAction("Call File Create", demo::demoCallFileCreate);
+    demo.addTitleAction("Call File List", demo::demoCallFileGetList);
+    demo.addTitleAction("Call File One", demo::demoCallFileGetOne);
+    demo.addTitleAction("Call File Content", demo::demoCallFileGetContent);
+    demo.addTitleAction("Call File Delete", demo::demoCallFileDelete);
 
     demo.run();
   }
