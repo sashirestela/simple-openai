@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.filter;
+package io.github.sashirestela.openai.domain.audio;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,10 +17,8 @@ import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
-import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 
-public class AudioFilterTest {
+class AudioFilterTest {
 
   static SimpleOpenAI openAI;
   static HttpClient httpClient = mock(HttpClient.class);

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
-public class EmbeddingDomainTest {
+class EmbeddingDomainTest {
 
   @Test
   void testEmbeddingsCreate() throws IOException {

@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.sashirestela.cleverclient.util.CommonUtil;
+import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
-import io.github.sashirestela.openai.support.CommonUtil;
-import io.github.sashirestela.openai.support.JsonUtil;
 
 public class FunctionExecutor {
   private Map<String, ChatFunction> mapFunctions = new HashMap<>();
@@ -39,7 +39,7 @@ public class FunctionExecutor {
 
   @SuppressWarnings("unchecked")
   public <T> T execute(ChatFunctionCall functionToCall) {
-    if (functionToCall == null || CommonUtil.get().isNullOrEmpty(functionToCall.getName())) {
+    if (functionToCall == null || CommonUtil.isNullOrEmpty(functionToCall.getName())) {
       throw new SimpleUncheckedException("No function was entered or it does not has a name.", "", null);
     }
     String functionName = functionToCall.getName();
@@ -47,10 +47,9 @@ public class FunctionExecutor {
       throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName, null);
     }
     try {
-      ChatFunction function = mapFunctions.get(functionName);
-      Functional object = JsonUtil.get().jsonToObject(functionToCall.getArguments(), function.getFunctionalClass());
-      T result = (T) object.execute();
-      return result;
+      var function = mapFunctions.get(functionName);
+      var object = JsonUtil.jsonToObject(functionToCall.getArguments(), function.getFunctionalClass());
+      return (T) object.execute();
     } catch (RuntimeException e) {
       throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
     }

@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.github.sashirestela.openai.support.JsonUtil;
+import io.github.sashirestela.cleverclient.util.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-public class ParametersSerializerTest {
+class ParametersSerializerTest {
 
   @Test
   void shouldApplyThisSerializerWhenAFieldIsAnnotatedWithTheSerializer() {
     var sample = new SampleClass(1, Serialized.class);
-    var actualJson = JsonUtil.get().objectToJson(sample);
+    var actualJson = JsonUtil.objectToJson(sample);
     var expectedJson = "{\"id\":1,\"serialized\":{\"type\":\"object\",\"properties\":" +
         "{\"first\":{\"type\":\"string\"},\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}}";
     assertEquals(expectedJson, actualJson);

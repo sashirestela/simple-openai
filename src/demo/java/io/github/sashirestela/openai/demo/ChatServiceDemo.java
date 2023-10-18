@@ -2,8 +2,6 @@ package io.github.sashirestela.openai.demo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -34,22 +32,22 @@ public class ChatServiceDemo extends AbstractDemo {
   }
 
   public void demoCallChatStreaming() {
-    CompletableFuture<Stream<ChatResponse>> futureChat = openAI.chatCompletions().createStream(chatRequest);
-    Stream<ChatResponse> chatResponse = futureChat.join();
+    var futureChat = openAI.chatCompletions().createStream(chatRequest);
+    var chatResponse = futureChat.join();
     chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-        .map(chatResp -> chatResp.firstContent())
+        .map(ChatResponse::firstContent)
         .forEach(System.out::print);
     System.out.println();
   }
 
   public void demoCallChatBlocking() {
-    CompletableFuture<ChatResponse> futureChat = openAI.chatCompletions().create(chatRequest);
-    ChatResponse chatResponse = futureChat.join();
+    var futureChat = openAI.chatCompletions().create(chatRequest);
+    var chatResponse = futureChat.join();
     System.out.println(chatResponse.firstContent());
   }
 
   public void demoCallChatWithFunctions() {
-    FunctionExecutor functionExecutor = new FunctionExecutor();
+    var functionExecutor = new FunctionExecutor();
     functionExecutor.enrollFunction(
         ChatFunction.builder()
             .name("get_weather")
@@ -68,18 +66,18 @@ public class ChatServiceDemo extends AbstractDemo {
             .description("Run an alarm")
             .functionalClass(RunAlarm.class)
             .build());
-    List<ChatMessage> messages = new ArrayList<>();
+    var messages = new ArrayList<ChatMessage>();
     messages.add(new ChatMessage(Role.USER, "What is the product of 123 and 456?"));
-    ChatRequest chatRequest = ChatRequest.builder()
+    chatRequest = ChatRequest.builder()
         .model(modelIdToUse)
         .messages(messages)
         .functions(functionExecutor.getFunctions())
         .functionCall("auto")
         .build();
-    CompletableFuture<ChatResponse> futureChat = openAI.chatCompletions().create(chatRequest);
-    ChatResponse chatResponse = futureChat.join();
-    ChatMessage chatMessage = chatResponse.firstMessage();
-    Object result = functionExecutor.execute(chatMessage.getFunctionCall());
+    var futureChat = openAI.chatCompletions().create(chatRequest);
+    var chatResponse = futureChat.join();
+    var chatMessage = chatResponse.firstMessage();
+    var result = functionExecutor.execute(chatMessage.getFunctionCall());
     messages.add(chatMessage);
     messages.add(
         ChatMessage.builder()
@@ -135,11 +133,11 @@ public class ChatServiceDemo extends AbstractDemo {
   }
 
   public static void main(String[] args) {
-    ChatServiceDemo demo = new ChatServiceDemo();
+    var demo = new ChatServiceDemo();
 
-    demo.addTitleAction("Call Chat (Streaming Approach)", () -> demo.demoCallChatStreaming());
-    demo.addTitleAction("Call Chat (Blocking Approach)", () -> demo.demoCallChatBlocking());
-    demo.addTitleAction("Call Chat with Functions", () -> demo.demoCallChatWithFunctions());
+    demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
+    demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
+    demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
 
     demo.run();
   }

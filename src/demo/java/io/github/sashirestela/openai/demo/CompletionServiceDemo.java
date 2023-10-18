@@ -1,8 +1,5 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
-
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 
@@ -22,25 +19,25 @@ public class CompletionServiceDemo extends AbstractDemo {
   }
 
   public void demoCallCompletionStreaming() {
-    CompletableFuture<Stream<CompletionResponse>> futureCompletion = openAI.completions().createStream(completionRequest);
-    Stream<CompletionResponse> completionResponse = futureCompletion.join();
+    var futureCompletion = openAI.completions().createStream(completionRequest);
+    var completionResponse = futureCompletion.join();
     completionResponse.filter(complResponse -> complResponse.firstText() != null)
-        .map(complResponse -> complResponse.firstText())
+        .map(CompletionResponse::firstText)
         .forEach(System.out::print);
     System.out.println();
   }
 
   public void demoCallCompletionBlocking() {
-    CompletableFuture<CompletionResponse> futureCompletion = openAI.completions().create(completionRequest);
-    CompletionResponse completionResponse = futureCompletion.join();
+    var futureCompletion = openAI.completions().create(completionRequest);
+    var completionResponse = futureCompletion.join();
     System.out.println(completionResponse.firstText());
   }
 
   public static void main(String[] args) {
-    CompletionServiceDemo demo = new CompletionServiceDemo();
+    var demo = new CompletionServiceDemo();
 
-    demo.addTitleAction("Call Completion (Streaming Approach)", () -> demo.demoCallCompletionStreaming());
-    demo.addTitleAction("Call Completion (Blocking Approach)", () -> demo.demoCallCompletionBlocking());
+    demo.addTitleAction("Call Completion (Streaming Approach)", demo::demoCallCompletionStreaming);
+    demo.addTitleAction("Call Completion (Blocking Approach)", demo::demoCallCompletionBlocking);
 
     demo.run();
   }

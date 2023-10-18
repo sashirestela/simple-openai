@@ -2,6 +2,9 @@ package io.github.sashirestela.openai.domain.chat;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import io.github.sashirestela.openai.SimpleUncheckedException;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
@@ -44,10 +47,12 @@ public class ChatMessage {
 
   private void validate() {
     if (role != Role.ASSISTANT && content == null) {
-      throw new RuntimeException("The content is required for ChatMessage when role is other than assistant.");
+      throw new SimpleUncheckedException("The content is required for ChatMessage when role is other than assistant.",
+          null, null);
     }
     if (role == Role.FUNCTION && name == null) {
-      throw new RuntimeException("The name is required for ChatMessage when role is function.");
+      throw new SimpleUncheckedException("The name is required for ChatMessage when role is function.",
+          null, null);
     }
   }
 

@@ -14,7 +14,7 @@ public abstract class AbstractDemo {
   private static List<TitleAction> titleActions = new ArrayList<>();
   private int times = 80;
 
-  public AbstractDemo() {
+  protected AbstractDemo() {
     apiKey = System.getenv("OPENAI_API_KEY");
     organizationId = System.getenv("OPENAI_ORGANIZATION_ID");
     openAI = SimpleOpenAI.builder()
@@ -29,14 +29,14 @@ public abstract class AbstractDemo {
 
   public void run() {
     titleActions.forEach(ta -> {
-      long startTime = System.currentTimeMillis();
+      var startTime = System.currentTimeMillis();
       System.out.println("=".repeat(times));
       System.out.println(ta.title);
       System.out.println("-".repeat(times));
       ta.action.execute();
       System.out.println("~".repeat(times / 2));
-      long endTime = System.currentTimeMillis();
-      long duration = endTime - startTime;
+      var endTime = System.currentTimeMillis();
+      var duration = endTime - startTime;
       System.out.println("Duration in milliseconds: " + duration);
       System.out.println();
     });
@@ -48,8 +48,8 @@ public abstract class AbstractDemo {
   }
 
   static class TitleAction {
-    public String title;
-    public Action action;
+    private String title;
+    private Action action;
 
     public TitleAction(String title, Action action) {
       this.title = title;

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
-public class ModerationDomainTest {
+class ModerationDomainTest {
 
   static HttpClient httpClient;
   static SimpleOpenAI openAI;
