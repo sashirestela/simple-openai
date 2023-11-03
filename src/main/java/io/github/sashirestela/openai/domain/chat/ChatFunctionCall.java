@@ -11,8 +11,8 @@ import lombok.ToString;
 @ToString
 public class ChatFunctionCall {
 
-  private String name;
+    private String name;
 
-  private String arguments;
+    private String arguments;
 
 }

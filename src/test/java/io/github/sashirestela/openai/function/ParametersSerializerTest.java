@@ -13,32 +13,32 @@ import lombok.Getter;
 
 class ParametersSerializerTest {
 
-  @Test
-  void shouldApplyThisSerializerWhenAFieldIsAnnotatedWithTheSerializer() {
-    var sample = new SampleClass(1, Serialized.class);
-    var actualJson = JsonUtil.objectToJson(sample);
-    var expectedJson = "{\"id\":1,\"serialized\":{\"type\":\"object\",\"properties\":" +
-        "{\"first\":{\"type\":\"string\"},\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}}";
-    assertEquals(expectedJson, actualJson);
-  }
+    @Test
+    void shouldApplyThisSerializerWhenAFieldIsAnnotatedWithTheSerializer() {
+        var sample = new SampleClass(1, Serialized.class);
+        var actualJson = JsonUtil.objectToJson(sample);
+        var expectedJson = "{\"id\":1,\"serialized\":{\"type\":\"object\",\"properties\":" +
+                "{\"first\":{\"type\":\"string\"},\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}}";
+        assertEquals(expectedJson, actualJson);
+    }
 
-  @AllArgsConstructor
-  @Getter
-  static class SampleClass {
+    @AllArgsConstructor
+    @Getter
+    static class SampleClass {
 
-    private Integer id;
+        private Integer id;
 
-    @JsonSerialize(using = ParametersSerializer.class)
-    private Class<?> serialized;
+        @JsonSerialize(using = ParametersSerializer.class)
+        private Class<?> serialized;
 
-  }
+    }
 
-  static class Serialized {
+    static class Serialized {
 
-    @JsonProperty(required = true)
-    public String first;
+        @JsonProperty(required = true)
+        public String first;
 
-    public Integer second;
+        public Integer second;
 
-  }
+    }
 }

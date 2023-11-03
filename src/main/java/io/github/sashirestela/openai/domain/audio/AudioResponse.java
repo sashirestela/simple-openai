@@ -11,14 +11,14 @@ import lombok.ToString;
 @ToString
 public class AudioResponse {
 
-  private String text;
-  
-  private String task;
+    private String text;
 
-  private String language;
+    private String task;
 
-  private Double duration;
+    private String language;
 
-  private List<Segment> segments;
+    private Double duration;
+
+    private List<Segment> segments;
 
 }

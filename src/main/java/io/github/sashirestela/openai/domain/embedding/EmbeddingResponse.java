@@ -11,13 +11,13 @@ import lombok.ToString;
 @Getter
 @ToString
 public class EmbeddingResponse {
-  
-  private String object;
 
-  private List<Embedding> data;
+    private String object;
 
-  private String model;
+    private List<Embedding> data;
 
-  private OpenAIUsage usage;
-  
+    private String model;
+
+    private OpenAIUsage usage;
+
 }

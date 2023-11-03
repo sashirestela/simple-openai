@@ -18,42 +18,43 @@ import lombok.ToString;
 @ToString
 public class ChatMessage {
 
-  @NonNull
-  private Role role;
+    @NonNull
+    private Role role;
 
-  private String content;
+    private String content;
 
-  @JsonInclude(Include.NON_NULL)
-  private String name;
+    @JsonInclude(Include.NON_NULL)
+    private String name;
 
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("function_call")
-  private ChatFunctionCall functionCall;
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("function_call")
+    private ChatFunctionCall functionCall;
 
-  public ChatMessage(Role role, String content) {
-    this.role = role;
-    this.content = content;
-    validate();
-  }
-
-  @Builder
-  public ChatMessage(@NonNull Role role, String content, String name, ChatFunctionCall functionCall) {
-    this.role = role;
-    this.content = content;
-    this.name = name;
-    this.functionCall = functionCall;
-    validate();
-  }
-
-  private void validate() {
-    if (role != Role.ASSISTANT && content == null) {
-      throw new SimpleUncheckedException("The content is required for ChatMessage when role is other than assistant.",
-          null, null);
+    public ChatMessage(Role role, String content) {
+        this.role = role;
+        this.content = content;
+        validate();
     }
-    if (role == Role.FUNCTION && name == null) {
-      throw new SimpleUncheckedException("The name is required for ChatMessage when role is function.",
-          null, null);
+
+    @Builder
+    public ChatMessage(@NonNull Role role, String content, String name, ChatFunctionCall functionCall) {
+        this.role = role;
+        this.content = content;
+        this.name = name;
+        this.functionCall = functionCall;
+        validate();
     }
-  }
+
+    private void validate() {
+        if (role != Role.ASSISTANT && content == null) {
+            throw new SimpleUncheckedException(
+                    "The content is required for ChatMessage when role is other than assistant.",
+                    null, null);
+        }
+        if (role == Role.FUNCTION && name == null) {
+            throw new SimpleUncheckedException("The name is required for ChatMessage when role is function.",
+                    null, null);
+        }
+    }
 
 }

@@ -13,13 +13,13 @@ import lombok.NonNull;
 @Builder
 public class EmbeddingRequest {
 
-  @NonNull
-  private String model;
+    @NonNull
+    private String model;
 
-  @NonNull
-  private List<String> input;
+    @NonNull
+    private List<String> input;
 
-  @JsonInclude(Include.NON_NULL)
-  private String user;
+    @JsonInclude(Include.NON_NULL)
+    private String user;
 
 }

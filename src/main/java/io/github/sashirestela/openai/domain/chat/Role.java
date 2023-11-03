@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum Role {
 
-  @JsonProperty("system")
-  SYSTEM,
+    @JsonProperty("system")
+    SYSTEM,
 
-  @JsonProperty("user")
-  USER,
+    @JsonProperty("user")
+    USER,
 
-  @JsonProperty("assistant")
-  ASSISTANT,
+    @JsonProperty("assistant")
+    ASSISTANT,
 
-  @JsonProperty("function")
-  FUNCTION;
+    @JsonProperty("function")
+    FUNCTION;
 
 }

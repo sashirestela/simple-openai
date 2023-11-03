@@ -12,24 +12,24 @@ import lombok.ToString;
 @ToString
 public class ChatResponse {
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  private Long created;
+    private Long created;
 
-  private String model;
+    private String model;
 
-  private List<Choice> choices;
+    private List<Choice> choices;
 
-  private OpenAIUsage usage;
+    private OpenAIUsage usage;
 
-  public ChatMessage firstMessage() {
-    return getChoices().get(0).getMessage();
-  }
+    public ChatMessage firstMessage() {
+        return getChoices().get(0).getMessage();
+    }
 
-  public String firstContent() {
-    return firstMessage().getContent();
-  }
+    public String firstContent() {
+        return firstMessage().getContent();
+    }
 
 }

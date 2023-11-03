@@ -14,24 +14,24 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class AudioTranslateRequest {
 
-  @NonNull
-  protected Path file;
+    @NonNull
+    protected Path file;
 
-  @NonNull
-  protected String model;
+    @NonNull
+    protected String model;
 
-  @JsonInclude(Include.NON_NULL)
-  protected String prompt;
+    @JsonInclude(Include.NON_NULL)
+    protected String prompt;
 
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("response_format")
-  protected AudioRespFmt responseFormat;
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("response_format")
+    protected AudioRespFmt responseFormat;
 
-  @JsonInclude(Include.NON_NULL)
-  protected Double temperature;
+    @JsonInclude(Include.NON_NULL)
+    protected Double temperature;
 
-  public void setResponseFormat(AudioRespFmt responseFormat) {
-    this.responseFormat = responseFormat;
-  }
+    public void setResponseFormat(AudioRespFmt responseFormat) {
+        this.responseFormat = responseFormat;
+    }
 
 }

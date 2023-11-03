@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class AudioTranscribeRequest extends AudioTranslateRequest {
 
-  @JsonInclude(Include.NON_NULL)
-  private String language;
+    @JsonInclude(Include.NON_NULL)
+    private String language;
 
 }

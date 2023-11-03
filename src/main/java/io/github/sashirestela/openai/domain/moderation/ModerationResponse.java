@@ -11,10 +11,10 @@ import lombok.ToString;
 @ToString
 public class ModerationResponse {
 
-  private String id;
+    private String id;
 
-  private String model;
+    private String model;
 
-  private List<Moderation> results;
+    private List<Moderation> results;
 
 }

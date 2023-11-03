@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class HyperParams {
 
-  @JsonProperty("n_epochs")
-  private Integer numberEpochs;
+    @JsonProperty("n_epochs")
+    private Integer numberEpochs;
 
 }

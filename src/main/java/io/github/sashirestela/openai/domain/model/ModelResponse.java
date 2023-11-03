@@ -13,19 +13,19 @@ import lombok.ToString;
 @ToString
 public class ModelResponse {
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  private long created;
+    private long created;
 
-  @JsonProperty("owned_by")
-  private String ownedBy;
+    @JsonProperty("owned_by")
+    private String ownedBy;
 
-  private List<Permission> permission;
+    private List<Permission> permission;
 
-  private String root;
+    private String root;
 
-  private String parent;
+    private String parent;
 
 }

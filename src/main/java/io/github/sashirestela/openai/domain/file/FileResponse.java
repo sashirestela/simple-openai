@@ -11,22 +11,22 @@ import lombok.ToString;
 @ToString
 public class FileResponse {
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  private String purpose;
+    private String purpose;
 
-  private String filename;
+    private String filename;
 
-  private Integer bytes;
+    private Integer bytes;
 
-  @JsonProperty("created_at")
-  private Double createdAt;
+    @JsonProperty("created_at")
+    private Double createdAt;
 
-  private String status;
+    private String status;
 
-  @JsonProperty("status_details")
-  private String statusDetails;
+    @JsonProperty("status_details")
+    private String statusDetails;
 
 }

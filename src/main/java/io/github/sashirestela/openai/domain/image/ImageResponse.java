@@ -10,10 +10,10 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ImageResponse {
-  
-  private String url;
 
-  @JsonProperty("b64_json")
-  private String b64Json;
+    private String url;
+
+    @JsonProperty("b64_json")
+    private String b64Json;
 
 }

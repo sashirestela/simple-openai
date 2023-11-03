@@ -15,15 +15,15 @@ import lombok.NonNull;
 @Builder
 public class ChatFunction {
 
-  @NonNull
-  private String name;
+    @NonNull
+    private String name;
 
-  @JsonInclude(Include.NON_NULL)
-  private String description;
+    @JsonInclude(Include.NON_NULL)
+    private String description;
 
-  @NonNull
-  @JsonSerialize(using = ParametersSerializer.class)
-  @JsonProperty("parameters")
-  private Class<? extends Functional> functionalClass;
+    @NonNull
+    @JsonSerialize(using = ParametersSerializer.class)
+    @JsonProperty("parameters")
+    private Class<? extends Functional> functionalClass;
 
 }

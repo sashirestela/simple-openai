@@ -10,14 +10,14 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Choice {
-  
-  private String text;
 
-  private Integer index;
+    private String text;
 
-  private Integer logprobs;
+    private Integer index;
 
-  @JsonProperty("finish_reason")
-  private String finishReason;
-  
+    private Integer logprobs;
+
+    @JsonProperty("finish_reason")
+    private String finishReason;
+
 }

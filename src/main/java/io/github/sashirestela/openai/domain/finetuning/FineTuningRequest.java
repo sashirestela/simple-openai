@@ -14,23 +14,23 @@ import lombok.NonNull;
 @Builder
 public class FineTuningRequest {
 
-  @NonNull
-  @JsonProperty("training_file")
-  private String trainingFile;
+    @NonNull
+    @JsonProperty("training_file")
+    private String trainingFile;
 
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("validation_file")
-  private String validationFile;
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("validation_file")
+    private String validationFile;
 
-  @NonNull
-  @JsonInclude(Include.NON_NULL)
-  private String model;
+    @NonNull
+    @JsonInclude(Include.NON_NULL)
+    private String model;
 
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("hyperparameters")
-  private HyperParams hyperParameters;
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("hyperparameters")
+    private HyperParams hyperParameters;
 
-  @JsonInclude(Include.NON_NULL)
-  private String suffix;
+    @JsonInclude(Include.NON_NULL)
+    private String suffix;
 
 }

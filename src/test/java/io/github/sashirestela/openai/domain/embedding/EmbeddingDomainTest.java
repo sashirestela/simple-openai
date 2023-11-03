@@ -14,22 +14,22 @@ import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
 class EmbeddingDomainTest {
 
-  @Test
-  void testEmbeddingsCreate() throws IOException {
-    var httpClient = mock(HttpClient.class);
-    var openAI = SimpleOpenAI.builder()
-        .apiKey("apiKey")
-        .httpClient(httpClient)
-        .build();
-    DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/embeddings_create.json");
-    var embeddingRequest = EmbeddingRequest.builder()
-        .model("text-embedding-ada-002")
-        .input(Arrays.asList("it is rainnig cats and dogs"))
-        .user("test")
-        .build();
-    var embeddingResponse = openAI.embeddings().create(embeddingRequest).join();
-    System.out.println(embeddingResponse);
-    assertNotNull(embeddingResponse);
+    @Test
+    void testEmbeddingsCreate() throws IOException {
+        var httpClient = mock(HttpClient.class);
+        var openAI = SimpleOpenAI.builder()
+                .apiKey("apiKey")
+                .httpClient(httpClient)
+                .build();
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/embeddings_create.json");
+        var embeddingRequest = EmbeddingRequest.builder()
+                .model("text-embedding-ada-002")
+                .input(Arrays.asList("it is rainnig cats and dogs"))
+                .user("test")
+                .build();
+        var embeddingResponse = openAI.embeddings().create(embeddingRequest).join();
+        System.out.println(embeddingResponse);
+        assertNotNull(embeddingResponse);
 
-  }
+    }
 }

@@ -9,10 +9,10 @@ import lombok.ToString;
 @ToString
 public class OpenAIDeletedResponse {
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  private Boolean deleted;
+    private Boolean deleted;
 
 }
