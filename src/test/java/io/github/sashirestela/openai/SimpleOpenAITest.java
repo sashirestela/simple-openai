@@ -123,95 +123,95 @@ class SimpleOpenAITest {
             openAI.setCleverClient(cleverClient);
         }
 
-    @Test
-    void shouldInstanceAudioServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Audios.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.audios());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceAudioServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Audios.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.audios());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceChatCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.ChatCompletions.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.chatCompletions());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceChatCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.ChatCompletions.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.chatCompletions());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Completions.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.completions());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Completions.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.completions());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceEmbeddingServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Embeddings.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.embeddings());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceEmbeddingServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Embeddings.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.embeddings());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceFilesServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Files.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.files());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceFilesServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Files.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.files());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceFineTunningServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.FineTunings.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.fineTunings());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceFineTunningServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.FineTunings.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.fineTunings());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceImageServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Images.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.images());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceImageServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Images.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.images());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceModelsServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Models.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.models());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceModelsServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Models.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.models());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
 
-    @Test
-    void shouldInstanceModerationServiceOnlyOnceWhenItIsCalledSeveralTimes() {
-      when(cleverClient.create(any()))
-          .thenReturn(ReflectUtil.createProxy(
-              OpenAI.Moderations.class,
-              new HttpInvocationHandler(null)));
-      repeat(NUMBER_CALLINGS, () -> openAI.moderations());
-      verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
-    }
+        @Test
+        void shouldInstanceModerationServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+            when(cleverClient.create(any()))
+                .thenReturn(ReflectUtil.createProxy(
+                    OpenAI.Moderations.class,
+                    new HttpInvocationHandler(null)));
+            repeat(NUMBER_CALLINGS, () -> openAI.moderations());
+            verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
+        }
     }
 
     private static void repeat(int times, Runnable action) {
