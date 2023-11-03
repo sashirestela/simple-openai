@@ -11,11 +11,11 @@ import lombok.ToString;
 @ToString
 public class Moderation {
 
-  private Boolean flagged;
+    private Boolean flagged;
 
-  private Category categories;
+    private Category categories;
 
-  @JsonProperty("category_scores")
-  private CategoryScore categoryScores;
+    @JsonProperty("category_scores")
+    private CategoryScore categoryScores;
 
 }

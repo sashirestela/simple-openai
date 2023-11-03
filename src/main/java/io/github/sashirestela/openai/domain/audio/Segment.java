@@ -13,27 +13,27 @@ import lombok.ToString;
 @ToString
 public class Segment {
 
-  private Integer id;
+    private Integer id;
 
-  private Integer seek;
+    private Integer seek;
 
-  private Double start;
+    private Double start;
 
-  private Double end;
+    private Double end;
 
-  private String text;
+    private String text;
 
-  private List<Integer> tokens;
+    private List<Integer> tokens;
 
-  private Double temperature;
+    private Double temperature;
 
-  @JsonProperty("avg_logprob")
-  private Double averageLogProb;
+    @JsonProperty("avg_logprob")
+    private Double averageLogProb;
 
-  @JsonProperty("compression_ratio")
-  private Double compressionRatio;
+    @JsonProperty("compression_ratio")
+    private Double compressionRatio;
 
-  @JsonProperty("no_speech_prob")
-  private Double noSpeechProb;
+    @JsonProperty("no_speech_prob")
+    private Double noSpeechProb;
 
 }

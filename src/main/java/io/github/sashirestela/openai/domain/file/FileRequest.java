@@ -10,10 +10,10 @@ import lombok.NonNull;
 @Builder
 public class FileRequest {
 
-  @NonNull
-  private Path file;
+    @NonNull
+    private Path file;
 
-  @NonNull
-  private String purpose;
+    @NonNull
+    private String purpose;
 
 }

@@ -13,34 +13,34 @@ import lombok.NoArgsConstructor;
 
 class JsonSchemaUtilTest {
 
-  @Test
-  void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
-    var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(TestClass.class).toString();
-    var expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
-        "\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
-    assertEquals(expectedJsonSchema, actualJsonSchema);
-  }
+    @Test
+    void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
+        var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(TestClass.class).toString();
+        var expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
+                "\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
+        assertEquals(expectedJsonSchema, actualJsonSchema);
+    }
 
-  @Test
-  void shouldGenerateEmptyJsonSchemaWhenClassHasNoFields() {
-    var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(EmptyClass.class).toString();
-    var expectedJsonSchema = Constant.JSON_EMPTY_CLASS;
-    assertEquals(expectedJsonSchema, actualJsonSchema);
-  }
+    @Test
+    void shouldGenerateEmptyJsonSchemaWhenClassHasNoFields() {
+        var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(EmptyClass.class).toString();
+        var expectedJsonSchema = Constant.JSON_EMPTY_CLASS;
+        assertEquals(expectedJsonSchema, actualJsonSchema);
+    }
 
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @Getter
-  static class TestClass {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    static class TestClass {
 
-    @JsonProperty(required = true)
-    public String first;
+        @JsonProperty(required = true)
+        public String first;
 
-    public Integer second;
+        public Integer second;
 
-  }
+    }
 
-  static class EmptyClass {
-  }
+    static class EmptyClass {
+    }
 
 }

@@ -15,16 +15,16 @@ import lombok.ToString;
 @Getter
 public class OpenAIGeneric<T> {
 
-  private String object;
+    private String object;
 
-  private Long created;
+    private Long created;
 
-  private List<T> data;
+    private List<T> data;
 
-  @JsonProperty("next_starting_after")
-  private String nextStartingAfter;
+    @JsonProperty("next_starting_after")
+    private String nextStartingAfter;
 
-  @JsonProperty("has_more")
-  private boolean hasMore;
+    @JsonProperty("has_more")
+    private boolean hasMore;
 
 }

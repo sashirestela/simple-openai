@@ -13,13 +13,13 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ImageEditsRequest extends AbstractImageRequest {
 
-  @NonNull
-  private Path image;
+    @NonNull
+    private Path image;
 
-  @JsonInclude(Include.NON_NULL)
-  private Path mask;
+    @JsonInclude(Include.NON_NULL)
+    private Path mask;
 
-  @NonNull
-  private String prompt;
+    @NonNull
+    private String prompt;
 
 }

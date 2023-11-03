@@ -10,11 +10,11 @@ import lombok.ToString;
 @Getter
 @ToString
 public class Embedding {
-  
-  private Integer index;
 
-  private String object;
+    private Integer index;
 
-  private List<Double> embedding;
+    private String object;
+
+    private List<Double> embedding;
 
 }

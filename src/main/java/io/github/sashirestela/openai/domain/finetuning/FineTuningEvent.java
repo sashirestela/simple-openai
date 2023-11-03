@@ -11,19 +11,19 @@ import lombok.ToString;
 @ToString
 public class FineTuningEvent {
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  @JsonProperty("created_at")
-  private Long createdAt;
+    @JsonProperty("created_at")
+    private Long createdAt;
 
-  private String level;
+    private String level;
 
-  private String message;
+    private String message;
 
-  private String data;
+    private String data;
 
-  private String type;
+    private String type;
 
 }

@@ -28,100 +28,100 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest;
 
 class SimpleOpenAITest {
 
-  HttpClient httpClient = mock(HttpClient.class);
-  CleverClient cleverClient = mock(CleverClient.class);
+    HttpClient httpClient = mock(HttpClient.class);
+    CleverClient cleverClient = mock(CleverClient.class);
 
-  @Nested
-  class StandAloneTests {
+    @Nested
+    class StandAloneTests {
 
-    @Test
-    void shouldSetPropertiesToDefaultValuesWhenBuilderIsCalledWithoutThoseProperties() {
-      var openAI = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .build();
-      assertEquals(HttpClient.Version.HTTP_2, openAI.getHttpClient().version());
-      assertNotNull(openAI.getUrlBase());
-      assertNotNull(openAI.getCleverClient());
+        @Test
+        void shouldSetPropertiesToDefaultValuesWhenBuilderIsCalledWithoutThoseProperties() {
+            var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .build();
+            assertEquals(HttpClient.Version.HTTP_2, openAI.getHttpClient().version());
+            assertNotNull(openAI.getUrlBase());
+            assertNotNull(openAI.getCleverClient());
+        }
+
+        @Test
+        void shouldSetPropertiesWhenBuilderIsCalledWithThoseProperties() {
+            var otherUrl = "https://openai.com/api";
+            var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .urlBase(otherUrl)
+                    .httpClient(httpClient)
+                    .build();
+            assertEquals("apiKey", openAI.getApiKey());
+            assertEquals(otherUrl, openAI.getUrlBase());
+            assertEquals(httpClient, openAI.getHttpClient());
+        }
+
+        @Test
+        void shouldNotAddOrganizationToHeadersWhenBuilderIsCalledWithoutOrganizationId() {
+            var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .build();
+            assertFalse(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+        }
+
+        @Test
+        void shouldAddOrganizationToHeadersWhenBuilderIsCalledWithOrganizationId() {
+            var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .organizationId("orgId")
+                    .build();
+            assertTrue(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+        }
+
+        @Test
+        @SuppressWarnings("unchecked")
+        void shouldNotDuplicateContentTypeHeaderWhenCallingSimpleOpenAI() {
+            var chatService = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .httpClient(httpClient)
+                    .build()
+                    .chatCompletions();
+
+            // When
+            final var NO_OF_REQUESTS = 2;
+            when(httpClient.sendAsync(any(), any()))
+                    .thenReturn(completedFuture(mock(HttpResponse.class)));
+
+            repeat(NO_OF_REQUESTS, () -> {
+                var chatRequest = ChatRequest.builder()
+                        .model("model")
+                        .messages(List.of())
+                        .build();
+                chatService.create(chatRequest);
+            });
+
+            // Then
+            ArgumentCaptor<HttpRequest> requestCaptor = ArgumentCaptor.forClass(HttpRequest.class);
+            verify(httpClient, times(NO_OF_REQUESTS))
+                    .sendAsync(requestCaptor.capture(), any());
+
+            var actualRequest = requestCaptor.getAllValues().get(NO_OF_REQUESTS - 1);
+            assertEquals(1, actualRequest.headers().allValues("Content-Type").size(),
+                    "Contains Content-Type header exactly once");
+        }
     }
 
-    @Test
-    void shouldSetPropertiesWhenBuilderIsCalledWithThoseProperties() {
-      var otherUrl = "https://openai.com/api";
-      var openAI = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .urlBase(otherUrl)
-          .httpClient(httpClient)
-          .build();
-          assertEquals("apiKey", openAI.getApiKey());
-          assertEquals(otherUrl, openAI.getUrlBase());
-          assertEquals(httpClient, openAI.getHttpClient());
-    }
+    @Nested
+    class InitializedTests {
+        final int NUMBER_CALLINGS = 3;
+        final int NUMBER_INVOCATIONS = 1;
 
-    @Test
-    void shouldNotAddOrganizationToHeadersWhenBuilderIsCalledWithoutOrganizationId() {
-      var openAI = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .build();
-      assertFalse(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
-    }
+        SimpleOpenAI openAI;
 
-    @Test
-    void shouldAddOrganizationToHeadersWhenBuilderIsCalledWithOrganizationId() {
-      var openAI = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .organizationId("orgId")
-          .build();
-      assertTrue(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    void shouldNotDuplicateContentTypeHeaderWhenCallingSimpleOpenAI() {
-      var chatService = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .httpClient(httpClient)
-          .build()
-          .chatCompletions();
-
-      // When
-      final var NO_OF_REQUESTS = 2;
-      when(httpClient.sendAsync(any(), any()))
-          .thenReturn(completedFuture(mock(HttpResponse.class)));
-
-      repeat(NO_OF_REQUESTS, () -> {
-        var chatRequest = ChatRequest.builder()
-            .model("model")
-            .messages(List.of())
-            .build();
-        chatService.create(chatRequest);
-      });
-
-      // Then
-      ArgumentCaptor<HttpRequest> requestCaptor = ArgumentCaptor.forClass(HttpRequest.class);
-      verify(httpClient, times(NO_OF_REQUESTS))
-          .sendAsync(requestCaptor.capture(), any());
-
-      var actualRequest = requestCaptor.getAllValues().get(NO_OF_REQUESTS - 1);
-      assertEquals(1, actualRequest.headers().allValues("Content-Type").size(),
-          "Contains Content-Type header exactly once");
-    }
-  }
-
-  @Nested
-  class InitializedTests {
-    final int NUMBER_CALLINGS = 3;
-    final int NUMBER_INVOCATIONS = 1;
-
-    SimpleOpenAI openAI;
-
-    @BeforeEach
-    void init() {
-      openAI = SimpleOpenAI.builder()
-          .apiKey("apiKey")
-          .httpClient(httpClient)
-          .build();
-      openAI.setCleverClient(cleverClient);
-    }
+        @BeforeEach
+        void init() {
+            openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
+                    .httpClient(httpClient)
+                    .build();
+            openAI.setCleverClient(cleverClient);
+        }
 
     @Test
     void shouldInstanceAudioServiceOnlyOnceWhenItIsCalledSeveralTimes() {
@@ -212,10 +212,10 @@ class SimpleOpenAITest {
       repeat(NUMBER_CALLINGS, () -> openAI.moderations());
       verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
     }
-  }
+    }
 
-  private static void repeat(int times, Runnable action) {
-    for (var i = 0; i < times; i++)
-      action.run();
-  }
+    private static void repeat(int times, Runnable action) {
+        for (var i = 0; i < times; i++)
+            action.run();
+    }
 }

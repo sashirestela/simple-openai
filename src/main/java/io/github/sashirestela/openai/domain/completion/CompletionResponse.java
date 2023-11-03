@@ -14,23 +14,23 @@ import lombok.ToString;
 @ToString
 public class CompletionResponse {
 
-  @JsonIgnore
-  private String warning;
+    @JsonIgnore
+    private String warning;
 
-  private String id;
+    private String id;
 
-  private String object;
+    private String object;
 
-  private Long created;
+    private Long created;
 
-  private String model;
+    private String model;
 
-  private List<Choice> choices;
+    private List<Choice> choices;
 
-  private OpenAIUsage usage;
+    private OpenAIUsage usage;
 
-  public String firstText() {
-    return getChoices().get(0).getText();
-  }
+    public String firstText() {
+        return getChoices().get(0).getText();
+    }
 
 }

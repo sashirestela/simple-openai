@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ImageRequest extends AbstractImageRequest {
 
-  @NonNull
-  private String prompt;
+    @NonNull
+    private String prompt;
 
 }
