@@ -3,6 +3,7 @@ target/
 .cache/
 .upm/
 .vscode/
+.idea/
 
 .project
 .classpath
