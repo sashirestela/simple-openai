@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -37,6 +38,8 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
 import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 /**
  * The OpenAI API can be applied to virtually any task that requires
@@ -45,7 +48,32 @@ import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
  * 
  * @see <a href="https://platform.openai.com/docs/api-reference">OpenAI API</a>
  */
-interface OpenAI {
+public interface OpenAI {
+
+    @Accessors(fluent = true)
+    final class Options {
+        @Getter
+        private static final Map<String, Object> withStream = Map.of("stream", Boolean.TRUE);
+        @Getter
+        private static final Map<String, Object> withoutStream = Map.of("stream", Boolean.FALSE);
+
+        public static Map<String, AudioRespFmt> getAudioResponseFormatOrDefault(AudioTranslateRequest audioRequest, AudioRespFmt orDefault, String methodName) {
+            final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
+            final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
+            final var isText = textEnumSet.contains(orDefault);
+
+            var requestedFormat = audioRequest.getResponseFormat();
+            if (requestedFormat != null) {
+                if (isText != textEnumSet.contains(requestedFormat)) {
+                    throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName, null);
+                }
+            } else {
+                requestedFormat = orDefault;
+            }
+
+            return Map.of("response_format", requestedFormat);
+        }
+    }
 
     /**
      * Turn audio into text (speech to text).
@@ -56,32 +84,6 @@ interface OpenAI {
     @Resource("/v1/audio")
     interface Audios {
 
-        private void setResponseFormatIfApplyOrThrownException(Object audioRequest, boolean isText, String methodName) {
-            final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
-            final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
-            var requestObj = (AudioTranslateRequest) audioRequest;
-            var responseFormat = requestObj.getResponseFormat();
-            if (isText) {
-                if (responseFormat != null) {
-                    if (!textEnumSet.contains(responseFormat)) {
-                        throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName,
-                                null);
-                    }
-                } else {
-                    requestObj.setResponseFormat(AudioRespFmt.TEXT);
-                }
-            } else {
-                if (responseFormat != null) {
-                    if (!jsonEnumSet.contains(responseFormat)) {
-                        throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName,
-                                null);
-                    }
-                } else {
-                    requestObj.setResponseFormat(AudioRespFmt.JSON);
-                }
-            }
-        }
-
         /**
          * Transcribes audio into the input language. Response as object.
          * 
@@ -90,13 +92,12 @@ interface OpenAI {
          * @return Transcription as an object.
          */
         default CompletableFuture<AudioResponse> transcribe(AudioTranscribeRequest audioRequest) {
-            setResponseFormatIfApplyOrThrownException(audioRequest, false, "transcribe");
-            return notUseTranscribe(audioRequest);
+            return transcribeWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "transcribe"));
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<AudioResponse> notUseTranscribe(@Body AudioTranscribeRequest audioRequest);
+        CompletableFuture<AudioResponse> transcribeWithOptions(@Body AudioTranscribeRequest audioRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as object.
@@ -106,13 +107,12 @@ interface OpenAI {
          * @return Translation as an object.
          */
         default CompletableFuture<AudioResponse> translate(AudioTranslateRequest audioRequest) {
-            setResponseFormatIfApplyOrThrownException(audioRequest, false, "translate");
-            return notUseTranslate(audioRequest);
+            return translateWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "translate"));
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<AudioResponse> notUseTranslate(@Body AudioTranslateRequest audioRequest);
+        CompletableFuture<AudioResponse> translateWithOptions(@Body AudioTranslateRequest audioRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Transcribes audio into the input language. Response as plain text.
@@ -122,13 +122,12 @@ interface OpenAI {
          * @return Transcription as plain text.
          */
         default CompletableFuture<String> transcribePlain(AudioTranscribeRequest audioRequest) {
-            setResponseFormatIfApplyOrThrownException(audioRequest, true, "transcribePlain");
-            return notUseTranscribePlain(audioRequest);
+            return transcribePlainWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "transcribePlain"));
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<String> notUseTranscribePlain(@Body AudioTranscribeRequest audioRequest);
+        CompletableFuture<String> transcribePlainWithOptions(@Body AudioTranscribeRequest audioRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as plain text.
@@ -138,13 +137,12 @@ interface OpenAI {
          * @return Translation as plain text.
          */
         default CompletableFuture<String> translatePlain(AudioTranslateRequest audioRequest) {
-            setResponseFormatIfApplyOrThrownException(audioRequest, true, "translatePlain");
-            return notUseTranslatePlain(audioRequest);
+            return translatePlainWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "translatePlain"));
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<String> notUseTranslatePlain(@Body AudioTranslateRequest audioRequest);
+        CompletableFuture<String> translatePlainWithOptions(@Body AudioTranslateRequest audioRequest, @Body Map<String, ?> requestOptions);
 
     }
 
@@ -165,28 +163,26 @@ interface OpenAI {
          *                    Its 'stream' attribute is setted to false automatically.
          * @return Response is delivered as a full text when is ready.
          */
-        default CompletableFuture<ChatResponse> create(ChatRequest chatRequest) {
-            chatRequest.setStream(false);
-            return notUseCreate(chatRequest);
+        default CompletableFuture<ChatResponse> create(@Body ChatRequest chatRequest) {
+            return createWithOptions(chatRequest, Options.withoutStream());
         }
 
         @POST
-        CompletableFuture<ChatResponse> notUseCreate(@Body ChatRequest chatRequest);
+        CompletableFuture<ChatResponse> createWithOptions(@Body ChatRequest chatRequest, @Body Map<String, Object> requestOptions);
 
         /**
          * Creates a model response for the given chat conversation. Streaming Mode.
          * 
          * @param chatRequest Includes a list of messages comprising the conversation.
          *                    Its 'stream' attribute is setted to true automatically.
-         * @return Response is delivered as a continuos flow of tokens.
+         * @return Response is delivered as a continues flow of tokens.
          */
-        default CompletableFuture<Stream<ChatResponse>> createStream(ChatRequest chatRequest) {
-            chatRequest.setStream(true);
-            return notUseCreateStream(chatRequest);
+        default CompletableFuture<Stream<ChatResponse>> createStream(@Body ChatRequest chatRequest) {
+            return createStreamWithOptions(chatRequest, Options.withStream());
         }
 
         @POST
-        CompletableFuture<Stream<ChatResponse>> notUseCreateStream(@Body ChatRequest chatRequest);
+        CompletableFuture<Stream<ChatResponse>> createStreamWithOptions(@Body ChatRequest chatRequest, @Body Map<String, Object> requestOptions);
 
     }
 
@@ -209,13 +205,12 @@ interface OpenAI {
          *                          automatically.
          * @return Response is delivered as a full text when is ready.
          */
-        default CompletableFuture<CompletionResponse> create(CompletionRequest completionRequest) {
-            completionRequest.setStream(false);
-            return notUseCreate(completionRequest);
+        default CompletableFuture<CompletionResponse> create(@Body CompletionRequest completionRequest) {
+            return createWithOptions(completionRequest, Options.withoutStream());
         }
 
         @POST
-        CompletableFuture<CompletionResponse> notUseCreate(@Body CompletionRequest completionRequest);
+        CompletableFuture<CompletionResponse> createWithOptions(@Body CompletionRequest completionRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Creates a completion for the provided prompt and parameters. Streaming mode.
@@ -223,15 +218,14 @@ interface OpenAI {
          * @param completionRequest Includes the prompt(s) to generate completions for.
          *                          Its 'stream' attribute is setted to true
          *                          automatically.
-         * @return Response is delivered as a continuos flow of tokens.
+         * @return Response is delivered as a continuous flow of tokens.
          */
-        default CompletableFuture<Stream<CompletionResponse>> createStream(CompletionRequest completionRequest) {
-            completionRequest.setStream(true);
-            return notUseCreateStream(completionRequest);
+        default CompletableFuture<Stream<CompletionResponse>> createStream(@Body CompletionRequest completionRequest) {
+            return createStreamWithOptions(completionRequest, Options.withStream());
         }
 
         @POST
-        CompletableFuture<Stream<CompletionResponse>> notUseCreateStream(@Body CompletionRequest completionRequest);
+        CompletableFuture<Stream<CompletionResponse>> createStreamWithOptions(@Body CompletionRequest completionRequest, @Body Map<String, ?> requestOptions);
 
     }
 
@@ -285,11 +279,11 @@ interface OpenAI {
          * @return List of files.
          */
         default CompletableFuture<List<FileResponse>> getList() {
-            return notUseGetGenericFile().thenApply(OpenAIGeneric::getData);
+            return getListWithOptions(Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FileResponse>> notUseGetGenericFile();
+        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(@Body Map<String, ?> requestOptions);
 
         /**
          * Returns information about a specific file.
@@ -350,12 +344,14 @@ interface OpenAI {
          * @return A list of paginated fine-tuning job objects.
          */
         default CompletableFuture<List<FineTuningResponse>> getList(Integer limit, String after) {
-            return notUseGetGenericFineTuning(limit, after).thenApply(OpenAIGeneric::getData);
+            return getListWithOptions(limit, after, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FineTuningResponse>> notUseGetGenericFineTuning(@Query("limit") Integer limit,
-                @Query("after") String after);
+        CompletableFuture<OpenAIGeneric<FineTuningResponse>> getListWithOptions(
+                @Query("limit") Integer limit,
+                @Query("after") String after,
+                @Body Map<String, ?> requestOptions);
 
         /**
          * Get info about a fine-tuning job.
@@ -376,13 +372,15 @@ interface OpenAI {
          * @return A list of fine-tuning event objects.
          */
         default CompletableFuture<List<FineTuningEvent>> getEvents(String fineTuningId, Integer limit, String after) {
-            return notUseGetGenericFineTuningEvent(fineTuningId, limit, after).thenApply(OpenAIGeneric::getData);
+            return getEventsWithOptions(fineTuningId, limit, after, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET("/{fineTuningId}/events")
-        CompletableFuture<OpenAIGeneric<FineTuningEvent>> notUseGetGenericFineTuningEvent(
+        CompletableFuture<OpenAIGeneric<FineTuningEvent>> getEventsWithOptions(
                 @Path("fineTuningId") String fineTuningId,
-                @Query("limit") Integer limit, @Query("after") String after);
+                @Query("limit") Integer limit,
+                @Query("after") String after,
+                @Body Map<String, ?> requestOptions);
 
         /**
          * Immediately cancel a fine-tune job.
@@ -413,11 +411,11 @@ interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<ImageResponse>> create(ImageRequest imageRequest) {
-            return notUseCreate(imageRequest).thenApply(OpenAIGeneric::getData);
+            return createWithOptions(imageRequest, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @POST("/generations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreate(@Body ImageRequest imageRequest);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createWithOptions(@Body ImageRequest imageRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
@@ -427,12 +425,12 @@ interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<ImageResponse>> createEdits(ImageEditsRequest imageRequest) {
-            return notUseCreateEdits(imageRequest).thenApply(OpenAIGeneric::getData);
+            return createEditsWithOptions(imageRequest, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @Multipart
         @POST("/edits")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreateEdits(@Body ImageEditsRequest imageRequest);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsWithOptions(@Body ImageEditsRequest imageRequest, @Body Map<String, ?> requestOptions);
 
         /**
          * Creates a variation of a given image.
@@ -442,13 +440,14 @@ interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<ImageResponse>> createVariations(ImageVariationsRequest imageRequest) {
-            return notUseCreateVariations(imageRequest).thenApply(OpenAIGeneric::getData);
+            return createVariationsWithOptions(imageRequest, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @Multipart
         @POST("/variations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> notUseCreateVariations(
-                @Body ImageVariationsRequest imageRequest);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createVariationsWithOptions(
+                @Body ImageVariationsRequest imageRequest,
+                @Body Map<String, ?> requestOptions);
     }
 
     /**
@@ -468,11 +467,11 @@ interface OpenAI {
          * @return A list of model objects.
          */
         default CompletableFuture<List<ModelResponse>> getList() {
-            return notUseGetGenericModel().thenApply(OpenAIGeneric::getData);
+            return getListWithOptions(Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<ModelResponse>> notUseGetGenericModel();
+        CompletableFuture<OpenAIGeneric<ModelResponse>> getListWithOptions(@Body Map<String, ?> requestOptions);
 
         /**
          * Retrieves a model instance, providing basic information about the model such
