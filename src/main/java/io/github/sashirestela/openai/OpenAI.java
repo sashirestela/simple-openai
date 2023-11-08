@@ -6,14 +6,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import io.github.sashirestela.cleverclient.annotation.Body;
-import io.github.sashirestela.cleverclient.annotation.DELETE;
-import io.github.sashirestela.cleverclient.annotation.GET;
-import io.github.sashirestela.cleverclient.annotation.Multipart;
-import io.github.sashirestela.cleverclient.annotation.POST;
-import io.github.sashirestela.cleverclient.annotation.Path;
-import io.github.sashirestela.cleverclient.annotation.Query;
-import io.github.sashirestela.cleverclient.annotation.Resource;
+import io.github.sashirestela.cleverclient.annotation.*;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
@@ -97,7 +90,7 @@ public interface OpenAI {
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<AudioResponse> transcribeWithOptions(@Body AudioTranscribeRequest audioRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<AudioResponse> transcribeWithOptions(@Body AudioTranscribeRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as object.
@@ -112,7 +105,7 @@ public interface OpenAI {
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<AudioResponse> translateWithOptions(@Body AudioTranslateRequest audioRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<AudioResponse> translateWithOptions(@Body AudioTranslateRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Transcribes audio into the input language. Response as plain text.
@@ -127,7 +120,7 @@ public interface OpenAI {
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<String> transcribePlainWithOptions(@Body AudioTranscribeRequest audioRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<String> transcribePlainWithOptions(@Body AudioTranscribeRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as plain text.
@@ -142,7 +135,7 @@ public interface OpenAI {
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<String> translatePlainWithOptions(@Body AudioTranslateRequest audioRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<String> translatePlainWithOptions(@Body AudioTranslateRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -168,7 +161,7 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<ChatResponse> createWithOptions(@Body ChatRequest chatRequest, @Body Map<String, Object> requestOptions);
+        CompletableFuture<ChatResponse> createWithOptions(@Body ChatRequest chatRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a model response for the given chat conversation. Streaming Mode.
@@ -182,7 +175,7 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<Stream<ChatResponse>> createStreamWithOptions(@Body ChatRequest chatRequest, @Body Map<String, Object> requestOptions);
+        CompletableFuture<Stream<ChatResponse>> createStreamWithOptions(@Body ChatRequest chatRequest, @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -210,7 +203,7 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<CompletionResponse> createWithOptions(@Body CompletionRequest completionRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<CompletionResponse> createWithOptions(@Body CompletionRequest completionRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a completion for the provided prompt and parameters. Streaming mode.
@@ -225,7 +218,7 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<Stream<CompletionResponse>> createStreamWithOptions(@Body CompletionRequest completionRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<Stream<CompletionResponse>> createStreamWithOptions(@Body CompletionRequest completionRequest, @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -283,7 +276,7 @@ public interface OpenAI {
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(@Body Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(@BodyPart Map<String, ?> requestOptions);
 
         /**
          * Returns information about a specific file.
@@ -351,7 +344,7 @@ public interface OpenAI {
         CompletableFuture<OpenAIGeneric<FineTuningResponse>> getListWithOptions(
                 @Query("limit") Integer limit,
                 @Query("after") String after,
-                @Body Map<String, ?> requestOptions);
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Get info about a fine-tuning job.
@@ -380,7 +373,7 @@ public interface OpenAI {
                 @Path("fineTuningId") String fineTuningId,
                 @Query("limit") Integer limit,
                 @Query("after") String after,
-                @Body Map<String, ?> requestOptions);
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Immediately cancel a fine-tune job.
@@ -415,7 +408,7 @@ public interface OpenAI {
         }
 
         @POST("/generations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createWithOptions(@Body ImageRequest imageRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createWithOptions(@Body ImageRequest imageRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
@@ -430,7 +423,7 @@ public interface OpenAI {
 
         @Multipart
         @POST("/edits")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsWithOptions(@Body ImageEditsRequest imageRequest, @Body Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsWithOptions(@Body ImageEditsRequest imageRequest, @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a variation of a given image.
@@ -447,7 +440,7 @@ public interface OpenAI {
         @POST("/variations")
         CompletableFuture<OpenAIGeneric<ImageResponse>> createVariationsWithOptions(
                 @Body ImageVariationsRequest imageRequest,
-                @Body Map<String, ?> requestOptions);
+                @BodyPart Map<String, ?> requestOptions);
     }
 
     /**
@@ -471,7 +464,7 @@ public interface OpenAI {
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<ModelResponse>> getListWithOptions(@Body Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<ModelResponse>> getListWithOptions(@BodyPart Map<String, ?> requestOptions);
 
         /**
          * Retrieves a model instance, providing basic information about the model such
