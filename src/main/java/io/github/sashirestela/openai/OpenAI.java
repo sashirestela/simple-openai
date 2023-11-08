@@ -6,7 +6,15 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-import io.github.sashirestela.cleverclient.annotation.*;
+import io.github.sashirestela.cleverclient.annotation.Body;
+import io.github.sashirestela.cleverclient.annotation.BodyPart;
+import io.github.sashirestela.cleverclient.annotation.DELETE;
+import io.github.sashirestela.cleverclient.annotation.GET;
+import io.github.sashirestela.cleverclient.annotation.Multipart;
+import io.github.sashirestela.cleverclient.annotation.POST;
+import io.github.sashirestela.cleverclient.annotation.Path;
+import io.github.sashirestela.cleverclient.annotation.Query;
+import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
