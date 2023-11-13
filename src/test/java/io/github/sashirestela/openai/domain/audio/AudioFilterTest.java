@@ -5,27 +5,31 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
-import org.junit.jupiter.api.BeforeAll;
+import io.github.sashirestela.openai.test.captors.CapturedValues;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleUncheckedException;
+import org.mockito.ArgumentCaptor;
 
 class AudioFilterTest {
 
-    static SimpleOpenAI openAI;
-    static HttpClient httpClient = mock(HttpClient.class);
+    SimpleOpenAI openAI;
+    HttpClient httpClient = mock(HttpClient.class);
 
-    @BeforeAll
+    @BeforeEach
     @SuppressWarnings("unchecked")
-    static void setup() {
+    void setup() {
         openAI = SimpleOpenAI.builder()
                 .apiKey("apiKey")
                 .httpClient(httpClient)
@@ -35,13 +39,16 @@ class AudioFilterTest {
     }
 
     @Test
-    void shouldSetRespFmtToTextWhenCallingTranscribePlainMethodOfAudioServiceWithoutRespFmt() {
+    void shouldSendRespFmtTextWhenCallingTranscribePlainMethodOfAudioServiceWithoutRespFmt() {
         var audioRequest = AudioTranscribeRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
                 .build();
         openAI.audios().transcribePlain(audioRequest);
-        assertEquals(AudioRespFmt.TEXT, audioRequest.getResponseFormat());
+
+        var httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        verify(httpClient).sendAsync(httpRequest.capture(), any());
+        assertContainsText(AudioRespFmt.TEXT, httpRequest);
     }
 
     @Test
@@ -74,7 +81,15 @@ class AudioFilterTest {
                 .model("test_model")
                 .build();
         openAI.audios().transcribe(audioRequest);
-        assertEquals(AudioRespFmt.JSON, audioRequest.getResponseFormat());
+
+        var httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
+        verify(httpClient).sendAsync(httpRequest.capture(), any());
+        assertContainsText(AudioRespFmt.JSON, httpRequest);
+    }
+
+    static void assertContainsText(AudioRespFmt responseFormat, ArgumentCaptor<HttpRequest> httpRequest) {
+        String requestBody = CapturedValues.getRequestBodyAsString(httpRequest);
+        assertTrue(requestBody.contains( responseFormat.name().toLowerCase() ), "Should contain " + requestBody + " in HttpRequest");
     }
 
     @Test

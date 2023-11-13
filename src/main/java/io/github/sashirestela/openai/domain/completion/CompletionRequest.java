@@ -69,8 +69,4 @@ public class CompletionRequest {
     @JsonInclude(Include.NON_NULL)
     private String user;
 
-    public void setStream(boolean stream) {
-        this.stream = stream;
-    }
-
 }
