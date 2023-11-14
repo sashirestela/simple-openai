@@ -30,6 +30,21 @@ class AudioDomainTest {
     }
 
     @Test
+    void testAudiosSpeech() throws IOException {
+        DomainTestingHelper.get().mockForBinary(httpClient, "src/test/resources/audios_speak.mp3");
+        var speechRequest = AudioSpeechRequest.builder()
+                .model("tts-1")
+                .input("Hello world, welcome to the AI universe!")
+                .voice(Voice.ALLOY)
+                .responseFormat(SpeechRespFmt.MP3)
+                .speed(1.0)
+                .build();
+        var speechResponse = openAI.audios().speak(speechRequest).join();
+        System.out.println(speechResponse.readAllBytes().length);
+        assertNotNull(speechResponse);
+    }
+
+    @Test
     void testAudiosTranscribe() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_transcribe.json");
         var audioRequest = AudioTranscribeRequest.builder()
