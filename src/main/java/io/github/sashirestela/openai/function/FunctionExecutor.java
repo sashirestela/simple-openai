@@ -55,7 +55,7 @@ public class FunctionExecutor {
             var object = JsonUtil.jsonToObjectStrict(functionToCall.getArguments(), function.getFunctionalClass());
             return (T) object.execute();
         } catch (Exception e) {
-            throw new SimpleUncheckedException("Cannot execute the function {0} due to: " + e, functionName, e);
+            throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
         }
     }
 
