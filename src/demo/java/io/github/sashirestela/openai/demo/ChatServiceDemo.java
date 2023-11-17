@@ -6,11 +6,13 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
-import io.github.sashirestela.openai.domain.chat.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
-import io.github.sashirestela.openai.domain.chat.Role;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
 
@@ -20,12 +22,12 @@ public class ChatServiceDemo extends AbstractDemo {
     private String modelIdToUse;
 
     public ChatServiceDemo() {
-        modelIdToUse = "gpt-3.5-turbo-16k-0613";
+        modelIdToUse = "gpt-3.5-turbo-1106";
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
                 .messages(List.of(
-                        new ChatMessage(Role.SYSTEM, "You are an expert in AI."),
-                        new ChatMessage(Role.USER, "Write a technical article about ChatGPT, no more than 100 words.")))
+                        new ChatMsgSystem("You are an expert in AI."),
+                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words.")))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
@@ -66,30 +68,24 @@ public class ChatServiceDemo extends AbstractDemo {
                         .description("Run an alarm")
                         .functionalClass(RunAlarm.class)
                         .build());
-        var messages = new ArrayList<ChatMessage>();
-        messages.add(new ChatMessage(Role.USER, "What is the product of 123 and 456?"));
+        var messages = new ArrayList<ChatMsg>();
+        messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
                 .messages(messages)
-                .functions(functionExecutor.getFunctions())
-                .functionCall("auto")
+                .tools(functionExecutor.getToolFunctions())
                 .build();
         var futureChat = openAI.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
         var chatMessage = chatResponse.firstMessage();
-        var result = functionExecutor.execute(chatMessage.getFunctionCall());
+        var chatToolCall = chatMessage.getToolCalls().get(0);
+        var result = functionExecutor.execute(chatToolCall.getFunction());
         messages.add(chatMessage);
-        messages.add(
-                ChatMessage.builder()
-                        .role(Role.FUNCTION)
-                        .content(result.toString())
-                        .name(chatMessage.getFunctionCall().getName())
-                        .build());
+        messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
                 .messages(messages)
-                .functions(functionExecutor.getFunctions())
-                .functionCall("auto")
+                .tools(functionExecutor.getToolFunctions())
                 .build();
         futureChat = openAI.chatCompletions().create(chatRequest);
         chatResponse = futureChat.join();

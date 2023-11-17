@@ -13,7 +13,7 @@ public enum Role {
     @JsonProperty("assistant")
     ASSISTANT,
 
-    @JsonProperty("function")
-    FUNCTION;
+    @JsonProperty("tool")
+    TOOL;
 
 }

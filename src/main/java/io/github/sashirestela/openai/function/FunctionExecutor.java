@@ -1,15 +1,17 @@
 package io.github.sashirestela.openai.function;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
 
 public class FunctionExecutor {
     private Map<String, ChatFunction> mapFunctions = new HashMap<>();
@@ -21,8 +23,11 @@ public class FunctionExecutor {
         enrollFunctions(functions);
     }
 
-    public List<ChatFunction> getFunctions() {
-        return new ArrayList<>(mapFunctions.values());
+    public List<ChatTool> getToolFunctions() {
+        return mapFunctions.values()
+            .stream()
+            .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+            .collect(Collectors.toList());
     }
 
     public void enrollFunction(ChatFunction function) {
