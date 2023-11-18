@@ -28,7 +28,9 @@ import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
+import io.github.sashirestela.openai.domain.embedding.EncodingFormat;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64Response;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingFloatResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningEvent;
@@ -61,6 +63,12 @@ public interface OpenAI {
 
         @Getter
         private static final Map<String, Object> withoutStream = Map.of("stream", Boolean.FALSE);
+
+        @Getter
+        private static final Map<String, Object> withFloatFormat = Map.of("encoding_format", EncodingFormat.FLOAT);
+
+        @Getter
+        private static final Map<String, Object> withBase64Format = Map.of("encoding_format", EncodingFormat.BASE64);
 
         public static Map<String, AudioRespFmt> getAudioResponseFormatOrDefault(AudioTranslateRequest audioRequest,
                 AudioRespFmt orDefault, String methodName) {
@@ -273,10 +281,29 @@ public interface OpenAI {
          * Creates an embedding vector representing the input text.
          * 
          * @param embeddingRequest The input text to embed and the model to use.
-         * @return Represents an embedding vector.
+         * @return Represents an embedding vector in array of float format.
          */
+        default CompletableFuture<EmbeddingFloatResponse> create(@Body EmbeddingRequest embeddingRequest) {
+            return createWithOptions(embeddingRequest, Options.withFloatFormat());
+        }
+
         @POST
-        CompletableFuture<EmbeddingResponse> create(@Body EmbeddingRequest embeddingRequest);
+        CompletableFuture<EmbeddingFloatResponse> createWithOptions(@Body EmbeddingRequest embeddingRequest,
+                @BodyPart Map<String, ?> requestOptions);
+
+        /**
+         * Creates an embedding vector representing the input text.
+         * 
+         * @param embeddingRequest The input text to embed and the model to use.
+         * @return Represents an embedding vector in base64 format.
+         */
+        default CompletableFuture<EmbeddingBase64Response> createBase64(@Body EmbeddingRequest embeddingRequest) {
+            return createBase64WithOptions(embeddingRequest, Options.withBase64Format());
+        }
+        
+        @POST
+        CompletableFuture<EmbeddingBase64Response> createBase64WithOptions(@Body EmbeddingRequest embeddingRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
     }
 
