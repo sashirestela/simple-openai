@@ -14,6 +14,6 @@ public class FileRequest {
     private Path file;
 
     @NonNull
-    private String purpose;
+    private PurposeType purpose;
 
 }

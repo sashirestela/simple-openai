@@ -22,10 +22,12 @@ public class FileResponse {
     private Integer bytes;
 
     @JsonProperty("created_at")
-    private Double createdAt;
+    private Long createdAt;
 
+    @Deprecated
     private String status;
 
+    @Deprecated
     @JsonProperty("status_details")
     private String statusDetails;
 

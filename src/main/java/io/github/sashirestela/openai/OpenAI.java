@@ -300,7 +300,7 @@ public interface OpenAI {
         default CompletableFuture<EmbeddingBase64Response> createBase64(@Body EmbeddingRequest embeddingRequest) {
             return createBase64WithOptions(embeddingRequest, Options.withBase64Format());
         }
-        
+
         @POST
         CompletableFuture<EmbeddingBase64Response> createBase64WithOptions(@Body EmbeddingRequest embeddingRequest,
                 @BodyPart Map<String, ?> requestOptions);
@@ -332,14 +332,17 @@ public interface OpenAI {
         /**
          * Returns a list of files that belong to the user's organization.
          * 
+         * @param purpose Only return files with the given purpose.
          * @return List of files.
          */
-        default CompletableFuture<List<FileResponse>> getList() {
-            return getListWithOptions(Map.of()).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<FileResponse>> getList(String purpose) {
+            return getListWithOptions(purpose, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(@BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(
+                @Query("purpose") String purpose,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Returns information about a specific file.

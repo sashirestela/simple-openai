@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
+import io.github.sashirestela.openai.domain.file.PurposeType;
 
 public class FileServiceDemo extends AbstractDemo {
 
@@ -13,7 +14,7 @@ public class FileServiceDemo extends AbstractDemo {
     public FileResponse createFileResponse() {
         var fileRequest = FileRequest.builder()
                 .file(Paths.get("src/demo/resources/test_data.jsonl"))
-                .purpose("fine-tune")
+                .purpose(PurposeType.FINE_TUNE)
                 .build();
         var futureFile = openAI.files().create(fileRequest);
         return futureFile.join();
@@ -44,7 +45,7 @@ public class FileServiceDemo extends AbstractDemo {
     }
 
     public void demoCallFileGetList() {
-        var futureFile = openAI.files().getList();
+        var futureFile = openAI.files().getList(null);
         var fileResponses = futureFile.join();
         fileResponses.stream()
                 .forEach(System.out::println);
