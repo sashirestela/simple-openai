@@ -6,14 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
 
-class SimpleFunctionExecutorTest {
+class FunctionExecutorTest {
 
     private List<ChatFunction> functionList = Arrays.asList(
             ChatFunction.builder()
@@ -30,8 +33,8 @@ class SimpleFunctionExecutorTest {
     @Test
     void shouldReturnEmptyListWhenObjectWasNotInitialized() {
         var executor = new FunctionExecutor();
-        var actualList = executor.getFunctions();
-        List<ChatFunction> expectedList = Collections.emptyList();
+        var actualList = executor.getToolFunctions();
+        List<ChatTool> expectedList = Collections.emptyList();
         assertEquals(expectedList, actualList);
     }
 
@@ -48,11 +51,13 @@ class SimpleFunctionExecutorTest {
     void shouldReturnListOfEnrolledFunctionsWhenEnteredAllInOne() {
         var executor = new FunctionExecutor();
         executor.enrollFunctions(functionList);
-        var actualList = executor.getFunctions();
-        var expectedList = functionList;
+        var actualList = executor.getToolFunctions();
+        var expectedList = functionList.stream().map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+                .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
-        assertEquals(expectedList, actualList);
+        assertEquals(expectedList.get(0).getFunction(), actualList.get(0).getFunction());
+        assertEquals(expectedList.get(1).getFunction(), actualList.get(1).getFunction());
     }
 
     @Test
@@ -60,11 +65,13 @@ class SimpleFunctionExecutorTest {
         var executor = new FunctionExecutor();
         executor.enrollFunction(functionList.get(0));
         executor.enrollFunction(functionList.get(1));
-        var actualList = executor.getFunctions();
-        var expectedList = functionList;
+        var actualList = executor.getToolFunctions();
+        var expectedList = functionList.stream().map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+                .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
-        assertEquals(expectedList, actualList);
+        assertEquals(expectedList.get(0).getFunction(), actualList.get(0).getFunction());
+        assertEquals(expectedList.get(1).getFunction(), actualList.get(1).getFunction());
     }
 
     @Test
@@ -113,8 +120,8 @@ class SimpleFunctionExecutorTest {
         assertEquals(actualResult, expectedResult);
     }
 
-    private void sortListFunction(List<ChatFunction> list) {
-        list.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+    private void sortListFunction(List<ChatTool> list) {
+        list.sort((o1, o2) -> o1.getFunction().getName().compareTo(o2.getFunction().getName()));
     }
 
     static class ConvertToCelsius implements Functional {

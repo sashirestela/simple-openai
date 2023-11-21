@@ -1,14 +1,12 @@
-package io.github.sashirestela.openai.domain.chat;
+package io.github.sashirestela.openai.domain.chat.tool;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
 public class ChatFunctionCall {
 
     private String name;

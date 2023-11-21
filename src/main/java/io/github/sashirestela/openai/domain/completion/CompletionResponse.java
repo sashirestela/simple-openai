@@ -3,6 +3,7 @@ package io.github.sashirestela.openai.domain.completion;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.github.sashirestela.openai.domain.OpenAIUsage;
 import lombok.Getter;
@@ -29,8 +30,10 @@ public class CompletionResponse {
 
     private OpenAIUsage usage;
 
+    @JsonProperty("system_fingerprint")
+    private String systemFingerprint;
+
     public String firstText() {
         return getChoices().get(0).getText();
     }
-
 }

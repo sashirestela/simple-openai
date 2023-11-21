@@ -12,6 +12,9 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractImageRequest {
 
     @JsonInclude(Include.NON_NULL)
+    protected String model;
+
+    @JsonInclude(Include.NON_NULL)
     protected Integer n;
 
     @JsonInclude(Include.NON_NULL)

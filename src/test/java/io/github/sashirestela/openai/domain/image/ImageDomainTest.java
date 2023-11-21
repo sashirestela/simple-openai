@@ -33,8 +33,11 @@ class ImageDomainTest {
         var imageRequest = ImageRequest.builder()
                 .prompt("A cartoon of a hummingbird that is flying around a flower.")
                 .n(2)
-                .size(Size.X256)
+                .size(Size.X1024)
                 .responseFormat(ImageRespFmt.URL)
+                .model("dall-e-3")
+                .quality(Quality.STANDARD)
+                .style(Style.NATURAL)
                 .user("test")
                 .build();
         var imageResponse = openAI.images().create(imageRequest).join();
@@ -51,6 +54,7 @@ class ImageDomainTest {
                 .n(1)
                 .size(Size.X256)
                 .responseFormat(ImageRespFmt.B64JSON)
+                .model("dall-e-2")
                 .user("test")
                 .build();
         var imageResponse = openAI.images().createEdits(imageRequest).join();
@@ -66,6 +70,7 @@ class ImageDomainTest {
                 .n(1)
                 .size(Size.X256)
                 .responseFormat(ImageRespFmt.B64JSON)
+                .model("dall-e-2")
                 .user("test")
                 .build();
         var imageResponse = openAI.images().createVariations(imageRequest).join();

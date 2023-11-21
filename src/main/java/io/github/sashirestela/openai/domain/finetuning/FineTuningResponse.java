@@ -48,4 +48,6 @@ public class FineTuningResponse {
     @JsonProperty("trained_tokens")
     private Integer trainedTokens;
 
+    private FineTuningError error;
+
 }

@@ -16,4 +16,7 @@ public class ImageResponse {
     @JsonProperty("b64_json")
     private String b64Json;
 
+    @JsonProperty("revised_prompt")
+    private String revisedPrompt;
+
 }

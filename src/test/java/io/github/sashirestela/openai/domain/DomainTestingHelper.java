@@ -4,7 +4,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -44,5 +46,14 @@ public class DomainTestingHelper {
                 .thenReturn(CompletableFuture.completedFuture(httpResponse));
         when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(httpResponse.body()).thenReturn(jsonResponse);
+    }
+
+    public void mockForBinary(HttpClient httpClient, String responseFilePath) throws IOException {
+        HttpResponse<InputStream> httpResponse = mock(HttpResponse.class);
+        InputStream binaryResponse = new FileInputStream(responseFilePath);
+        when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofInputStream().getClass())))
+                .thenReturn(CompletableFuture.completedFuture(httpResponse));
+        when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(httpResponse.body()).thenReturn(binaryResponse);
     }
 }

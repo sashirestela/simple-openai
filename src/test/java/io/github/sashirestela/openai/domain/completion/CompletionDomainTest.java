@@ -1,15 +1,20 @@
 package io.github.sashirestela.openai.domain.completion;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
 class CompletionDomainTest {
@@ -26,8 +31,8 @@ class CompletionDomainTest {
                 .httpClient(httpClient)
                 .build();
         completionRequest = CompletionRequest.builder()
-                .model("text-davinci-003")
-                .prompt("Write a technical article about ChatGPT, no more than 100 words.")
+                .model("gpt-3.5-turbo-instruct")
+                .prompt("Tell me the Pythagorean theorem in no more than 50 words.")
                 .suffix(null)
                 .temperature(0.0)
                 .maxTokens(300)
@@ -36,6 +41,7 @@ class CompletionDomainTest {
                 .logprobs(0)
                 .echo(false)
                 .stop(null)
+                .seed(1)
                 .presencePenalty(0.0)
                 .frequencyPenalty(0.0)
                 .bestOf(1)
@@ -60,5 +66,73 @@ class CompletionDomainTest {
         var completionResponse = openAI.completions().create(completionRequest).join();
         System.out.println(completionResponse);
         assertNotNull(completionResponse);
+    }
+
+    @Test
+    void shouldCreateCompletionRequestWhenPromptIsRightClass() {
+        Object[] testData = {
+                "demo",
+                List.of("first", "second"),
+                List.of(1, 2, 3, 4),
+                List.of(List.of(11, 22, 33))
+        };
+        for (Object data : testData) {
+            var completionRequestBuilder = CompletionRequest.builder()
+                    .model("model")
+                    .prompt(data);
+            assertDoesNotThrow(() -> completionRequestBuilder.build());
+        }
+    }
+
+    @Test
+    void shouldThrownExceptionWhenCreatingCompletionRequestWithPromptWrongClass() {
+        Object[] testData = {
+                1001,
+                List.of(17.65, 23.68),
+                List.of(List.of("first", "second"))
+        };
+        for (Object data : testData) {
+            var completionRequestBuilder = CompletionRequest.builder()
+                    .model("model")
+                    .prompt(data);
+            var exception = assertThrows(SimpleUncheckedException.class, () -> completionRequestBuilder.build());
+            var actualErrorMessage = exception.getMessage();
+            var expectedErrorMessge = "The field prompt must be String or List<String> or List<Integer> or List<List<Integer>> classes.";
+            assertEquals(expectedErrorMessge, actualErrorMessage);
+        }
+    }
+
+    @Test
+    void shouldCreateCompletionRequestWhenStopIsRightClass() {
+        Object[] testData = {
+                "stop",
+                List.of("stop", "end", "quit", "finish")
+        };
+        for (Object data : testData) {
+            var completionRequestBuilder = CompletionRequest.builder()
+                    .model("model")
+                    .prompt("prompt demo")
+                    .stop(data);
+            assertDoesNotThrow(() -> completionRequestBuilder.build());
+        }
+    }
+
+    @Test
+    void shouldThrownExceptionWhenCreatingCompletionRequestWithStopWrongClass() {
+        Object[] testData = {
+                1001,
+                List.of(17.65, 23.68),
+                List.of("one", "two", "three", "four", "five")
+        };
+        for (Object data : testData) {
+            var completionRequestBuilder = CompletionRequest.builder()
+                    .model("model")
+                    .prompt("prompt demo")
+                    .stop(data);
+            var exception = assertThrows(SimpleUncheckedException.class, () -> completionRequestBuilder.build());
+            var actualErrorMessage = exception.getMessage();
+            var expectedErrorMessge = "The field stop must be String or List<String> (max 4 items) classes.";
+            assertEquals(expectedErrorMessge, actualErrorMessage);
+        }
     }
 }

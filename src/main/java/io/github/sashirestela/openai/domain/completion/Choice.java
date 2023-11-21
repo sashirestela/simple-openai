@@ -15,7 +15,7 @@ public class Choice {
 
     private Integer index;
 
-    private Integer logprobs;
+    private LogProbs logprobs;
 
     @JsonProperty("finish_reason")
     private String finishReason;

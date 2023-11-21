@@ -22,8 +22,6 @@ public class FineTuningEvent {
 
     private String message;
 
-    private String data;
-
     private String type;
 
 }

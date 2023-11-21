@@ -1,1 +1,1 @@
-{ "id": "gpt-3.5-turbo-16k-0613", "object": "model", "created": 1685474247, "owned_by": "openai", "permission": [ { "id": "modelperm-hb67ObpoaFIKTieIMs9CqZPq", "object": "model_permission", "created": 1692458644, "allow_create_engine": false, "allow_sampling": true, "allow_logprobs": true, "allow_search_indices": false, "allow_view": true, "allow_fine_tuning": false, "organization": "*", "group": null, "is_blocking": false } ], "root": "gpt-3.5-turbo-16k-0613", "parent": null }
+{ "id": "gpt-3.5-turbo-16k-0613", "object": "model", "created": 1685474247, "owned_by": "openai" }
