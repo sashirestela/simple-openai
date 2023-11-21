@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,7 +64,7 @@ public class ThreadRunStep {
 
         private String type;
         private MessageCreation messageCreation;
-        private ToolCalls toolCalls;
+        private List<ToolCall> toolCalls;
 
     }
 
@@ -81,9 +82,58 @@ public class ThreadRunStep {
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ToolCalls {
+    public static class ToolCall {
 
-        // TODO
+        private String id;
+        private String type;
+        private CodeInterpreter codeInterpreter;
+        private Map<?, ?> retrieval;
+        private Function function;
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class CodeInterpreter {
+
+        private String input;
+        private List<CodeInterpreterOutput> outputs;
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class CodeInterpreterOutput {
+
+        private String type;
+        private String logs;
+        private Image image;
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class Image {
+
+        private String fileId;
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class Function {
+
+        private String name;
+        private String arguments;
+        private String output;
 
     }
 }

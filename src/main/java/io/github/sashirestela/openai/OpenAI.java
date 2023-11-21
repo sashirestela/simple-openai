@@ -372,13 +372,22 @@ public interface OpenAI {
         CompletableFuture<FileResponse> getOne(@Path("fileId") String fileId);
 
         /**
-         * Returns information about a specific file.
+         * Returns a file content.
          * 
          * @param fileId The id of the file to use for this request.
          * @return Content of specific file.
          */
         @GET("/{fileId}/content")
         CompletableFuture<String> getContent(@Path("fileId") String fileId);
+
+        /**
+         * Returns a file content as a stream.
+         *
+         * @param fileId The id of the file to use for this request.
+         * @return Content of specific file.
+         */
+        @GET("/{fileId}/content")
+        CompletableFuture<InputStream> getContentInputStream(@Path("fileId") String fileId);
 
         /**
          * Returns information about a specific file.

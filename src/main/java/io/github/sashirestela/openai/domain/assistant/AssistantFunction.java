@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.sashirestela.openai.domain.chat.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.function;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,6 @@ import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.ToolCall;
 import io.github.sashirestela.openai.domain.assistant.ToolOutput;
-import io.github.sashirestela.openai.domain.chat.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;

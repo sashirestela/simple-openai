@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.domain;
 
-import io.github.sashirestela.openai.domain.chat.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
