@@ -16,6 +16,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .n(2)
                 .size(Size.X256)
                 .responseFormat(ImageRespFmt.URL)
+                .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().create(imageRequest);
         var imageResponse = futureImage.join();
@@ -29,6 +30,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .n(1)
                 .size(Size.X256)
                 .responseFormat(ImageRespFmt.URL)
+                .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().createEdits(imageEditsRequest);
         var imageResponse = futureImage.join();
@@ -41,6 +43,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .n(1)
                 .size(Size.X256)
                 .responseFormat(ImageRespFmt.URL)
+                .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().createVariations(imageVariationsRequest);
         var imageResponse = futureImage.join();
