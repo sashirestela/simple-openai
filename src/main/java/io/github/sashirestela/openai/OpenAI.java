@@ -390,15 +390,6 @@ public interface OpenAI {
         CompletableFuture<InputStream> getContentInputStream(@Path("fileId") String fileId);
 
         /**
-         * Returns information about a specific file.
-         *
-         * @param fileId The id of the file to use for this request.
-         * @return Content of specific file.
-         */
-        @GET("/{fileId}/content")
-        CompletableFuture<byte[]> getBytes(@Path("fileId") String fileId);
-
-        /**
          * Delete a file.
          * 
          * @param fileId The id of the file to use for this request.
