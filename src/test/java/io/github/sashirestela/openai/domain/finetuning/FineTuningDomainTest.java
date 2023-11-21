@@ -32,8 +32,9 @@ class FineTuningDomainTest {
         var fineTuningRequest = FineTuningRequest.builder()
                 .trainingFile("fileId")
                 .validationFile("fileId")
-                .model("gpt-3.5-turbo-0613")
-                .hyperParameters(new HyperParams(1))
+                .model("gpt-3.5-turbo-1106")
+                .hyperParameters(HyperParams.builder().batchSize("auto").learningRateMultiplier("auto")
+                        .numberEpochs("auto").build())
                 .suffix("suffix")
                 .build();
         var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
