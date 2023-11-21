@@ -22,10 +22,4 @@ public class ModelResponse {
     @JsonProperty("owned_by")
     private String ownedBy;
 
-    private List<Permission> permission;
-
-    private String root;
-
-    private String parent;
-
 }
