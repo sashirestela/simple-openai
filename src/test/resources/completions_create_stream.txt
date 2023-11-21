@@ -1,185 +1,135 @@
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"\n","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"\n\n","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"\n","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"The","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"Chat","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" Py","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"G","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"thag","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"PT","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"orean","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" is","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" theorem","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" an","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" states","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" AI","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" that","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"-","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" in","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"powered","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" a","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" chat","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" right","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"bot","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" triangle","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" that","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" uses","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" natural","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" square","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" language","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" of","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" processing","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" (","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" length","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"N","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" of","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"LP","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":")","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" hyp","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" to generate conversations","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"oten","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":".","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"use","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" It","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" (","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" is","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" powered","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" side","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" by","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" opposite","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" Open","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"AI","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" right","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"'s","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" angle","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" G","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":")","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"PT","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" is","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"-","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" equal","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"3","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" to","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" language","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" model","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" sum","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" of","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" which","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" enables","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" squares","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" it","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" of","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" to","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" understand","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" other","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" and","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" two","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" respond","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" sides","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" to","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":".","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" user","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" It","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" input","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" can","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" in","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" be","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" a","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" written","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" natural","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" as a^","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"2 +","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" convers","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" b^","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"ational","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"2 =","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" manner","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" c^","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":".","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":"2,","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" Chat","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" where c is the length of the hypotenuse and","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"G","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" a","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"PT","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" and","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" can","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" b","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" be","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" are","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" used","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" to","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" lengths","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" automate","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" of","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" customer","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" the","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" service","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" other","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" two","index":0,"logprobs":null,"finish_reason":null}],"model":"gpt-3.5-turbo-instruct"}
 
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" provide","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" personalized","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" recommendations","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" and","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" more","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":".","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" It","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" is","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" an","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" easy","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"-","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"to","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"-","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"use","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":",","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" cost","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"-","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":"effective","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" solution for","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" businesses looking","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" to","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" improve","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" their","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":" customer experience","index":0,"logprobs":null,"finish_reason":null}],"model":"text-davinci-003"}
-
-data: {"warning":"This model version is deprecated. Migrate before January 4, 2024 to avoid disruption of service. Learn more https://platform.openai.com/docs/deprecations","id":"cmpl-7pHx6gPonxqwAE4Du67G6bPFYS6xG","object":"text_completion","created":1692458092,"choices":[{"text":".","index":0,"logprobs":null,"finish_reason":"stop"}],"model":"text-davinci-003"}
+data: {"id":"cmpl-8Ly2R1r5KHRRzQpDIt1iU8OpaKy6w","object":"text_completion","created":1700246367,"choices":[{"text":" sides.","index":0,"logprobs":null,"finish_reason":"stop"}],"model":"gpt-3.5-turbo-instruct"}
 
 data: [DONE]

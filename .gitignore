@@ -13,3 +13,7 @@ dependency-reduced-pom.xml
 .flattened-pom.xml
 .factorypath
 *.log
+
+src/demo/resources/response.mp3
+.replit
+replit.nix

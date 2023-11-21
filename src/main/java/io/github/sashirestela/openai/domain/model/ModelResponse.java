@@ -1,7 +1,5 @@
 package io.github.sashirestela.openai.domain.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -21,11 +19,5 @@ public class ModelResponse {
 
     @JsonProperty("owned_by")
     private String ownedBy;
-
-    private List<Permission> permission;
-
-    private String root;
-
-    private String parent;
 
 }

@@ -32,7 +32,7 @@ class FileDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/files_create.json");
         var fileRequest = FileRequest.builder()
                 .file(Paths.get("src/demo/resources/test_data.jsonl"))
-                .purpose("fine-tune")
+                .purpose(PurposeType.FINE_TUNE)
                 .build();
         var fileResponse = openAI.files().create(fileRequest).join();
         System.out.println(fileResponse);
@@ -42,7 +42,7 @@ class FileDomainTest {
     @Test
     void testFilesGetList() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/files_getlist.json");
-        var fileResponse = openAI.files().getList().join();
+        var fileResponse = openAI.files().getList("fine-tune").join();
         System.out.println(fileResponse);
         assertNotNull(fileResponse);
     }

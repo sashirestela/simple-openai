@@ -20,7 +20,7 @@ public class FinetuningServiceDemo extends AbstractDemo {
         fileServiceDemo.waitUntilFileIsProcessed(fileId);
         var fineTuningRequest = FineTuningRequest.builder()
                 .trainingFile(fileId)
-                .model("gpt-3.5-turbo-0613")
+                .model("gpt-3.5-turbo-1106")
                 .build();
         var futureFineTuning = openAI.fineTunings().create(fineTuningRequest);
         var fineTuningResponse = futureFineTuning.join();

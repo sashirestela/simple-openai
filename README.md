@@ -14,7 +14,18 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Full support for all of the OpenAI services:
+Full support for all of the OpenAI services, including the latest changes announced at the [DevDay](https://openai.com/blog/new-models-and-developer-products-announced-at-devday) on Nov 6th, 2023:
+
+* Text to speech (as part of Audio)
+* Speech to text (as part of Audio)
+* Text generation (as part of Chat)
+* Function calling (as part of Chat)
+* Image to text (as part of Chat)
+* Text to image (as part of Image)
+* Embeddings
+* Fine tuning
+
+NOTE: Beta services are not included yet.
 
 ![Services](media/supported_services.png)
 
@@ -77,6 +88,27 @@ var openai = SimpleOpenAI.builder()
 After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI Api. Let's see some examples.
 
 #### Audio Service
+Example to call th Audio service to transform text to audio. We are requesting to receive the audio in binary format (InputStream):
+```java
+var speechRequest = AudioSpeechRequest.builder()
+        .model("tts-1")
+        .input("Hello world, welcome to the AI universe!")
+        .voice(Voice.ALLOY)
+        .responseFormat(SpeechRespFmt.MP3)
+        .speed(1.0)
+        .build();
+var futureSpeech = openAI.audios().speak(speechRequest);
+var speechResponse = futureSpeech.join();
+try {
+    var audioFile = new FileOutputStream("response.mp3");
+    audioFile.write(speechResponse.readAllBytes());
+    System.out.println(audioFile.getChannel().size() + " bytes");
+    audioFile.close();
+} catch (Exception e) {
+    e.printStackTrace();
+}
+```
+
 Example to call the Audio service to transcribe an audio to text. We are requesting to receive the transcription in plain text format (see the name of the method):
 ```java
 var audioRequest = AudioTranscribeRequest.builder()
@@ -95,6 +127,7 @@ var imageRequest = ImageRequest.builder()
     .n(2)
     .size(Size.X256)
     .responseFormat(ImageRespFmt.URL)
+    .model("dall-e-2")
     .build();
 var futureImage = openai.images().create(imageRequest);
 var imageResponse = futureImage.join();
@@ -104,10 +137,10 @@ imageResponse.stream().forEach(img -> System.out.println("\n" + img.getUrl()));
 Example to call the Chat Completion service to ask a question and wait for an answer. We are printing out it in the console:
 ```java
 var chatRequest = ChatRequest.builder()
-    .model("gpt-3.5-turbo-16k-0613")
+    .model("gpt-3.5-turbo-1106")
     .messages(List.of(
-        new ChatMessage(Role.SYSTEM, "You are an expert in AI."),
-        new ChatMessage(Role.USER, "Write an article about ChatGPT, no more than 100 words.")))
+        new ChatMsgSystem("You are an expert in AI."),
+        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words.")))
     .temperature(0.0)
     .maxTokens(300)
     .build();
@@ -138,32 +171,26 @@ public void demoCallChatWithFunctions() {
             .description("Run an alarm")
             .functionalClass(RunAlarm.class)
             .build());
-    var messages = new ArrayList<ChatMessage>();
-    messages.add(new ChatMessage(Role.USER, "What is the product of 123 and 456?"));
-    var chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-16k-0613")
-        .messages(messages)
-        .functions(functionExecutor.getFunctions())
-        .functionCall("auto")
-        .build();
-    var futureChat = openai.chatCompletions().create(chatRequest);
+    var messages = new ArrayList<ChatMsg>();
+    messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
+    chatRequest = ChatRequest.builder()
+            .model("gpt-3.5-turbo-1106")
+            .messages(messages)
+            .tools(functionExecutor.getToolFunctions())
+            .build();
+    var futureChat = openAI.chatCompletions().create(chatRequest);
     var chatResponse = futureChat.join();
     var chatMessage = chatResponse.firstMessage();
-    var result = functionExecutor.execute(chatMessage.getFunctionCall());
+    var chatToolCall = chatMessage.getToolCalls().get(0);
+    var result = functionExecutor.execute(chatToolCall.getFunction());
     messages.add(chatMessage);
-    messages.add(
-        ChatMessage.builder()
-            .role(Role.FUNCTION)
-            .content(result.toString())
-            .name(chatMessage.getFunctionCall().getName())
-            .build());
+    messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
     chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-16k-0613")
-        .messages(messages)
-        .functions(functionExecutor.getFunctions())
-        .functionCall("auto")
-        .build();
-    futureChat = openai.chatCompletions().create(chatRequest);
+            .model("gpt-3.5-turbo-1106")
+            .messages(messages)
+            .tools(functionExecutor.getToolFunctions())
+            .build();
+    futureChat = openAI.chatCompletions().create(chatRequest);
     chatResponse = futureChat.join();
     System.out.println(chatResponse.firstContent());
 }
@@ -204,13 +231,6 @@ public static class RunAlarm implements Functional {
     }
 }
 ```
-
-
-## 🎬 Demo
-Demonstration of the Chat functionality in streaming mode. The application prints the information to the console as soon as it is received from the server token by token, in response to our prompt:
-
-![Demo](media/demo_chat_stream.gif)
-
 
 ## ✳ Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:

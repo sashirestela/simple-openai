@@ -10,11 +10,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class EmbeddingResponse {
+public class EmbeddingFloatResponse {
 
     private String object;
 
-    private List<Embedding> data;
+    private List<EmbeddingFloat> data;
 
     private String model;
 

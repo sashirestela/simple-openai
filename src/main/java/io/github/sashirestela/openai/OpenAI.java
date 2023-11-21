@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
+import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
@@ -26,7 +28,9 @@ import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingResponse;
+import io.github.sashirestela.openai.domain.embedding.EncodingFormat;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64Response;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingFloatResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningEvent;
@@ -53,12 +57,21 @@ public interface OpenAI {
 
     @Accessors(fluent = true)
     final class Options {
+
         @Getter
         private static final Map<String, Object> withStream = Map.of("stream", Boolean.TRUE);
+
         @Getter
         private static final Map<String, Object> withoutStream = Map.of("stream", Boolean.FALSE);
 
-        public static Map<String, AudioRespFmt> getAudioResponseFormatOrDefault(AudioTranslateRequest audioRequest, AudioRespFmt orDefault, String methodName) {
+        @Getter
+        private static final Map<String, Object> withFloatFormat = Map.of("encoding_format", EncodingFormat.FLOAT);
+
+        @Getter
+        private static final Map<String, Object> withBase64Format = Map.of("encoding_format", EncodingFormat.BASE64);
+
+        public static Map<String, AudioRespFmt> getAudioResponseFormatOrDefault(AudioTranslateRequest audioRequest,
+                AudioRespFmt orDefault, String methodName) {
             final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
             final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
             final var isText = textEnumSet.contains(orDefault);
@@ -66,7 +79,8 @@ public interface OpenAI {
             var requestedFormat = audioRequest.getResponseFormat();
             if (requestedFormat != null) {
                 if (isText != textEnumSet.contains(requestedFormat)) {
-                    throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName, null);
+                    throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.", methodName,
+                            null);
                 }
             } else {
                 requestedFormat = orDefault;
@@ -86,6 +100,16 @@ public interface OpenAI {
     interface Audios {
 
         /**
+         * Generates audio from the input text.
+         * 
+         * @param speechRequest Includes the text to generate audio for, and audio file
+         *                      format among others.
+         * @return The audio file content.
+         */
+        @POST("/speech")
+        CompletableFuture<InputStream> speak(@Body AudioSpeechRequest speechRequest);
+
+        /**
          * Transcribes audio into the input language. Response as object.
          * 
          * @param audioRequest Its 'responseFormat' attribute should be: json,
@@ -93,12 +117,14 @@ public interface OpenAI {
          * @return Transcription as an object.
          */
         default CompletableFuture<AudioResponse> transcribe(AudioTranscribeRequest audioRequest) {
-            return transcribeWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "transcribe"));
+            return transcribeWithOptions(audioRequest,
+                    Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "transcribe"));
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<AudioResponse> transcribeWithOptions(@Body AudioTranscribeRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<AudioResponse> transcribeWithOptions(@Body AudioTranscribeRequest audioRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as object.
@@ -108,12 +134,14 @@ public interface OpenAI {
          * @return Translation as an object.
          */
         default CompletableFuture<AudioResponse> translate(AudioTranslateRequest audioRequest) {
-            return translateWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "translate"));
+            return translateWithOptions(audioRequest,
+                    Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.JSON, "translate"));
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<AudioResponse> translateWithOptions(@Body AudioTranslateRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<AudioResponse> translateWithOptions(@Body AudioTranslateRequest audioRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Transcribes audio into the input language. Response as plain text.
@@ -123,12 +151,14 @@ public interface OpenAI {
          * @return Transcription as plain text.
          */
         default CompletableFuture<String> transcribePlain(AudioTranscribeRequest audioRequest) {
-            return transcribePlainWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "transcribePlain"));
+            return transcribePlainWithOptions(audioRequest,
+                    Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "transcribePlain"));
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<String> transcribePlainWithOptions(@Body AudioTranscribeRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<String> transcribePlainWithOptions(@Body AudioTranscribeRequest audioRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Translates audio into English. Response as plain text.
@@ -138,12 +168,14 @@ public interface OpenAI {
          * @return Translation as plain text.
          */
         default CompletableFuture<String> translatePlain(AudioTranslateRequest audioRequest) {
-            return translatePlainWithOptions(audioRequest, Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "translatePlain"));
+            return translatePlainWithOptions(audioRequest,
+                    Options.getAudioResponseFormatOrDefault(audioRequest, AudioRespFmt.TEXT, "translatePlain"));
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<String> translatePlainWithOptions(@Body AudioTranslateRequest audioRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<String> translatePlainWithOptions(@Body AudioTranslateRequest audioRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -169,7 +201,8 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<ChatResponse> createWithOptions(@Body ChatRequest chatRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<ChatResponse> createWithOptions(@Body ChatRequest chatRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a model response for the given chat conversation. Streaming Mode.
@@ -183,7 +216,8 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<Stream<ChatResponse>> createStreamWithOptions(@Body ChatRequest chatRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<Stream<ChatResponse>> createStreamWithOptions(@Body ChatRequest chatRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -211,7 +245,8 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<CompletionResponse> createWithOptions(@Body CompletionRequest completionRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<CompletionResponse> createWithOptions(@Body CompletionRequest completionRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a completion for the provided prompt and parameters. Streaming mode.
@@ -226,7 +261,8 @@ public interface OpenAI {
         }
 
         @POST
-        CompletableFuture<Stream<CompletionResponse>> createStreamWithOptions(@Body CompletionRequest completionRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<Stream<CompletionResponse>> createStreamWithOptions(@Body CompletionRequest completionRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -245,10 +281,29 @@ public interface OpenAI {
          * Creates an embedding vector representing the input text.
          * 
          * @param embeddingRequest The input text to embed and the model to use.
-         * @return Represents an embedding vector.
+         * @return Represents an embedding vector in array of float format.
          */
+        default CompletableFuture<EmbeddingFloatResponse> create(@Body EmbeddingRequest embeddingRequest) {
+            return createWithOptions(embeddingRequest, Options.withFloatFormat());
+        }
+
         @POST
-        CompletableFuture<EmbeddingResponse> create(@Body EmbeddingRequest embeddingRequest);
+        CompletableFuture<EmbeddingFloatResponse> createWithOptions(@Body EmbeddingRequest embeddingRequest,
+                @BodyPart Map<String, ?> requestOptions);
+
+        /**
+         * Creates an embedding vector representing the input text.
+         * 
+         * @param embeddingRequest The input text to embed and the model to use.
+         * @return Represents an embedding vector in base64 format.
+         */
+        default CompletableFuture<EmbeddingBase64Response> createBase64(@Body EmbeddingRequest embeddingRequest) {
+            return createBase64WithOptions(embeddingRequest, Options.withBase64Format());
+        }
+
+        @POST
+        CompletableFuture<EmbeddingBase64Response> createBase64WithOptions(@Body EmbeddingRequest embeddingRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
     }
 
@@ -277,14 +332,17 @@ public interface OpenAI {
         /**
          * Returns a list of files that belong to the user's organization.
          * 
+         * @param purpose Only return files with the given purpose.
          * @return List of files.
          */
-        default CompletableFuture<List<FileResponse>> getList() {
-            return getListWithOptions(Map.of()).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<FileResponse>> getList(String purpose) {
+            return getListWithOptions(purpose, Map.of()).thenApply(OpenAIGeneric::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(@BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<FileResponse>> getListWithOptions(
+                @Query("purpose") String purpose,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Returns information about a specific file.
@@ -416,7 +474,8 @@ public interface OpenAI {
         }
 
         @POST("/generations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createWithOptions(@Body ImageRequest imageRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createWithOptions(@Body ImageRequest imageRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
@@ -431,7 +490,8 @@ public interface OpenAI {
 
         @Multipart
         @POST("/edits")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsWithOptions(@Body ImageEditsRequest imageRequest, @BodyPart Map<String, ?> requestOptions);
+        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsWithOptions(@Body ImageEditsRequest imageRequest,
+                @BodyPart Map<String, ?> requestOptions);
 
         /**
          * Creates a variation of a given image.

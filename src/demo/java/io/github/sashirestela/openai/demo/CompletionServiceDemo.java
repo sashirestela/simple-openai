@@ -9,12 +9,13 @@ public class CompletionServiceDemo extends AbstractDemo {
     private String modelIdToUse;
 
     public CompletionServiceDemo() {
-        modelIdToUse = "text-davinci-003";
+        modelIdToUse = "gpt-3.5-turbo-instruct";
         completionRequest = CompletionRequest.builder()
                 .model(modelIdToUse)
-                .prompt("Write a technical article about ChatGPT, no more than 100 words.")
+                .prompt("Tell me the Pythagorean theorem in no more than 50 words.")
                 .temperature(0.0)
                 .maxTokens(300)
+                .seed(1)
                 .build();
     }
 
