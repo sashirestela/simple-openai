@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.With;
 
 @Getter
 public class ChatRequest {
@@ -49,6 +50,7 @@ public class ChatRequest {
     @JsonInclude(Include.NON_NULL)
     private Integer n;
 
+    @With
     @JsonInclude(Include.NON_NULL)
     private Boolean stream;
 
