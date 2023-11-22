@@ -11,6 +11,7 @@ import io.github.sashirestela.openai.SimpleUncheckedException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.With;
 
 @Getter
 public class CompletionRequest {
@@ -38,6 +39,7 @@ public class CompletionRequest {
     @JsonInclude(Include.NON_NULL)
     private Integer n;
 
+    @With
     @JsonInclude(Include.NON_NULL)
     private Boolean stream;
 
