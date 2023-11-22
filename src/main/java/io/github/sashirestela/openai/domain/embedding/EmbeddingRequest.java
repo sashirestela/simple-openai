@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.With;
 
 @Getter
 public class EmbeddingRequest {
@@ -22,6 +23,7 @@ public class EmbeddingRequest {
     @NonNull
     private Object input;
 
+    @With
     @JsonInclude(Include.NON_NULL)
     @JsonProperty("encoding_format")
     private EncodingFormat encodingFormat;

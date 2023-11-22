@@ -63,7 +63,7 @@ class AudioDomainTest {
     @Test
     void testAudiosTranslate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_translate.json");
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = AudioTranslateRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
@@ -94,7 +94,7 @@ class AudioDomainTest {
     @Test
     void testAudiosTranslatePlain() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_translate_plain.txt");
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = AudioTranslateRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
