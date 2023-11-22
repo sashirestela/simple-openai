@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.function;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.stream.Collectors;
 import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.domain.ToolCall;
+import io.github.sashirestela.openai.domain.assistant.ToolOutput;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
@@ -58,6 +61,23 @@ public class FunctionExecutor {
             return (T) object.execute();
         } catch (RuntimeException e) {
             throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
+        }
+    }
+
+    public List<ToolOutput> executeAll(List<ToolCall> toolsToCalls) {
+        var toolOutputs = new ArrayList<ToolOutput>();
+        for (ToolCall toolToCall : toolsToCalls)
+            if (toolToCall.getFunction() != null)
+                toolOutputs.add(execute(toolToCall.getId(), toolToCall.getFunction()));
+
+        return toolOutputs;
+    }
+
+    public ToolOutput execute(String toolCallId, ChatFunctionCall functionToCall) {
+        try {
+            return ToolOutput.of(toolCallId, ("" + execute(functionToCall)));
+        } catch (Exception e) {
+            return ToolOutput.of(toolCallId, e.toString());
         }
     }
 }

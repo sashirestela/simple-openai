@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import io.github.sashirestela.cleverclient.annotation.Body;
 import io.github.sashirestela.cleverclient.annotation.DELETE;
 import io.github.sashirestela.cleverclient.annotation.GET;
+import io.github.sashirestela.cleverclient.annotation.Header;
 import io.github.sashirestela.cleverclient.annotation.Multipart;
 import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
@@ -16,6 +17,23 @@ import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
+import io.github.sashirestela.openai.domain.PageRequest;
+import io.github.sashirestela.openai.domain.Page;
+import io.github.sashirestela.openai.domain.assistant.Assistant;
+import io.github.sashirestela.openai.domain.assistant.AssistantFile;
+import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
+import io.github.sashirestela.openai.domain.assistant.FilePath;
+import io.github.sashirestela.openai.domain.assistant.Thread;
+import io.github.sashirestela.openai.domain.assistant.ThreadCreateAndRunRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessage;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageFile;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRun;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
+import io.github.sashirestela.openai.domain.assistant.ToolOutput;
+import io.github.sashirestela.openai.domain.assistant.ToolOutputSubmission;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
 import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
@@ -329,13 +347,22 @@ public interface OpenAI {
         CompletableFuture<FileResponse> getOne(@Path("fileId") String fileId);
 
         /**
-         * Returns information about a specific file.
+         * Returns a file content.
          * 
          * @param fileId The id of the file to use for this request.
          * @return Content of specific file.
          */
         @GET("/{fileId}/content")
         CompletableFuture<String> getContent(@Path("fileId") String fileId);
+
+        /**
+         * Returns a file content as a stream.
+         *
+         * @param fileId The id of the file to use for this request.
+         * @return Content of specific file.
+         */
+        @GET("/{fileId}/content")
+        CompletableFuture<InputStream> getContentInputStream(@Path("fileId") String fileId);
 
         /**
          * Delete a file.
@@ -544,4 +571,462 @@ public interface OpenAI {
 
     }
 
+
+    /**
+     * Build assistants that can call models and use tools to perform tasks.
+     *
+     * @see <a href="https://platform.openai.com/docs/api-reference/assistants">OpenAI Assistants</a>
+     */
+    @Resource("/v1/assistants")
+    interface Assistants {
+
+        /**
+         * Create an assistant with a model and instructions.
+         *
+         * @param assistantRequest The assistant request.
+         * @return the created assistant object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST
+        CompletableFuture<Assistant> create(@Body AssistantRequest assistantRequest);
+
+        /**
+         * Retrieves an assistant.
+         *
+         * @param assistantId The ID of the assistant to retrieve.
+         * @return The {@link Assistant} object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{assistantId}")
+        CompletableFuture<Assistant> getOne(@Path("assistantId") String assistantId);
+
+        /**
+         * Modifies an assistant.
+         *
+         * @param assistantId      The ID of the assistant to retrieve.
+         * @param assistantRequest The assistant request.
+         * @return the modified assistant object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{assistantId}")
+        CompletableFuture<Assistant> modify(@Path("assistantId") String assistantId, @Body AssistantRequest assistantRequest);
+
+        /**
+         * Deletes an assistant.
+         *
+         * @param assistantId The ID of the assistant to delete.
+         * @return the deletion status
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @DELETE("/{assistantId}")
+        CompletableFuture<OpenAIDeletedResponse> delete(@Path("assistantId") String assistantId);
+
+        /**
+         * Returns a list of assistants (first page only).
+         *
+         * @return the list of assistant objects
+         */
+        default CompletableFuture<Page<Assistant>> getList() {
+            return getList(PageRequest.builder().build());
+        }
+
+        /**
+         * Returns a list of assistants.
+         *
+         * @param page The result page requested.
+         * @return the list of assistant objects
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET
+        CompletableFuture<Page<Assistant>> getList(@Query PageRequest page);
+
+        /**
+         * Create an assistant file by attaching a File to an assistant.
+         *
+         * @param assistantId The ID of the assistant for which to create a File.
+         * @param fileId A File ID (with purpose="assistants") that the assistant should use.
+         * @return the created assistant file object.
+         */
+        default CompletableFuture<AssistantFile> createFile(String assistantId, String fileId) {
+            return createFile(assistantId, FilePath.of(fileId));
+        }
+
+        /**
+         * Create an assistant file by attaching a File to an assistant.
+         *
+         * @param assistantId The ID of the assistant for which to create a File.
+         * @param file A File ID (with purpose="assistants") that the assistant should use.
+         * @return the created assistant file object.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{assistantId}/files")
+        CompletableFuture<AssistantFile> createFile(@Path("assistantId") String assistantId, @Body FilePath file);
+
+        /**
+         * Retrieves an AssistantFile.
+         *
+         * @param assistantId The ID of the assistant who the file belongs to.
+         * @param fileId The ID of the file we're getting.
+         * @return the assistant file object matching the specified ID
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{assistantId}/files/{fileId}")
+        CompletableFuture<AssistantFile> getFile(@Path("assistantId") String assistantId, @Path("fileId") String fileId);
+
+        /**
+         * Delete an assistant file.
+         *
+         * @param assistantId The ID of the assistant that the file belongs to.
+         * @param fileId The ID of the file to delete.
+         * @return the deletion status
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @DELETE("/{assistantId}/files/{fileId}")
+        CompletableFuture<OpenAIDeletedResponse> deleteFile(@Path("assistantId") String assistantId, @Path("fileId") String fileId);
+
+        /**
+         * Returns a list of assistant files (first page only).
+         *
+         * @param assistantId The ID of the assistant the file belongs to.
+         * @return the list of assistant file objects.
+         */
+        default CompletableFuture<Page<AssistantFile>> getFileList(String assistantId) {
+            return getFileList(assistantId, PageRequest.builder().build());
+        }
+
+        /**
+         * Returns a list of assistant files.
+         *
+         * @param assistantId The ID of the assistant the file belongs to.
+         * @param page The requested result page.
+         * @return the list of assistant file objects.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{assistantId}/files")
+        CompletableFuture<Page<AssistantFile>> getFileList(@Path("assistantId") String assistantId, @Query PageRequest page);
+
+    }
+
+    /**
+     * Build assistants that can call models and use tools to perform tasks.
+     *
+     * @see <a href="https://platform.openai.com/docs/api-reference/threads">OpenAI Threads</a>
+     */
+    @Resource("/v1/threads")
+    interface Threads {
+
+        /**
+         * Creates a message thread.
+         *
+         * @return the created thread object
+         */
+        default CompletableFuture<Thread> create() {
+            return create(ThreadRequest.builder().build());
+        }
+
+        /**
+         * Creates a message thread.
+         *
+         * @param threadRequest The thread request.
+         * @return the created thread object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST
+        CompletableFuture<Thread> create(@Body ThreadRequest threadRequest);
+
+        /**
+         * Retrieves a thread.
+         *
+         * @param threadId The ID of the thread to retrieve.
+         * @return The {@link Thread} object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}")
+        CompletableFuture<Thread> getOne(@Path("threadId") String threadId);
+
+        /**
+         * Modifies a thread.
+         *
+         * @param threadRequest The thread request.
+         * @return the created thread object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}")
+        CompletableFuture<Thread> modify(@Path("threadId") String threadId, @Body ThreadRequest threadRequest);
+
+        /**
+         * Deletes a thread.
+         *
+         * @param threadId The ID of the thread to delete.
+         * @return the thread deletion status
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @DELETE("/{threadId}")
+        CompletableFuture<OpenAIDeletedResponse> delete(@Path("threadId") String threadId);
+
+        /**
+         * Retrieves a list of threads (first page only).
+         *
+         * @return the list of threads
+         */
+        default CompletableFuture<Page<Thread>> getList() {
+            return getList(PageRequest.builder().build());
+        }
+
+        /**
+         * Retrieves a list of threads.
+         *
+         * @param page The requested result page.
+         * @return the list of threads
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET
+        CompletableFuture<Page<Thread>> getList(@Query PageRequest page);
+
+        /**
+         * Create a message.
+         *
+         * @param threadId The ID of the thread to create a message for.
+         * @param request  The requested message to create.
+         * @return the created message object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/messages")
+        CompletableFuture<ThreadMessage> createMessage(@Path("threadId") String threadId, @Body ThreadMessageRequest request);
+
+        /**
+         * Retrieve a message.
+         *
+         * @param threadId  The ID of the thread to which this message belongs.
+         * @param messageId The ID of the message to retrieve.
+         * @return The message object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/messages/{messageId}")
+        CompletableFuture<ThreadMessage> getMessage(@Path("threadId") String threadId, @Path("messageId") String messageId);
+
+        /**
+         * Modifies a message.
+         *
+         * @param threadId  The ID of the thread to which this message belongs.
+         * @param messageId The ID of the message to modify.
+         * @param request   The message modification request.
+         * @return The message object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/messages/{messageId}")
+        CompletableFuture<ThreadMessage> modifyMessage(@Path("threadId") String threadId, @Path("messageId") String messageId, @Body ThreadMessageRequest request);
+
+        /**
+         * Returns a list of messages for a given thread (first page only).
+         *
+         * @param threadId The ID of the thread the messages belong to.
+         * @return The  list of message objects.
+         */
+        default CompletableFuture<Page<ThreadMessage>> getMessageList(String threadId) {
+            return getMessageList(threadId, PageRequest.builder().build());
+        }
+
+        /**
+         * Returns a list of messages for a given thread.
+         *
+         * @param threadId The ID of the thread the messages belong to.
+         * @param page     The requested result page.
+         * @return The list of message objects.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/messages")
+        CompletableFuture<Page<ThreadMessage>> getMessageList(@Path("threadId") String threadId, @Query PageRequest page);
+
+        /**
+         * Retrieves a message file.
+         *
+         * @param threadId  The ID of the thread to which the message and File belong.
+         * @param messageId The ID of the message the file belongs to.
+         * @param fileId    The ID of the file being retrieved.
+         * @return The message file object.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/messages/{messageId}/files/{fileId}")
+        CompletableFuture<ThreadMessageFile> getMessageFile(
+                @Path("threadId") String threadId,
+                @Path("messageId") String messageId,
+                @Path("fileId") String fileId);
+
+        /**
+         * Returns a list of message files (first page only).
+         *
+         * @param threadId The ID of the thread to which the message and File belong.
+         * @param messageId The ID of the message the file belongs to.
+         * @return The list of message file objects.
+         */
+        default CompletableFuture<Page<ThreadMessageFile>> getMessageFileList(String threadId, String messageId) {
+            return getMessageFileList(threadId, messageId, PageRequest.builder().build());
+        }
+
+        /**
+         * Returns a list of message files.
+         *
+         * @param threadId The ID of the thread to which the message and File belong.
+         * @param messageId The ID of the message the file belongs to.
+         * @param page The requested result page.
+         * @return The list of message file objects.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/messages/{messageId}/files")
+        CompletableFuture<Page<ThreadMessageFile>> getMessageFileList(
+                @Path("threadId") String threadId,
+                @Path("messageId") String messageId,
+                @Query PageRequest page);
+
+        /**
+         * Create a run.
+         *
+         * @param threadId The ID of the thread to run.
+         * @param assistantId The ID of the assistant to use to execute this run.
+         * @return the queued run object
+         */
+        default CompletableFuture<ThreadRun> createRun(String threadId, String assistantId) {
+            return createRun(threadId, ThreadRunRequest.builder()
+                    .assistantId(assistantId)
+                    .build());
+        }
+
+        /**
+         * Create a run.
+         *
+         * @param threadId The ID of the thread to run.
+         * @param request The requested run.
+         * @return the queued run object
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/runs")
+        CompletableFuture<ThreadRun> createRun(@Path("threadId") String threadId, @Body ThreadRunRequest request);
+
+        /**
+         * Retrieves a run.
+         *
+         * @param threadId The ID of the thread that was run.
+         * @param runId The ID of the run to retrieve.
+         * @return The run object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/runs/{runId}")
+        CompletableFuture<ThreadRun> getRun(@Path("threadId") String threadId, @Path("runId") String runId);
+
+        /**
+         * Modifies a run.
+         *
+         * @param threadId The ID of the thread that was run.
+         * @param runId The ID of the run to modify.
+         * @return The modified run object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/runs/{runId}")
+        CompletableFuture<ThreadRun> modifyRun(@Path("threadId") String threadId, @Path("runId") String runId, @Body ThreadRunRequest request);
+
+        /**
+         * Returns a list of runs belonging to a thread.
+         *
+         * @param threadId The ID of the thread the run belongs to.
+         * @param page The requested page of result.
+         * @return A list of run objects.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/runs")
+        CompletableFuture<Page<ThreadRun>> getRunList(@Path("threadId") String threadId, @Query PageRequest page);
+
+        /**
+         * Submit tool outputs to run
+         *
+         * @param threadId The ID of the thread to which this run belongs.
+         * @param runId The ID of the run that requires the tool output submission.
+         * @param toolOutputs The tool output submission.
+         * @return The modified run object matching the specified ID.
+         */
+        default CompletableFuture<ThreadRun> submitToolOutputs(String threadId, String runId, List<ToolOutput> toolOutputs) {
+            return submitToolOutputs(threadId, runId, ToolOutputSubmission.builder()
+                    .toolOutputs(toolOutputs)
+                    .build());
+        }
+
+        /**
+         * Submit tool outputs to run
+         *
+         * @param threadId The ID of the thread to which this run belongs.
+         * @param runId The ID of the run that requires the tool output submission.
+         * @param toolOutputs The tool output submission.
+         * @return The modified run object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/runs/{runId}/submit_tool_outputs")
+        CompletableFuture<ThreadRun> submitToolOutputs(
+                @Path("threadId") String threadId,
+                @Path("runId") String runId,
+                @Body ToolOutputSubmission toolOutputs
+        );
+
+        /**
+         * Cancels a run that is {@code in_progress}.
+         *
+         * @param threadId The ID of the thread to which this run belongs.
+         * @param runId The ID of the run to cancel.
+         * @return The modified run object matching the specified ID.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/{threadId}/runs/{runId}/cancel")
+        CompletableFuture<ThreadRun> cancelRun(@Path("threadId") String threadId, @Path("runId") String runId);
+
+        /**
+         * Create a thread and run it in one request.
+         *
+         * @param request The thread request create and to run.
+         * @return A created run object.
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @POST("/runs")
+        CompletableFuture<ThreadRun> createThreadAndRun(@Body ThreadCreateAndRunRequest request);
+
+        /**
+         * Retrieves a run step.
+         *
+         * @param threadId The ID of the thread the run and run steps belong to.
+         * @param runId The ID of the run steps belong to.
+         * @param stepId The ID of the run step to retrieve.
+         * @return the list of run step objects
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/runs/{runId}/steps/{stepId}")
+        CompletableFuture<ThreadRunStep> getRunStep(
+                @Path("threadId") String threadId,
+                @Path("runId") String runId,
+                @Path("stepId") String stepId);
+
+        /**
+         * Returns a list of run steps belonging to a run.
+         *
+         * @param threadId The ID of the thread the run and run steps belong to.
+         * @param runId The ID of the run steps belong to.
+         * @return the list of run step objects
+         */
+        default CompletableFuture<Page<ThreadRunStep>> getRunStepList(String threadId, String runId) {
+            return getRunStepList(threadId, runId, PageRequest.builder().build());
+        }
+
+        /**
+         * Returns a list of run steps belonging to a run.
+         *
+         * @param threadId The ID of the thread the run and run steps belong to.
+         * @param runId The ID of the run steps belong to.
+         * @param page The requested result page.
+         * @return the list of run step objects
+         */
+        @Header(name = "OpenAI-Beta", value = "assistants=v1")
+        @GET("/{threadId}/runs/{runId}/steps")
+        CompletableFuture<Page<ThreadRunStep>> getRunStepList(
+                @Path("threadId") String threadId,
+                @Path("runId") String runId,
+                @Query PageRequest page);
+
+    }
 }

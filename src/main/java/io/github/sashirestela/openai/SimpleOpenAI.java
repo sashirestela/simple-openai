@@ -203,4 +203,31 @@ public class SimpleOpenAI {
         }
         return moderationService;
     }
-}
+
+    private OpenAI.Assistants assistantService;
+
+    /**
+     * Generates an implementation of the Assistant interface to handle requests.
+     *
+     * @return An instance of the interface. It is created only once, because nobody likes a double agent.
+     */
+    public OpenAI.Assistants assistants() {
+        if (assistantService == null) {
+            assistantService = cleverClient.create(OpenAI.Assistants.class);
+        }
+        return assistantService;
+    }
+
+    private OpenAI.Threads threadService;
+
+    /**
+     * Spawns a single instance of the Threads interface to manage requests.
+     *
+     * @return An instance of the interface. Because one thread to rule them all just sounds cooler.
+     */
+    public OpenAI.Threads threads() {
+        if (threadService == null) {
+            threadService = cleverClient.create(OpenAI.Threads.class);
+        }
+        return threadService;
+    }}
