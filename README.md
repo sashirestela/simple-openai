@@ -25,7 +25,7 @@ Full support for all of the OpenAI services, including the latest changes announ
 * Embeddings
 * Fine tuning
 
-NOTE: Beta services are not included yet.
+NOTE: Includes the Beta Assistants API.
 
 ![Services](media/supported_services.png)
 
