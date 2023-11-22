@@ -29,4 +29,6 @@ public class AssistantRequest {
     private List<String> fileIds;
     private Map<String, String> metadata;
 
+    public static class AssistantRequestBuilder {}
+
 }
