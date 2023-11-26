@@ -59,6 +59,12 @@ public class SimpleOpenAI {
     @Getter(AccessLevel.NONE)
     private OpenAI.Moderations moderationService;
 
+    @Getter(AccessLevel.NONE)
+    private OpenAI.Assistants assistantService;
+
+    @Getter(AccessLevel.NONE)
+    private OpenAI.Threads threadService;
+
     /**
      * Constructor used to generate a builder.
      * 
@@ -204,12 +210,10 @@ public class SimpleOpenAI {
         return moderationService;
     }
 
-    private OpenAI.Assistants assistantService;
-
     /**
      * Generates an implementation of the Assistant interface to handle requests.
      *
-     * @return An instance of the interface. It is created only once, because nobody likes a double agent.
+     * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Assistants assistants() {
         if (assistantService == null) {
@@ -218,16 +222,15 @@ public class SimpleOpenAI {
         return assistantService;
     }
 
-    private OpenAI.Threads threadService;
-
     /**
      * Spawns a single instance of the Threads interface to manage requests.
      *
-     * @return An instance of the interface. Because one thread to rule them all just sounds cooler.
+     * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Threads threads() {
         if (threadService == null) {
             threadService = cleverClient.create(OpenAI.Threads.class);
         }
         return threadService;
-    }}
+    }
+}
