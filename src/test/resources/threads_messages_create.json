@@ -1,0 +1,1 @@
+{ "id": "msg_J0YkQiEmsyIiDSx73UJ3422m", "object": "thread.message", "created_at": 1700872232, "thread_id": "thread_xK2nfHLx8AV4nR2lsC6jHfxo", "role": "user", "content": [ { "type": "text", "text": { "value": "What is the product of 123 and 456?", "annotations": [] } } ], "file_ids": [ "file-bI6iyBmUO1jOvZVTd3wLzjFq" ], "assistant_id": null, "run_id": null, "metadata": {} }
