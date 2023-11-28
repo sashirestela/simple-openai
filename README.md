@@ -24,10 +24,11 @@ Full support for all of the OpenAI services, including the latest changes announ
 * Text to image (as part of Image)
 * Embeddings
 * Fine tuning
-
-NOTE: Includes the Beta Assistants API.
+* Assistants API (Beta)
 
 ![Services](media/supported_services.png)
+
+![Assitants API](media/assistants_api.png)
 
 NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 
@@ -267,6 +268,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * image
     * model
     * moderation
+    * assistant
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
