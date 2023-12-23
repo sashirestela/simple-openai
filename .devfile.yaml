@@ -1,0 +1,26 @@
+schemaVersion: 2.2.2
+metadata:
+  attributes:
+    metadata-name-field: generateName
+    metadata-name-original-value: simple-openai
+  name: simple-openai
+  namespace: sashirestela-dev
+attributes:
+  che-theia.eclipse.org/sidecar-policy: mergeImage
+projects:
+  - name: simple-openai
+    git:
+      remotes:
+        origin: https://github.com/sashirestela/simple-openai.git
+components:
+  - name: universal-developer-image
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-latest
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+      mountSources: true
+  - name: m2
+    volume:
+      size: 5Gi
+commands: []
