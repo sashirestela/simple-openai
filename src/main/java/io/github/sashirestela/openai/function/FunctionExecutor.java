@@ -57,7 +57,7 @@ public class FunctionExecutor {
         }
         try {
             var function = mapFunctions.get(functionName);
-            var object = JsonUtil.jsonToObjectStrict(functionToCall.getArguments(), function.getFunctionalClass());
+            var object = JsonUtil.jsonToObject(functionToCall.getArguments(), function.getFunctionalClass());
             return (T) object.execute();
         } catch (RuntimeException e) {
             throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
