@@ -103,7 +103,7 @@ class FunctionExecutorTest {
     @Test
     void shouldThrowAnExceptionWhenTryingToExecuteFunctionArgumentsThatDoNotMatchItsClassStructure() {
         var executor = new FunctionExecutor(functionList);
-        var functionToCall = new ChatFunctionCall("exponentiation", "{\"base\":2.0,\"power\":10.0}");
+        var functionToCall = new ChatFunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":\"ten\"}");
         var exception = assertThrows(SimpleUncheckedException.class,
                 () -> executor.execute(functionToCall));
         var actualErrorMessage = exception.getMessage();
