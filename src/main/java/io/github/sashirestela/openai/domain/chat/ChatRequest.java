@@ -24,8 +24,8 @@ import lombok.With;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ChatRequest {
 
-    private String model;
-    private List<ChatMsg> messages;
+    @NonNull private String model;
+    @NonNull private List<ChatMsg> messages;
     private ChatRespFmt responseFormat;
     private Integer seed;
     private List<ChatTool> tools;
@@ -33,8 +33,7 @@ public class ChatRequest {
     private Double temperature;
     private Double topP;
     private Integer n;
-    @With
-    private Boolean stream;
+    @With private Boolean stream;
     private Object stop;
     private Integer maxTokens;
     private Double presencePenalty;
@@ -48,8 +47,7 @@ public class ChatRequest {
             Boolean stream, Object stop, Integer maxTokens, Double presencePenalty, Double frequencyPenalty,
             Map<String, Integer> logitBias, String user) {
         if (toolChoice != null &&
-                !(toolChoice instanceof ChatToolChoiceType)
-                && !(toolChoice instanceof ChatToolChoice)) {
+                !(toolChoice instanceof ChatToolChoiceType) && !(toolChoice instanceof ChatToolChoice)) {
             throw new SimpleUncheckedException(
                     "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
                     null, null);

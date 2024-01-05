@@ -13,7 +13,7 @@ import lombok.NonNull;
 public class ChatMsgTool extends ChatMsg {
 
     @JsonInclude private String content;
-    private String toolCallId;
+    @NonNull private String toolCallId;
 
     public ChatMsgTool(String content, @NonNull String toolCallId) {
         this.role = Role.TOOL;
