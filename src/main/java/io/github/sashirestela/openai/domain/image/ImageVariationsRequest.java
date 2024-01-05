@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ImageVariationsRequest extends AbstractImageRequest {
 
-    @NonNull
-    private Path image;
+    @NonNull private Path image;
 
 }

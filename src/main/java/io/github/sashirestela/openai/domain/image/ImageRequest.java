@@ -9,15 +9,11 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
+@JsonInclude(Include.NON_EMPTY)
 public class ImageRequest extends AbstractImageRequest {
 
-    @NonNull
-    private String prompt;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private String prompt;
     private Quality quality;
-
-    @JsonInclude(Include.NON_NULL)
     private Style style;
 
 }
