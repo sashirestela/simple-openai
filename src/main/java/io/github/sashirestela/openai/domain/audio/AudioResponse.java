@@ -12,13 +12,9 @@ import lombok.ToString;
 public class AudioResponse {
 
     private String text;
-
     private String task;
-
     private String language;
-
     private Double duration;
-
     private List<Segment> segments;
 
 }
