@@ -11,12 +11,10 @@ import lombok.NonNull;
 
 @Getter
 @Builder
+@JsonInclude(Include.NON_EMPTY)
 public class ModerationRequest {
 
-    @NonNull
-    private List<String> input;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private List<String> input;
     private String model;
 
 }
