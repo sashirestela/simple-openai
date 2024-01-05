@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
+import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
+import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
@@ -92,6 +95,25 @@ public class ChatServiceDemo extends AbstractDemo {
         System.out.println(chatResponse.firstContent());
     }
 
+    public void demoCallChatWithVision() {
+        var chatRequest = ChatRequest.builder()
+                .model("gpt-4-vision-preview")
+                .messages(List.of(
+                        new ChatMsgUser(List.of(
+                                new ContentPartText(
+                                        "What do you see in the image? Give in details in no more than 100 words."),
+                                new ContentPartImage(new ImageUrl(
+                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
+                .temperature(0.0)
+                .maxTokens(500)
+                .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+                .map(chatResp -> chatResp.firstContent())
+                .forEach(System.out::print);
+        System.out.println();
+    }
+
     public static class Weather implements Functional {
         @JsonPropertyDescription("City and state, for example: León, Guanajuato")
         public String location;
@@ -134,6 +156,7 @@ public class ChatServiceDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
+        demo.addTitleAction("Call Chat with Vision", demo::demoCallChatWithVision);
 
         demo.run();
     }
