@@ -4,31 +4,23 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.With;
 
 @Getter
+@JsonInclude(Include.NON_EMPTY)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class EmbeddingRequest {
 
-    @NonNull
-    private String model;
-
-    @NonNull
-    private Object input;
-
-    @With
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("encoding_format")
-    private EncodingFormat encodingFormat;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private String model;
+    @NonNull private Object input;
+    @With private EncodingFormat encodingFormat;
     private String user;
 
     @Builder

@@ -13,11 +13,8 @@ import lombok.ToString;
 public class EmbeddingBase64Response {
 
     private String object;
-
     private List<EmbeddingBase64> data;
-
     private String model;
-
     private OpenAIUsage usage;
 
 }
