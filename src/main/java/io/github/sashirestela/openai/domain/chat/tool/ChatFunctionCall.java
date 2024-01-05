@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class ChatFunctionCall {
 
     private String name;
-
     private String arguments;
 
 }

@@ -1,7 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -25,9 +24,8 @@ public class ChatServiceDemo extends AbstractDemo {
         modelIdToUse = "gpt-3.5-turbo-1106";
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
-                .messages(List.of(
-                        new ChatMsgSystem("You are an expert in AI."),
-                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words.")))
+                .message(new ChatMsgSystem("You are an expert in AI."))
+                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();

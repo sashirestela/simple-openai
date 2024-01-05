@@ -10,13 +10,8 @@ import lombok.NonNull;
 @Getter
 public class ChatToolCall {
     
-    @NonNull
-    private String id;
-
-    @NonNull
-    private ChatToolType type;
-
-    @NonNull
-    private ChatFunctionCall function;
+    @NonNull private String id;
+    @NonNull private ChatToolType type;
+    @NonNull private ChatFunctionCall function;
 
 }

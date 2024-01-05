@@ -8,7 +8,6 @@ import lombok.NonNull;
 @Getter
 public class ChatFunctionName {
 
-    @NonNull
-    private String name;
+    @NonNull private String name;
 
 }
