@@ -5,7 +5,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import lombok.Builder;
@@ -14,64 +15,26 @@ import lombok.NonNull;
 import lombok.With;
 
 @Getter
+@JsonInclude(Include.NON_EMPTY)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CompletionRequest {
 
-    @NonNull
-    private String model;
-
-    @NonNull
-    private Object prompt;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private String model;
+    @NonNull private Object prompt;
     private String suffix;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("max_tokens")
     private Integer maxTokens;
-
-    @JsonInclude(Include.NON_NULL)
     private Double temperature;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("top_p")
     private Double topP;
-
-    @JsonInclude(Include.NON_NULL)
     private Integer n;
-
-    @With
-    @JsonInclude(Include.NON_NULL)
-    private Boolean stream;
-
-    @JsonInclude(Include.NON_NULL)
+    @With private Boolean stream;
     private Integer logprobs;
-
-    @JsonInclude(Include.NON_NULL)
     private Boolean echo;
-
-    @JsonInclude(Include.NON_NULL)
     private Object stop;
-
-    @JsonInclude(Include.NON_NULL)
     private Integer seed;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("presence_penalty")
     private Double presencePenalty;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("frequency_penalty")
     private Double frequencyPenalty;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("best_of")
     private Integer bestOf;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("logit_bias")
     private Map<String, Integer> logitBias;
-
-    @JsonInclude(Include.NON_NULL)
     private String user;
 
     @Builder
