@@ -13,16 +13,15 @@ import java.util.Map;
 
 @Getter
 @Builder
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ThreadRunRequest {
 
     private String assistantId;
     private String model;
     private String instructions;
-    @JsonInclude(Include.NON_EMPTY)
-    @Singular
-    private List<AssistantTool> tools;
+    private String additionalInstructions;
+    @Singular private List<AssistantTool> tools;
     private Map<String, String> metadata;
 
 }
