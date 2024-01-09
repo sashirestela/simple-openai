@@ -152,7 +152,14 @@ public class ThreadDomainTest {
     @Test
     void testThreadsRunsCreate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_runs_create.json");
-        var response = openAI.threads().createRun(threadId, assistantId).join();
+        var request = ThreadRunRequest.builder()
+                .assistantId(assistantId)
+                .model("gpt-4-1106-preview")
+                .instructions("instructions")
+                .additionalInstructions("additional Instructions")
+                .metadata(Map.of("key1", "value1"))
+                .build();
+        var response = openAI.threads().createRun(threadId, request).join();
         System.out.println(response);
         assertNotNull(response);
     }

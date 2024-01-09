@@ -37,8 +37,8 @@ class FineTuningDomainTest {
                 .trainingFile("fileId")
                 .validationFile("fileId")
                 .model("gpt-3.5-turbo-1106")
-                .hyperParameters(HyperParams.builder().batchSize("auto").learningRateMultiplier("auto")
-                        .numberEpochs("auto").build())
+                .hyperparameters(HyperParams.builder().batchSize("auto").learningRateMultiplier("auto")
+                        .nEpochs("auto").build())
                 .suffix("suffix")
                 .build();
         var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
@@ -88,7 +88,7 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize(data)
                     .learningRateMultiplier("auto")
-                    .numberEpochs("auto");
+                    .nEpochs("auto");
             assertDoesNotThrow(() -> builder.build());
         }
     }
@@ -103,7 +103,7 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize(data)
                     .learningRateMultiplier("auto")
-                    .numberEpochs("auto");
+                    .nEpochs("auto");
             var exception = assertThrows(SimpleUncheckedException.class, () -> builder.build());
             var actualErrorMessage = exception.getMessage();
             var expectedErrorMessge = "The field batchSize must be Integer or String classes.";
@@ -121,7 +121,7 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize("auto")
                     .learningRateMultiplier(data)
-                    .numberEpochs("auto");
+                    .nEpochs("auto");
             assertDoesNotThrow(() -> builder.build());
         }
     }
@@ -136,7 +136,7 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize("auto")
                     .learningRateMultiplier(data)
-                    .numberEpochs("auto");
+                    .nEpochs("auto");
             var exception = assertThrows(SimpleUncheckedException.class, () -> builder.build());
             var actualErrorMessage = exception.getMessage();
             var expectedErrorMessge = "The field learningRateMultiplier must be Double or String classes.";
@@ -154,7 +154,7 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize("auto")
                     .learningRateMultiplier("auto")
-                    .numberEpochs(data);
+                    .nEpochs(data);
             assertDoesNotThrow(() -> builder.build());
         }
     }
@@ -169,10 +169,10 @@ class FineTuningDomainTest {
             var builder = HyperParams.builder()
                     .batchSize("auto")
                     .learningRateMultiplier("auto")
-                    .numberEpochs(data);
+                    .nEpochs(data);
             var exception = assertThrows(SimpleUncheckedException.class, () -> builder.build());
             var actualErrorMessage = exception.getMessage();
-            var expectedErrorMessge = "The field numberEpochs must be Integer or String classes.";
+            var expectedErrorMessge = "The field nEpochs must be Integer or String classes.";
             assertEquals(expectedErrorMessge, actualErrorMessage);
         }
     }

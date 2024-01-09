@@ -12,9 +12,7 @@ import lombok.ToString;
 public class ModerationResponse {
 
     private String id;
-
     private String model;
-
     private List<Moderation> results;
 
 }

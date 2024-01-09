@@ -11,15 +11,11 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
+@JsonInclude(Include.NON_EMPTY)
 public class ImageEditsRequest extends AbstractImageRequest {
 
-    @NonNull
-    private Path image;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private Path image;
     private Path mask;
-
-    @NonNull
-    private String prompt;
+    @NonNull private String prompt;
 
 }

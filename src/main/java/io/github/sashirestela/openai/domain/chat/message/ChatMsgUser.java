@@ -12,11 +12,10 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
+@JsonInclude(Include.NON_EMPTY)
 public class ChatMsgUser extends ChatMsg {
 
-    private Object content;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private Object content;
     private String name;
 
     public ChatMsgUser(@NonNull Object content, String name) {
@@ -30,7 +29,7 @@ public class ChatMsgUser extends ChatMsg {
         this.name = name;
     }
 
-    public ChatMsgUser(@NonNull Object content) {
+    public ChatMsgUser(Object content) {
         this(content, null);
     }
 }

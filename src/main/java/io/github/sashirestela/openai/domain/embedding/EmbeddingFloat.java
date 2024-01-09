@@ -12,9 +12,7 @@ import lombok.ToString;
 public class EmbeddingFloat {
 
     private Integer index;
-
     private String object;
-
     private List<Double> embedding;
 
 }

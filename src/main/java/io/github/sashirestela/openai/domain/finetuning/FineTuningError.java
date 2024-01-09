@@ -10,8 +10,7 @@ import lombok.ToString;
 public class FineTuningError {
 
     private String code;
-
     private String message;
-
     private String param;
+
 }

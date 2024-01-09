@@ -54,9 +54,8 @@ class ChatDomainTest {
                 .build();
         chatTextRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .messages(List.of(
-                        new ChatMsgSystem("You are an expert in Mathematics", "tutor"),
-                        new ChatMsgUser("Tell me the Pitagoras theorem in less than 50 words.", "student")))
+                .message(new ChatMsgSystem("You are an expert in Mathematics", "tutor"))
+                .message(new ChatMsgUser("Tell me the Pitagoras theorem in less than 50 words.", "student"))
                 .temperature(0.2)
                 .maxTokens(500)
                 .topP(1.0)
@@ -67,7 +66,9 @@ class ChatDomainTest {
                 .logitBias(Map.of("21943", 0))
                 .user("test")
                 .responseFormat(new ChatRespFmt(ChatRespFmtType.TEXT))
-                .seed(1)
+                .seed(2)
+                .logprobs(true)
+                .topLogprobs(1)
                 .build();
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
@@ -104,14 +105,13 @@ class ChatDomainTest {
                 "src/test/resources/chatcompletions_create_vision.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-vision-preview")
-                .messages(List.of(
-                        new ChatMsgUser(List.of(
-                                new ContentPartText("What are in these images? Is there any difference between them?"),
-                                new ContentPartImage(new ImageUrl(
-                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
-                                        ImageDetail.AUTO)),
-                                new ContentPartImage(new ImageUrl(
-                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
+                .message(new ChatMsgUser(List.of(
+                        new ContentPartText("What are in these images? Is there any difference between them?"),
+                        new ContentPartImage(new ImageUrl(
+                                "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+                                ImageDetail.AUTO)),
+                        new ContentPartImage(new ImageUrl(
+                                "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg")))))
                 .temperature(0.2)
                 .maxTokens(500)
                 .topP(1.0)
@@ -133,9 +133,8 @@ class ChatDomainTest {
                 "src/test/resources/chatcompletions_create_function_question.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .messages(List.of(
-                        new ChatMsgSystem("You are an expert in Mathematics"),
-                        new ChatMsgUser("What is the product of 123 and 456?")))
+                .message(new ChatMsgSystem("You are an expert in Mathematics"))
+                .message(new ChatMsgUser("What is the product of 123 and 456?"))
                 .tools(functionExecutor.getToolFunctions())
                 .toolChoice(new ChatToolChoice(ChatToolType.FUNCTION, new ChatFunctionName("product")))
                 .temperature(0.2)
@@ -162,16 +161,13 @@ class ChatDomainTest {
                 "src/test/resources/chatcompletions_create_function_answer.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .messages(List.of(
-                        new ChatMsgSystem("You are an expert in Mathematics"),
-                        new ChatMsgUser("What is the product of 123 and 456?"),
-                        new ChatMsgAssistant(null,
-                                List.of(new ChatToolCall(
-                                        "call_tAoX6VHyjQVLnM9CZvEsTEwW",
-                                        ChatToolType.FUNCTION,
-                                        new ChatFunctionCall("product",
-                                                "{\"multiplicand\":123,\"multiplier\":456}")))),
-                        new ChatMsgTool("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW")))
+                .message(new ChatMsgSystem("You are an expert in Mathematics"))
+                .message(new ChatMsgUser("What is the product of 123 and 456?"))
+                .message(new ChatMsgAssistant(null, List.of(new ChatToolCall(
+                        "call_tAoX6VHyjQVLnM9CZvEsTEwW",
+                        ChatToolType.FUNCTION,
+                        new ChatFunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
+                .message(new ChatMsgTool("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW"))
                 .tools(functionExecutor.getToolFunctions())
                 .temperature(0.2)
                 .maxTokens(500)
@@ -199,7 +195,7 @@ class ChatDomainTest {
         for (Object data : testData) {
             var chatRequestBuilder = ChatRequest.builder()
                     .model("model")
-                    .messages(List.of(new ChatMsgUser("My Content")))
+                    .message(new ChatMsgUser("My Content"))
                     .toolChoice(data);
             assertDoesNotThrow(() -> chatRequestBuilder.build());
         }
@@ -209,7 +205,7 @@ class ChatDomainTest {
     void shouldThrownExceptionWhenCreatingChatRequestWithToolChoiceWrongClass() {
         var chatRequestBuilder = ChatRequest.builder()
                 .model("model")
-                .messages(List.of(new ChatMsgUser("My Content")))
+                .message(new ChatMsgUser("My Content"))
                 .toolChoice("wrong value");
         var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
         var actualErrorMessage = exception.getMessage();
@@ -226,7 +222,7 @@ class ChatDomainTest {
         for (Object data : testData) {
             var chatRequestBuilder = ChatRequest.builder()
                     .model("model")
-                    .messages(List.of(new ChatMsgUser("My Content")))
+                    .message(new ChatMsgUser("My Content"))
                     .stop(data);
             assertDoesNotThrow(() -> chatRequestBuilder.build());
         }
@@ -242,7 +238,7 @@ class ChatDomainTest {
         for (Object data : testData) {
             var chatRequestBuilder = ChatRequest.builder()
                     .model("model")
-                    .messages(List.of(new ChatMsgUser("My Content")))
+                    .message(new ChatMsgUser("My Content"))
                     .stop(data);
             var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
             var actualErrorMessage = exception.getMessage();

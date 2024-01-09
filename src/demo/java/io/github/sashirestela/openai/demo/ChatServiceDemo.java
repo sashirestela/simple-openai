@@ -28,9 +28,8 @@ public class ChatServiceDemo extends AbstractDemo {
         modelIdToUse = "gpt-3.5-turbo-1106";
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
-                .messages(List.of(
-                        new ChatMsgSystem("You are an expert in AI."),
-                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words.")))
+                .message(new ChatMsgSystem("You are an expert in AI."))
+                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();

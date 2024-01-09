@@ -4,7 +4,8 @@ import java.nio.file.Path;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,26 +14,15 @@ import lombok.With;
 
 @Getter
 @Builder
+@JsonInclude(Include.NON_EMPTY)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AudioTranscribeRequest  {
 
-    @NonNull
-    protected Path file;
-
-    @NonNull
-    protected String model;
-
-    @JsonInclude(Include.NON_NULL)
-    protected String prompt;
-
-    @JsonInclude(Include.NON_NULL)
-    protected Double temperature;
-
-    @JsonInclude(Include.NON_NULL)
+    @NonNull private Path file;
+    @NonNull private String model;
+    private String prompt;
+    private Double temperature;
     private String language;
-
-    @With
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("response_format")
-    protected AudioRespFmt responseFormat;
+    @With private AudioRespFmt responseFormat;
 
 }

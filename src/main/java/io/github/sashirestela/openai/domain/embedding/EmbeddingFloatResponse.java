@@ -13,11 +13,8 @@ import lombok.ToString;
 public class EmbeddingFloatResponse {
 
     private String object;
-
     private List<EmbeddingFloat> data;
-
     private String model;
-
     private OpenAIUsage usage;
 
 }

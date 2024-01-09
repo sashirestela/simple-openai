@@ -134,8 +134,8 @@ var futureImage = openai.images().create(imageRequest);
 var imageResponse = futureImage.join();
 imageResponse.stream().forEach(img -> System.out.println("\n" + img.getUrl()));
 ```
-#### Chat Completion Service
-Example to call the Chat Completion service to ask a question and wait for an answer. We are printing out it in the console:
+#### Chat Completion Service (blocking mode)
+Example to call the Chat Completion service to ask a question and wait for a full answer. We are printing out it in the console:
 ```java
 var chatRequest = ChatRequest.builder()
     .model("gpt-3.5-turbo-1106")
@@ -148,6 +148,24 @@ var chatRequest = ChatRequest.builder()
 var futureChat = openai.chatCompletions().create(chatRequest);
 var chatResponse = futureChat.join();
 System.out.println(chatResponse.firstContent());
+```
+#### Chat Completion Service (streaming mode)
+Example to call the Chat Completion service to ask a question and wait for an answer in partial message deltas. We are printing out it in the console as soon as each delta is arriving:
+```java
+var chatRequest = ChatRequest.builder()
+    .model("gpt-3.5-turbo-1106")
+    .messages(List.of(
+        new ChatMsgSystem("You are an expert in AI."),
+        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words.")))
+    .temperature(0.0)
+    .maxTokens(300)
+    .build();
+var futureChat = openai.chatCompletions().createStream(chatRequest);
+var chatResponse = futureChat.join();
+chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+    .map(ChatResponse::firstContent)
+    .forEach(System.out::print);
+System.out.println();
 ```
 #### Chat Completion Service with Functions
 This functionality empowers the Chat Completion service to solve specific problems to our context. In this example we are setting three functions and we are entering a prompt that will require to call one of them (the function ```product```). For setting functions we are using additional classes which implements the interface ```Functional```. Those classes define a field by each function argument, annotating them to describe them and each class must override the ```execute``` method with the function's logic. Note that we are using the ```FunctionExecutor``` utility class to enroll the functions and to execute the function selected by the ```openai.chatCompletions()``` calling:
@@ -231,6 +249,26 @@ public static class RunAlarm implements Functional {
         return "DONE";
     }
 }
+```
+#### Chat Completion Service with Vision
+Example to call the Chat Completion service to allow the model to take in images and answer questions about them:
+```java
+var chatRequest = ChatRequest.builder()
+    .model("gpt-4-vision-preview")
+    .messages(List.of(
+        new ChatMsgUser(List.of(
+            new ContentPartText(
+                "What do you see in the image? Give in details in no more than 100 words."),
+            new ContentPartImage(new ImageUrl(
+                "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
+    .temperature(0.0)
+    .maxTokens(500)
+    .build();
+var chatResponse = openai.chatCompletions().createStream(chatRequest).join();
+chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+    .map(chatResp -> chatResp.firstContent())
+    .forEach(System.out::print);
+System.out.println();
 ```
 
 ## ✳ Run Examples

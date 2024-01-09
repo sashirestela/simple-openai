@@ -4,23 +4,20 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
 import lombok.Getter;
 
 @Getter
+@JsonInclude(Include.NON_EMPTY)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ChatMsgAssistant extends ChatMsg {
 
-    @JsonInclude()
-    private String content;
-
-    @JsonInclude(Include.NON_NULL)
+    @JsonInclude private String content;
     private String name;
-
-    @JsonInclude(Include.NON_NULL)
-    @JsonProperty("tool_calls")
     private List<ChatToolCall> toolCalls;
 
     public ChatMsgAssistant(String content, String name, List<ChatToolCall> toolCalls) {

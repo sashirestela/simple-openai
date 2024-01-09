@@ -7,11 +7,10 @@ import lombok.Getter;
 import lombok.NonNull;
 
 @Getter
+@JsonInclude(Include.NON_EMPTY)
 public class ImageUrl {
     
     private String url;
-
-    @JsonInclude(Include.NON_NULL)
     private ImageDetail detail;
 
 	public ImageUrl(@NonNull String url, ImageDetail detail) {
