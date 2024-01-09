@@ -66,7 +66,9 @@ class ChatDomainTest {
                 .logitBias(Map.of("21943", 0))
                 .user("test")
                 .responseFormat(new ChatRespFmt(ChatRespFmtType.TEXT))
-                .seed(1)
+                .seed(2)
+                .logprobs(true)
+                .topLogprobs(1)
                 .build();
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(

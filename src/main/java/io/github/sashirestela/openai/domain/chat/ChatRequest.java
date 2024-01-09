@@ -40,12 +40,14 @@ public class ChatRequest {
     private Double frequencyPenalty;
     private Map<String, Integer> logitBias;
     private String user;
+    private Boolean logprobs;
+    private Integer topLogprobs;
 
     @Builder
     public ChatRequest(@NonNull String model, @NonNull @Singular List<ChatMsg> messages, ChatRespFmt responseFormat,
             Integer seed, @Singular List<ChatTool> tools, Object toolChoice, Double temperature, Double topP, Integer n,
             Boolean stream, Object stop, Integer maxTokens, Double presencePenalty, Double frequencyPenalty,
-            Map<String, Integer> logitBias, String user) {
+            Map<String, Integer> logitBias, String user, Boolean logprobs, Integer topLogprobs) {
         if (toolChoice != null &&
                 !(toolChoice instanceof ChatToolChoiceType) && !(toolChoice instanceof ChatToolChoice)) {
             throw new SimpleUncheckedException(
@@ -74,5 +76,7 @@ public class ChatRequest {
         this.frequencyPenalty = frequencyPenalty;
         this.logitBias = logitBias;
         this.user = user;
+        this.logprobs = logprobs;
+        this.topLogprobs = topLogprobs;
     }
 }
