@@ -40,7 +40,7 @@ class SimpleOpenAITest {
                     .apiKey("apiKey")
                     .build();
             assertEquals(HttpClient.Version.HTTP_2, openAI.getHttpClient().version());
-            assertNotNull(openAI.getUrlBase());
+            assertNotNull(openAI.getBaseUrl());
             assertNotNull(openAI.getCleverClient());
         }
 
@@ -49,11 +49,11 @@ class SimpleOpenAITest {
             var otherUrl = "https://openai.com/api";
             var openAI = SimpleOpenAI.builder()
                     .apiKey("apiKey")
-                    .urlBase(otherUrl)
+                    .baseUrl(otherUrl)
                     .httpClient(httpClient)
                     .build();
             assertEquals("apiKey", openAI.getApiKey());
-            assertEquals(otherUrl, openAI.getUrlBase());
+            assertEquals(otherUrl, openAI.getBaseUrl());
             assertEquals(httpClient, openAI.getHttpClient());
         }
 

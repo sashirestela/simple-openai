@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
@@ -17,19 +18,20 @@ import lombok.NonNull;
 @Getter
 public class SimpleOpenAI {
 
-    private static final String OPENAI_URL_BASE = "https://api.openai.com";
+    private static final String OPENAI_BASE_URL = "https://api.openai.com";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
     private static final String END_OF_STREAM = "[DONE]";
 
     @NonNull
-    private String apiKey;
+    private final String apiKey;
 
-    private String organizationId;
-    private String urlBase;
-    private HttpClient httpClient;
+    private final String organizationId;
+    private final String baseUrl;
+    private final HttpClient httpClient;
 
+    @Setter
     private CleverClient cleverClient;
 
     @Getter(AccessLevel.NONE)
@@ -67,19 +69,19 @@ public class SimpleOpenAI {
 
     /**
      * Constructor used to generate a builder.
-     * 
+     *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
-     * @param urlBase        Host's url, If not provided, it'll be
-     *                       https://api.openai.com. Optional.
-     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
+     * @param baseUrl        Host's url, If not provided, it'll be
+     *                       <a href="https://api.openai.com">...</a>. Optional.
+     * @param httpClient     A {@link HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAI(String apiKey, String organizationId, String urlBase, HttpClient httpClient) {
+    public SimpleOpenAI(String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
-        this.urlBase = Optional.ofNullable(urlBase).orElse(OPENAI_URL_BASE);
+        this.baseUrl = Optional.ofNullable(baseUrl).orElse(OPENAI_BASE_URL);
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
         var headers = new ArrayList<String>();
@@ -91,14 +93,10 @@ public class SimpleOpenAI {
         }
         this.cleverClient = CleverClient.builder()
                 .httpClient(this.httpClient)
-                .urlBase(this.urlBase)
+                .urlBase(this.baseUrl)
                 .headers(headers)
                 .endOfStream(END_OF_STREAM)
                 .build();
-    }
-
-    public void setCleverClient(CleverClient cleverClient) {
-        this.cleverClient = cleverClient;
     }
 
     /**
