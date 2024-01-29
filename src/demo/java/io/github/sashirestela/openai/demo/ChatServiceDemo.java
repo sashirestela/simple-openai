@@ -188,10 +188,10 @@ public class ChatServiceDemo extends AbstractDemo {
     public static void main(String[] args) {
         var demo = new ChatServiceDemo();
 
-        /*demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
+        demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);*/
+        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
         demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
 
         demo.run();
