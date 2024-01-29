@@ -1,6 +1,10 @@
 package io.github.sashirestela.openai.demo;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -94,7 +98,7 @@ public class ChatServiceDemo extends AbstractDemo {
         System.out.println(chatResponse.firstContent());
     }
 
-    public void demoCallChatWithVision() {
+    public void demoCallChatWithVisionExternalImage() {
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-vision-preview")
                 .messages(List.of(
@@ -111,6 +115,38 @@ public class ChatServiceDemo extends AbstractDemo {
                 .map(chatResp -> chatResp.firstContent())
                 .forEach(System.out::print);
         System.out.println();
+    }
+
+    public void demoCallChatWithVisionLocalImage() {
+        var chatRequest = ChatRequest.builder()
+                .model("gpt-4-vision-preview")
+                .messages(List.of(
+                        new ChatMsgUser(List.of(
+                                new ContentPartText(
+                                        "What do you see in the image? Give in details in no more than 100 words."),
+                                new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                .temperature(0.0)
+                .maxTokens(500)
+                .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+                .map(chatResp -> chatResp.firstContent())
+                .forEach(System.out::print);
+        System.out.println();
+    }
+
+    private static ImageUrl loadImageAsBase64(String imagePath) {
+        try {
+            Path path = Paths.get(imagePath);
+            byte[] imageBytes = Files.readAllBytes(path);
+            String base64String = Base64.getEncoder().encodeToString(imageBytes);
+            var extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+            var prefix = "data:image/" + extension + ";base64,";
+            return new ImageUrl(prefix + base64String);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static class Weather implements Functional {
@@ -155,7 +191,8 @@ public class ChatServiceDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        demo.addTitleAction("Call Chat with Vision", demo::demoCallChatWithVision);
+        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
+        demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
 
         demo.run();
     }

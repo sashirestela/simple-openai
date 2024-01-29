@@ -251,7 +251,7 @@ public static class RunAlarm implements Functional {
 }
 ```
 #### Chat Completion Service with Vision
-Example to call the Chat Completion service to allow the model to take in images and answer questions about them:
+Example to call the Chat Completion service to allow the model to take in external images and answer questions about them:
 ```java
 var chatRequest = ChatRequest.builder()
     .model("gpt-4-vision-preview")
@@ -269,6 +269,37 @@ chatResponse.filter(chatResp -> chatResp.firstContent() != null)
     .map(chatResp -> chatResp.firstContent())
     .forEach(System.out::print);
 System.out.println();
+```
+Example to call the Chat Completion service to allow the model to take in local images and answer questions about them:
+```java
+var chatRequest = ChatRequest.builder()
+    .model("gpt-4-vision-preview")
+    .messages(List.of(
+        new ChatMsgUser(List.of(
+            new ContentPartText(
+                "What do you see in the image? Give in details in no more than 100 words."),
+            new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+    .temperature(0.0)
+    .maxTokens(500)
+    .build();
+var chatResponse = openai.chatCompletions().createStream(chatRequest).join();
+chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+    .map(chatResp -> chatResp.firstContent())
+    .forEach(System.out::print);
+System.out.println();
+
+private static ImageUrl loadImageAsBase64(String imagePath) {
+    try {
+        Path path = Paths.get(imagePath);
+        byte[] imageBytes = Files.readAllBytes(path);
+        String base64String = Base64.getEncoder().encodeToString(imageBytes);
+        var extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+        var prefix = "data:image/" + extension + ";base64,";
+        return new ImageUrl(prefix + base64String);
+    } catch (Exception e) {
+        return null;
+    }
+}
 ```
 
 ## ✳ Run Examples
