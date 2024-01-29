@@ -62,8 +62,8 @@ class SimpleOpenAITest {
         void shouldSetBaseUrlWhenBuilderIsCalledWithBaseUrlOnly() {
             var someUrl = "https://exmaple.org/api";
             var openAI = SimpleOpenAI.builder()
-                .baseUrl(someUrl)
-                .build();
+                    .baseUrl(someUrl)
+                    .build();
             assertEquals(someUrl, openAI.getBaseUrl());
         }
 
@@ -71,8 +71,8 @@ class SimpleOpenAITest {
         void shouldSetBaseUrlWhenBuilderIsCalledWithUrlBaseOnly() {
             var someUrl = "https://exmaple.org/api";
             var openAI = SimpleOpenAI.builder()
-                .urlBase(someUrl)
-                .build();
+                    .urlBase(someUrl)
+                    .build();
             assertEquals(someUrl, openAI.getBaseUrl());
         }
 
@@ -81,16 +81,16 @@ class SimpleOpenAITest {
             var someUrl = "https://exmaple.org/api";
             var otherUrl = "https://exmaple.org/other-api";
             var openAI = SimpleOpenAI.builder()
-                .baseUrl(someUrl)
-                .urlBase(otherUrl)
-                .build();
+                    .baseUrl(someUrl)
+                    .urlBase(otherUrl)
+                    .build();
             assertEquals(someUrl, openAI.getBaseUrl());
         }
 
         @Test
         void shouldSetDefaultBaseUrlWhenBuilderIsCalledWithoutBaseUrlOrUrlBase() {
             var openAI = SimpleOpenAI.builder()
-                .build();
+                    .build();
             assertEquals(OPENAI_BASE_URL, openAI.getBaseUrl());
         }
 
@@ -163,9 +163,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceAudioServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Audios.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Audios.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.audios());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -173,9 +173,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceChatCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.ChatCompletions.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.ChatCompletions.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.chatCompletions());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -183,9 +183,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceCompletionServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Completions.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Completions.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.completions());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -193,9 +193,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceEmbeddingServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Embeddings.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Embeddings.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.embeddings());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -203,9 +203,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceFilesServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Files.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Files.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.files());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -213,9 +213,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceFineTunningServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.FineTunings.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.FineTunings.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.fineTunings());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -223,9 +223,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceImageServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Images.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Images.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.images());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -233,9 +233,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceModelsServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Models.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Models.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.models());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -243,9 +243,9 @@ class SimpleOpenAITest {
         @Test
         void shouldInstanceModerationServiceOnlyOnceWhenItIsCalledSeveralTimes() {
             when(cleverClient.create(any()))
-                .thenReturn(ReflectUtil.createProxy(
-                    OpenAI.Moderations.class,
-                    new HttpProcessor(null, null, null)));
+                    .thenReturn(ReflectUtil.createProxy(
+                            OpenAI.Moderations.class,
+                            new HttpProcessor(null, null, null)));
             repeat(NUMBER_CALLINGS, () -> openAI.moderations());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }

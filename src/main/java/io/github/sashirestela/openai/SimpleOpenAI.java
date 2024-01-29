@@ -90,7 +90,7 @@ public class SimpleOpenAI {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
         this.baseUrl = Optional.ofNullable(baseUrl)
-            .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
+                .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
 
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
@@ -102,11 +102,11 @@ public class SimpleOpenAI {
             headers.add(organizationId);
         }
         this.cleverClient = CleverClient.builder()
-            .httpClient(this.httpClient)
-            .baseUrl(this.baseUrl)
-            .headers(headers)
-            .endOfStream(END_OF_STREAM)
-            .build();
+                .httpClient(this.httpClient)
+                .baseUrl(this.baseUrl)
+                .headers(headers)
+                .endOfStream(END_OF_STREAM)
+                .build();
     }
 
     public void setCleverClient(CleverClient cleverClient) {
