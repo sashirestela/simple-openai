@@ -17,7 +17,7 @@ import lombok.NonNull;
 @Getter
 public class SimpleOpenAI {
 
-    private static final String OPENAI_URL_BASE = "https://api.openai.com";
+    public static final String OPENAI_BASE_URL = "https://api.openai.com";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
@@ -27,7 +27,9 @@ public class SimpleOpenAI {
     private String apiKey;
 
     private String organizationId;
-    private String urlBase;
+    private final String baseUrl;
+    @Deprecated
+    private final String urlBase = null;
     private HttpClient httpClient;
 
     private CleverClient cleverClient;
@@ -67,19 +69,29 @@ public class SimpleOpenAI {
 
     /**
      * Constructor used to generate a builder.
-     * 
+     *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
-     * @param urlBase        Host's url, If not provided, it'll be
-     *                       https://api.openai.com. Optional.
+     * @param baseUrl        Host's url, If not provided (including via the
+     *                       deprecated urlBase), it'll be
+     *                       <a href="https://api.openai.com">...</a>. Optional.
+     * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will
+     *                       be removed in a future version. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAI(String apiKey, String organizationId, String urlBase, HttpClient httpClient) {
+    public SimpleOpenAI(
+            String apiKey,
+            String organizationId,
+            String baseUrl,
+            String urlBase,
+            HttpClient httpClient) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
-        this.urlBase = Optional.ofNullable(urlBase).orElse(OPENAI_URL_BASE);
+        this.baseUrl = Optional.ofNullable(baseUrl)
+            .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
+
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
         var headers = new ArrayList<String>();
@@ -90,11 +102,11 @@ public class SimpleOpenAI {
             headers.add(organizationId);
         }
         this.cleverClient = CleverClient.builder()
-                .httpClient(this.httpClient)
-                .urlBase(this.urlBase)
-                .headers(headers)
-                .endOfStream(END_OF_STREAM)
-                .build();
+            .httpClient(this.httpClient)
+            .baseUrl(this.baseUrl)
+            .headers(headers)
+            .endOfStream(END_OF_STREAM)
+            .build();
     }
 
     public void setCleverClient(CleverClient cleverClient) {
@@ -103,7 +115,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Audios interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Audios audios() {
@@ -116,7 +128,7 @@ public class SimpleOpenAI {
     /**
      * Generates an implementation of the ChatCompletions interface to handle
      * requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.ChatCompletions chatCompletions() {
@@ -128,7 +140,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Completions interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Completions completions() {
@@ -140,7 +152,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Embeddings interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Embeddings embeddings() {
@@ -152,7 +164,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Files interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Files files() {
@@ -164,7 +176,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the FineTunings interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.FineTunings fineTunings() {
@@ -176,7 +188,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Images interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Images images() {
@@ -188,7 +200,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Models interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Models models() {
@@ -200,7 +212,7 @@ public class SimpleOpenAI {
 
     /**
      * Generates an implementation of the Moderations interface to handle requests.
-     * 
+     *
      * @return An instance of the interface. It is created only once.
      */
     public OpenAI.Moderations moderations() {
