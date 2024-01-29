@@ -9,31 +9,29 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 /**
- * The factory that generates implementations of the {@link OpenAI OpenAI} interfaces.
+ * The factory that generates implementations of the {@link OpenAI OpenAI}
+ * interfaces.
  */
 @Getter
 public class SimpleOpenAI {
 
-    static final String OPENAI_BASE_URL = "https://api.openai.com";
+    public static final String OPENAI_BASE_URL = "https://api.openai.com";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
     private static final String END_OF_STREAM = "[DONE]";
 
     @NonNull
-    private final String apiKey;
+    private String apiKey;
 
-    private final String organizationId;
+    private String organizationId;
     private final String baseUrl;
     @Deprecated
     private final String urlBase = null;
+    private HttpClient httpClient;
 
-    private final HttpClient httpClient;
-
-    @Setter
     private CleverClient cleverClient;
 
     @Getter(AccessLevel.NONE)
@@ -74,24 +72,23 @@ public class SimpleOpenAI {
      *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
-     * @param baseUrl        Host's url, If not provided (including via the deprecated urlBase),
-     *                       it'll be
+     * @param baseUrl        Host's url, If not provided (including via the
+     *                       deprecated urlBase), it'll be
      *                       <a href="https://api.openai.com">...</a>. Optional.
-     * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will be removed in a
-     *                       future version. Optional.
-     * @param httpClient     A {@link HttpClient HttpClient} object. One is created by default if
-     *                       not provided. Optional.
+     * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will
+     *                       be removed in a future version. Optional.
+     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
+     *                       One is created by default if not provided. Optional.
      */
     @Builder
     public SimpleOpenAI(
-        String apiKey,
-        String organizationId,
-        String baseUrl,
-        String urlBase,
-        HttpClient httpClient) {
+            String apiKey,
+            String organizationId,
+            String baseUrl,
+            String urlBase,
+            HttpClient httpClient) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
-
         this.baseUrl = Optional.ofNullable(baseUrl)
             .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
 
@@ -112,6 +109,10 @@ public class SimpleOpenAI {
             .build();
     }
 
+    public void setCleverClient(CleverClient cleverClient) {
+        this.cleverClient = cleverClient;
+    }
+
     /**
      * Generates an implementation of the Audios interface to handle requests.
      *
@@ -125,7 +126,8 @@ public class SimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the ChatCompletions interface to handle requests.
+     * Generates an implementation of the ChatCompletions interface to handle
+     * requests.
      *
      * @return An instance of the interface. It is created only once.
      */
