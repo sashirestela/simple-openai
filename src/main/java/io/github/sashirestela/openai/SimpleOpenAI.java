@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import io.github.sashirestela.cleverclient.CleverClient;
-import javax.management.ConstructorParameters;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
