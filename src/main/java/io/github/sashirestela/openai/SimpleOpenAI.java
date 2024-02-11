@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import io.github.sashirestela.cleverclient.CleverClient;
+import java.util.function.Function;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class SimpleOpenAI {
 
     public static final String OPENAI_BASE_URL = "https://api.openai.com";
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String AZURE_OPENAI_API_KEY_HEADER = "api-key";
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
     private static final String END_OF_STREAM = "[DONE]";
@@ -30,6 +32,9 @@ public class SimpleOpenAI {
     private final String baseUrl;
     @Deprecated
     private final String urlBase = null;
+
+    private String queryParams;
+
     private HttpClient httpClient;
 
     private CleverClient cleverClient;
@@ -77,6 +82,7 @@ public class SimpleOpenAI {
      *                       <a href="https://api.openai.com">...</a>. Optional.
      * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will
      *                       be removed in a future version. Optional.
+     * @queryParams          Query params to be used in the requests. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
@@ -86,17 +92,24 @@ public class SimpleOpenAI {
             String organizationId,
             String baseUrl,
             String urlBase,
-            HttpClient httpClient) {
+            String queryParams,
+            HttpClient httpClient,
+            Function<String, String> urlInterceptor) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
         this.baseUrl = Optional.ofNullable(baseUrl)
                 .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
 
+        this.queryParams = queryParams;
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
         var headers = new ArrayList<String>();
         headers.add(AUTHORIZATION_HEADER);
         headers.add(BEARER_AUTHORIZATION + apiKey);
+        // Azure OpenAI API requires the API Key to be passed as api-key: <API_KEY>
+        headers.add(AZURE_OPENAI_API_KEY_HEADER);
+        headers.add(apiKey);
+
         if (organizationId != null) {
             headers.add(ORGANIZATION_HEADER);
             headers.add(organizationId);
@@ -106,6 +119,7 @@ public class SimpleOpenAI {
                 .baseUrl(this.baseUrl)
                 .headers(headers)
                 .endOfStream(END_OF_STREAM)
+                .urlInterceptor(urlInterceptor)
                 .build();
     }
 

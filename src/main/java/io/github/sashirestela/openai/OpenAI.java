@@ -218,7 +218,7 @@ public interface OpenAI {
 
     /**
      * Given a prompt, the model will return one or more predicted completions. It
-     * is recommend most users to use the Chat Completion.
+     * is recommended for most users to use the Chat Completion.
      * 
      * @see <a href=
      *      "https://platform.openai.com/docs/api-reference/completions">OpenAI
