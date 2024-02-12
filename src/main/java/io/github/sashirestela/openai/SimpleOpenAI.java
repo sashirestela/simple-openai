@@ -33,8 +33,6 @@ public class SimpleOpenAI {
     @Deprecated
     private final String urlBase = null;
 
-    private String queryParams;
-
     private HttpClient httpClient;
 
     private CleverClient cleverClient;
@@ -82,7 +80,6 @@ public class SimpleOpenAI {
      *                       <a href="https://api.openai.com">...</a>. Optional.
      * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will
      *                       be removed in a future version. Optional.
-     * @queryParams          Query params to be used in the requests. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
@@ -92,7 +89,6 @@ public class SimpleOpenAI {
             String organizationId,
             String baseUrl,
             String urlBase,
-            String queryParams,
             HttpClient httpClient,
             Function<String, String> urlInterceptor) {
         this.apiKey = apiKey;
@@ -100,7 +96,6 @@ public class SimpleOpenAI {
         this.baseUrl = Optional.ofNullable(baseUrl)
                 .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
 
-        this.queryParams = queryParams;
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
         var headers = new ArrayList<String>();
@@ -109,7 +104,6 @@ public class SimpleOpenAI {
         // Azure OpenAI API requires the API Key to be passed as api-key: <API_KEY>
         headers.add(AZURE_OPENAI_API_KEY_HEADER);
         headers.add(apiKey);
-
         if (organizationId != null) {
             headers.add(ORGANIZATION_HEADER);
             headers.add(organizationId);
