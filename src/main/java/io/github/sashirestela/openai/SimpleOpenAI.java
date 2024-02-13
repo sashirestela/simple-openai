@@ -105,6 +105,9 @@ public class SimpleOpenAI {
 
         var headers = new HashMap<String, String>();
         headers.put(AUTHORIZATION_HEADER, BEARER_AUTHORIZATION + apiKey);
+        if (organizationId != null) {
+            headers.put(ORGANIZATION_HEADER, organizationId);
+        }
         this.cleverClient = CleverClient.builder()
                 .httpClient(this.httpClient)
                 .baseUrl(this.baseUrl)
