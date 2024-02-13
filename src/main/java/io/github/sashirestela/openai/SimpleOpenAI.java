@@ -10,6 +10,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
@@ -29,7 +30,7 @@ public class SimpleOpenAI {
     private final String organizationId;
     private final String baseUrl;
     private final HttpClient httpClient;
-
+    @Setter
     private CleverClient cleverClient;
 
     @Getter(AccessLevel.NONE)
@@ -95,10 +96,6 @@ public class SimpleOpenAI {
                 .endOfStream(END_OF_STREAM)
                 .requestInterceptor(requestInterceptor)
                 .build();
-    }
-
-    public void setCleverClient(CleverClient cleverClient) {
-        this.cleverClient = cleverClient;
     }
 
     /**
