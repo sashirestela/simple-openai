@@ -3,14 +3,11 @@ package io.github.sashirestela.openai.support;
 import static io.github.sashirestela.openai.support.JsonSchemaUtil.JSON_EMPTY_CLASS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.github.sashirestela.cleverclient.util.Constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.Test;
 
 class JsonSchemaUtilTest {
 

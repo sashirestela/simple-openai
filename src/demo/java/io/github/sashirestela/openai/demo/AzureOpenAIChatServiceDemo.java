@@ -12,6 +12,7 @@ public class AzureOpenAIChatServiceDemo extends AbstractDemo {
     private static final String AZURE_OPENAI_API_KEY_HEADER = "api-key";
     private final ChatRequest chatRequest;
 
+    @SuppressWarnings("unchecked")
     public AzureOpenAIChatServiceDemo(String baseUrl, String apiKey, String model) {
         super(baseUrl, apiKey, request -> {
             var url = request.getUrl();

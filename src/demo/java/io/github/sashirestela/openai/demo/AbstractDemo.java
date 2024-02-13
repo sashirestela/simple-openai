@@ -1,11 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.openai.SimpleOpenAI;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.NonNull;
 

@@ -1,16 +1,10 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import java.net.http.HttpClient;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-
-import io.github.sashirestela.cleverclient.CleverClient;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.Builder;
