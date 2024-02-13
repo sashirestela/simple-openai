@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.support;
 
+import static io.github.sashirestela.openai.support.JsonSchemaUtil.JSON_EMPTY_CLASS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class JsonSchemaUtilTest {
     @Test
     void shouldGenerateEmptyJsonSchemaWhenClassHasNoFields() {
         var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(EmptyClass.class).toString();
-        var expectedJsonSchema = Constant.JSON_EMPTY_CLASS;
+        var expectedJsonSchema = JSON_EMPTY_CLASS;
         assertEquals(expectedJsonSchema, actualJsonSchema);
     }
 

@@ -1,25 +1,52 @@
 package io.github.sashirestela.openai.demo;
 
 
+import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class AzureOpenAIChatServiceDemo extends AbstractDemo {
-
+    private static final String AZURE_OPENAI_API_KEY_HEADER = "api-key";
     private final ChatRequest chatRequest;
 
     public AzureOpenAIChatServiceDemo(String baseUrl, String apiKey, String model) {
-        super(baseUrl, apiKey, url -> {
-            // add a query parameter to url (current api version for AzureOpenAI)
+        super(baseUrl, apiKey, request -> {
+            var url = request.getUrl();
+            var contentType = request.getContentType();
+            var body = request.getBody();
+
+            // add a header to the request
+            var headers = request.getHeaders();
+            headers.put(AZURE_OPENAI_API_KEY_HEADER, apiKey);
+            request.setHeaders(headers);
+
+            // add a query parameter to url
             url += (url.contains("?") ? "&" : "?") + "api-version=2023-05-15";
             // remove '/vN' or '/vN.M' from url
-            url = url.replaceFirst("/v\\d+(\\.\\d+)?", "");
-            return url;
+            url = url.replaceFirst("(\\/v\\d+\\.*\\d*)", "");
+            request.setUrl(url);
+
+            if (contentType != null) {
+                if (contentType.equals(ContentType.APPLICATION_JSON)) {
+                    var bodyJson = (String) request.getBody();
+                    // remove a field from body (as Json)
+                    bodyJson = bodyJson.replaceFirst(",?\"model\":\"[^\"]*\",?", "");
+                    bodyJson = bodyJson.replaceFirst("\"\"", "\",\"");
+                    body = bodyJson;
+                }
+                if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
+                    Map<String, Object> bodyMap = (Map<String, Object>) request.getBody();
+                    // remove a field from body (as Map)
+                    bodyMap.remove("model");
+                    body = bodyMap;
+                }
+                request.setBody(body);
+            }
+
+            return request;
         });
 
         chatRequest = ChatRequest.builder()

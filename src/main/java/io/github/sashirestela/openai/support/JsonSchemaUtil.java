@@ -15,6 +15,8 @@ import io.github.sashirestela.cleverclient.util.Constant;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 
 public class JsonSchemaUtil {
+
+    public static final String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{}}";
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     private JsonSchemaUtil() {
@@ -39,7 +41,7 @@ public class JsonSchemaUtil {
             }
         } else {
             try {
-                jsonSchema = objectMapper.readTree(Constant.JSON_EMPTY_CLASS);
+                jsonSchema = objectMapper.readTree(JSON_EMPTY_CLASS);
             } catch (JsonProcessingException e) {
                 throw new SimpleUncheckedException("Cannot generate the Json Schema for the class {0}.",
                         clazz.getName(), e);

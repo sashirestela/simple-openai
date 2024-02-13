@@ -99,7 +99,7 @@ class SimpleOpenAITest {
             var openAI = SimpleOpenAI.builder()
                     .apiKey("apiKey")
                     .build();
-            assertFalse(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+            assertFalse(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
         }
 
         @Test
@@ -108,7 +108,7 @@ class SimpleOpenAITest {
                     .apiKey("apiKey")
                     .organizationId("orgId")
                     .build();
-            assertTrue(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+            assertTrue(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
         }
 
         @Test

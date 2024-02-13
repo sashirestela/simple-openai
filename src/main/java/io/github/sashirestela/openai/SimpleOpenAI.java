@@ -1,11 +1,17 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import java.net.http.HttpClient;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import io.github.sashirestela.cleverclient.CleverClient;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +26,6 @@ public class SimpleOpenAI {
 
     public static final String OPENAI_BASE_URL = "https://api.openai.com";
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String AZURE_OPENAI_API_KEY_HEADER = "api-key";
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
     private static final String END_OF_STREAM = "[DONE]";
@@ -90,7 +95,7 @@ public class SimpleOpenAI {
             String baseUrl,
             String urlBase,
             HttpClient httpClient,
-            Function<String, String> urlInterceptor) {
+            UnaryOperator<HttpRequestData> requestInterceptor) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
         this.baseUrl = Optional.ofNullable(baseUrl)
@@ -98,22 +103,14 @@ public class SimpleOpenAI {
 
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
-        var headers = new ArrayList<String>();
-        headers.add(AUTHORIZATION_HEADER);
-        headers.add(BEARER_AUTHORIZATION + apiKey);
-        // Azure OpenAI API requires the API Key to be passed as api-key: <API_KEY>
-        headers.add(AZURE_OPENAI_API_KEY_HEADER);
-        headers.add(apiKey);
-        if (organizationId != null) {
-            headers.add(ORGANIZATION_HEADER);
-            headers.add(organizationId);
-        }
+        var headers = new HashMap<String, String>();
+        headers.put(AUTHORIZATION_HEADER, BEARER_AUTHORIZATION + apiKey);
         this.cleverClient = CleverClient.builder()
                 .httpClient(this.httpClient)
                 .baseUrl(this.baseUrl)
                 .headers(headers)
                 .endOfStream(END_OF_STREAM)
-                .urlInterceptor(urlInterceptor)
+                .requestInterceptor(requestInterceptor)
                 .build();
     }
 
