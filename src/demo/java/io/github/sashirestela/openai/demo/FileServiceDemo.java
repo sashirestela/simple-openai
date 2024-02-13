@@ -20,6 +20,7 @@ public class FileServiceDemo extends AbstractDemo {
         return futureFile.join();
     }
 
+    @SuppressWarnings("deprecation")
     public void waitUntilFileIsProcessed(String fileId) {
         FileResponse fileResponse = null;
         do {
