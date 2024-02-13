@@ -25,14 +25,10 @@ public class SimpleOpenAI {
     private static final String END_OF_STREAM = "[DONE]";
 
     @NonNull
-    private String apiKey;
-
-    private String organizationId;
+    private final String apiKey;
+    private final String organizationId;
     private final String baseUrl;
-    @Deprecated
-    private final String urlBase = null;
-
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     private CleverClient cleverClient;
 
@@ -74,27 +70,17 @@ public class SimpleOpenAI {
      *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
-     * @param baseUrl        Host's url, If not provided (including via the
-     *                       deprecated urlBase), it'll be
-     *                       <a href="https://api.openai.com">...</a>. Optional.
-     * @param urlBase        [[ Deprecated ]] Host's url. See baseUrl. urlBase will
-     *                       be removed in a future version. Optional.
+     * @param baseUrl        Host's url, If not provided, it'll be
+     *                       'https://api.openai.com'. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAI(
-            String apiKey,
-            String organizationId,
-            String baseUrl,
-            String urlBase,
-            HttpClient httpClient,
+    public SimpleOpenAI(@NonNull String apiKey, String organizationId, String baseUrl, HttpClient httpClient,
             UnaryOperator<HttpRequestData> requestInterceptor) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
-        this.baseUrl = Optional.ofNullable(baseUrl)
-                .orElse(Optional.ofNullable(urlBase).orElse(OPENAI_BASE_URL));
-
+        this.baseUrl = Optional.ofNullable(baseUrl).orElse(OPENAI_BASE_URL);
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
         var headers = new HashMap<String, String>();
