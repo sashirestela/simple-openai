@@ -99,7 +99,7 @@ class SimpleOpenAITest {
             var openAI = SimpleOpenAI.builder()
                     .apiKey("apiKey")
                     .build();
-            assertFalse(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+            assertFalse(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
         }
 
         @Test
@@ -108,7 +108,7 @@ class SimpleOpenAITest {
                     .apiKey("apiKey")
                     .organizationId("orgId")
                     .build();
-            assertTrue(openAI.getCleverClient().getHeaders().contains(openAI.getOrganizationId()));
+            assertTrue(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
         }
 
         @Test
@@ -165,7 +165,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Audios.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.audios());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -175,7 +175,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.ChatCompletions.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.chatCompletions());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -185,7 +185,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Completions.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.completions());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -195,7 +195,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Embeddings.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.embeddings());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -205,7 +205,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Files.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.files());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -215,7 +215,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.FineTunings.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.fineTunings());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -225,7 +225,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Images.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.images());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -235,7 +235,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Models.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.models());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }
@@ -245,7 +245,7 @@ class SimpleOpenAITest {
             when(cleverClient.create(any()))
                     .thenReturn(ReflectUtil.createProxy(
                             OpenAI.Moderations.class,
-                            new HttpProcessor(null, null, null)));
+                            HttpProcessor.builder().build()));
             repeat(NUMBER_CALLINGS, () -> openAI.moderations());
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(any());
         }

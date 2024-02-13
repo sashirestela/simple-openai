@@ -1,10 +1,11 @@
 package io.github.sashirestela.openai;
 
-import java.net.http.HttpClient;
-import java.util.ArrayList;
-import java.util.Optional;
-
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import java.net.http.HttpClient;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.UnaryOperator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class SimpleOpenAI {
     private final String baseUrl;
     @Deprecated
     private final String urlBase = null;
+
     private HttpClient httpClient;
 
     private CleverClient cleverClient;
@@ -86,7 +88,8 @@ public class SimpleOpenAI {
             String organizationId,
             String baseUrl,
             String urlBase,
-            HttpClient httpClient) {
+            HttpClient httpClient,
+            UnaryOperator<HttpRequestData> requestInterceptor) {
         this.apiKey = apiKey;
         this.organizationId = organizationId;
         this.baseUrl = Optional.ofNullable(baseUrl)
@@ -94,18 +97,17 @@ public class SimpleOpenAI {
 
         this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
 
-        var headers = new ArrayList<String>();
-        headers.add(AUTHORIZATION_HEADER);
-        headers.add(BEARER_AUTHORIZATION + apiKey);
+        var headers = new HashMap<String, String>();
+        headers.put(AUTHORIZATION_HEADER, BEARER_AUTHORIZATION + apiKey);
         if (organizationId != null) {
-            headers.add(ORGANIZATION_HEADER);
-            headers.add(organizationId);
+            headers.put(ORGANIZATION_HEADER, organizationId);
         }
         this.cleverClient = CleverClient.builder()
                 .httpClient(this.httpClient)
                 .baseUrl(this.baseUrl)
                 .headers(headers)
                 .endOfStream(END_OF_STREAM)
+                .requestInterceptor(requestInterceptor)
                 .build();
     }
 

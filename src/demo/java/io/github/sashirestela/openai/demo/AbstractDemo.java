@@ -1,9 +1,11 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.openai.SimpleOpenAI;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
+import java.util.function.UnaryOperator;
+import lombok.NonNull;
 
 public abstract class AbstractDemo {
 
@@ -21,6 +23,16 @@ public abstract class AbstractDemo {
                 .apiKey(apiKey)
                 .organizationId(organizationId)
                 .build();
+    }
+
+    protected AbstractDemo(@NonNull String baseUrl,
+                           @NonNull String apiKey,
+                           @NonNull UnaryOperator<HttpRequestData> requestInterceptor) {
+        openAI = SimpleOpenAI.builder()
+            .apiKey(apiKey)
+            .baseUrl(baseUrl)
+            .requestInterceptor(requestInterceptor)
+            .build();
     }
 
     public void addTitleAction(String title, Action action) {
