@@ -3,16 +3,18 @@ package io.github.sashirestela.openai.function;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
 
 class FunctionExecutorTest {
 

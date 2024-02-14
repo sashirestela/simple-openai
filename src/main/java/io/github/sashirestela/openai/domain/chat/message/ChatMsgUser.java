@@ -1,11 +1,13 @@
 package io.github.sashirestela.openai.domain.chat.message;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.chat.content.ContentPart;
-import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 

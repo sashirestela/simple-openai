@@ -9,6 +9,7 @@ import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.PurposeType;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

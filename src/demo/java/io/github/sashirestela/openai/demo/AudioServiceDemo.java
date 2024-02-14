@@ -1,13 +1,14 @@
 package io.github.sashirestela.openai.demo;
 
+import java.io.FileOutputStream;
+import java.nio.file.Paths;
+
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 import io.github.sashirestela.openai.domain.audio.SpeechRespFmt;
 import io.github.sashirestela.openai.domain.audio.Voice;
-import java.io.FileOutputStream;
-import java.nio.file.Paths;
 
 public class AudioServiceDemo extends AbstractDemo {
     private static final String MODEL_TTS = "tts-1";

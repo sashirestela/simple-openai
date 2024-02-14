@@ -1,6 +1,7 @@
 package io.github.sashirestela.openai.domain.embedding;
 
 import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

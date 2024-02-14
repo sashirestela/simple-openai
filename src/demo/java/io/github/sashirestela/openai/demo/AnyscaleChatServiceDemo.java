@@ -2,6 +2,7 @@ package io.github.sashirestela.openai.demo;
 
 
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
+import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;

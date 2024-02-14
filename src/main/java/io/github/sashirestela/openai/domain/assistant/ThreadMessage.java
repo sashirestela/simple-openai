@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.cleverclient.util.UnixTimestampDeserializer;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a message within a thread.

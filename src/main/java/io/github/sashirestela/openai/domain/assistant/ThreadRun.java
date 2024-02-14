@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.cleverclient.util.UnixTimestampDeserializer;
 import io.github.sashirestela.openai.domain.ToolCall;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents an execution run on a thread.

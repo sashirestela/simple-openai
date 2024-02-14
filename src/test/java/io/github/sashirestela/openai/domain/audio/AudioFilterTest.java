@@ -8,16 +8,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.test.captors.CapturedValues;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
+
+import io.github.sashirestela.openai.test.captors.CapturedValues;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
 import org.mockito.ArgumentCaptor;
 
 class AudioFilterTest {

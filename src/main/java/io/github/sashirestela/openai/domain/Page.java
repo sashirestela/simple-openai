@@ -3,11 +3,12 @@ package io.github.sashirestela.openai.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.AbstractList;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.AbstractList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter

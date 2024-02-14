@@ -1,5 +1,7 @@
 package io.github.sashirestela.openai.test.captors;
 
+import org.mockito.ArgumentCaptor;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodySubscriber;
 import java.net.http.HttpResponse.BodySubscribers;
@@ -7,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.Flow;
-import org.mockito.ArgumentCaptor;
 
 public class CapturedValues {
 

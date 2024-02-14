@@ -1,10 +1,11 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @JsonTypeName("text")
 @NoArgsConstructor
