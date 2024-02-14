@@ -2,19 +2,17 @@ package io.github.sashirestela.openai.domain.chat;
 
 import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
 
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;

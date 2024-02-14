@@ -2,14 +2,12 @@ package io.github.sashirestela.openai.function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.github.sashirestela.cleverclient.util.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.junit.jupiter.api.Test;
 
 class ParametersSerializerTest {
 

@@ -1,11 +1,5 @@
 package io.github.sashirestela.openai;
 
-import java.io.InputStream;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
-
 import io.github.sashirestela.cleverclient.annotation.Body;
 import io.github.sashirestela.cleverclient.annotation.DELETE;
 import io.github.sashirestela.cleverclient.annotation.GET;
@@ -17,8 +11,8 @@ import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
-import io.github.sashirestela.openai.domain.PageRequest;
 import io.github.sashirestela.openai.domain.Page;
+import io.github.sashirestela.openai.domain.PageRequest;
 import io.github.sashirestela.openai.domain.assistant.Assistant;
 import io.github.sashirestela.openai.domain.assistant.AssistantFile;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
@@ -59,6 +53,11 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.ModelResponse;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
 import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
+import java.io.InputStream;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 /**
  * The OpenAI API can be applied to virtually any task that requires

@@ -1,8 +1,7 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.Arrays;
-
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
+import java.util.Arrays;
 
 public class ModerationServiceDemo extends AbstractDemo {
 

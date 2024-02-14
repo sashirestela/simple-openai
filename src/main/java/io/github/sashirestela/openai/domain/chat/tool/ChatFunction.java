@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import io.github.sashirestela.openai.function.Functional;
 import io.github.sashirestela.openai.function.ParametersSerializer;
 import lombok.Builder;

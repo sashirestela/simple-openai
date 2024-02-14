@@ -1,10 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.Arrays;
-
 import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
+import java.util.Arrays;
 
 public class EmbeddingServiceDemo extends AbstractDemo {
 

@@ -2,7 +2,6 @@ package io.github.sashirestela.openai.domain.chat.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import io.github.sashirestela.openai.domain.chat.Role;
 import lombok.Getter;
 
