@@ -63,27 +63,8 @@ class SimpleOpenAITest {
         void shouldSetBaseUrlWhenBuilderIsCalledWithBaseUrlOnly() {
             var someUrl = "https://exmaple.org/api";
             var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
                     .baseUrl(someUrl)
-                    .build();
-            assertEquals(someUrl, openAI.getBaseUrl());
-        }
-
-        @Test
-        void shouldSetBaseUrlWhenBuilderIsCalledWithUrlBaseOnly() {
-            var someUrl = "https://exmaple.org/api";
-            var openAI = SimpleOpenAI.builder()
-                    .urlBase(someUrl)
-                    .build();
-            assertEquals(someUrl, openAI.getBaseUrl());
-        }
-
-        @Test
-        void shouldSetBaseUrlWhenBuilderIsCalledWithBothBaseUrlAndUrlBase() {
-            var someUrl = "https://exmaple.org/api";
-            var otherUrl = "https://exmaple.org/other-api";
-            var openAI = SimpleOpenAI.builder()
-                    .baseUrl(someUrl)
-                    .urlBase(otherUrl)
                     .build();
             assertEquals(someUrl, openAI.getBaseUrl());
         }
@@ -91,6 +72,7 @@ class SimpleOpenAITest {
         @Test
         void shouldSetDefaultBaseUrlWhenBuilderIsCalledWithoutBaseUrlOrUrlBase() {
             var openAI = SimpleOpenAI.builder()
+                    .apiKey("apiKey")
                     .build();
             assertEquals(OPENAI_BASE_URL, openAI.getBaseUrl());
         }

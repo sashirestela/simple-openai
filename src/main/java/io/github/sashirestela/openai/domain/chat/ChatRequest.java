@@ -1,5 +1,7 @@
 package io.github.sashirestela.openai.domain.chat;
 
+import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
+
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -53,6 +56,10 @@ public class ChatRequest {
             throw new SimpleUncheckedException(
                     "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
                     null, null);
+        }
+        if (!isNullOrEmpty(tools)) {
+            toolChoice = Optional.ofNullable(toolChoice)
+                .orElse(ChatToolChoiceType.AUTO);
         }
         if (stop != null && !(stop instanceof String) && !(stop instanceof List
                 && ((List<?>) stop).get(0) instanceof String && ((List<?>) stop).size() <= 4)) {

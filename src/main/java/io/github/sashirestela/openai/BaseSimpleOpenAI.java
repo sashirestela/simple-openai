@@ -23,12 +23,12 @@ public class BaseSimpleOpenAI {
     private static final String END_OF_STREAM = "[DONE]";
 
     @NonNull
-    private String apiKey;
+    private final String apiKey;
 
     @NonNull
     private final String baseUrl;
 
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     private CleverClient cleverClient;
 
@@ -66,17 +66,18 @@ public class BaseSimpleOpenAI {
     private OpenAI.Threads threadService;
 
     /**
-     * Constructor used to generate a builder.
+     * Constructor
      *
      * @param apiKey             Identifier to be used for authentication. Mandatory.
      * @param baseUrl            Host's url. Mandatory.
      * @param httpClient         A {@link HttpClient HttpClient} object.
      *                           One is created by default if not provided. Optional.
+     * @Param headers            A map with headers to be added to the request. Optional.
      * @param requestInterceptor A function to modify the request before it is sent.
      */
     public BaseSimpleOpenAI(
-            String apiKey,
-            String baseUrl,
+            @NonNull String apiKey,
+            @NonNull String baseUrl,
             Map<String, String> headers,
             HttpClient httpClient,
             UnaryOperator<HttpRequestData> requestInterceptor) {
