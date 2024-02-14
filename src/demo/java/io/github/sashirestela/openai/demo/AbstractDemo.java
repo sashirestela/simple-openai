@@ -15,7 +15,7 @@ public abstract class AbstractDemo {
     protected BaseSimpleOpenAI openAI;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
-    private int times = 80;
+    private final int times = 80;
 
     protected AbstractDemo() {
         apiKey = System.getenv("OPENAI_API_KEY");
@@ -24,16 +24,6 @@ public abstract class AbstractDemo {
                 .apiKey(apiKey)
                 .organizationId(organizationId)
                 .build();
-    }
-
-    protected AbstractDemo(@NonNull String baseUrl,
-                           @NonNull String apiKey,
-                           @NonNull UnaryOperator<HttpRequestData> requestInterceptor) {
-        this.openAI = SimpleOpenAI.builder()
-            .apiKey(apiKey)
-            .baseUrl(baseUrl)
-            .requestInterceptor(requestInterceptor)
-            .build();
     }
 
     protected AbstractDemo(@NonNull BaseSimpleOpenAI openAI) {
