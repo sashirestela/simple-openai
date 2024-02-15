@@ -1,8 +1,23 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
+import io.github.sashirestela.openai.OpenAI.Assistants;
+import io.github.sashirestela.openai.OpenAI.Audios;
+import io.github.sashirestela.openai.OpenAI.ChatCompletions;
+import io.github.sashirestela.openai.OpenAI.Completions;
+import io.github.sashirestela.openai.OpenAI.Embeddings;
+import io.github.sashirestela.openai.OpenAI.Files;
+import io.github.sashirestela.openai.OpenAI.FineTunings;
+import io.github.sashirestela.openai.OpenAI.Images;
+import io.github.sashirestela.openai.OpenAI.Models;
+import io.github.sashirestela.openai.OpenAI.Moderations;
+import io.github.sashirestela.openai.OpenAI.Threads;
+import java.net.http.HttpClient;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,16 +28,23 @@ import lombok.NonNull;
  * interfaces.
  */
 @Getter
-public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
+public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
+    private static final String END_OF_STREAM = "[DONE]";
 
-    private static UnaryOperator<HttpRequestData> prepareRequestInterceptor() {
+    private final String apiKey;
+    private final String baseUrl;
+    private final HttpClient httpClient;
+    private final CleverClient cleverClient;
+    private ChatCompletions chatCompletionService;
+
+    private static UnaryOperator<HttpRequestData> prepareRequestInterceptor(String apiVersion) {
         return request -> {
             var url = request.getUrl();
             var contentType = request.getContentType();
             var body = request.getBody();
 
             // add a query parameter to url
-            url += (url.contains("?") ? "&" : "?") + "api-version=2023-12-01-preview";
+            url += (url.contains("?") ? "&" : "?") + "api-version=" + apiVersion;
             // remove '/vN' or '/vN.M' from url
             url = url.replaceFirst("(\\/v\\d+\\.*\\d*)", "");
             request.setUrl(url);
@@ -52,15 +74,86 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     /**
      * Constructor used to generate a builder.
      *
-     * @param apiKey             Identifier to be used for authentication. Mandatory.
-     * @param baseUrl            The URL of the Azure OpenAI deployment.   Mandatory.
+     * @param apiKey         Identifier to be used for authentication. Mandatory.
+     * @param baseUrl        The URL of the Azure OpenAI deployment.   Mandatory.
+     * @param apiVersion     Azure OpeAI API version. See:
+     *                       https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning
+     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
+     *                       One is created by default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl) {
-        super(apiKey,
-            baseUrl,
-            Map.of("api-key", apiKey),
-            null,
-            prepareRequestInterceptor());
+    public SimpleOpenAIAzure(
+        @NonNull String apiKey,
+        @NonNull String baseUrl,
+        @NonNull String apiVersion,
+        HttpClient httpClient) {
+        this.apiKey = apiKey;
+        this.baseUrl = baseUrl;
+        this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
+        this.cleverClient = CleverClient.builder()
+            .httpClient(this.httpClient)
+            .baseUrl(this.baseUrl)
+            .headers(Map.of("api-key", apiKey))
+            .endOfStream(END_OF_STREAM)
+            .requestInterceptor(prepareRequestInterceptor(apiVersion))
+            .build();
+    }
+
+    @Override
+    public Audios audios() {
+        return null;
+    }
+
+    @Override
+    public ChatCompletions chatCompletions() {
+        if (this.chatCompletionService == null) {
+            this.chatCompletionService = cleverClient.create(OpenAI.ChatCompletions.class);
+        }
+        return this.chatCompletionService;
+    }
+
+    @Override
+    public Completions completions() {
+        return null;
+    }
+
+    @Override
+    public Embeddings embeddings() {
+        return null;
+    }
+
+    @Override
+    public Files files() {
+        return null;
+    }
+
+    @Override
+    public FineTunings fineTunings() {
+        return null;
+    }
+
+    @Override
+    public Images images() {
+        return null;
+    }
+
+    @Override
+    public Models models() {
+        return null;
+    }
+
+    @Override
+    public Moderations moderations() {
+        return null;
+    }
+
+    @Override
+    public Assistants assistants() {
+        return null;
+    }
+
+    @Override
+    public Threads threads() {
+        return null;
     }
 }

@@ -22,7 +22,11 @@ public class AzureChatServiceDemo extends AbstractDemo {
 
     @SuppressWarnings("unchecked")
     public AzureChatServiceDemo(String baseUrl, String apiKey) {
-        super(new SimpleOpenAIAzure(apiKey, baseUrl));
+        super(SimpleOpenAIAzure.builder()
+            .apiKey(apiKey)
+            .baseUrl(baseUrl)
+            .apiVersion("2023-12-01-preview")
+            .build());
         chatRequest = ChatRequest.builder()
             .model("N/A")
             .message(new ChatMsgSystem("You are an expert in AI."))

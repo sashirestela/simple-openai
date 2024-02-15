@@ -28,7 +28,7 @@ public class AnyscaleChatServiceDemo extends AbstractDemo {
 
     @SuppressWarnings("unchecked")
     public AnyscaleChatServiceDemo(String baseUrl, String apiKey, String model) {
-        super(new SimpleOpenAIAnyscale(apiKey, baseUrl));
+        super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).baseUrl(baseUrl).build());
         chatRequest = ChatRequest.builder()
             .model(model)
             .message(new ChatMsgSystem("You are an expert in AI."))
