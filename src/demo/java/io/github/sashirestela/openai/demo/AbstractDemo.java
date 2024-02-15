@@ -1,12 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.openai.BaseSimpleOpenAI;
-import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 import lombok.NonNull;
 
 public abstract class AbstractDemo {

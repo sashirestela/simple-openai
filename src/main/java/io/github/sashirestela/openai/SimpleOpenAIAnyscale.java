@@ -1,7 +1,6 @@
 package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.openai.OpenAI.Assistants;
 import io.github.sashirestela.openai.OpenAI.Audios;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
@@ -15,14 +14,10 @@ import io.github.sashirestela.openai.OpenAI.Moderations;
 import io.github.sashirestela.openai.OpenAI.Threads;
 import java.net.http.HttpClient;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
-import jdk.jshell.spi.ExecutionControl.NotImplementedException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
@@ -70,7 +65,7 @@ public class SimpleOpenAIAnyscale implements BaseSimpleOpenAI {
 
     @Override
     public Audios audios() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
@@ -83,46 +78,46 @@ public class SimpleOpenAIAnyscale implements BaseSimpleOpenAI {
 
     @Override
     public Completions completions() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Embeddings embeddings() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Files files() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public FineTunings fineTunings() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Images images() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Models models() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Moderations moderations() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Assistants assistants() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Threads threads() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 }

@@ -15,7 +15,6 @@ import io.github.sashirestela.openai.OpenAI.Models;
 import io.github.sashirestela.openai.OpenAI.Moderations;
 import io.github.sashirestela.openai.OpenAI.Threads;
 import java.net.http.HttpClient;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
@@ -101,7 +100,7 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
 
     @Override
     public Audios audios() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
@@ -114,46 +113,46 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
 
     @Override
     public Completions completions() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Embeddings embeddings() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Files files() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public FineTunings fineTunings() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Images images() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Models models() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Moderations moderations() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Assistants assistants() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 
     @Override
     public Threads threads() {
-        return null;
+        throw new SimpleUncheckedException("Not implemented");
     }
 }

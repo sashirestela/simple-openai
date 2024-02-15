@@ -1,19 +1,5 @@
 package io.github.sashirestela.openai;
 
-import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
-import java.net.http.HttpClient;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.UnaryOperator;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
-
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
  * interfaces.

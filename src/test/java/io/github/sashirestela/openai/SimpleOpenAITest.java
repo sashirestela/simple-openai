@@ -104,7 +104,7 @@ class SimpleOpenAITest {
     }
 
     @Test
-    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeveralTimes() {
+    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeverlaTimes() {
         final int NUMBER_CALLINGS = 3;
         final int NUMBER_INVOCATIONS = 1;
 
