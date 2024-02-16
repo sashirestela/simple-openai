@@ -65,8 +65,8 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
      *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param baseUrl        The URL of the Azure OpenAI deployment.   Mandatory.
-     * @param apiVersion     Azure OpeAI API version. See:
-     *                       <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure OpenAI API versioning...</a>
+     * @param apiVersion     Azure OpenAI API version. See:
+     *                       <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure OpenAI API versioning</a>
      * @param httpClient     A {@link HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
