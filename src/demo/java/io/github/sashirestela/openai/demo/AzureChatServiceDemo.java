@@ -7,25 +7,31 @@ import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
+import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
+import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 public class AzureChatServiceDemo extends AbstractDemo {
-    private static final String AZURE_OPENAI_API_KEY_HEADER = "api-key";
     private ChatRequest chatRequest;
 
-
     @SuppressWarnings("unchecked")
-    public AzureChatServiceDemo(String baseUrl, String apiKey) {
+    public AzureChatServiceDemo(String baseUrl, String apiKey, String apiVersion) {
         super(SimpleOpenAIAzure.builder()
             .apiKey(apiKey)
             .baseUrl(baseUrl)
-            .apiVersion("2023-12-01-preview")
+            .apiVersion(apiVersion)
             .build());
         chatRequest = ChatRequest.builder()
             .model("N/A")
@@ -96,14 +102,68 @@ public class AzureChatServiceDemo extends AbstractDemo {
         System.out.println(chatResponse.firstContent());
     }
 
+    public void demoCallChatWithVisionExternalImage() {
+        var chatRequest = ChatRequest.builder()
+            .model("N/A")
+            .messages(List.of(
+                new ChatMsgUser(List.of(
+                    new ContentPartText(
+                        "What do you see in the image? Give in details in no more than 100 words."),
+                    new ContentPartImage(new ImageUrl(
+                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
+            .temperature(0.0)
+            .maxTokens(500)
+            .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+            .map(chatResp -> chatResp.firstContent())
+            .forEach(System.out::print);
+        System.out.println();
+    }
+
+    public void demoCallChatWithVisionLocalImage() {
+        var chatRequest = ChatRequest.builder()
+            .model("N/A")
+            .messages(List.of(
+                new ChatMsgUser(List.of(
+                    new ContentPartText(
+                        "What do you see in the image? Give in details in no more than 100 words."),
+                    new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+            .temperature(0.0)
+            .maxTokens(500)
+            .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+            .map(chatResp -> chatResp.firstContent())
+            .forEach(System.out::print);
+        System.out.println();
+    }
+
+    private static ImageUrl loadImageAsBase64(String imagePath) {
+        try {
+            Path path = Paths.get(imagePath);
+            byte[] imageBytes = Files.readAllBytes(path);
+            String base64String = Base64.getEncoder().encodeToString(imageBytes);
+            var extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+            var prefix = "data:image/" + extension + ";base64,";
+            return new ImageUrl(prefix + base64String);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
         var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL");
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
+        var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
         // Services like Azure OpenAI don't require a model (endpoints have built-in model)
-        var demo = new AzureChatServiceDemo(baseUrl, apiKey);
+        var demo = new AzureChatServiceDemo(baseUrl, apiKey, apiVersion);
 
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
-        demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
+        //demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
+        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
+        demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
 
         demo.run();
     }
