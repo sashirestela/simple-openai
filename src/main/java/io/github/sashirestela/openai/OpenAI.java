@@ -1,8 +1,12 @@
 package io.github.sashirestela.openai;
 
+import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
+
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -184,6 +188,16 @@ public interface OpenAI {
     @Resource("/v1/chat/completions")
     interface ChatCompletions {
 
+        private static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
+            var toolChoice = chatRequest.getToolChoice();
+            if (!isNullOrEmpty(chatRequest.getTools()) && toolChoice == null) {
+                toolChoice = ChatToolChoiceType.AUTO;
+            }
+            return chatRequest
+                .withStream(useStream)
+                .withToolChoice(toolChoice);
+        }
+
         /**
          * Creates a model response for the given chat conversation. Blocking mode.
          * 
@@ -192,7 +206,7 @@ public interface OpenAI {
          * @return Response is delivered as a full text when is ready.
          */
         default CompletableFuture<ChatResponse> create(@Body ChatRequest chatRequest) {
-            var request = chatRequest.withStream(Boolean.FALSE);
+            var request = updateRequest(chatRequest, Boolean.FALSE);
             return __create(request);
         }
 
@@ -207,7 +221,7 @@ public interface OpenAI {
          * @return Response is delivered as a continues flow of tokens.
          */
         default CompletableFuture<Stream<ChatResponse>> createStream(@Body ChatRequest chatRequest) {
-            var request = chatRequest.withStream(Boolean.TRUE);
+            var request = updateRequest(chatRequest, Boolean.TRUE);
             return __createStream(request);
         }
 

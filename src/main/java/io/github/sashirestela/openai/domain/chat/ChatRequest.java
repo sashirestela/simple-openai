@@ -32,7 +32,7 @@ public class ChatRequest {
     private ChatRespFmt responseFormat;
     private Integer seed;
     private List<ChatTool> tools;
-    private Object toolChoice;
+    @With private Object toolChoice;
     private Double temperature;
     private Double topP;
     private Integer n;
@@ -56,10 +56,6 @@ public class ChatRequest {
             throw new SimpleUncheckedException(
                     "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
                     null, null);
-        }
-        if (!isNullOrEmpty(tools)) {
-            toolChoice = Optional.ofNullable(toolChoice)
-                .orElse(ChatToolChoiceType.AUTO);
         }
         if (stop != null && !(stop instanceof String) && !(stop instanceof List
                 && ((List<?>) stop).get(0) instanceof String && ((List<?>) stop).size() <= 4)) {
