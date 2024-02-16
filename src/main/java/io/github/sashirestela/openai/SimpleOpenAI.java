@@ -12,7 +12,6 @@ import lombok.NonNull;
  * The factory that generates implementations of the {@link OpenAI OpenAI}
  * interfaces.
  */
-@Getter
 public class SimpleOpenAI extends BaseSimpleOpenAI {
 
     public static final String OPENAI_BASE_URL = "https://api.openai.com";
@@ -20,34 +19,21 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Audios audioService;
-
-    @Getter(AccessLevel.NONE)
-    private OpenAI.ChatCompletions chatCompletionService;
-
-    @Getter(AccessLevel.NONE)
     private OpenAI.Completions completionService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Embeddings embeddingService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Files fileService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.FineTunings fineTuningService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Images imageService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Models modelService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Moderations moderationService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Assistants assistantService;
 
     @Getter(AccessLevel.NONE)

@@ -1,32 +1,18 @@
 package io.github.sashirestela.openai;
 
-import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
-import io.github.sashirestela.openai.OpenAI.Assistants;
-import io.github.sashirestela.openai.OpenAI.Audios;
-import io.github.sashirestela.openai.OpenAI.ChatCompletions;
-import io.github.sashirestela.openai.OpenAI.Completions;
-import io.github.sashirestela.openai.OpenAI.Embeddings;
-import io.github.sashirestela.openai.OpenAI.Files;
-import io.github.sashirestela.openai.OpenAI.FineTunings;
-import io.github.sashirestela.openai.OpenAI.Images;
-import io.github.sashirestela.openai.OpenAI.Models;
-import io.github.sashirestela.openai.OpenAI.Moderations;
-import io.github.sashirestela.openai.OpenAI.Threads;
 import java.net.http.HttpClient;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
  * The factory that generates implementations of the {@link OpenAI OpenAI}
  * interfaces.
  */
-@Getter
+
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
     private static BaseSimpleOpenAiArgs prepareBaseSimpleOpenAiArgs(

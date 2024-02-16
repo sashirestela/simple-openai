@@ -1,22 +1,8 @@
 package io.github.sashirestela.openai;
 
-import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.openai.OpenAI.Assistants;
-import io.github.sashirestela.openai.OpenAI.Audios;
-import io.github.sashirestela.openai.OpenAI.ChatCompletions;
-import io.github.sashirestela.openai.OpenAI.Completions;
-import io.github.sashirestela.openai.OpenAI.Embeddings;
-import io.github.sashirestela.openai.OpenAI.Files;
-import io.github.sashirestela.openai.OpenAI.FineTunings;
-import io.github.sashirestela.openai.OpenAI.Images;
-import io.github.sashirestela.openai.OpenAI.Models;
-import io.github.sashirestela.openai.OpenAI.Moderations;
-import io.github.sashirestela.openai.OpenAI.Threads;
 import java.net.http.HttpClient;
 import java.util.HashMap;
-import java.util.Optional;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -28,7 +14,6 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_AUTHORIZATION = "Bearer ";
-    private static final String END_OF_STREAM = "[DONE]"; ;
 
     /**
      * Constructor used to generate a builder.
