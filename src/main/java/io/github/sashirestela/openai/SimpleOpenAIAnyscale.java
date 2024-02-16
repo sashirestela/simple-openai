@@ -15,8 +15,8 @@ import lombok.NonNull;
 public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
     public static final String DEFAULT_BASE_URL = "https://api.endpoints.anyscale.com";
 
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_AUTHORIZATION = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_AUTHORIZATION = "Bearer ";
 
     /**
      * Constructor used to generate a builder.
@@ -26,9 +26,9 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
-    private static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAiArgs(String apiKey,
-                                                                    String baseUrl,
-                                                                    HttpClient httpClient) {
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey,
+                                                                   String baseUrl,
+                                                                   HttpClient httpClient) {
 
         if (isNullOrEmpty(baseUrl)) {
             baseUrl = DEFAULT_BASE_URL;
@@ -49,6 +49,6 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
         @NonNull String apiKey,
         String baseUrl,
         HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAiArgs(apiKey, baseUrl, httpClient));
+        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, httpClient));
     }
 }

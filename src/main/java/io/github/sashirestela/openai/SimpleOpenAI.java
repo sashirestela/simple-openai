@@ -13,9 +13,9 @@ import lombok.NonNull;
 public class SimpleOpenAI extends BaseSimpleOpenAI {
 
     public static final String OPENAI_BASE_URL = "https://api.openai.com";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String ORGANIZATION_HEADER = "OpenAI-Organization";
-    private static final String BEARER_AUTHORIZATION = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String ORGANIZATION_HEADER = "OpenAI-Organization";
+    public static final String BEARER_AUTHORIZATION = "Bearer ";
 
     private OpenAI.Audios audioService;
     private OpenAI.Completions completionService;
@@ -37,7 +37,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     private OpenAI.Threads threadService;
 
 
-    private static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAiArgs(
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
         String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
 
         var headers = new HashMap<String, String>();
@@ -65,7 +65,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAiArgs(apiKey, organizationId, baseUrl, httpClient));
+        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, baseUrl, httpClient));
     }
 
     /**

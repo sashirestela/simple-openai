@@ -15,7 +15,7 @@ import lombok.NonNull;
 
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
-    private static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAiArgs(
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
         String apiKey, String baseUrl, String apiVersion, HttpClient httpClient) {
 
         var headers = Map.of("api-Key", apiKey);
@@ -77,6 +77,6 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         @NonNull String baseUrl,
         @NonNull String apiVersion,
         HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAiArgs(apiKey, baseUrl, apiVersion, httpClient));
+        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient));
     }
 }
