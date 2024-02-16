@@ -1,18 +1,44 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.CleverClient;
+import java.net.http.HttpClient;
+import java.util.Optional;
+import lombok.NonNull;
+import lombok.Setter;
+
+
 /**
- * The factory that generates implementations of the {@link OpenAI OpenAI}
- * interfaces.
+ * The base abstract class that all providers extend
  */
 
-public interface BaseSimpleOpenAI {
+
+public class BaseSimpleOpenAI {
+
+    private static final String END_OF_STREAM = "[DONE]";
+
+    @Setter
+    protected CleverClient cleverClient;
+
+    protected OpenAI.ChatCompletions chatCompletionService;
+
+    BaseSimpleOpenAI(@NonNull BaseSimpleOpenAiArgs args) {
+        var httpClient =
+            Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
+        this.cleverClient = CleverClient.builder()
+            .httpClient(httpClient)
+            .baseUrl(args.getBaseUrl())
+            .headers(args.getHeaders())
+            .endOfStream(END_OF_STREAM)
+            .requestInterceptor(args.getRequestInterceptor())
+            .build();
+    }
 
     /**
-     * Generates an implementation of the Audios interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Audios audios();
+    public OpenAI.Audios audios() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
      * Generates an implementation of the ChatCompletions interface to handle
@@ -20,68 +46,74 @@ public interface BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-    public OpenAI.ChatCompletions chatCompletions();
+    public OpenAI.ChatCompletions chatCompletions() {
+        if (this.chatCompletionService == null) {
+            this.chatCompletionService = this.cleverClient.create(OpenAI.ChatCompletions.class);
+        }
+        return this.chatCompletionService;
+
+    }
 
     /**
-     * Generates an implementation of the Completions interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Completions completions();
+    public OpenAI.Completions completions() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Embeddings interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Embeddings embeddings();
+    public OpenAI.Embeddings embeddings() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Files interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Files files();
+    public OpenAI.Files files() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the FineTunings interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.FineTunings fineTunings();
+    public OpenAI.FineTunings fineTunings() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Images interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Images images();
+    public OpenAI.Images images() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Models interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Models models();
+    public OpenAI.Models models() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Moderations interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Moderations moderations();
+    public OpenAI.Moderations moderations() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Generates an implementation of the Assistant interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Assistants assistants();
+    public OpenAI.Assistants assistants() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 
     /**
-     * Spawns a single instance of the Threads interface to manage requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
-    public OpenAI.Threads threads();
+    public OpenAI.Threads threads() {
+        throw new SimpleUncheckedException("Not implemented");
+    }
 }

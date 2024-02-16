@@ -27,17 +27,15 @@ import lombok.NonNull;
  * interfaces.
  */
 @Getter
-public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
-    private static final String END_OF_STREAM = "[DONE]";
+public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
-    private final String apiKey;
-    private final String baseUrl;
-    private final HttpClient httpClient;
-    private final CleverClient cleverClient;
-    private ChatCompletions chatCompletionService;
+    private static BaseSimpleOpenAiArgs prepareBaseSimpleOpenAiArgs(
+        String apiKey, String baseUrl, String apiVersion, HttpClient httpClient) {
 
-    private static UnaryOperator<HttpRequestData> prepareRequestInterceptor(String apiVersion) {
-        return request -> {
+        var headers = Map.of("api-Key", apiKey);
+
+        // Inline the UnaryOperator<HttpRequestData> as a lambda directly.
+        var requestInterceptor = (UnaryOperator<HttpRequestData>) request -> {
             var url = request.getUrl();
             var contentType = request.getContentType();
             var body = request.getBody();
@@ -57,7 +55,7 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
                     body = bodyJson;
                 }
                 if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
-                    Map<String, Object> bodyMap = (Map<String, Object>) request.getBody();
+                    var bodyMap = (Map<String, Object>) request.getBody();
                     // remove a field from body (as Map)
                     bodyMap.remove("model");
                     body = bodyMap;
@@ -67,8 +65,14 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
 
             return request;
         };
-    }
 
+        return BaseSimpleOpenAiArgs.builder()
+            .baseUrl(baseUrl)
+            .headers(headers)
+            .httpClient(httpClient)
+            .requestInterceptor(requestInterceptor)
+            .build();
+    }
 
     /**
      * Constructor used to generate a builder.
@@ -76,8 +80,8 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param baseUrl        The URL of the Azure OpenAI deployment.   Mandatory.
      * @param apiVersion     Azure OpeAI API version. See:
-     *                       https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning
-     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
+     *                       <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure OpenAI API versioning...</a>
+     * @param httpClient     A {@link HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
     @Builder
@@ -86,73 +90,6 @@ public class SimpleOpenAIAzure implements BaseSimpleOpenAI {
         @NonNull String baseUrl,
         @NonNull String apiVersion,
         HttpClient httpClient) {
-        this.apiKey = apiKey;
-        this.baseUrl = baseUrl;
-        this.httpClient = Optional.ofNullable(httpClient).orElse(HttpClient.newHttpClient());
-        this.cleverClient = CleverClient.builder()
-            .httpClient(this.httpClient)
-            .baseUrl(this.baseUrl)
-            .headers(Map.of("api-key", apiKey))
-            .endOfStream(END_OF_STREAM)
-            .requestInterceptor(prepareRequestInterceptor(apiVersion))
-            .build();
-    }
-
-    @Override
-    public Audios audios() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public ChatCompletions chatCompletions() {
-        if (this.chatCompletionService == null) {
-            this.chatCompletionService = cleverClient.create(OpenAI.ChatCompletions.class);
-        }
-        return this.chatCompletionService;
-    }
-
-    @Override
-    public Completions completions() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Embeddings embeddings() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Files files() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public FineTunings fineTunings() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Images images() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Models models() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Moderations moderations() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Assistants assistants() {
-        throw new SimpleUncheckedException("Not implemented");
-    }
-
-    @Override
-    public Threads threads() {
-        throw new SimpleUncheckedException("Not implemented");
+        super(prepareBaseSimpleOpenAiArgs(apiKey, baseUrl, apiVersion, httpClient));
     }
 }
