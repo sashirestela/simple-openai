@@ -17,17 +17,14 @@ import java.util.ArrayList;
 
 public class AnyscaleChatServiceDemo extends AbstractDemo {
 
-    public static final String BASE_URL = "https://api.endpoints.anyscale.com";
-
     public static final String MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1";
 
 
     private ChatRequest chatRequest;
 
 
-    @SuppressWarnings("unchecked")
-    public AnyscaleChatServiceDemo(String baseUrl, String apiKey, String model) {
-        super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).baseUrl(baseUrl).build());
+    public AnyscaleChatServiceDemo(String apiKey, String model) {
+        super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).build());
         chatRequest = ChatRequest.builder()
             .model(model)
             .message(new ChatMsgSystem("You are an expert in AI."))
@@ -100,7 +97,7 @@ public class AnyscaleChatServiceDemo extends AbstractDemo {
     public static void main(String[] args) {
         var apiKey = System.getenv("ANYSCALE_API_KEY");
         // Services like Azure OpenAI don't require a model (endpoints have built-in model)
-        var demo = new AnyscaleChatServiceDemo(BASE_URL, apiKey, MODEL);
+        var demo = new AnyscaleChatServiceDemo(apiKey, MODEL);
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

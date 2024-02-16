@@ -3,9 +3,7 @@ package io.github.sashirestela.openai;
 import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Optional;
-import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -36,11 +34,10 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
 
     private OpenAI.Assistants assistantService;
 
-    @Getter(AccessLevel.NONE)
     private OpenAI.Threads threadService;
 
 
-    private static BaseSimpleOpenAiArgs prepareBaseSimpleOpenAiArgs(
+    private static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAiArgs(
         String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
 
         var headers = new HashMap<String, String>();
@@ -49,7 +46,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
             headers.put(ORGANIZATION_HEADER, organizationId);
         }
 
-        return BaseSimpleOpenAiArgs.builder()
+        return BaseSimpleOpenAIArgs.builder()
             .baseUrl(Optional.ofNullable(baseUrl).orElse(OPENAI_BASE_URL))
             .headers(headers)
             .httpClient(httpClient)

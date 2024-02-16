@@ -26,7 +26,6 @@ import java.util.List;
 public class AzureChatServiceDemo extends AbstractDemo {
     private ChatRequest chatRequest;
 
-    @SuppressWarnings("unchecked")
     public AzureChatServiceDemo(String baseUrl, String apiKey, String apiVersion) {
         super(SimpleOpenAIAzure.builder()
             .apiKey(apiKey)
@@ -160,10 +159,15 @@ public class AzureChatServiceDemo extends AbstractDemo {
         // Services like Azure OpenAI don't require a model (endpoints have built-in model)
         var demo = new AzureChatServiceDemo(baseUrl, apiKey, apiVersion);
 
+
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
-        //demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
-        demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
+        if (baseUrl.contains("gpt-35-turbo")) {
+            demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
+        } else if (baseUrl.contains("gpt-4")){
+            demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
+            demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
+            demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
+        }
 
         demo.run();
     }

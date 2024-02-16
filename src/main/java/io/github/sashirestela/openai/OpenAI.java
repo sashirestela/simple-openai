@@ -6,7 +6,6 @@ import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 

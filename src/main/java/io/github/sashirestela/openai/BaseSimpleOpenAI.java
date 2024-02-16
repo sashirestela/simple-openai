@@ -21,7 +21,7 @@ public class BaseSimpleOpenAI {
 
     protected OpenAI.ChatCompletions chatCompletionService;
 
-    BaseSimpleOpenAI(@NonNull BaseSimpleOpenAiArgs args) {
+    BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
         var httpClient =
             Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
         this.cleverClient = CleverClient.builder()

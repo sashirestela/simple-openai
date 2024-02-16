@@ -15,7 +15,7 @@ import lombok.NonNull;
 
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
-    private static BaseSimpleOpenAiArgs prepareBaseSimpleOpenAiArgs(
+    private static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAiArgs(
         String apiKey, String baseUrl, String apiVersion, HttpClient httpClient) {
 
         var headers = Map.of("api-Key", apiKey);
@@ -41,6 +41,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                     body = bodyJson;
                 }
                 if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
+                    @SuppressWarnings("unchecked")
                     var bodyMap = (Map<String, Object>) request.getBody();
                     // remove a field from body (as Map)
                     bodyMap.remove("model");
@@ -52,7 +53,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
             return request;
         };
 
-        return BaseSimpleOpenAiArgs.builder()
+        return BaseSimpleOpenAIArgs.builder()
             .baseUrl(baseUrl)
             .headers(headers)
             .httpClient(httpClient)

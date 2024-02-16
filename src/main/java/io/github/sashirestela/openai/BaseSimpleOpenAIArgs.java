@@ -10,7 +10,7 @@ import lombok.NonNull;
 
 @Getter
 @Builder
-public class BaseSimpleOpenAiArgs {
+public class BaseSimpleOpenAIArgs {
     @NonNull
     private final String baseUrl;
     private final Map<String, String> headers;
