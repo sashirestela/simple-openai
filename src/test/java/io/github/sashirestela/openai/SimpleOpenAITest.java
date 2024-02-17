@@ -1,11 +1,13 @@
 package io.github.sashirestela.openai;
 
+import static io.github.sashirestela.openai.SimpleOpenAI.AUTHORIZATION_HEADER;
+import static io.github.sashirestela.openai.SimpleOpenAI.BEARER_AUTHORIZATION;
 import static io.github.sashirestela.openai.SimpleOpenAI.OPENAI_BASE_URL;
+import static io.github.sashirestela.openai.SimpleOpenAI.ORGANIZATION_HEADER;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -32,44 +34,36 @@ class SimpleOpenAITest {
     CleverClient cleverClient = mock(CleverClient.class);
 
     @Test
-    void shouldSetPropertiesToDefaultValuesWhenBuilderIsCalledWithoutThoseProperties() {
-        var openAI = SimpleOpenAI.builder()
-                .apiKey("apiKey")
-                .build();
-        assertEquals(HttpClient.Version.HTTP_2, openAI.getHttpClient().version());
-        assertEquals(OPENAI_BASE_URL, openAI.getBaseUrl());
-        assertNotNull(openAI.getCleverClient());
+    void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
+
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs(
+            "the-api-key",
+            "orgId",
+            "https://example.org",
+            HttpClient.newHttpClient());
+
+        assertEquals("https://example.org", args.getBaseUrl());
+        assertEquals(2, args.getHeaders().size());
+        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
+        assertEquals("orgId", args.getHeaders().get(ORGANIZATION_HEADER));
+        assertNotNull(args.getHttpClient());
+
+        // No request interceptor for SimpleOpenAI
+        assertNull(args.getRequestInterceptor());
     }
 
-    @Test
-    void shouldSetPropertiesWhenBuilderIsCalledWithThoseProperties() {
-        var otherUrl = "https://openai.com/api";
-        var openAI = SimpleOpenAI.builder()
-                .apiKey("apiKey")
-                .baseUrl(otherUrl)
-                .httpClient(httpClient)
-                .build();
-        assertEquals("apiKey", openAI.getApiKey());
-        assertEquals(otherUrl, openAI.getBaseUrl());
-        assertEquals(httpClient, openAI.getHttpClient());
+    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
+
+        assertEquals(OPENAI_BASE_URL, args.getBaseUrl());
+        assertEquals(1, args.getHeaders().size());
+        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
+        assertNotNull(args.getHttpClient());
+
+        // No request interceptor for SimpleOpenAI
+        assertNull(args.getRequestInterceptor());
     }
 
-    @Test
-    void shouldNotAddOrganizationToHeadersWhenBuilderIsCalledWithoutOrganizationId() {
-        var openAI = SimpleOpenAI.builder()
-                .apiKey("apiKey")
-                .build();
-        assertFalse(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
-    }
-
-    @Test
-    void shouldAddOrganizationToHeadersWhenBuilderIsCalledWithOrganizationId() {
-        var openAI = SimpleOpenAI.builder()
-                .apiKey("apiKey")
-                .organizationId("orgId")
-                .build();
-        assertTrue(openAI.getCleverClient().getHeaders().containsValue(openAI.getOrganizationId()));
-    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -104,7 +98,7 @@ class SimpleOpenAITest {
     }
 
     @Test
-    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeverlaTimes() {
+    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeveralTimes() {
         final int NUMBER_CALLINGS = 3;
         final int NUMBER_INVOCATIONS = 1;
 

@@ -3,9 +3,13 @@ package io.github.sashirestela.openai.domain.chat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
+import io.github.sashirestela.openai.OpenAI;
+import io.github.sashirestela.openai.OpenAI.ChatCompletions;
+import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.List;
@@ -202,15 +206,31 @@ class ChatDomainTest {
     }
 
     @Test
+    void shouldUpdateChatRequestWithAutoToolChoiceWhenToolsAreProvidedWithoutToolChoice() {
+        var charRequest = ChatRequest.builder()
+            .model("model")
+            .message(new ChatMsgUser("content"))
+            .tools(functionExecutor.getToolFunctions())
+            .build();
+
+        assertNull(charRequest.getToolChoice());
+        var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
+        assertEquals(ChatToolChoiceType.AUTO, updatedChatRequest.getToolChoice());
+    }
+
+    @Test
     void shouldThrownExceptionWhenCreatingChatRequestWithToolChoiceWrongClass() {
-        var chatRequestBuilder = ChatRequest.builder()
-                .model("model")
-                .message(new ChatMsgUser("My Content"))
-                .toolChoice("wrong value");
-        var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
+        var charRequest = ChatRequest.builder()
+            .model("model")
+            .message(new ChatMsgUser("content"))
+            .tools(functionExecutor.getToolFunctions())
+            .toolChoice("wrong value")
+            .build();
+
+        var exception = assertThrows(SimpleUncheckedException.class, () -> OpenAI.updateRequest(charRequest, Boolean.TRUE));
         var actualErrorMessage = exception.getMessage();
-        var expectedErrorMessge = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
-        assertEquals(expectedErrorMessge, actualErrorMessage);
+        var expectedErrorMessage = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
+        assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
     @Test

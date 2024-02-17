@@ -1,5 +1,9 @@
 package io.github.sashirestela.openai;
 
+import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
+
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.List;
@@ -68,6 +72,25 @@ import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
  * @see <a href="https://platform.openai.com/docs/api-reference">OpenAI API</a>
  */
 public interface OpenAI {
+
+    static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
+        var toolChoice = chatRequest.getToolChoice();
+
+        if (!isNullOrEmpty(chatRequest.getTools())) {
+            if (toolChoice == null) {
+                toolChoice = ChatToolChoiceType.AUTO;
+            } else if (!(toolChoice instanceof ChatToolChoice) &&
+                       !(toolChoice instanceof ChatToolChoiceType)) {
+                throw new SimpleUncheckedException(
+                    "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
+                    null, null);
+            }
+        }
+        return chatRequest
+            .withStream(useStream)
+            .withToolChoice(toolChoice);
+    }
+
 
     /**
      * Turn audio into text (speech to text).
@@ -183,7 +206,6 @@ public interface OpenAI {
      */
     @Resource("/v1/chat/completions")
     interface ChatCompletions {
-
         /**
          * Creates a model response for the given chat conversation. Blocking mode.
          * 
@@ -192,7 +214,7 @@ public interface OpenAI {
          * @return Response is delivered as a full text when is ready.
          */
         default CompletableFuture<ChatResponse> create(@Body ChatRequest chatRequest) {
-            var request = chatRequest.withStream(Boolean.FALSE);
+            var request = updateRequest(chatRequest, Boolean.FALSE);
             return __create(request);
         }
 
@@ -207,7 +229,7 @@ public interface OpenAI {
          * @return Response is delivered as a continues flow of tokens.
          */
         default CompletableFuture<Stream<ChatResponse>> createStream(@Body ChatRequest chatRequest) {
-            var request = chatRequest.withStream(Boolean.TRUE);
+            var request = updateRequest(chatRequest, Boolean.TRUE);
             return __createStream(request);
         }
 

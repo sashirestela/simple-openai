@@ -1,20 +1,19 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 import lombok.NonNull;
 
 public abstract class AbstractDemo {
 
     private String apiKey;
     private String organizationId;
-    protected SimpleOpenAI openAI;
+    protected BaseSimpleOpenAI openAI;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
-    private int times = 80;
+    private final int times = 80;
 
     protected AbstractDemo() {
         apiKey = System.getenv("OPENAI_API_KEY");
@@ -25,14 +24,8 @@ public abstract class AbstractDemo {
                 .build();
     }
 
-    protected AbstractDemo(@NonNull String baseUrl,
-                           @NonNull String apiKey,
-                           @NonNull UnaryOperator<HttpRequestData> requestInterceptor) {
-        openAI = SimpleOpenAI.builder()
-            .apiKey(apiKey)
-            .baseUrl(baseUrl)
-            .requestInterceptor(requestInterceptor)
-            .build();
+    protected AbstractDemo(@NonNull BaseSimpleOpenAI openAI) {
+        this.openAI = openAI;
     }
 
     public void addTitleAction(String title, Action action) {
