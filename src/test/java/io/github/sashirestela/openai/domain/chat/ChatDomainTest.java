@@ -220,14 +220,17 @@ class ChatDomainTest {
 
     @Test
     void shouldThrownExceptionWhenCreatingChatRequestWithToolChoiceWrongClass() {
-        var chatRequestBuilder = ChatRequest.builder()
-                .model("model")
-                .message(new ChatMsgUser("My Content"))
-                .toolChoice("wrong value");
-        var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
+        var charRequest = ChatRequest.builder()
+            .model("model")
+            .message(new ChatMsgUser("content"))
+            .tools(functionExecutor.getToolFunctions())
+            .toolChoice("wrong value")
+            .build();
+
+        var exception = assertThrows(SimpleUncheckedException.class, () -> OpenAI.updateRequest(charRequest, Boolean.TRUE));
         var actualErrorMessage = exception.getMessage();
-        var expectedErrorMessge = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
-        assertEquals(expectedErrorMessge, actualErrorMessage);
+        var expectedErrorMessage = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
+        assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
     @Test

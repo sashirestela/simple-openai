@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
 
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -74,8 +75,16 @@ public interface OpenAI {
 
     static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
         var toolChoice = chatRequest.getToolChoice();
-        if (!isNullOrEmpty(chatRequest.getTools()) && toolChoice == null) {
-            toolChoice = ChatToolChoiceType.AUTO;
+
+        if (!isNullOrEmpty(chatRequest.getTools())) {
+            if (toolChoice == null) {
+                toolChoice = ChatToolChoiceType.AUTO;
+            } else if (!(toolChoice instanceof ChatToolChoice) &&
+                       !(toolChoice instanceof ChatToolChoiceType)) {
+                throw new SimpleUncheckedException(
+                    "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
+                    null, null);
+            }
         }
         return chatRequest
             .withStream(useStream)
