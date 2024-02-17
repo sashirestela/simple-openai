@@ -1,17 +1,14 @@
 package io.github.sashirestela.openai;
 
-import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
-
 import java.net.http.HttpClient;
 import java.util.HashMap;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.NonNull;
 
 /**
- * The factory that generates implementations of the {@link OpenAI OpenAI}
- * interfaces.
+ * This class provides the chatCompletion() service for the Anyscale provider
  */
-
 public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
     public static final String DEFAULT_BASE_URL = "https://api.endpoints.anyscale.com";
 
@@ -26,16 +23,10 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
      *                       One is created by default if not provided. Optional.
      */
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey,
-                                                                   String baseUrl,
-                                                                   HttpClient httpClient) {
-
-        if (isNullOrEmpty(baseUrl)) {
-            baseUrl = DEFAULT_BASE_URL;
-        }
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, HttpClient httpClient) {
+        baseUrl = Optional.ofNullable(baseUrl).orElse(DEFAULT_BASE_URL);
         var headers = new HashMap<String, String>();
         headers.put(AUTHORIZATION_HEADER, BEARER_AUTHORIZATION + apiKey);
-
 
         return BaseSimpleOpenAIArgs.builder()
             .baseUrl(baseUrl)

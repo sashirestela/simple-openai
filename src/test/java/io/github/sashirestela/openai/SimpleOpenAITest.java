@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import static io.github.sashirestela.openai.SimpleOpenAI.AUTHORIZATION_HEADER;
 import static io.github.sashirestela.openai.SimpleOpenAI.BEARER_AUTHORIZATION;
+import static io.github.sashirestela.openai.SimpleOpenAI.OPENAI_BASE_URL;
 import static io.github.sashirestela.openai.SimpleOpenAI.ORGANIZATION_HEADER;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +35,7 @@ class SimpleOpenAITest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
+
         var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs(
             "the-api-key",
             "orgId",
@@ -49,6 +51,19 @@ class SimpleOpenAITest {
         // No request interceptor for SimpleOpenAI
         assertNull(args.getRequestInterceptor());
     }
+
+    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
+
+        assertEquals(OPENAI_BASE_URL, args.getBaseUrl());
+        assertEquals(1, args.getHeaders().size());
+        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
+        assertNotNull(args.getHttpClient());
+
+        // No request interceptor for SimpleOpenAI
+        assertNull(args.getRequestInterceptor());
+    }
+
 
     @Test
     @SuppressWarnings("unchecked")
@@ -83,7 +98,7 @@ class SimpleOpenAITest {
     }
 
     @Test
-    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeverlaTimes() {
+    void shouldInstanceServiceOnlyOnceWhenItIsCalledSeveralTimes() {
         final int NUMBER_CALLINGS = 3;
         final int NUMBER_INVOCATIONS = 1;
 

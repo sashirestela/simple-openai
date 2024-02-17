@@ -9,42 +9,47 @@ import lombok.Builder;
 import lombok.NonNull;
 
 /**
- * The factory that generates implementations of the {@link OpenAI OpenAI}
- * interfaces.
+ * This class provides the chatCompletion() service for the Azure OpenAI provider
+ * Note that each instance of SimpleOpenAIAzure is linked to a single specific model.
+ * The capabilities of the model determine which chatCompletion() methods are available.
  */
-
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
-        String apiKey, String baseUrl, String apiVersion, HttpClient httpClient) {
+    public static final String API_KEY_HEADER = "api-key";
+    public static final String API_VERSION = "api-version";
 
-        var headers = Map.of("api-Key", apiKey);
+    private static final String ENDPOINT_VERSION_REGEX = "(\\/v\\d+\\.*\\d*)";
+    private static final String MODEL_REGEX =  ",?\"model\":\"[^\"]*\",?";
 
-        // Inline the UnaryOperator<HttpRequestData> as a lambda directly.
+    private static final String EMPTY_REGEX = "\"\"";
+    private static final String QUOTED_COMMA = "\",\"";
+
+    private static final String MODEL_LITERAL = "model";
+
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, String apiVersion, HttpClient httpClient) {
+
+        var headers = Map.of(API_KEY_HEADER, apiKey);
+
         var requestInterceptor = (UnaryOperator<HttpRequestData>) request -> {
             var url = request.getUrl();
             var contentType = request.getContentType();
             var body = request.getBody();
 
-            // add a query parameter to url
-            url += (url.contains("?") ? "&" : "?") + "api-version=" + apiVersion;
-            // remove '/vN' or '/vN.M' from url
-            url = url.replaceFirst("(\\/v\\d+\\.*\\d*)", "");
+            url += (url.contains("?") ? "&" : "?") + API_VERSION + "=" + apiVersion;
+            url = url.replaceFirst(ENDPOINT_VERSION_REGEX, "");
             request.setUrl(url);
 
             if (contentType != null) {
                 if (contentType.equals(ContentType.APPLICATION_JSON)) {
                     var bodyJson = (String) request.getBody();
-                    // remove a field from body (as Json)
-                    bodyJson = bodyJson.replaceFirst(",?\"model\":\"[^\"]*\",?", "");
-                    bodyJson = bodyJson.replaceFirst("\"\"", "\",\"");
+                    bodyJson = bodyJson.replaceFirst(MODEL_REGEX, "");
+                    bodyJson = bodyJson.replaceFirst(EMPTY_REGEX, QUOTED_COMMA);
                     body = bodyJson;
                 }
                 if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
                     @SuppressWarnings("unchecked")
                     var bodyMap = (Map<String, Object>) request.getBody();
-                    // remove a field from body (as Map)
-                    bodyMap.remove("model");
+                    bodyMap.remove(MODEL_LITERAL);
                     body = bodyMap;
                 }
                 request.setBody(body);

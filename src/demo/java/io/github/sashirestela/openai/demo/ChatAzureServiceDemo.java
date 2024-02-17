@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class AzureChatServiceDemo extends AbstractDemo {
+public class ChatAzureServiceDemo extends AbstractDemo {
     private ChatRequest chatRequest;
 
-    public AzureChatServiceDemo(String baseUrl, String apiKey, String apiVersion) {
+    public ChatAzureServiceDemo(String baseUrl, String apiKey, String apiVersion) {
         super(SimpleOpenAIAzure.builder()
             .apiKey(apiKey)
             .baseUrl(baseUrl)
@@ -157,7 +157,7 @@ public class AzureChatServiceDemo extends AbstractDemo {
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
         var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
         // Services like Azure OpenAI don't require a model (endpoints have built-in model)
-        var demo = new AzureChatServiceDemo(baseUrl, apiKey, apiVersion);
+        var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
 
 
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

@@ -187,7 +187,7 @@ public interface OpenAI {
     @Resource("/v1/chat/completions")
     interface ChatCompletions {
 
-        private static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
+        public static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
             var toolChoice = chatRequest.getToolChoice();
             if (!isNullOrEmpty(chatRequest.getTools()) && toolChoice == null) {
                 toolChoice = ChatToolChoiceType.AUTO;

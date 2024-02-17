@@ -15,7 +15,7 @@ import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import java.util.ArrayList;
 
-public class AnyscaleChatServiceDemo extends AbstractDemo {
+public class ChatAnyscaleServiceDemo extends AbstractDemo {
 
     public static final String MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1";
 
@@ -23,7 +23,7 @@ public class AnyscaleChatServiceDemo extends AbstractDemo {
     private ChatRequest chatRequest;
 
 
-    public AnyscaleChatServiceDemo(String apiKey, String model) {
+    public ChatAnyscaleServiceDemo(String apiKey, String model) {
         super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).build());
         chatRequest = ChatRequest.builder()
             .model(model)
@@ -97,7 +97,7 @@ public class AnyscaleChatServiceDemo extends AbstractDemo {
     public static void main(String[] args) {
         var apiKey = System.getenv("ANYSCALE_API_KEY");
         // Services like Azure OpenAI don't require a model (endpoints have built-in model)
-        var demo = new AnyscaleChatServiceDemo(apiKey, MODEL);
+        var demo = new ChatAnyscaleServiceDemo(apiKey, MODEL);
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

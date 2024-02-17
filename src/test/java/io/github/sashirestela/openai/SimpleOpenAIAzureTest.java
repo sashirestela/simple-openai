@@ -1,5 +1,7 @@
 package io.github.sashirestela.openai;
 
+import static io.github.sashirestela.openai.SimpleOpenAIAzure.API_KEY_HEADER;
+import static io.github.sashirestela.openai.SimpleOpenAIAzure.API_VERSION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +24,7 @@ class SimpleOpenAIAzureTest {
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
-        assertEquals("the-api-key", args.getHeaders().get("api-Key"));
+        assertEquals("the-api-key", args.getHeaders().get(API_KEY_HEADER));
         assertNotNull(args.getHttpClient());
         assertNotNull(args.getRequestInterceptor());
     }
@@ -32,13 +34,13 @@ class SimpleOpenAIAzureTest {
         var request = HttpRequestData.builder()
             .url("https://example.org/v1/endpoint")
             .contentType(ContentType.APPLICATION_JSON)
-            .headers(Map.of("api-Key", "the-api-key"))
+            .headers(Map.of(API_KEY_HEADER, "the-api-key"))
             .body("{\"model\":\"model1\"}")
             .build();
         var expectedRequest = HttpRequestData.builder()
-            .url("https://example.org/endpoint?api-version=12-34-5678")
+            .url("https://example.org/endpoint?" + API_VERSION + "=12-34-5678")
             .contentType(ContentType.APPLICATION_JSON)
-            .headers(Map.of("api-Key", "the-api-key"))
+            .headers(Map.of(API_KEY_HEADER, "the-api-key"))
             .body("{}")
             .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(

@@ -8,11 +8,13 @@ import lombok.Setter;
 
 
 /**
- * The base abstract class that all providers extend
+ * The base abstract class that all providers extend. It generates
+ * an implementation to the chatCompletions() interface of {@link OpenAI OpenAI} interfaces.
+ * It throws a "Not implemented" exception for all other interfaces
  */
 
 
-public class BaseSimpleOpenAI {
+public abstract class BaseSimpleOpenAI {
 
     private static final String END_OF_STREAM = "[DONE]";
 
