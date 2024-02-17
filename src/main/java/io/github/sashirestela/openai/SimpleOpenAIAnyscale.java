@@ -36,10 +36,7 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
     }
 
     @Builder
-    public SimpleOpenAIAnyscale(
-        @NonNull String apiKey,
-        String baseUrl,
-        HttpClient httpClient) {
+    public SimpleOpenAIAnyscale(@NonNull String apiKey, String baseUrl, HttpClient httpClient) {
         super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, httpClient));
     }
 }
