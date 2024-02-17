@@ -72,6 +72,17 @@ import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
  */
 public interface OpenAI {
 
+    static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
+        var toolChoice = chatRequest.getToolChoice();
+        if (!isNullOrEmpty(chatRequest.getTools()) && toolChoice == null) {
+            toolChoice = ChatToolChoiceType.AUTO;
+        }
+        return chatRequest
+            .withStream(useStream)
+            .withToolChoice(toolChoice);
+    }
+
+
     /**
      * Turn audio into text (speech to text).
      * 
@@ -186,17 +197,6 @@ public interface OpenAI {
      */
     @Resource("/v1/chat/completions")
     interface ChatCompletions {
-
-        public static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
-            var toolChoice = chatRequest.getToolChoice();
-            if (!isNullOrEmpty(chatRequest.getTools()) && toolChoice == null) {
-                toolChoice = ChatToolChoiceType.AUTO;
-            }
-            return chatRequest
-                .withStream(useStream)
-                .withToolChoice(toolChoice);
-        }
-
         /**
          * Creates a model response for the given chat conversation. Blocking mode.
          * 

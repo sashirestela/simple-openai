@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
+import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import java.io.IOException;
@@ -213,7 +214,7 @@ class ChatDomainTest {
             .build();
 
         assertNull(charRequest.getToolChoice());
-        var updatedChatRequest = ChatCompletions.updateRequest(charRequest, Boolean.TRUE);
+        var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
         assertEquals(ChatToolChoiceType.AUTO, updatedChatRequest.getToolChoice());
     }
 
