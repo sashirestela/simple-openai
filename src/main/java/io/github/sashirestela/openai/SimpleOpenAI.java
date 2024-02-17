@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.NonNull;
 
 /**
- * A subclass that extends the abstract BaseSimpleOpenAI and implements
- * additional {@link OpenAI OpenAI} interfaces targeting the OpenAI service.
+ * This class provides the implements additional {@link OpenAI OpenAI} interfaces
+ * targeting the OpenAI service.
  */
 public class SimpleOpenAI extends BaseSimpleOpenAI {
 
