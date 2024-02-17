@@ -77,11 +77,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
      *                       One is created by default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAIAzure(
-        @NonNull String apiKey,
-        @NonNull String baseUrl,
-        @NonNull String apiVersion,
-        HttpClient httpClient) {
+    public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl, @NonNull String apiVersion, HttpClient httpClient) {
         super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient));
     }
 }
