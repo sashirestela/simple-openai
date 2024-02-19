@@ -51,21 +51,23 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
     <!-- Dependencies Versions -->
-    <slf4j.version>[2.0.9,3.0.0)</slf4j.version>
+    <slf4j.version>2.0.12</slf4j.version>
     <cleverclient.version>1.1.0</cleverclient.version>
-    <lombok.version>[1.18.30,2.0.0)</lombok.version>
-    <jackson.version>[2.15.2,3.0.0)</jackson.version>
-    <json.schema.version>[4.31.1,5.0.0)</json.schema.version>
-    <junit.version>[5.10.0,6.0.0)</junit.version>
-    <mockito.version>[5.5.0,6.0.0)</mockito.version>
+    <lombok.version>1.18.30</lombok.version>
+    <jackson.version>2.16.1</jackson.version>
+    <json.schema.version>4.33.1</json.schema.version>
+    <junit.version>5.10.2</junit.version>
+    <mockito.version>5.10.0</mockito.version>
     <!-- Plugins Versions -->
-    <compiler.version>3.11.0</compiler.version>
-    <surefire.version>3.1.2</surefire.version>
-    <exec.version>3.1.0</exec.version>
-    <jacoco.version>0.8.10</jacoco.version>
-    <helper.version>3.4.0</helper.version>
+    <compiler.version>3.12.1</compiler.version>
+    <enforcer.version>3.4.1</enforcer.version>
+    <surefire.version>3.2.5</surefire.version>
+    <exec.version>3.1.1</exec.version>
+    <jacoco.version>0.8.11</jacoco.version>
+    <helper.version>3.5.0</helper.version>
+    <versions.version>2.16.2</versions.version>
     <source.version>3.3.0</source.version>
-    <javadoc.version>3.5.0</javadoc.version>
+    <javadoc.version>3.6.3</javadoc.version>
     <gpg.version>3.1.0</gpg.version>
     <sonatype.version>1.6.13</sonatype.version>
   </properties>
@@ -303,6 +305,26 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${enforcer.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-maven</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>3.6.3</version>
+                </requireMavenVersion>
+              </rules>    
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire.version}</version>
       </plugin>
@@ -337,6 +359,21 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>${versions.version}</version>
+        <configuration>
+          <ruleSet>
+            <ignoreVersions>
+              <ignoreVersion>
+                <type>regex</type>
+                <version>.+-(alpha|beta).*</version>
+              </ignoreVersion>
+            </ignoreVersions>
+          </ruleSet>
+        </configuration>
       </plugin>
     </plugins>
   </build>
