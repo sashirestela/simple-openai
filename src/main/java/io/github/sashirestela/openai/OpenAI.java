@@ -2,8 +2,6 @@ package io.github.sashirestela.openai;
 
 import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
 
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.List;
@@ -21,8 +19,8 @@ import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
-import io.github.sashirestela.openai.domain.PageRequest;
 import io.github.sashirestela.openai.domain.Page;
+import io.github.sashirestela.openai.domain.PageRequest;
 import io.github.sashirestela.openai.domain.assistant.Assistant;
 import io.github.sashirestela.openai.domain.assistant.AssistantFile;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
@@ -45,6 +43,7 @@ import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
 import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64Response;
@@ -72,25 +71,6 @@ import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
  * @see <a href="https://platform.openai.com/docs/api-reference">OpenAI API</a>
  */
 public interface OpenAI {
-
-    static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
-        var toolChoice = chatRequest.getToolChoice();
-
-        if (!isNullOrEmpty(chatRequest.getTools())) {
-            if (toolChoice == null) {
-                toolChoice = ChatToolChoiceType.AUTO;
-            } else if (!(toolChoice instanceof ChatToolChoice) &&
-                       !(toolChoice instanceof ChatToolChoiceType)) {
-                throw new SimpleUncheckedException(
-                    "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.",
-                    null, null);
-            }
-        }
-        return chatRequest
-            .withStream(useStream)
-            .withToolChoice(toolChoice);
-    }
-
 
     /**
      * Turn audio into text (speech to text).
@@ -178,23 +158,6 @@ public interface OpenAI {
         @Multipart
         @POST("/translations")
         CompletableFuture<String> __translatePlain(@Body AudioTranslateRequest audioRequest);
-
-        private AudioRespFmt getResponseFormat(AudioRespFmt currValue, AudioRespFmt orDefault, String methodName) {
-            final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
-            final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
-
-            var isText = textEnumSet.contains(orDefault);
-            var requestedFormat = currValue;
-            if (requestedFormat != null) {
-                if (isText != textEnumSet.contains(requestedFormat)) {
-                    throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.",
-                            methodName, null);
-                }
-            } else {
-                requestedFormat = orDefault;
-            }
-            return requestedFormat;
-        }
     }
 
     /**
@@ -1031,5 +994,30 @@ public interface OpenAI {
         CompletableFuture<Page<ThreadRunStep>> getRunStepList(@Path("threadId") String threadId,
                 @Path("runId") String runId, @Query PageRequest page);
 
+    }
+
+    static AudioRespFmt getResponseFormat(AudioRespFmt currValue, AudioRespFmt orDefault, String methodName) {
+        final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
+        final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
+
+        var isText = textEnumSet.contains(orDefault);
+        var requestedFormat = currValue;
+        if (requestedFormat != null) {
+            if (isText != textEnumSet.contains(requestedFormat)) {
+                throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.",
+                        methodName, null);
+            }
+        } else {
+            requestedFormat = orDefault;
+        }
+        return requestedFormat;
+    }
+
+    static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
+        var updatedChatRequest = chatRequest.withStream(useStream);
+        if (!isNullOrEmpty(chatRequest.getTools()) && chatRequest.getToolChoice() == null) {
+            updatedChatRequest = updatedChatRequest.withToolChoice(ChatToolChoiceType.AUTO);
+        }
+        return updatedChatRequest;
     }
 }

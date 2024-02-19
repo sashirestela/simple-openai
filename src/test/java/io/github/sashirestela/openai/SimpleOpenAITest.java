@@ -1,9 +1,5 @@
 package io.github.sashirestela.openai;
 
-import static io.github.sashirestela.openai.SimpleOpenAI.AUTHORIZATION_HEADER;
-import static io.github.sashirestela.openai.SimpleOpenAI.BEARER_AUTHORIZATION;
-import static io.github.sashirestela.openai.SimpleOpenAI.OPENAI_BASE_URL;
-import static io.github.sashirestela.openai.SimpleOpenAI.ORGANIZATION_HEADER;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,6 +23,7 @@ import org.mockito.ArgumentCaptor;
 
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.support.Constant;
 
 class SimpleOpenAITest {
 
@@ -35,35 +32,29 @@ class SimpleOpenAITest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
-
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs(
-            "the-api-key",
-            "orgId",
-            "https://example.org",
-            HttpClient.newHttpClient());
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "https://example.org",
+                HttpClient.newHttpClient());
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(2, args.getHeaders().size());
-        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
-        assertEquals("orgId", args.getHeaders().get(ORGANIZATION_HEADER));
+        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
+                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
+        assertEquals("orgId", args.getHeaders().get(Constant.OPENAI_ORG_HEADER));
         assertNotNull(args.getHttpClient());
-
-        // No request interceptor for SimpleOpenAI
         assertNull(args.getRequestInterceptor());
     }
 
+    @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
         var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
 
-        assertEquals(OPENAI_BASE_URL, args.getBaseUrl());
+        assertEquals(Constant.OPENAI_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
-        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
-        assertNotNull(args.getHttpClient());
-
-        // No request interceptor for SimpleOpenAI
+        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
+                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
+        assertNull(args.getHttpClient());
         assertNull(args.getRequestInterceptor());
     }
-
 
     @Test
     @SuppressWarnings("unchecked")

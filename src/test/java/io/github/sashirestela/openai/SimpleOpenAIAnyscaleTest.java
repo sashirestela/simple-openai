@@ -1,46 +1,61 @@
 package io.github.sashirestela.openai;
 
-import static io.github.sashirestela.openai.SimpleOpenAIAnyscale.AUTHORIZATION_HEADER;
-import static io.github.sashirestela.openai.SimpleOpenAIAnyscale.BEARER_AUTHORIZATION;
-import static io.github.sashirestela.openai.SimpleOpenAIAnyscale.DEFAULT_BASE_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.http.HttpClient;
+
 import org.junit.jupiter.api.Test;
+
+import io.github.sashirestela.openai.support.Constant;
 
 class SimpleOpenAIAnyscaleTest {
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithCustomBaseURL() {
-        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs(
-            "the-api-key",
-            "https://example.org",
-            HttpClient.newHttpClient());
+        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org",
+                HttpClient.newHttpClient());
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
-        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
+        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
+                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNotNull(args.getHttpClient());
-
-        // No request interceptor for SimpleOpenAIAnyscale
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
-    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithDefaultBaseURL() {
-        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs(
-            "the-api-key",
-            null,
-            HttpClient.newHttpClient());
+    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
+        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", null, null);
 
-        assertEquals(SimpleOpenAIAnyscale.DEFAULT_BASE_URL, args.getBaseUrl());
+        assertEquals(Constant.ANYSCALE_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
-        assertEquals(BEARER_AUTHORIZATION + "the-api-key", args.getHeaders().get(AUTHORIZATION_HEADER));
-        assertNotNull(args.getHttpClient());
-
-        // No request interceptor for SimpleOpenAIAnyscale
+        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
+                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
+        assertNull(args.getHttpClient());
         assertNull(args.getRequestInterceptor());
     }
 
+    @Test
+    void shouldThrownExceptionWhenCallingUnimplementedMethods() {
+        var openAI = SimpleOpenAIAnyscale.builder()
+                .apiKey("api-key-test")
+                .build();
+        Runnable[] callingData = {
+                openAI::audios,
+                openAI::completions,
+                openAI::embeddings,
+                openAI::files,
+                openAI::fineTunings,
+                openAI::images,
+                openAI::models,
+                openAI::moderations,
+                openAI::assistants,
+                openAI::threads
+        };
+        for (Runnable calling : callingData) {
+            assertThrows(UnsupportedOperationException.class, () -> calling.run());
+        }
+    };
 }
