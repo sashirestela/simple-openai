@@ -8,13 +8,40 @@ A Java library to use the OpenAI Api in the simplest possible way.
 
 
 ## 💡 Description
-Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI Api](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's a _community-maintained_ library.
+Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI API](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's a _community-maintained_ library.
 
-Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclient) library for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code.
+Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclient) library for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code, among others libraries.
+
+
+## ✴ Support for Other OpenAI Providers
+Simple-OpenAI can be used with other providers that are compatible with the OpenAI API. At this moment, there is support for the following providers:
+
+### Azure OpenAI
+[Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure`, which extends the class `BaseSimpleOpenAI`, to start using this provider. 
+```java
+var openai = SimpleOpenAIAzure.builder()
+    .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
+    .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))   // Including resourceName and deploymentId
+    .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the `openai.chatCompletionService()` service only.
+
+### Anyscale
+[Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
+```java
+var openai = SimpleOpenAIAnyscale.builder()
+    .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
+    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the `openai.chatCompletionService()` service only. It was tested with the model Mistral.
 
 
 ## ✅ Supported Services
-Full support for all of the OpenAI services, including the latest changes announced at the [DevDay](https://openai.com/blog/new-models-and-developer-products-announced-at-devday) on Nov 6th, 2023:
+Full support for all of the OpenAI services:
 
 * Text to speech (as part of Audio)
 * Speech to text (as part of Audio)
@@ -69,7 +96,7 @@ var openai = SimpleOpenAI.builder()
     .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
     .build();
 ```
-Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as executor, proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
+Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as executors, proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
 ```java
 var httpClient = HttpClient.newBuilder()
     .version(Version.HTTP_1_1)
@@ -86,10 +113,10 @@ var openai = SimpleOpenAI.builder()
 ```
 
 ### Calling the SimpleOpenAI Services
-After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI Api. Let's see some examples.
+After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API. Let's see some examples.
 
 #### Audio Service
-Example to call th Audio service to transform text to audio. We are requesting to receive the audio in binary format (InputStream):
+Example to call the Audio service to transform text to audio. We are requesting to receive the audio in binary format (InputStream):
 ```java
 var speechRequest = AudioSpeechRequest.builder()
         .model("tts-1")
