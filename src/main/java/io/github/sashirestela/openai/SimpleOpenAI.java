@@ -3,55 +3,27 @@ package io.github.sashirestela.openai;
 import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Optional;
+
+import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
 
 /**
- * This class provides the implements additional {@link OpenAI OpenAI} interfaces
- * targeting the OpenAI service.
+ * This class provides the implements additional {@link OpenAI OpenAI}
+ * interfaces targeting the OpenAI service.
  */
 public class SimpleOpenAI extends BaseSimpleOpenAI {
 
-    public static final String OPENAI_BASE_URL = "https://api.openai.com";
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String ORGANIZATION_HEADER = "OpenAI-Organization";
-    public static final String BEARER_AUTHORIZATION = "Bearer ";
-
     private OpenAI.Audios audioService;
     private OpenAI.Completions completionService;
-
     private OpenAI.Embeddings embeddingService;
-
     private OpenAI.Files fileService;
-
     private OpenAI.FineTunings fineTuningService;
-
     private OpenAI.Images imageService;
-
     private OpenAI.Models modelService;
-
     private OpenAI.Moderations moderationService;
-
     private OpenAI.Assistants assistantService;
-
     private OpenAI.Threads threadService;
-
-
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
-        String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
-
-        var headers = new HashMap<String, String>();
-        headers.put(AUTHORIZATION_HEADER, BEARER_AUTHORIZATION + apiKey);
-        if (organizationId != null) {
-            headers.put(ORGANIZATION_HEADER, organizationId);
-        }
-
-        return BaseSimpleOpenAIArgs.builder()
-            .baseUrl(Optional.ofNullable(baseUrl).orElse(OPENAI_BASE_URL))
-            .headers(headers)
-            .httpClient(httpClient)
-            .build();
-    }
 
     /**
      * Constructor used to generate a builder.
@@ -66,6 +38,22 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
         super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, baseUrl, httpClient));
+    }
+
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
+            String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
+
+        var headers = new HashMap<String, String>();
+        headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
+        if (organizationId != null) {
+            headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
+        }
+
+        return BaseSimpleOpenAIArgs.builder()
+                .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
+                .headers(headers)
+                .httpClient(httpClient)
+                .build();
     }
 
     /**

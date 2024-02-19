@@ -1,5 +1,11 @@
 package io.github.sashirestela.openai.demo;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
@@ -16,38 +22,32 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 
 public class ChatAzureServiceDemo extends AbstractDemo {
     private ChatRequest chatRequest;
 
     public ChatAzureServiceDemo(String baseUrl, String apiKey, String apiVersion) {
         super(SimpleOpenAIAzure.builder()
-            .apiKey(apiKey)
-            .baseUrl(baseUrl)
-            .apiVersion(apiVersion)
-            .build());
+                .apiKey(apiKey)
+                .baseUrl(baseUrl)
+                .apiVersion(apiVersion)
+                .build());
         chatRequest = ChatRequest.builder()
-            .model("N/A")
-            .message(new ChatMsgSystem("You are an expert in AI."))
-            .message(
-                new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
-            .temperature(0.0)
-            .maxTokens(300)
-            .build();
+                .model("N/A")
+                .message(new ChatMsgSystem("You are an expert in AI."))
+                .message(
+                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .temperature(0.0)
+                .maxTokens(300)
+                .build();
     }
 
     public void demoCallChatStreaming() {
         var futureChat = openAI.chatCompletions().createStream(chatRequest);
         var chatResponse = futureChat.join();
         chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-            .map(ChatResponse::firstContent)
-            .forEach(System.out::print);
+                .map(ChatResponse::firstContent)
+                .forEach(System.out::print);
         System.out.println();
     }
 
@@ -60,30 +60,30 @@ public class ChatAzureServiceDemo extends AbstractDemo {
     public void demoCallChatWithFunctions() {
         var functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
-            ChatFunction.builder()
-                .name("get_weather")
-                .description("Get the current weather of a location")
-                .functionalClass(Weather.class)
-                .build());
+                ChatFunction.builder()
+                        .name("get_weather")
+                        .description("Get the current weather of a location")
+                        .functionalClass(Weather.class)
+                        .build());
         functionExecutor.enrollFunction(
-            ChatFunction.builder()
-                .name("product")
-                .description("Get the product of two numbers")
-                .functionalClass(Product.class)
-                .build());
+                ChatFunction.builder()
+                        .name("product")
+                        .description("Get the product of two numbers")
+                        .functionalClass(Product.class)
+                        .build());
         functionExecutor.enrollFunction(
-            ChatFunction.builder()
-                .name("run_alarm")
-                .description("Run an alarm")
-                .functionalClass(RunAlarm.class)
-                .build());
+                ChatFunction.builder()
+                        .name("run_alarm")
+                        .description("Run an alarm")
+                        .functionalClass(RunAlarm.class)
+                        .build());
         var messages = new ArrayList<ChatMsg>();
         messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
         chatRequest = ChatRequest.builder()
-            .model("N/A")
-            .messages(messages)
-            .tools(functionExecutor.getToolFunctions())
-            .build();
+                .model("N/A")
+                .messages(messages)
+                .tools(functionExecutor.getToolFunctions())
+                .build();
         var futureChat = openAI.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
         var chatMessage = chatResponse.firstMessage();
@@ -92,10 +92,10 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         messages.add(chatMessage);
         messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
-            .model("N/A")
-            .messages(messages)
-            .tools(functionExecutor.getToolFunctions())
-            .build();
+                .model("N/A")
+                .messages(messages)
+                .tools(functionExecutor.getToolFunctions())
+                .build();
         futureChat = openAI.chatCompletions().create(chatRequest);
         chatResponse = futureChat.join();
         System.out.println(chatResponse.firstContent());
@@ -103,38 +103,38 @@ public class ChatAzureServiceDemo extends AbstractDemo {
 
     public void demoCallChatWithVisionExternalImage() {
         var chatRequest = ChatRequest.builder()
-            .model("N/A")
-            .messages(List.of(
-                new ChatMsgUser(List.of(
-                    new ContentPartText(
-                        "What do you see in the image? Give in details in no more than 100 words."),
-                    new ContentPartImage(new ImageUrl(
-                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
-            .temperature(0.0)
-            .maxTokens(500)
-            .build();
+                .model("N/A")
+                .messages(List.of(
+                        new ChatMsgUser(List.of(
+                                new ContentPartText(
+                                        "What do you see in the image? Give in details in no more than 100 words."),
+                                new ContentPartImage(new ImageUrl(
+                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
+                .temperature(0.0)
+                .maxTokens(500)
+                .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
         chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-            .map(chatResp -> chatResp.firstContent())
-            .forEach(System.out::print);
+                .map(chatResp -> chatResp.firstContent())
+                .forEach(System.out::print);
         System.out.println();
     }
 
     public void demoCallChatWithVisionLocalImage() {
         var chatRequest = ChatRequest.builder()
-            .model("N/A")
-            .messages(List.of(
-                new ChatMsgUser(List.of(
-                    new ContentPartText(
-                        "What do you see in the image? Give in details in no more than 100 words."),
-                    new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
-            .temperature(0.0)
-            .maxTokens(500)
-            .build();
+                .model("N/A")
+                .messages(List.of(
+                        new ChatMsgUser(List.of(
+                                new ContentPartText(
+                                        "What do you see in the image? Give in details in no more than 100 words."),
+                                new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                .temperature(0.0)
+                .maxTokens(500)
+                .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
         chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-            .map(chatResp -> chatResp.firstContent())
-            .forEach(System.out::print);
+                .map(chatResp -> chatResp.firstContent())
+                .forEach(System.out::print);
         System.out.println();
     }
 
@@ -156,14 +156,13 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL");
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
         var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
-        // Services like Azure OpenAI don't require a model (endpoints have built-in model)
-        var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
 
+        var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
 
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         if (baseUrl.contains("gpt-35-turbo")) {
             demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        } else if (baseUrl.contains("gpt-4")){
+        } else if (baseUrl.contains("gpt-4")) {
             demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
             demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
             demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);

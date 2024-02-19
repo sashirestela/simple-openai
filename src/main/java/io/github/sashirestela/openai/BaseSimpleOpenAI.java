@@ -1,18 +1,17 @@
 package io.github.sashirestela.openai;
 
-import io.github.sashirestela.cleverclient.CleverClient;
 import java.net.http.HttpClient;
 import java.util.Optional;
+
+import io.github.sashirestela.cleverclient.CleverClient;
 import lombok.NonNull;
 import lombok.Setter;
 
-
 /**
- * The base abstract class that all providers extend. It generates
- * an implementation to the chatCompletions() interface of {@link OpenAI OpenAI} interfaces.
- * It throws a "Not implemented" exception for all other interfaces
+ * The base abstract class that all providers extend. It generates an
+ * implementation to the chatCompletions() interface of {@link OpenAI OpenAI}
+ * interfaces. It throws a "Not implemented" exception for all other interfaces
  */
-
 
 public abstract class BaseSimpleOpenAI {
 
@@ -24,22 +23,21 @@ public abstract class BaseSimpleOpenAI {
     protected OpenAI.ChatCompletions chatCompletionService;
 
     BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
-        var httpClient =
-            Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
+        var httpClient = Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
         this.cleverClient = CleverClient.builder()
-            .httpClient(httpClient)
-            .baseUrl(args.getBaseUrl())
-            .headers(args.getHeaders())
-            .endOfStream(END_OF_STREAM)
-            .requestInterceptor(args.getRequestInterceptor())
-            .build();
+                .httpClient(httpClient)
+                .baseUrl(args.getBaseUrl())
+                .headers(args.getHeaders())
+                .endOfStream(END_OF_STREAM)
+                .requestInterceptor(args.getRequestInterceptor())
+                .build();
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Audios audios() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
@@ -60,62 +58,62 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Completions completions() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Embeddings embeddings() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Files files() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.FineTunings fineTunings() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Images images() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Models models() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Moderations moderations() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Assistants assistants() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Threads threads() {
-        throw new SimpleUncheckedException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

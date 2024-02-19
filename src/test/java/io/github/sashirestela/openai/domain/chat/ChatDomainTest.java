@@ -7,9 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-import io.github.sashirestela.openai.OpenAI;
-import io.github.sashirestela.openai.OpenAI.ChatCompletions;
-import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.List;
@@ -21,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 
+import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
@@ -208,29 +206,25 @@ class ChatDomainTest {
     @Test
     void shouldUpdateChatRequestWithAutoToolChoiceWhenToolsAreProvidedWithoutToolChoice() {
         var charRequest = ChatRequest.builder()
-            .model("model")
-            .message(new ChatMsgUser("content"))
-            .tools(functionExecutor.getToolFunctions())
-            .build();
+                .model("model")
+                .message(new ChatMsgUser("content"))
+                .tools(functionExecutor.getToolFunctions())
+                .build();
 
         assertNull(charRequest.getToolChoice());
         var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
         assertEquals(ChatToolChoiceType.AUTO, updatedChatRequest.getToolChoice());
     }
 
-    @Test
     void shouldThrownExceptionWhenCreatingChatRequestWithToolChoiceWrongClass() {
-        var charRequest = ChatRequest.builder()
-            .model("model")
-            .message(new ChatMsgUser("content"))
-            .tools(functionExecutor.getToolFunctions())
-            .toolChoice("wrong value")
-            .build();
-
-        var exception = assertThrows(SimpleUncheckedException.class, () -> OpenAI.updateRequest(charRequest, Boolean.TRUE));
+        var chatRequestBuilder = ChatRequest.builder()
+                .model("model")
+                .message(new ChatMsgUser("My Content"))
+                .toolChoice("wrong value");
+        var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
         var actualErrorMessage = exception.getMessage();
-        var expectedErrorMessage = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
-        assertEquals(expectedErrorMessage, actualErrorMessage);
+        var expectedErrorMessge = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
+        assertEquals(expectedErrorMessge, actualErrorMessage);
     }
 
     @Test
