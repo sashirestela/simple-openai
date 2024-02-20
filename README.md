@@ -32,7 +32,7 @@ Currently we are supporting the `openai.chatCompletionService()` service only.
 [Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
 ```java
 var openai = SimpleOpenAIAnyscale.builder()
-    .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
+    .apiKey(System.getenv("ANYSCALE_API_KEY"))
     //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
     //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
     .build();
