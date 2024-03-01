@@ -1,17 +1,16 @@
 package io.github.sashirestela.openai.domain.file;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 class FileDomainTest {
 
@@ -70,4 +69,5 @@ class FileDomainTest {
         System.out.println(fileResponse);
         assertNotNull(fileResponse);
     }
+
 }

@@ -9,5 +9,5 @@ public enum Quality {
 
     @JsonProperty("hd")
     HD;
-    
+
 }

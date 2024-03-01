@@ -12,7 +12,6 @@ import java.time.ZonedDateTime;
 
 /**
  * Represents a files attached to an assistant.
- *
  */
 @NoArgsConstructor
 @Getter

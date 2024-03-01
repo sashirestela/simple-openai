@@ -8,7 +8,9 @@ import lombok.NonNull;
 @Getter
 public class ChatToolChoice {
 
-    @NonNull private ChatToolType type;
-    @NonNull private ChatFunctionName function;
-    
+    @NonNull
+    private ChatToolType type;
+    @NonNull
+    private ChatFunctionName function;
+
 }

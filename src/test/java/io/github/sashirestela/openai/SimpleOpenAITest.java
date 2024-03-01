@@ -1,14 +1,10 @@
 package io.github.sashirestela.openai;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.support.Constant;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -18,12 +14,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
-import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.support.Constant;
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class SimpleOpenAITest {
 
@@ -126,6 +125,7 @@ class SimpleOpenAITest {
     }
 
     static class TestData {
+
         private Class<?> serviceClass;
         private Runnable calling;
 
@@ -133,6 +133,7 @@ class SimpleOpenAITest {
             this.serviceClass = serviceClass;
             this.calling = calling;
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -141,10 +142,13 @@ class SimpleOpenAITest {
                 interfaceClass.getClassLoader(),
                 new Class<?>[] { interfaceClass },
                 new InvocationHandler() {
+
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                         throw new UnsupportedOperationException("Unimplemented method 'invoke'");
                     }
+
                 });
     }
+
 }

@@ -1,11 +1,11 @@
 package io.github.sashirestela.openai.demo;
 
-import java.nio.file.Paths;
-
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.file.PurposeType;
+
+import java.nio.file.Paths;
 
 public class FileServiceDemo extends AbstractDemo {
 
@@ -80,4 +80,5 @@ public class FileServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

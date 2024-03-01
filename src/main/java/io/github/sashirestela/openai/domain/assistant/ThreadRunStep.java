@@ -14,7 +14,6 @@ import java.util.Map;
 
 /**
  * Represents a step in execution of a run.
- *
  */
 @NoArgsConstructor
 @Getter
@@ -44,16 +43,20 @@ public class ThreadRunStep {
     private Map<String, String> metadata;
 
     public interface Type {
+
         String MESSAGE_CREATION = "message_creation";
         String TOOL_CALLS = "tool_calls";
+
     }
 
     public interface Status {
+
         String IN_PROGRESS = "in_progress";
         String CANCELLED = "cancelled";
         String FAILED = "failed";
         String COMPLETED = "completed";
         String EXPIRED = "expired";
+
     }
 
     @NoArgsConstructor
@@ -136,4 +139,5 @@ public class ThreadRunStep {
         private String output;
 
     }
+
 }

@@ -16,7 +16,13 @@ public class PageRequest {
     private String before;
 
     public enum Order {
-        @JsonProperty("asc") ASC,
-        @JsonProperty("desc") DESC
+
+        @JsonProperty("asc")
+        ASC,
+
+        @JsonProperty("desc")
+        DESC
+
     }
+
 }

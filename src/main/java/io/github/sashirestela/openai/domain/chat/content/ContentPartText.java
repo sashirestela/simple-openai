@@ -12,4 +12,5 @@ public class ContentPartText extends ContentPart {
         this.type = ContentPartType.TEXT;
         this.text = text;
     }
+
 }

@@ -15,7 +15,6 @@ import java.util.Map;
 
 /**
  * Represents an assistant that can call the model and use tools.
- *
  */
 @NoArgsConstructor
 @Getter
@@ -45,4 +44,5 @@ public class Assistant {
                 .fileIds(fileIds)
                 .metadata(metadata);
     }
+
 }

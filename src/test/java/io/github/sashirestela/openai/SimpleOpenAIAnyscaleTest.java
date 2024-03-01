@@ -1,17 +1,17 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.openai.support.Constant;
+import org.junit.jupiter.api.Test;
+
+import java.net.http.HttpClient;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.net.http.HttpClient;
-
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.support.Constant;
-
 class SimpleOpenAIAnyscaleTest {
+
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithCustomBaseURL() {
         var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org",
@@ -58,4 +58,5 @@ class SimpleOpenAIAnyscaleTest {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());
         }
     };
+
 }

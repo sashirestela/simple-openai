@@ -40,4 +40,5 @@ public class Page<T> extends AbstractList<T> {
     public T last() {
         return get(size() - 1);
     }
+
 }

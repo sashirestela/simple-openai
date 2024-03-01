@@ -18,4 +18,5 @@ public class ToolOutput {
     public static ToolOutput of(String toolCallId, String output) {
         return new ToolOutput(toolCallId, output);
     }
+
 }

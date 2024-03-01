@@ -1,15 +1,14 @@
 package io.github.sashirestela.openai.domain.chat;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.domain.OpenAIUsage;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -32,4 +31,5 @@ public class ChatResponse {
     public String firstContent() {
         return firstMessage().getContent();
     }
+
 }

@@ -1,15 +1,7 @@
 package io.github.sashirestela.openai.demo;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
@@ -22,6 +14,13 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 public class ChatServiceDemo extends AbstractDemo {
 
@@ -140,7 +139,7 @@ public class ChatServiceDemo extends AbstractDemo {
             Path path = Paths.get(imagePath);
             byte[] imageBytes = Files.readAllBytes(path);
             String base64String = Base64.getEncoder().encodeToString(imageBytes);
-            var extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+            var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
             var prefix = "data:image/" + extension + ";base64,";
             return new ImageUrl(prefix + base64String);
         } catch (Exception e) {
@@ -150,6 +149,7 @@ public class ChatServiceDemo extends AbstractDemo {
     }
 
     public static class Weather implements Functional {
+
         @JsonPropertyDescription("City and state, for example: León, Guanajuato")
         public String location;
 
@@ -161,9 +161,11 @@ public class ChatServiceDemo extends AbstractDemo {
         public Object execute() {
             return Math.random() * 45;
         }
+
     }
 
     public static class Product implements Functional {
+
         @JsonPropertyDescription("The multiplicand part of a product")
         @JsonProperty(required = true)
         public double multiplicand;
@@ -176,13 +178,16 @@ public class ChatServiceDemo extends AbstractDemo {
         public Object execute() {
             return multiplicand * multiplier;
         }
+
     }
 
     public static class RunAlarm implements Functional {
+
         @Override
         public Object execute() {
             return "DONE";
         }
+
     }
 
     public static void main(String[] args) {
@@ -196,4 +201,5 @@ public class ChatServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

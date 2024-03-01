@@ -1,17 +1,16 @@
 package io.github.sashirestela.openai.domain.audio;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 class AudioDomainTest {
 
@@ -105,4 +104,5 @@ class AudioDomainTest {
         System.out.println(audioResponse);
         assertNotNull(audioResponse);
     }
+
 }

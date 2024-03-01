@@ -1,18 +1,17 @@
 package io.github.sashirestela.openai.domain.assistant;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 public class ThreadDomainTest {
 
@@ -245,4 +244,5 @@ public class ThreadDomainTest {
         System.out.println(response);
         assertNotNull(response);
     }
+
 }

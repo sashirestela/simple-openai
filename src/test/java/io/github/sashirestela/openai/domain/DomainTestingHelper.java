@@ -1,9 +1,5 @@
 package io.github.sashirestela.openai.domain;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +12,13 @@ import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @SuppressWarnings("unchecked")
 public class DomainTestingHelper {
+
     private static DomainTestingHelper helper = null;
 
     private DomainTestingHelper() {
@@ -56,4 +57,5 @@ public class DomainTestingHelper {
         when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
         when(httpResponse.body()).thenReturn(binaryResponse);
     }
+
 }

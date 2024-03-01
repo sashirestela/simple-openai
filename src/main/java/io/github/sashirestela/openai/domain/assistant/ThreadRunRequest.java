@@ -21,7 +21,8 @@ public class ThreadRunRequest {
     private String model;
     private String instructions;
     private String additionalInstructions;
-    @Singular private List<AssistantTool> tools;
+    @Singular
+    private List<AssistantTool> tools;
     private Map<String, String> metadata;
 
 }

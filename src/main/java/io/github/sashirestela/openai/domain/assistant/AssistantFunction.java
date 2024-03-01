@@ -25,7 +25,6 @@ public class AssistantFunction {
     @NonNull
     private JsonNode parameters;
 
-
     public static AssistantFunction function(ChatFunction function) {
         return AssistantFunction.builder()
                 .name(function.getName())
@@ -33,4 +32,5 @@ public class AssistantFunction {
                 .parameters(JsonSchemaUtil.classToJsonSchema(function.getFunctionalClass()))
                 .build();
     }
+
 }

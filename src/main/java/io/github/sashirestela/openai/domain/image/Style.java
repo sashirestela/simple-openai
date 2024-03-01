@@ -9,5 +9,5 @@ public enum Style {
 
     @JsonProperty("natural")
     NATURAL;
-    
+
 }

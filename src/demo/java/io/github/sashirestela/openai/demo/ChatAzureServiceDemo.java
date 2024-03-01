@@ -1,12 +1,5 @@
 package io.github.sashirestela.openai.demo;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
@@ -23,7 +16,15 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+
 public class ChatAzureServiceDemo extends AbstractDemo {
+
     private ChatRequest chatRequest;
 
     public ChatAzureServiceDemo(String baseUrl, String apiKey, String apiVersion) {
@@ -35,8 +36,7 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         chatRequest = ChatRequest.builder()
                 .model("N/A")
                 .message(new ChatMsgSystem("You are an expert in AI."))
-                .message(
-                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
@@ -143,7 +143,7 @@ public class ChatAzureServiceDemo extends AbstractDemo {
             Path path = Paths.get(imagePath);
             byte[] imageBytes = Files.readAllBytes(path);
             String base64String = Base64.getEncoder().encodeToString(imageBytes);
-            var extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+            var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
             var prefix = "data:image/" + extension + ";base64,";
             return new ImageUrl(prefix + base64String);
         } catch (Exception e) {
@@ -170,4 +170,5 @@ public class ChatAzureServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

@@ -7,4 +7,5 @@ public abstract class ContentPart {
     public ContentPartType getType() {
         return type;
     }
+
 }

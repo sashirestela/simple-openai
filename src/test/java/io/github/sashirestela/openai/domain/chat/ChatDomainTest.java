@@ -1,23 +1,7 @@
 package io.github.sashirestela.openai.domain.chat;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-import java.net.http.HttpClient;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleUncheckedException;
@@ -39,6 +23,20 @@ import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.http.HttpClient;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class ChatDomainTest {
 
@@ -83,8 +81,7 @@ class ChatDomainTest {
 
     @Test
     void testChatCompletionsCreateStream() throws IOException {
-        DomainTestingHelper.get().mockForStream(httpClient,
-                "src/test/resources/chatcompletions_create_stream.txt");
+        DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/chatcompletions_create_stream.txt");
         var chatResponse = openAI.chatCompletions().createStream(chatTextRequest).join();
         chatResponse.filter(chatResp -> chatResp.firstContent() != null)
                 .map(chatResp -> chatResp.firstContent())
@@ -94,8 +91,7 @@ class ChatDomainTest {
 
     @Test
     void testChatCompletionsCreate() throws IOException {
-        DomainTestingHelper.get().mockForObject(httpClient,
-                "src/test/resources/chatcompletions_create.json");
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create.json");
         var chatResponse = openAI.chatCompletions().create(chatTextRequest).join();
         System.out.println(chatResponse.firstContent());
         assertNotNull(chatResponse);
@@ -103,8 +99,7 @@ class ChatDomainTest {
 
     @Test
     void testChatCompletionsCreateWithVision() throws IOException {
-        DomainTestingHelper.get().mockForObject(httpClient,
-                "src/test/resources/chatcompletions_create_vision.json");
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create_vision.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-vision-preview")
                 .message(new ChatMsgUser(List.of(
@@ -131,8 +126,8 @@ class ChatDomainTest {
 
     @Test
     void testChatCompletionsCreateWithFunctionQuestion() throws IOException {
-        DomainTestingHelper.get().mockForObject(httpClient,
-                "src/test/resources/chatcompletions_create_function_question.json");
+        DomainTestingHelper.get()
+                .mockForObject(httpClient, "src/test/resources/chatcompletions_create_function_question.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
                 .message(new ChatMsgSystem("You are an expert in Mathematics"))
@@ -159,8 +154,8 @@ class ChatDomainTest {
 
     @Test
     void testChatCompletionsCreateWithFunctionAnswer() throws IOException {
-        DomainTestingHelper.get().mockForObject(httpClient,
-                "src/test/resources/chatcompletions_create_function_answer.json");
+        DomainTestingHelper.get()
+                .mockForObject(httpClient, "src/test/resources/chatcompletions_create_function_answer.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
                 .message(new ChatMsgSystem("You are an expert in Mathematics"))
@@ -298,6 +293,7 @@ class ChatDomainTest {
     }
 
     static class Product implements Functional {
+
         @JsonPropertyDescription("The multiplicand part of a product")
         @JsonProperty(required = true)
         public double multiplicand;
@@ -310,5 +306,7 @@ class ChatDomainTest {
         public Object execute() {
             return multiplicand * multiplier;
         }
+
     }
+
 }

@@ -14,7 +14,6 @@ import java.util.Map;
 
 /**
  * Represents a message within a thread.
- *
  */
 @NoArgsConstructor
 @Getter

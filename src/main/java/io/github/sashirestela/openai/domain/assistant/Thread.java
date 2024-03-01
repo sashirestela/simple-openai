@@ -13,7 +13,6 @@ import java.util.Map;
 
 /**
  * A thread that assistants can interact with.
- *
  */
 @NoArgsConstructor
 @Getter

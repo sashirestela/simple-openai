@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,8 +14,10 @@ import lombok.NonNull;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FineTuningRequest {
 
-    @NonNull private String model;
-    @NonNull private String trainingFile;
+    @NonNull
+    private String model;
+    @NonNull
+    private String trainingFile;
     private String validationFile;
     private HyperParams hyperparameters;
     private String suffix;

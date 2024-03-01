@@ -1,18 +1,17 @@
 package io.github.sashirestela.openai;
 
-import java.net.http.HttpClient;
-import java.util.Optional;
-
 import io.github.sashirestela.cleverclient.CleverClient;
 import lombok.NonNull;
 import lombok.Setter;
 
-/**
- * The base abstract class that all providers extend. It generates an
- * implementation to the chatCompletions() interface of {@link OpenAI OpenAI}
- * interfaces. It throws a "Not implemented" exception for all other interfaces
- */
+import java.net.http.HttpClient;
+import java.util.Optional;
 
+/**
+ * The base abstract class that all providers extend. It generates an implementation to the
+ * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a "Not implemented"
+ * exception for all other interfaces
+ */
 public abstract class BaseSimpleOpenAI {
 
     private static final String END_OF_STREAM = "[DONE]";
@@ -41,8 +40,7 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the ChatCompletions interface to handle
-     * requests.
+     * Generates an implementation of the ChatCompletions interface to handle requests.
      *
      * @return An instance of the interface. It is created only once.
      */
@@ -116,4 +114,5 @@ public abstract class BaseSimpleOpenAI {
     public OpenAI.Threads threads() {
         throw new UnsupportedOperationException("Not implemented");
     }
+
 }

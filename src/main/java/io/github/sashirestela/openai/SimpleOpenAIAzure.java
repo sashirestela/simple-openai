@@ -1,20 +1,19 @@
 package io.github.sashirestela.openai;
 
-import java.net.http.HttpClient;
-import java.util.Map;
-import java.util.function.UnaryOperator;
-
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
 
+import java.net.http.HttpClient;
+import java.util.Map;
+import java.util.function.UnaryOperator;
+
 /**
- * This class provides the chatCompletion() service for the Azure OpenAI
- * provider. Note that each instance of SimpleOpenAIAzure is linked to a single
- * specific model. The capabilities of the model determine which
- * chatCompletion() methods are available.
+ * This class provides the chatCompletion() service for the Azure OpenAI provider. Note that each
+ * instance of SimpleOpenAIAzure is linked to a single specific model. The capabilities of the model
+ * determine which chatCompletion() methods are available.
  */
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
@@ -23,12 +22,11 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
      *
      * @param apiKey     Identifier to be used for authentication. Mandatory.
      * @param baseUrl    The URL of the Azure OpenAI deployment. Mandatory.
-     * @param apiVersion Azure OpenAI API version. See:
-     *                   <a href=
+     * @param apiVersion Azure OpenAI API version. See: <a href=
      *                   "https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure
      *                   OpenAI API versioning</a>. Mandatory.
-     * @param httpClient A {@link HttpClient HttpClient} object.
-     *                   One is created by default if not provided. Optional.
+     * @param httpClient A {@link HttpClient HttpClient} object. One is created by default if not
+     *                   provided. Optional.
      */
     @Builder
     public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl, @NonNull String apiVersion,
@@ -82,4 +80,5 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 .requestInterceptor(requestInterceptor)
                 .build();
     }
+
 }

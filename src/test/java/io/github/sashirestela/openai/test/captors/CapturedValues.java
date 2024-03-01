@@ -24,6 +24,7 @@ public class CapturedValues {
     }
 
     private static final class StringSubscriberAdapter implements Flow.Subscriber<ByteBuffer> {
+
         final BodySubscriber<String> wrapped;
 
         StringSubscriberAdapter(BodySubscriber<String> wrapped) {
@@ -34,11 +35,22 @@ public class CapturedValues {
         public void onSubscribe(Flow.Subscription subscription) {
             wrapped.onSubscribe(subscription);
         }
+
         @Override
-        public void onNext(ByteBuffer item) { wrapped.onNext(List.of(item)); }
+        public void onNext(ByteBuffer item) {
+            wrapped.onNext(List.of(item));
+        }
+
         @Override
-        public void onError(Throwable throwable) { wrapped.onError(throwable); }
+        public void onError(Throwable throwable) {
+            wrapped.onError(throwable);
+        }
+
         @Override
-        public void onComplete() { wrapped.onComplete(); }
+        public void onComplete() {
+            wrapped.onComplete();
+        }
+
     }
+
 }

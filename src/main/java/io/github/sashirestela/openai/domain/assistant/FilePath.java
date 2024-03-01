@@ -19,4 +19,5 @@ public class FilePath {
     public static FilePath of(String id) {
         return new FilePath(id);
     }
+
 }

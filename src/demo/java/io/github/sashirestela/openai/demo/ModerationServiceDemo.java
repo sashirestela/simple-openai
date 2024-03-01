@@ -1,8 +1,8 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.Arrays;
-
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
+
+import java.util.Arrays;
 
 public class ModerationServiceDemo extends AbstractDemo {
 
@@ -14,7 +14,8 @@ public class ModerationServiceDemo extends AbstractDemo {
                 .build();
         var futureModeration = openAI.moderations().create(moderationRequest);
         var moderationResponse = futureModeration.join();
-        moderationResponse.getResults().stream()
+        moderationResponse.getResults()
+                .stream()
                 .forEach(System.out::println);
     }
 
@@ -25,4 +26,5 @@ public class ModerationServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

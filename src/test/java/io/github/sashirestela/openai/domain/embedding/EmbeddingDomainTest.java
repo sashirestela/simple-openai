@@ -1,21 +1,20 @@
 package io.github.sashirestela.openai.domain.embedding;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class EmbeddingDomainTest {
 
@@ -88,4 +87,5 @@ class EmbeddingDomainTest {
             assertEquals(expectedErrorMessge, actualErrorMessage);
         }
     }
+
 }

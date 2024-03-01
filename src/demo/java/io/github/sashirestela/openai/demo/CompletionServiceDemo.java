@@ -42,4 +42,5 @@ public class CompletionServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }
