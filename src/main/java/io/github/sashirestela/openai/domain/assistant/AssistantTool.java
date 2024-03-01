@@ -17,9 +17,11 @@ import lombok.ToString;
 public class AssistantTool {
 
     public static final AssistantTool CODE_INTERPRETER = AssistantTool.builder()
-            .type("code_interpreter").build();
+            .type("code_interpreter")
+            .build();
     public static final AssistantTool RETRIEVAL = AssistantTool.builder()
-            .type("retrieval").build();
+            .type("retrieval")
+            .build();
 
     @NonNull
     @Builder.Default

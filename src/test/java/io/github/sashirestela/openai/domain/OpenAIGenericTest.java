@@ -1,10 +1,10 @@
 package io.github.sashirestela.openai.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OpenAIGenericTest {
 
@@ -15,4 +15,5 @@ class OpenAIGenericTest {
         System.out.println(openAIGeneric);
         assertNotNull(openAIGeneric);
     }
+
 }

@@ -1,7 +1,7 @@
 package io.github.sashirestela.openai.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,15 +9,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OpenAIUsage {
 
-    @JsonProperty("prompt_tokens")
     private Integer promptTokens;
-
-    @JsonProperty("completion_tokens")
     private Integer completionTokens;
-
-    @JsonProperty("total_tokens")
     private Integer totalTokens;
 
 }

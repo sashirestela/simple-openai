@@ -2,9 +2,10 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
 
 public abstract class AbstractDemo {
 
@@ -49,10 +50,13 @@ public abstract class AbstractDemo {
 
     @FunctionalInterface
     static interface Action {
+
         void execute();
+
     }
 
     static class TitleAction {
+
         private String title;
         private Action action;
 
@@ -60,5 +64,7 @@ public abstract class AbstractDemo {
             this.title = title;
             this.action = action;
         }
+
     }
+
 }

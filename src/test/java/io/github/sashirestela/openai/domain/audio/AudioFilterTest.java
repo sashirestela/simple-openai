@@ -1,12 +1,11 @@
 package io.github.sashirestela.openai.domain.audio;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.test.captors.CapturedValues;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -14,13 +13,13 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
-import io.github.sashirestela.openai.test.captors.CapturedValues;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
-import org.mockito.ArgumentCaptor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class AudioFilterTest {
 
@@ -89,7 +88,8 @@ class AudioFilterTest {
 
     static void assertContainsText(AudioRespFmt responseFormat, ArgumentCaptor<HttpRequest> httpRequest) {
         String requestBody = CapturedValues.getRequestBodyAsString(httpRequest);
-        assertTrue(requestBody.contains( responseFormat.name().toLowerCase() ), "Should contain " + requestBody + " in HttpRequest");
+        assertTrue(requestBody.contains(responseFormat.name().toLowerCase()),
+                "Should contain " + requestBody + " in HttpRequest");
     }
 
     @Test
@@ -114,4 +114,5 @@ class AudioFilterTest {
                 () -> openAI.audios().transcribe(audioRequest));
         assertTrue(exception.getMessage().contains("Unexpected responseFormat for the method"));
     }
+
 }

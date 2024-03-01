@@ -1,10 +1,10 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.Arrays;
-
 import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
+
+import java.util.Arrays;
 
 public class EmbeddingServiceDemo extends AbstractDemo {
 
@@ -17,7 +17,8 @@ public class EmbeddingServiceDemo extends AbstractDemo {
                 .build();
         var futureEmbedding = openAI.embeddings().create(embeddingRequest);
         var embeddingResponse = futureEmbedding.join();
-        embeddingResponse.getData().stream()
+        embeddingResponse.getData()
+                .stream()
                 .map(EmbeddingFloat::getEmbedding)
                 .forEach(System.out::println);
     }
@@ -26,12 +27,13 @@ public class EmbeddingServiceDemo extends AbstractDemo {
         var embeddingRequest = EmbeddingRequest.builder()
                 .model("text-embedding-ada-002")
                 .input(Arrays.asList(
-                    "shiny sun",
-                    "blue sky"))
-            .build();
+                        "shiny sun",
+                        "blue sky"))
+                .build();
         var futureEmbedding = openAI.embeddings().createBase64(embeddingRequest);
         var embeddingResponse = futureEmbedding.join();
-        embeddingResponse.getData().stream()
+        embeddingResponse.getData()
+                .stream()
                 .map(EmbeddingBase64::getEmbedding)
                 .forEach(System.out::println);
     }
@@ -44,4 +46,5 @@ public class EmbeddingServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

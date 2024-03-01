@@ -1,23 +1,21 @@
 package io.github.sashirestela.openai.domain.assistant;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.function.Functional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
-import io.github.sashirestela.openai.function.Functional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 public class AssistantDomainTest {
 
@@ -39,10 +37,13 @@ public class AssistantDomainTest {
                 .name("Math Tutor")
                 .description("Assistant for mathematics topics")
                 .instructions("You are a personal math tutor. Use the added function if necessary or the added files.")
-                .tool(AssistantTool.builder().type("function")
-                        .function(AssistantFunction.function(ChatFunction.builder().name("product")
+                .tool(AssistantTool.builder()
+                        .type("function")
+                        .function(AssistantFunction.function(ChatFunction.builder()
+                                .name("product")
                                 .description("Get the product of two numbers")
-                                .functionalClass(Product.class).build()))
+                                .functionalClass(Product.class)
+                                .build()))
                         .build())
                 .tool(AssistantTool.RETRIEVAL)
                 .fileId(fileId)
@@ -133,6 +134,7 @@ public class AssistantDomainTest {
     }
 
     static class Product implements Functional {
+
         @JsonPropertyDescription("The multiplicand part of a product")
         @JsonProperty(required = true)
         public double multiplicand;
@@ -145,5 +147,7 @@ public class AssistantDomainTest {
         public Object execute() {
             return multiplicand * multiplier;
         }
+
     }
+
 }

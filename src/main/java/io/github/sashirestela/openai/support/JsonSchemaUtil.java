@@ -9,7 +9,6 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 
 public class JsonSchemaUtil {
@@ -41,4 +40,5 @@ public class JsonSchemaUtil {
         }
         return jsonSchema;
     }
+
 }

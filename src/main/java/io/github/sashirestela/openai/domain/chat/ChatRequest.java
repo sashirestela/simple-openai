@@ -1,13 +1,9 @@
 package io.github.sashirestela.openai.domain.chat;
 
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
@@ -18,6 +14,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.With;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @JsonInclude(Include.NON_EMPTY)
@@ -84,4 +83,5 @@ public class ChatRequest {
         this.logprobs = logprobs;
         this.topLogprobs = topLogprobs;
     }
+
 }

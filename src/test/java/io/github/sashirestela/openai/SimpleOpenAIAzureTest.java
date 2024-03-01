@@ -1,18 +1,17 @@
 package io.github.sashirestela.openai;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.cleverclient.support.ContentType;
+import io.github.sashirestela.openai.support.Constant;
+import org.junit.jupiter.api.Test;
 
 import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
-import io.github.sashirestela.cleverclient.support.ContentType;
-import io.github.sashirestela.openai.support.Constant;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleOpenAIAzureTest {
 
@@ -106,4 +105,5 @@ class SimpleOpenAIAzureTest {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());
         }
     };
+
 }

@@ -1,20 +1,19 @@
 package io.github.sashirestela.openai.domain.finetuning;
 
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.http.HttpClient;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-import java.net.http.HttpClient;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.DomainTestingHelper;
 
 class FineTuningDomainTest {
 
@@ -37,8 +36,11 @@ class FineTuningDomainTest {
                 .trainingFile("fileId")
                 .validationFile("fileId")
                 .model("gpt-3.5-turbo-1106")
-                .hyperparameters(HyperParams.builder().batchSize("auto").learningRateMultiplier("auto")
-                        .nEpochs("auto").build())
+                .hyperparameters(HyperParams.builder()
+                        .batchSize("auto")
+                        .learningRateMultiplier("auto")
+                        .nEpochs("auto")
+                        .build())
                 .suffix("suffix")
                 .build();
         var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
@@ -176,4 +178,5 @@ class FineTuningDomainTest {
             assertEquals(expectedErrorMessge, actualErrorMessage);
         }
     }
+
 }

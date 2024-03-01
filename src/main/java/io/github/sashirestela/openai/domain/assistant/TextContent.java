@@ -15,20 +15,22 @@ public class TextContent implements ThreadMessageContent {
 
     private Text text;
 
-
     public String getValue() {
-        return (text == null)? null: text.getValue();
+        return (text == null) ? null : text.getValue();
     }
 
     public List<TextContentAnnotation> getAnnotations() {
-        return (text == null)? null: text.getAnnotations();
+        return (text == null) ? null : text.getAnnotations();
     }
 
     @NoArgsConstructor
     @Getter
     @ToString
     public class Text {
+
         private String value;
         private List<TextContentAnnotation> annotations;
+
     }
+
 }

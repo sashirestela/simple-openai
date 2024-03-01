@@ -1,32 +1,34 @@
 package io.github.sashirestela.openai.domain.completion;
 
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.With;
 
+import java.util.List;
+import java.util.Map;
+
 @Getter
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CompletionRequest {
 
-    @NonNull private String model;
-    @NonNull private Object prompt;
+    @NonNull
+    private String model;
+    @NonNull
+    private Object prompt;
     private String suffix;
     private Integer maxTokens;
     private Double temperature;
     private Double topP;
     private Integer n;
-    @With private Boolean stream;
+    @With
+    private Boolean stream;
     private Integer logprobs;
     private Boolean echo;
     private Object stop;
@@ -74,4 +76,5 @@ public class CompletionRequest {
         this.logitBias = logitBias;
         this.user = user;
     }
+
 }

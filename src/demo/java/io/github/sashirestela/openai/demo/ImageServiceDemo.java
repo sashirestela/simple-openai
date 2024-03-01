@@ -1,12 +1,12 @@
 package io.github.sashirestela.openai.demo;
 
-import java.nio.file.Paths;
-
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
 import io.github.sashirestela.openai.domain.image.ImageRespFmt;
 import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.image.Size;
+
+import java.nio.file.Paths;
 
 public class ImageServiceDemo extends AbstractDemo {
 
@@ -59,4 +59,5 @@ public class ImageServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

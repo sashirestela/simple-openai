@@ -1,7 +1,5 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.ArrayList;
-
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
@@ -15,6 +13,8 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 
+import java.util.ArrayList;
+
 public class ChatAnyscaleServiceDemo extends AbstractDemo {
 
     public static final String MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1";
@@ -26,8 +26,7 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
         chatRequest = ChatRequest.builder()
                 .model(model)
                 .message(new ChatMsgSystem("You are an expert in AI."))
-                .message(
-                        new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
@@ -103,4 +102,5 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }

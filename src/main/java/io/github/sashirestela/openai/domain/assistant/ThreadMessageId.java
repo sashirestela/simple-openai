@@ -19,7 +19,10 @@ public interface ThreadMessageId {
     @Getter
     @ToString
     class Impl implements ThreadMessageId {
+
         @JsonProperty("message_id")
         public String id;
+
     }
+
 }

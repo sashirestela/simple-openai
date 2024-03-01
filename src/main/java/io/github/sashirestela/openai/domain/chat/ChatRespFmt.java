@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class ChatRespFmt {
-    
+
     private ChatRespFmtType type;
 
 }

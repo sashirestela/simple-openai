@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import org.junit.jupiter.api.Test;
 
 class SimpleUncheckedExceptionTest {
 
@@ -20,4 +20,5 @@ class SimpleUncheckedExceptionTest {
         var exception = new SimpleUncheckedException("Message", null, new Exception());
         assertNotNull(exception.getCause());
     }
+
 }

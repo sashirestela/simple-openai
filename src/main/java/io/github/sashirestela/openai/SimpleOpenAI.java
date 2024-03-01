@@ -1,16 +1,16 @@
 package io.github.sashirestela.openai;
 
-import java.net.http.HttpClient;
-import java.util.HashMap;
-import java.util.Optional;
-
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
 
+import java.net.http.HttpClient;
+import java.util.HashMap;
+import java.util.Optional;
+
 /**
- * This class provides the implements additional {@link OpenAI OpenAI}
- * interfaces targeting the OpenAI service.
+ * This class provides the implements additional {@link OpenAI OpenAI} interfaces targeting the
+ * OpenAI service.
  */
 public class SimpleOpenAI extends BaseSimpleOpenAI {
 
@@ -30,18 +30,17 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
-     * @param baseUrl        Host's url, If not provided, it'll be
-     *                       'https://api.openai.com'. Optional.
-     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object.
-     *                       One is created by default if not provided. Optional.
+     * @param baseUrl        Host's url, If not provided, it'll be 'https://api.openai.com'. Optional.
+     * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object. One is created by
+     *                       default if not provided. Optional.
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
         super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, baseUrl, httpClient));
     }
 
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(
-            String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String organizationId, String baseUrl,
+            HttpClient httpClient) {
 
         var headers = new HashMap<String, String>();
         headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
@@ -85,7 +84,6 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-
     public OpenAI.Embeddings embeddings() {
         if (embeddingService == null) {
             embeddingService = cleverClient.create(OpenAI.Embeddings.class);
@@ -176,4 +174,5 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
         }
         return threadService;
     }
+
 }

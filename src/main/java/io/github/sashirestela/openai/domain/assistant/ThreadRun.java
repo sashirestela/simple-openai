@@ -15,7 +15,6 @@ import java.util.Map;
 
 /**
  * Represents an execution run on a thread.
- *
  */
 @NoArgsConstructor
 @Getter
@@ -49,6 +48,7 @@ public class ThreadRun {
     private Map<String, String> metadata;
 
     public interface Status {
+
         String QUEUED = "queued";
         String IN_PROGRESS = "in_progress";
         String REQUIRES_ACTION = "requires_action";
@@ -57,6 +57,7 @@ public class ThreadRun {
         String FAILED = "failed";
         String COMPLETED = "completed";
         String EXPIRED = "expired";
+
     }
 
     public boolean isActionRequired() {
@@ -77,7 +78,10 @@ public class ThreadRun {
     @Getter
     @ToString
     public static class Error {
+
         private String code;
         private String message;
+
     }
+
 }

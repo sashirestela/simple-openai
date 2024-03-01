@@ -1,20 +1,19 @@
 package io.github.sashirestela.openai.function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
+import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
+import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.junit.jupiter.api.Test;
-
-import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
-import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FunctionExecutorTest {
 
@@ -52,7 +51,8 @@ class FunctionExecutorTest {
         var executor = new FunctionExecutor();
         executor.enrollFunctions(functionList);
         var actualList = executor.getToolFunctions();
-        var expectedList = functionList.stream().map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+        var expectedList = functionList.stream()
+                .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
                 .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
@@ -66,7 +66,8 @@ class FunctionExecutorTest {
         executor.enrollFunction(functionList.get(0));
         executor.enrollFunction(functionList.get(1));
         var actualList = executor.getToolFunctions();
-        var expectedList = functionList.stream().map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+        var expectedList = functionList.stream()
+                .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
                 .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
@@ -125,15 +126,18 @@ class FunctionExecutorTest {
     }
 
     static class ConvertToCelsius implements Functional {
+
         public double fahrenheit;
 
         @Override
         public Object execute() {
             return (fahrenheit - 32) * 5 / 9;
         }
+
     }
 
     static class MathPower implements Functional {
+
         public double base;
         public double exponent;
 
@@ -141,5 +145,7 @@ class FunctionExecutorTest {
         public Object execute() {
             return Math.pow(base, exponent);
         }
+
     }
+
 }

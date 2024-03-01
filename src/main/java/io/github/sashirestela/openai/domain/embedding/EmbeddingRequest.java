@@ -1,26 +1,28 @@
 package io.github.sashirestela.openai.domain.embedding;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.With;
 
+import java.util.List;
+
 @Getter
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class EmbeddingRequest {
 
-    @NonNull private String model;
-    @NonNull private Object input;
-    @With private EncodingFormat encodingFormat;
+    @NonNull
+    private String model;
+    @NonNull
+    private Object input;
+    @With
+    private EncodingFormat encodingFormat;
     private String user;
 
     @Builder
@@ -38,4 +40,5 @@ public class EmbeddingRequest {
         this.encodingFormat = encodingFormat;
         this.user = user;
     }
+
 }

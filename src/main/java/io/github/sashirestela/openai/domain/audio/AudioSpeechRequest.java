@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -15,9 +14,13 @@ import lombok.NonNull;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AudioSpeechRequest {
 
-    @NonNull private String model;
-    @NonNull private String input;
-    @NonNull private Voice voice;
+    @NonNull
+    private String model;
+    @NonNull
+    private String input;
+    @NonNull
+    private Voice voice;
     private SpeechRespFmt responseFormat;
     private Double speed;
+
 }

@@ -1,21 +1,21 @@
 package io.github.sashirestela.openai.domain.chat.message;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.chat.content.ContentPart;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.util.List;
+
 @Getter
 @JsonInclude(Include.NON_EMPTY)
 public class ChatMsgUser extends ChatMsg {
 
-    @NonNull private Object content;
+    @NonNull
+    private Object content;
     private String name;
 
     public ChatMsgUser(@NonNull Object content, String name) {
@@ -32,4 +32,5 @@ public class ChatMsgUser extends ChatMsg {
     public ChatMsgUser(Object content) {
         this(content, null);
     }
+
 }

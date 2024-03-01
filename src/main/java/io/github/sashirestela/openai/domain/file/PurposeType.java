@@ -9,5 +9,5 @@ public enum PurposeType {
 
     @JsonProperty("assistants")
     ASSISTANTS;
-    
+
 }

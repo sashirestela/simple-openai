@@ -38,7 +38,8 @@ public class AssistantServiceDemo extends AbstractDemo {
         var assistant = openAI.assistants().getOne(assistantId).join();
         var assistantRequest = assistant.mutate()
                 .name("Math Expert")
-                .instructions("You are a personal math expert. When asked a question, write and run Python code to answer the question.")
+                .instructions(
+                        "You are a personal math expert. When asked a question, write and run Python code to answer the question.")
                 .tool(AssistantTool.CODE_INTERPRETER)
                 .build();
 
@@ -48,9 +49,10 @@ public class AssistantServiceDemo extends AbstractDemo {
 
     public void demoListAssistants() {
         AtomicInteger count = new AtomicInteger();
-        openAI.assistants().getList()
+        openAI.assistants()
+                .getList()
                 .join()
-                .forEach(r -> System.out.println("\n#"+count.incrementAndGet()+"\n" + r));
+                .forEach(r -> System.out.println("\n#" + count.incrementAndGet() + "\n" + r));
     }
 
     public void demoUploadAssistantFile() {
@@ -68,7 +70,8 @@ public class AssistantServiceDemo extends AbstractDemo {
         var threadRequest = ThreadRequest.builder()
                 .message(ThreadMessageRequest.builder()
                         .role("user")
-                        .content("Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
+                        .content(
+                                "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
                         .build())
                 .build();
 
@@ -94,10 +97,12 @@ public class AssistantServiceDemo extends AbstractDemo {
     public void demoGetAssistantMessages() {
         List<ThreadMessage> messages = openAI.threads().getMessageList(threadId).join();
         ThreadMessage assistant = messages.get(0);
-        ImageFileContent assistantImageContent = assistant.getContent().stream()
+        ImageFileContent assistantImageContent = assistant.getContent()
+                .stream()
                 .filter(ImageFileContent.class::isInstance)
                 .map(ImageFileContent.class::cast)
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
 
         System.out.println("All messages:");
         System.out.println("=============");
@@ -105,7 +110,9 @@ public class AssistantServiceDemo extends AbstractDemo {
 
         if (assistantImageContent != null) {
             System.out.println("\nAssistant answer contains an image. Downloading it now...");
-            try (var in = openAI.files().getContentInputStream(assistantImageContent.getImageFile().getFileId()).join()) {
+            try (var in = openAI.files()
+                    .getContentInputStream(assistantImageContent.getImageFile().getFileId())
+                    .join()) {
                 Path tempFile = Files.createTempFile("code_interpreter", ".png");
                 Files.write(tempFile, in.readAllBytes());
                 System.out.println("Image file downloaded to: " + tempFile.toUri());
@@ -141,4 +148,5 @@ public class AssistantServiceDemo extends AbstractDemo {
 
         demo.run();
     }
+
 }
