@@ -70,6 +70,7 @@
     <javadoc.version>3.6.3</javadoc.version>
     <gpg.version>3.1.0</gpg.version>
     <sonatype.version>1.6.13</sonatype.version>
+    <spotless.version>2.43.0</spotless.version>
   </properties>
 
   <profiles>
@@ -373,6 +374,32 @@
               </ignoreVersion>
             </ignoreVersions>
           </ruleSet>
+        </configuration>
+      </plugin>
+      <!-- https://github.com/diffplug/spotless/blob/main/plugin-maven/README.md -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <ratchetFrom>origin/main</ratchetFrom>
+          <java>
+            <toggleOffOn />
+            <includes>
+              <include>src/*/java/**/*.java</include>
+            </includes>
+            <cleanthat />
+            <eclipse>
+              <file>${project.basedir}/codestyle/spotless_java_eclipseformat.xml</file>
+            </eclipse>
+            <importOrder>
+              <wildcardsLast>false</wildcardsLast>
+              <file>${project.basedir}/codestyle/spotless_java.importorder</file>
+            </importOrder>
+            <removeUnusedImports>
+              <engine>cleanthat-javaparser-unnecessaryimport</engine>
+            </removeUnusedImports>
+          </java>
         </configuration>
       </plugin>
     </plugins>
