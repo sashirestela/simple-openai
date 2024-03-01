@@ -5,7 +5,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ["main", "increase-testing-coverage"]
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
@@ -21,6 +21,8 @@ jobs:
           java-version: "11"
           distribution: "temurin"
           cache: maven
+      - name: Check code format with Spotless
+        run: mvn spotless:check
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Upload coverage reports to Codecov
