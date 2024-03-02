@@ -1,0 +1,31 @@
+name: Release to Maven Central
+run-name: Release run ${{ github.run_number }}
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "11"
+          distribution: "temurin"
+          java-package: "jdk"
+          check-latest: true
+          server-id: "ossrh"
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_PASSWORD
+          gpg-passphrase: SIGN_KEY_PASS
+          gpg-private-key: ${{ secrets.GPG_PASSWORD }}
+          cache: "maven"
+      - name: Build & Deploy
+        run: mvn -U -B clean deploy -P release
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
