@@ -21,12 +21,12 @@ jobs:
           server-id: "ossrh"
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: GPG_PASSPHRASE
-          gpg-private-key: ${{ secrets.GPG_PASSWORD }}
           cache: "maven"
       - name: Build & Deploy
         run: mvn -U -B clean deploy -P release
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
