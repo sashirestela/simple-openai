@@ -21,7 +21,7 @@ jobs:
           server-id: "ossrh"
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
-          gpg-passphrase: SIGN_KEY_PASS
+          gpg-passphrase: GPG_PASSPHRASE
           gpg-private-key: ${{ secrets.GPG_PASSWORD }}
           cache: "maven"
       - name: Build & Deploy
