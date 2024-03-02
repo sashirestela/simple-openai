@@ -1,10 +1,30 @@
-[![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
-![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/maven.yml)
-
-
 # 📌 Simple-OpenAI
 A Java library to use the OpenAI Api in the simplest possible way.
+
+[![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
+
+
+### Table of Contents
+- [Description](#-description)
+- [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
+  - [Azure OpenAI](#azure-openai)
+  - [Anyscale](#anyscale)
+- [Supported Services](#-supported-services)
+- [Installation](#-installation)
+- [Usage](#-usage)
+  - [Creating a SimpleOpenAI Object](#creating-a-simpleopenai-object)
+  - [Calling some SimpleOpenAI Services](#calling-some-simpleopenai-services)
+    - [Audio Service](#audio-service)
+    - [Image Service](#image-service)
+    - [Chat Completion Service (blocking mode)](#chat-completion-service-blocking-mode)
+    - [Chat Completion Service (streaming mode)](#chat-completion-service-streaming-mode)
+    - [Chat Completion Service with Functions](#chat-completion-service-with-functions)
+    - [Chat Completion Service with Vision](#chat-completion-service-with-vision)
+- [Run Examples](#-run-examples)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 
 ## 💡 Description
@@ -13,8 +33,8 @@ Simple-OpenAI is a Java http client library for sending requests to and receivin
 Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclient) library for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code, among others libraries.
 
 
-## ✴ Support for Other OpenAI Providers
-Simple-OpenAI can be used with other providers that are compatible with the OpenAI API. At this moment, there is support for the following providers:
+## ✴ Support for Additional OpenAI Providers
+Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
 ### Azure OpenAI
 [Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure`, which extends the class `BaseSimpleOpenAI`, to start using this provider. 
@@ -37,7 +57,7 @@ var openai = SimpleOpenAIAnyscale.builder()
     //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
     .build();
 ```
-Currently we are supporting the `openai.chatCompletionService()` service only. It was tested with the model Mistral.
+Currently we are supporting the `openai.chatCompletionService()` service only. It was tested with the model _Mistral_.
 
 
 ## ✅ Supported Services
@@ -112,7 +132,7 @@ var openai = SimpleOpenAI.builder()
     .build();
 ```
 
-### Calling the SimpleOpenAI Services
+### Calling some SimpleOpenAI Services
 After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API. Let's see some examples.
 
 #### Audio Service
@@ -368,6 +388,9 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
+
+## 💼 Contributing
+Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contrinute to this project.
 
 ## 📄 License
 Simple-OpenAI is licensed under the MIT License. See the
