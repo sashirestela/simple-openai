@@ -8,7 +8,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 
 ### Table of Contents
 - [Description](#-description)
-- [Support for Other OpenAI Providers](#-support-for-other-openai-providers)
+- [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
 - [Supported Services](#-supported-services)
