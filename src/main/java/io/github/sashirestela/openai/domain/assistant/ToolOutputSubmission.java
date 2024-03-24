@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
+import lombok.With;
 
 import java.util.List;
 
@@ -17,5 +18,8 @@ public class ToolOutputSubmission {
     @NonNull
     @Singular
     private List<ToolOutput> toolOutputs;
+
+    @With
+    private boolean stream;
 
 }

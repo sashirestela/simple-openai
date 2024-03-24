@@ -87,6 +87,7 @@ public class ThreadRunStep {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ToolCall {
 
+        private String index;
         private String id;
         private String type;
         private CodeInterpreter codeInterpreter;

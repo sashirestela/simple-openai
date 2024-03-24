@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.Event;
 import io.github.sashirestela.cleverclient.annotation.Body;
 import io.github.sashirestela.cleverclient.annotation.DELETE;
 import io.github.sashirestela.cleverclient.annotation.GET;
@@ -16,6 +17,7 @@ import io.github.sashirestela.openai.domain.PageRequest;
 import io.github.sashirestela.openai.domain.assistant.Assistant;
 import io.github.sashirestela.openai.domain.assistant.AssistantFile;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantStreamEvents;
 import io.github.sashirestela.openai.domain.assistant.FilePath;
 import io.github.sashirestela.openai.domain.assistant.Thread;
 import io.github.sashirestela.openai.domain.assistant.ThreadCreateAndRunRequest;
@@ -827,8 +829,9 @@ public interface OpenAI {
          * @return the queued run object
          */
         default CompletableFuture<ThreadRun> createRun(String threadId, String assistantId) {
-            return createRun(threadId, ThreadRunRequest.builder()
+            return __createRun(threadId, ThreadRunRequest.builder()
                     .assistantId(assistantId)
+                    .stream(Boolean.FALSE)
                     .build());
         }
 
@@ -839,8 +842,32 @@ public interface OpenAI {
          * @param request  The requested run.
          * @return the queued run object
          */
+        default CompletableFuture<ThreadRun> createRun(@Path("threadId") String threadId,
+                @Body ThreadRunRequest request) {
+            var newRequest = request.withStream(Boolean.FALSE);
+            return __createRun(threadId, newRequest);
+        }
+
         @POST("/{threadId}/runs")
-        CompletableFuture<ThreadRun> createRun(@Path("threadId") String threadId, @Body ThreadRunRequest request);
+        CompletableFuture<ThreadRun> __createRun(@Path("threadId") String threadId, @Body ThreadRunRequest request);
+
+        /**
+         * Create a run and stream the response.
+         *
+         * @param threadId The ID of the thread to run.
+         * @param request  The requested run.
+         * @return A stream of events.
+         */
+        default CompletableFuture<Stream<Event>> createRunStream(@Path("threadId") String threadId,
+                @Body ThreadRunRequest request) {
+            var newRequest = request.withStream(Boolean.TRUE);
+            return __createRunStream(threadId, newRequest);
+        }
+
+        @POST("/{threadId}/runs")
+        @AssistantStreamEvents
+        CompletableFuture<Stream<Event>> __createRunStream(@Path("threadId") String threadId,
+                @Body ThreadRunRequest request);
 
         /**
          * Retrieves a run.
@@ -884,7 +911,7 @@ public interface OpenAI {
         CompletableFuture<Page<ThreadRun>> getRunList(@Path("threadId") String threadId, @Query PageRequest page);
 
         /**
-         * Submit tool outputs to run
+         * Submit tool outputs to run.
          *
          * @param threadId    The ID of the thread to which this run belongs.
          * @param runId       The ID of the run that requires the tool output submission.
@@ -899,16 +926,41 @@ public interface OpenAI {
         }
 
         /**
-         * Submit tool outputs to run
+         * Submit tool outputs to run.
          *
          * @param threadId    The ID of the thread to which this run belongs.
          * @param runId       The ID of the run that requires the tool output submission.
          * @param toolOutputs The tool output submission.
          * @return The modified run object matching the specified ID.
          */
+        default CompletableFuture<ThreadRun> submitToolOutputs(@Path("threadId") String threadId,
+                @Path("runId") String runId, @Body ToolOutputSubmission toolOutputs) {
+            var newToolOutputs = toolOutputs.withStream(Boolean.FALSE);
+            return __submitToolOutputs(threadId, runId, newToolOutputs);
+        }
+
         @POST("/{threadId}/runs/{runId}/submit_tool_outputs")
-        CompletableFuture<ThreadRun> submitToolOutputs(@Path("threadId") String threadId, @Path("runId") String runId,
+        CompletableFuture<ThreadRun> __submitToolOutputs(@Path("threadId") String threadId, @Path("runId") String runId,
                 @Body ToolOutputSubmission toolOutputs);
+
+        /**
+         * Submit tool outputs to run and stream the response.
+         *
+         * @param threadId    The ID of the thread to which this run belongs.
+         * @param runId       The ID of the run that requires the tool output submission.
+         * @param toolOutputs The tool output submission.
+         * @return A stream of events.
+         */
+        default CompletableFuture<Stream<Event>> submitToolOutputsStream(@Path("threadId") String threadId,
+                @Path("runId") String runId, @Body ToolOutputSubmission toolOutputs) {
+            var newToolOutputs = toolOutputs.withStream(Boolean.TRUE);
+            return __submitToolOutputsStream(threadId, runId, newToolOutputs);
+        }
+
+        @POST("/{threadId}/runs/{runId}/submit_tool_outputs")
+        @AssistantStreamEvents
+        CompletableFuture<Stream<Event>> __submitToolOutputsStream(@Path("threadId") String threadId,
+                @Path("runId") String runId, @Body ToolOutputSubmission toolOutputs);
 
         /**
          * Cancels a run that is {@code in_progress}.
@@ -926,8 +978,28 @@ public interface OpenAI {
          * @param request The thread request create and to run.
          * @return A created run object.
          */
+        default CompletableFuture<ThreadRun> createThreadAndRun(@Body ThreadCreateAndRunRequest request) {
+            var newRequest = request.withStream(Boolean.FALSE);
+            return __createThreadAndRun(newRequest);
+        }
+
         @POST("/runs")
-        CompletableFuture<ThreadRun> createThreadAndRun(@Body ThreadCreateAndRunRequest request);
+        CompletableFuture<ThreadRun> __createThreadAndRun(@Body ThreadCreateAndRunRequest request);
+
+        /**
+         * Create a thread and run it in one request and stream the response.
+         *
+         * @param request The thread request create and to run.
+         * @return A stream of events.
+         */
+        default CompletableFuture<Stream<Event>> createThreadAndRunStream(@Body ThreadCreateAndRunRequest request) {
+            var newRequest = request.withStream(Boolean.TRUE);
+            return __createThreadAndRunStream(newRequest);
+        }
+
+        @POST("/runs")
+        @AssistantStreamEvents
+        CompletableFuture<Stream<Event>> __createThreadAndRunStream(@Body ThreadCreateAndRunRequest request);
 
         /**
          * Retrieves a run step.

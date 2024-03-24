@@ -14,6 +14,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ImageFileContent implements ThreadMessageContent {
 
+    private Integer index;
     private FilePath imageFile;
 
 }
