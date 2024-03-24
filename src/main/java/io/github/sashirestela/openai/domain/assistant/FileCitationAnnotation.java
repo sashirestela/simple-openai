@@ -14,6 +14,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class FileCitationAnnotation implements TextContentAnnotation {
 
+    private Integer index;
     private String text;
     private FileCitation fileCitation;
     private int startIndex;

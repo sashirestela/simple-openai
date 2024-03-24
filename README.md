@@ -72,6 +72,7 @@ Full support for all of the OpenAI services:
 * Embeddings
 * Fine tuning
 * Assistants API (Beta)
+* Assistant Stream Events (Beta) 📣
 
 ![Services](media/supported_services.png)
 

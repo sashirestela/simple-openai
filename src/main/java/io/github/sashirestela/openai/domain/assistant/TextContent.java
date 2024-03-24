@@ -13,6 +13,7 @@ import java.util.List;
 @ToString
 public class TextContent implements ThreadMessageContent {
 
+    private Integer index;
     private Text text;
 
     public String getValue() {

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
+import lombok.With;
 
 import java.util.List;
 import java.util.Map;
@@ -24,5 +25,7 @@ public class ThreadCreateAndRunRequest {
     @Singular
     private List<AssistantTool> tools;
     private Map<String, String> metadata;
+    @With
+    private boolean stream;
 
 }
