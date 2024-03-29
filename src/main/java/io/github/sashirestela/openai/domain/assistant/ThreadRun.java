@@ -50,7 +50,6 @@ public class ThreadRun {
     private OpenAIUsage usage;
     private Double temperature;
 
-
     public interface Status {
 
         String QUEUED = "queued";
