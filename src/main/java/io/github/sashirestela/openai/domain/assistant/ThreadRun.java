@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.cleverclient.util.UnixTimestampDeserializer;
+import io.github.sashirestela.openai.domain.OpenAIUsage;
 import io.github.sashirestela.openai.domain.ToolCall;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,8 @@ public class ThreadRun {
     private List<AssistantTool> tools;
     private List<String> fileIds;
     private Map<String, String> metadata;
+    private OpenAIUsage usage;
+    private Double temperature;
 
     public interface Status {
 
