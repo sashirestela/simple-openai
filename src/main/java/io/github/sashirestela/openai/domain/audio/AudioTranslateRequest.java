@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.With;
 
 import java.nio.file.Path;
@@ -17,12 +17,16 @@ import java.nio.file.Path;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AudioTranslateRequest {
 
-    @NonNull
+    @Required
     private Path file;
-    @NonNull
+
+    @Required
     private String model;
+
     private String prompt;
+
     private Double temperature;
+
     @With
     private AudioRespFmt responseFormat;
 

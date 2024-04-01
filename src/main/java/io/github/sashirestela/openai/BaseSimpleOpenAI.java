@@ -1,11 +1,14 @@
 package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.slimvalidator.Validator;
+import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.Setter;
 
 import java.net.http.HttpClient;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * The base abstract class that all providers extend. It generates an implementation to the
@@ -23,12 +26,20 @@ public abstract class BaseSimpleOpenAI {
 
     BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
         var httpClient = Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
+        Consumer<Object> bodyInspector = body -> {
+            var validator = new Validator();
+            var violations = validator.validate(body);
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            }
+        };
         this.cleverClient = CleverClient.builder()
                 .httpClient(httpClient)
                 .baseUrl(args.getBaseUrl())
                 .headers(args.getHeaders())
                 .endOfStream(END_OF_STREAM)
                 .requestInterceptor(args.getRequestInterceptor())
+                .bodyInspector(bodyInspector)
                 .build();
     }
 

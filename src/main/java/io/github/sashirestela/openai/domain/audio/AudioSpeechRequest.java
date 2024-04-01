@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Range;
+import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 @Getter
 @Builder
@@ -14,13 +16,19 @@ import lombok.NonNull;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AudioSpeechRequest {
 
-    @NonNull
+    @Required
     private String model;
-    @NonNull
+
+    @Required
+    @Size(max = 4096)
     private String input;
-    @NonNull
+
+    @Required
     private Voice voice;
+
     private SpeechRespFmt responseFormat;
+
+    @Range(min = 0.25, max = 4.0)
     private Double speed;
 
 }

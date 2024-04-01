@@ -1,14 +1,14 @@
 package io.github.sashirestela.openai.domain.chat.tool;
 
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @AllArgsConstructor
 @Getter
 public class ChatFunctionName {
 
-    @NonNull
+    @Required
     private String name;
 
 }
