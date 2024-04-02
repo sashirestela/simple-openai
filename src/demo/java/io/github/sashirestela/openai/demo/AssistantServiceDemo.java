@@ -11,6 +11,10 @@ import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta.MessageCreationStepDetail;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta.ToolCallsStepDetail;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.PurposeType;
 
@@ -101,10 +105,70 @@ public class AssistantServiceDemo extends AbstractDemo {
     public void demoRunThreadAndStream() {
         var request = ThreadRunRequest.builder().assistantId(assistantId).build();
         var response = openAI.threads().createRunStream(threadId, request).join();
-        response.filter(e -> e.getName().equals(Events.THREAD_MESSAGE_DELTA))
-                .map(e -> ((TextContent) ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0)).getValue())
-                .forEach(System.out::print);
-        System.out.println();
+        response.forEach(e -> {
+            switch (e.getName()) {
+                case Events.THREAD_RUN_STEP_CREATED:
+                    var runStepCreated = (ThreadRunStep) e.getData();
+                    System.out.println("\n===== Thread Run Step Created - " + runStepCreated.getType() + " - "
+                            + runStepCreated.getId());
+                    break;
+                case Events.THREAD_RUN_STEP_COMPLETED:
+                    var runStepCompleted = (ThreadRunStep) e.getData();
+                    System.out.println("\n----- Thread Run Step Completed - " + runStepCompleted.getType() + " - "
+                            + runStepCompleted.getId());
+                    break;
+                case Events.THREAD_RUN_STEP_DELTA:
+                    var runStepDeltaDetails = ((ThreadRunStepDelta) e.getData()).getDelta().getStepDetails();
+                    if (runStepDeltaDetails instanceof MessageCreationStepDetail) {
+                        System.out.println(
+                                ((MessageCreationStepDetail) runStepDeltaDetails).getMessageCreation().getMessageId());
+                    } else if (runStepDeltaDetails instanceof ToolCallsStepDetail) {
+                        var toolCall = ((ToolCallsStepDetail) runStepDeltaDetails).getToolCalls().get(0);
+                        if (toolCall.getType().equals("code_interpreter")) {
+                            var codeInterpreter = toolCall.getCodeInterpreter();
+                            if (codeInterpreter.getInput() != null) {
+                                System.out.print(codeInterpreter.getInput());
+                            }
+                            if (codeInterpreter.getOutputs() != null && codeInterpreter.getOutputs().size() > 0) {
+                                var codeInterpreterOutput = codeInterpreter.getOutputs().get(0);
+                                if (codeInterpreterOutput.getType().equals("logs")) {
+                                    System.out.print("\nOutput Logs = " + codeInterpreterOutput.getLogs());
+                                } else if (codeInterpreterOutput.getType().equals("image")) {
+                                    System.out.print(
+                                            "\nOutput Image File Id = " + codeInterpreterOutput.getImage().getFileId());
+                                }
+                            }
+                        } else if (toolCall.getType().equals("function")) {
+                            var functionTool = toolCall.getFunction();
+                            if (functionTool.getName() != null) {
+                                System.out.println("Function Name = " + functionTool.getName());
+                                System.out.print("Function Arguments = ");
+                            }
+                            if (functionTool.getArguments() != null) {
+                                System.out.print(functionTool.getArguments());
+                            }
+                            if (functionTool.getOutput() != null) {
+                                System.out.print("\nFunction Output = " + functionTool.getOutput());
+                            }
+                        } else if (toolCall.getType().equals("retrieval")) {
+                            // Currently OpenAI is replying an empty Map.
+                        }
+                    }
+                    break;
+                case Events.THREAD_MESSAGE_DELTA:
+                    var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
+                    if (messageDeltaFirstContent instanceof TextContent) {
+                        System.out.print(((TextContent) messageDeltaFirstContent).getValue());
+                    } else if (messageDeltaFirstContent instanceof ImageFileContent) {
+                        System.out.println(
+                                "File Id = "
+                                        + ((ImageFileContent) messageDeltaFirstContent).getImageFile().getFileId());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     public void demoGetAssistantMessages() {
@@ -135,8 +199,9 @@ public class AssistantServiceDemo extends AbstractDemo {
         }
     }
 
-    public void demoDeleteAssistant() {
+    public void demoDeleteAssistantAndThread() {
         openAI.assistants().delete(assistantId).join();
+        openAI.threads().delete(threadId).join();
     }
 
     private static void sleep(int seconds) {
@@ -155,10 +220,10 @@ public class AssistantServiceDemo extends AbstractDemo {
         demo.addTitleAction("Demo Call Assistant List", demo::demoListAssistants);
         demo.addTitleAction("Demo Call Assistant File Upload", demo::demoUploadAssistantFile);
         demo.addTitleAction("Demo Call Assistant Thread Create", demo::demoCreateThread);
-        demo.addTitleAction("Demo Call Assistant Thread Run", demo::demoRunThreadAndWaitUntilComplete);
+        //demo.addTitleAction("Demo Call Assistant Thread Run", demo::demoRunThreadAndWaitUntilComplete);
         demo.addTitleAction("Demo Call Assistant Thread Run Stream", demo::demoRunThreadAndStream);
         demo.addTitleAction("Demo Call Assistant Messages Get", demo::demoGetAssistantMessages);
-        demo.addTitleAction("Demo Call Assistant Delete", demo::demoDeleteAssistant);
+        demo.addTitleAction("Demo Call Assistant & Thread Delete", demo::demoDeleteAssistantAndThread);
 
         demo.run();
     }

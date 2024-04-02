@@ -24,7 +24,7 @@ public class ThreadRunStepDelta {
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class ThreadRunStepDeltaDetail {
+    public static class ThreadRunStepDeltaDetail {
 
         private StepDetails stepDetails;
 
@@ -35,14 +35,14 @@ public class ThreadRunStepDelta {
             @JsonSubTypes.Type(value = MessageCreationStepDetail.class, name = "message_creation"),
             @JsonSubTypes.Type(value = ToolCallsStepDetail.class, name = "tool_calls")
     })
-    public interface StepDetails {
+    public static interface StepDetails {
     }
 
     @NoArgsConstructor
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class MessageCreationStepDetail implements StepDetails {
+    public static class MessageCreationStepDetail implements StepDetails {
 
         private MessageCreation messageCreation;
 
@@ -52,7 +52,7 @@ public class ThreadRunStepDelta {
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class ToolCallsStepDetail implements StepDetails {
+    public static class ToolCallsStepDetail implements StepDetails {
 
         private List<ThreadRunStep.ToolCall> toolCalls;
 
@@ -62,7 +62,7 @@ public class ThreadRunStepDelta {
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class MessageCreation {
+    public static class MessageCreation {
 
         private String messageId;
 
