@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta.MessageCreationStepDetail;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta.ToolCallsStepDetail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -164,6 +166,23 @@ public class ThreadDomainTest {
     }
 
     @Test
+    void testThreadsRunsCreateStream() throws IOException {
+        DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/threads_runs_create_stream.txt");
+        var request = ThreadRunRequest.builder()
+                .assistantId(assistantId)
+                .model("gpt-4-1106-preview")
+                .instructions("instructions")
+                .additionalInstructions("additional Instructions")
+                .metadata(Map.of("key1", "value1"))
+                .build();
+        var response = openAI.threads().createRunStream(threadId, request).join();
+        response.filter(e -> e.getName().equals(Events.THREAD_MESSAGE_DELTA))
+                .map(e -> ((TextContent) ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0)).getValue())
+                .forEach(System.out::print);
+        assertNotNull(response);
+    }
+
+    @Test
     void testThreadsRunsModify() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_runs_modify.json");
         var request = ThreadRunRequest.builder()
@@ -234,6 +253,89 @@ public class ThreadDomainTest {
                 .build();
         var response = openAI.threads().createThreadAndRun(request).join();
         System.out.println(response);
+        assertNotNull(response);
+    }
+
+    @Test
+    void testThreadsRunsCreateBothStream() throws IOException {
+        DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/threads_runs_create_both_stream.txt");
+        var request = ThreadCreateAndRunRequest.builder()
+                .assistantId(assistantId)
+                .thread(ThreadMessageList.builder()
+                        .message(ThreadMessageRequest.builder()
+                                .role("user")
+                                .content(
+                                        "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
+                                .build())
+                        .metadata(Map.of("stage", "test"))
+                        .build())
+                .metadata(Map.of("phase", "test"))
+                .build();
+        var response = openAI.threads().createThreadAndRunStream(request).join();
+        response.forEach(e -> {
+            switch (e.getName()) {
+                case Events.THREAD_RUN_STEP_CREATED:
+                    var runStepCreated = (ThreadRunStep) e.getData();
+                    System.out.println("\n===== Thread Run Step Created - " + runStepCreated.getType() + " - "
+                            + runStepCreated.getId());
+                    break;
+                case Events.THREAD_RUN_STEP_COMPLETED:
+                    var runStepCompleted = (ThreadRunStep) e.getData();
+                    System.out.println("\n----- Thread Run Step Completed - " + runStepCompleted.getType() + " - "
+                            + runStepCompleted.getId());
+                    break;
+                case Events.THREAD_RUN_STEP_DELTA:
+                    var runStepDeltaDetails = ((ThreadRunStepDelta) e.getData()).getDelta().getStepDetails();
+                    if (runStepDeltaDetails instanceof MessageCreationStepDetail) {
+                        System.out.println(
+                                ((MessageCreationStepDetail) runStepDeltaDetails).getMessageCreation().getMessageId());
+                    } else if (runStepDeltaDetails instanceof ToolCallsStepDetail) {
+                        var toolCall = ((ToolCallsStepDetail) runStepDeltaDetails).getToolCalls().get(0);
+                        if (toolCall.getType().equals("code_interpreter")) {
+                            var codeInterpreter = toolCall.getCodeInterpreter();
+                            if (codeInterpreter.getInput() != null) {
+                                System.out.print(codeInterpreter.getInput());
+                            }
+                            if (codeInterpreter.getOutputs() != null && codeInterpreter.getOutputs().size() > 0) {
+                                var codeInterpreterOutput = codeInterpreter.getOutputs().get(0);
+                                if (codeInterpreterOutput.getType().equals("logs")) {
+                                    System.out.print("\nOutput Logs = " + codeInterpreterOutput.getLogs());
+                                } else if (codeInterpreterOutput.getType().equals("image")) {
+                                    System.out.print(
+                                            "\nOutput Image File Id = " + codeInterpreterOutput.getImage().getFileId());
+                                }
+                            }
+                        } else if (toolCall.getType().equals("function")) {
+                            var functionTool = toolCall.getFunction();
+                            if (functionTool.getName() != null) {
+                                System.out.println("Function Name = " + functionTool.getName());
+                                System.out.print("Function Arguments = ");
+                            }
+                            if (functionTool.getArguments() != null) {
+                                System.out.print(functionTool.getArguments());
+                            }
+                            if (functionTool.getOutput() != null) {
+                                System.out.print("\nFunction Output = " + functionTool.getOutput());
+                            }
+                        } else if (toolCall.getType().equals("retrieval")) {
+                            // Currently OpenAI is replying an empty Map.
+                        }
+                    }
+                    break;
+                case Events.THREAD_MESSAGE_DELTA:
+                    var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
+                    if (messageDeltaFirstContent instanceof TextContent) {
+                        System.out.print(((TextContent) messageDeltaFirstContent).getValue());
+                    } else if (messageDeltaFirstContent instanceof ImageFileContent) {
+                        System.out.println(
+                                "File Id = "
+                                        + ((ImageFileContent) messageDeltaFirstContent).getImageFile().getFileId());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
         assertNotNull(response);
     }
 
