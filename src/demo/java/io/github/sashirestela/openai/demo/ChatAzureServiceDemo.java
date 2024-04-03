@@ -160,14 +160,14 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
 
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
-        if (baseUrl.contains("gpt-35-turbo")) {
+        if (baseUrl.contains("gpt-4-0125-Preview")) {
             demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        } else if (baseUrl.contains("gpt-4")) {
+        } else if (baseUrl.contains("gpt-35-turbo")) {
             demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
+        } else if (baseUrl.contains("gpt-4-vision")) {
             demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
             demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
         }
-
         demo.run();
     }
 
