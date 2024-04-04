@@ -3,13 +3,13 @@ package io.github.sashirestela.openai;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.support.Constant;
-import java.util.regex.Pattern;
 import lombok.Builder;
 import lombok.NonNull;
 
 import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 /**
  * This class provides the chatCompletion() service for the Azure OpenAI provider. Note that each
