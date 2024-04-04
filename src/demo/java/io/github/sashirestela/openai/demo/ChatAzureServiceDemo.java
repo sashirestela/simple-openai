@@ -113,11 +113,9 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
-        System.out.println();
+
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
     }
 
     public void demoCallChatWithVisionLocalImage() {
@@ -131,11 +129,8 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
-        System.out.println();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
     }
 
     private static ImageUrl loadImageAsBase64(String imagePath) {

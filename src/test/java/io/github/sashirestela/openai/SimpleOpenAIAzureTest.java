@@ -29,21 +29,22 @@ class SimpleOpenAIAzureTest {
 
     @Test
     void shouldInterceptUrlCorrectlyWhenBodyIsJson() {
+        var baseUrl = "https://example.org/openai/deployments/some-deployment";
         var request = HttpRequestData.builder()
-                .url("https://example.org/v1/endpoint")
+                .url(baseUrl + "/chat/completions")
                 .contentType(ContentType.APPLICATION_JSON)
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
                 .body("{\"model\":\"model1\"}")
                 .build();
         var expectedRequest = HttpRequestData.builder()
-                .url("https://example.org/endpoint?" + Constant.AZURE_API_VERSION + "=12-34-5678")
+                .url(baseUrl + "/chat/completions?" + Constant.AZURE_API_VERSION + "=12-34-5678")
                 .contentType(ContentType.APPLICATION_JSON)
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
                 .body("{}")
                 .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
                 "the-api-key",
-                "https://example.org",
+                baseUrl,
                 "12-34-5678",
                 null);
         var actualRequest = args.getRequestInterceptor().apply(request);
@@ -93,13 +94,10 @@ class SimpleOpenAIAzureTest {
                 openAI::audios,
                 openAI::completions,
                 openAI::embeddings,
-                openAI::files,
                 openAI::fineTunings,
                 openAI::images,
                 openAI::models,
                 openAI::moderations,
-                openAI::assistants,
-                openAI::threads
         };
         for (Runnable calling : callingData) {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());

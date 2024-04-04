@@ -83,7 +83,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 if (contentType.equals(ContentType.APPLICATION_JSON)) {
                     var bodyJson = (String) request.getBody();
                     var model = "";
-                    if (!url.contains("/chat/completions/")) {
+                    if (url.contains("/assistants")) {
                         model = "\"" + MODEL_LITERAL + "\":\"" + deployment + "\"";
                     }
                     bodyJson = bodyJson.replaceFirst(MODEL_REGEX, model);
@@ -93,7 +93,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
                     @SuppressWarnings("unchecked")
                     var bodyMap = (Map<String, Object>) request.getBody();
-                    if (url.contains("/assistants/")) {
+                    if (url.contains("/assistants")) {
                         bodyMap.put(MODEL_LITERAL, deployment);
                     } else {
                         bodyMap.remove(MODEL_LITERAL);
