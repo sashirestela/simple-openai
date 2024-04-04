@@ -45,8 +45,6 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
         assistantId = assistant.getId();
     }
 
-
-
     public void demoCreateAssistant() {
         var assistantRequest = AssistantRequest.builder()
                 .model("N/A")
