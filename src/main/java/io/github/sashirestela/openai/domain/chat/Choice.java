@@ -15,8 +15,10 @@ import lombok.ToString;
 public class Choice {
 
     private Integer index;
+
     @JsonAlias({ "delta" })
     private ChatMsgResponse message;
+
     private String finishReason;
 
 }

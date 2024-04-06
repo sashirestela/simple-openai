@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,15 +33,19 @@ public class CompletionRequest {
 
     private Integer maxTokens;
 
+    @Range(min = 0.0, max = 2.0)
     private Double temperature;
 
+    @Range(min = 0.0, max = 1.0)
     private Double topP;
 
+    @Range(min = 1, max = 128)
     private Integer n;
 
     @With
     private Boolean stream;
 
+    @Range(min = 0, max = 5)
     private Integer logprobs;
 
     private Boolean echo;
@@ -51,10 +56,13 @@ public class CompletionRequest {
 
     private Integer seed;
 
+    @Range(min = -2.0, max = 2.0)
     private Double presencePenalty;
 
+    @Range(min = -2.0, max = 2.0)
     private Double frequencyPenalty;
 
+    @Range(min = 0, max = 20)
     private Integer bestOf;
 
     private Map<String, Integer> logitBias;

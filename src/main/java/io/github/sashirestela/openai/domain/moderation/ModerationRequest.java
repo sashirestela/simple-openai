@@ -2,9 +2,9 @@ package io.github.sashirestela.openai.domain.moderation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 import java.util.List;
 
@@ -13,8 +13,9 @@ import java.util.List;
 @JsonInclude(Include.NON_EMPTY)
 public class ModerationRequest {
 
-    @NonNull
+    @Required
     private List<String> input;
+
     private String model;
 
 }

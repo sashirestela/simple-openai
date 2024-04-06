@@ -15,10 +15,10 @@ public enum SpeechRespFmt {
 
     @JsonProperty("flac")
     FLAC,
-    
+
     @JsonProperty("wav")
     WAV,
-    
+
     @JsonProperty("pcm")
     PCM;
 

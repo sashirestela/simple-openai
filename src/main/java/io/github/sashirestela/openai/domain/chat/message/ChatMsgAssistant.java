@@ -17,7 +17,9 @@ public class ChatMsgAssistant extends ChatMsg {
 
     @JsonInclude
     private String content;
+
     private String name;
+
     private List<ChatToolCall> toolCalls;
 
     public ChatMsgAssistant(String content, String name, List<ChatToolCall> toolCalls) {

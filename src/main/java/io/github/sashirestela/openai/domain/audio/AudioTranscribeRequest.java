@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Extension;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.nio.file.Path;
 public class AudioTranscribeRequest {
 
     @Required
+    @Extension({ "flac", "mp3", "mp4", "mpeg", "mpga", "m4a", "ogg", "wav", "webm" })
     private Path file;
 
     @Required

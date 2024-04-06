@@ -9,6 +9,7 @@ import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,10 +44,13 @@ public class ChatRequest {
     @ObjectType(baseClass = ChatToolChoice.class)
     private Object toolChoice;
 
+    @Range(min = 0.0, max = 2.0)
     private Double temperature;
 
+    @Range(min = 0.0, max = 1.0)
     private Double topP;
 
+    @Range(min = 1, max = 128)
     private Integer n;
 
     @With
@@ -58,8 +62,10 @@ public class ChatRequest {
 
     private Integer maxTokens;
 
+    @Range(min = -2.0, max = 2.0)
     private Double presencePenalty;
 
+    @Range(min = -2.0, max = 2.0)
     private Double frequencyPenalty;
 
     private Map<String, Integer> logitBias;
@@ -68,6 +74,7 @@ public class ChatRequest {
 
     private Boolean logprobs;
 
+    @Range(min = 0, max = 20)
     private Integer topLogprobs;
 
 }
