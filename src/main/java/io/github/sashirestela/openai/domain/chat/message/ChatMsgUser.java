@@ -2,28 +2,24 @@ package io.github.sashirestela.openai.domain.chat.message;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.chat.content.ContentPart;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
-import lombok.NonNull;
-
-import java.util.List;
 
 @Getter
 @JsonInclude(Include.NON_EMPTY)
 public class ChatMsgUser extends ChatMsg {
 
-    @NonNull
+    @Required
+    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = ContentPart.class, firstGroup = true)
     private Object content;
+
     private String name;
 
-    public ChatMsgUser(@NonNull Object content, String name) {
-        if (!(content instanceof String) &&
-                !(content instanceof List && ((List<?>) content).get(0) instanceof ContentPart)) {
-            throw new SimpleUncheckedException("The field content must be String or List<ContentPart> classes.",
-                    null, null);
-        }
+    public ChatMsgUser(Object content, String name) {
         this.role = Role.USER;
         this.content = content;
         this.name = name;

@@ -60,7 +60,7 @@ public class ThreadDomainTest {
     @Test
     void testThreadsModify() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads__modify.json");
-        var request = ThreadRequest.builder()
+        var request = ThreadModifyRequest.builder()
                 .metadata(Map.of("env", "test"))
                 .build();
         var response = openAI.threads().modify(threadId, request).join();
@@ -100,9 +100,7 @@ public class ThreadDomainTest {
     @Test
     void testThreadsMessagesModify() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_messages_modify.json");
-        var request = ThreadMessageRequest.builder()
-                .role("user")
-                .content("What is the product of 123 and 456?")
+        var request = ThreadMessageModifyRequest.builder()
                 .metadata(Map.of("key1", "value1"))
                 .build();
         var response = openAI.threads().modifyMessage(threadId, messageId, request).join();
@@ -185,7 +183,7 @@ public class ThreadDomainTest {
     @Test
     void testThreadsRunsModify() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_runs_modify.json");
-        var request = ThreadRunRequest.builder()
+        var request = ThreadRunModifyRequest.builder()
                 .metadata(Map.of("key1", "value1"))
                 .build();
         var response = openAI.threads().modifyRun(threadId, runId, request).join();

@@ -14,6 +14,12 @@ public enum SpeechRespFmt {
     AAC,
 
     @JsonProperty("flac")
-    FLAC;
+    FLAC,
+
+    @JsonProperty("wav")
+    WAV,
+
+    @JsonProperty("pcm")
+    PCM;
 
 }

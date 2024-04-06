@@ -23,9 +23,12 @@ import io.github.sashirestela.openai.domain.assistant.Thread;
 import io.github.sashirestela.openai.domain.assistant.ThreadCreateAndRunRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessage;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageFile;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
 import io.github.sashirestela.openai.domain.assistant.ToolOutput;
@@ -709,7 +712,7 @@ public interface OpenAI {
          * @return the created thread object
          */
         @POST("/{threadId}")
-        CompletableFuture<Thread> modify(@Path("threadId") String threadId, @Body ThreadRequest threadRequest);
+        CompletableFuture<Thread> modify(@Path("threadId") String threadId, @Body ThreadModifyRequest threadRequest);
 
         /**
          * Deletes a thread.
@@ -752,7 +755,7 @@ public interface OpenAI {
          */
         @POST("/{threadId}/messages/{messageId}")
         CompletableFuture<ThreadMessage> modifyMessage(@Path("threadId") String threadId,
-                @Path("messageId") String messageId, @Body ThreadMessageRequest request);
+                @Path("messageId") String messageId, @Body ThreadMessageModifyRequest request);
 
         /**
          * Returns a list of messages for a given thread (first page only).
@@ -888,7 +891,7 @@ public interface OpenAI {
          */
         @POST("/{threadId}/runs/{runId}")
         CompletableFuture<ThreadRun> modifyRun(@Path("threadId") String threadId, @Path("runId") String runId,
-                @Body ThreadRunRequest request);
+                @Body ThreadRunModifyRequest request);
 
         /**
          * Returns a list of runs belonging to a thread (first page).

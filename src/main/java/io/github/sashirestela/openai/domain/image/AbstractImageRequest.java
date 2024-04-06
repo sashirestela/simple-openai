@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Range;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
@@ -14,9 +15,14 @@ import lombok.experimental.SuperBuilder;
 public abstract class AbstractImageRequest {
 
     protected String model;
+
+    @Range(min = 1, max = 10)
     protected Integer n;
+
     protected Size size;
+
     protected ImageRespFmt responseFormat;
+
     protected String user;
 
 }

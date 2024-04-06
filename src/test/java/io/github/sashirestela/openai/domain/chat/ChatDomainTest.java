@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
@@ -31,11 +30,9 @@ import java.net.http.HttpClient;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 class ChatDomainTest {
@@ -184,21 +181,6 @@ class ChatDomainTest {
     }
 
     @Test
-    void shouldCreateChatRequestWhenToolChoiceIsRightClass() {
-        Object[] testData = {
-                ChatToolChoiceType.AUTO,
-                new ChatToolChoice(ChatToolType.FUNCTION, new ChatFunctionName("myFunction"))
-        };
-        for (Object data : testData) {
-            var chatRequestBuilder = ChatRequest.builder()
-                    .model("model")
-                    .message(new ChatMsgUser("My Content"))
-                    .toolChoice(data);
-            assertDoesNotThrow(() -> chatRequestBuilder.build());
-        }
-    }
-
-    @Test
     void shouldUpdateChatRequestWithAutoToolChoiceWhenToolsAreProvidedWithoutToolChoice() {
         var charRequest = ChatRequest.builder()
                 .model("model")
@@ -209,76 +191,6 @@ class ChatDomainTest {
         assertNull(charRequest.getToolChoice());
         var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
         assertEquals(ChatToolChoiceType.AUTO, updatedChatRequest.getToolChoice());
-    }
-
-    void shouldThrownExceptionWhenCreatingChatRequestWithToolChoiceWrongClass() {
-        var chatRequestBuilder = ChatRequest.builder()
-                .model("model")
-                .message(new ChatMsgUser("My Content"))
-                .toolChoice("wrong value");
-        var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
-        var actualErrorMessage = exception.getMessage();
-        var expectedErrorMessge = "The field toolChoice must be ChatToolChoiceType or ChatToolChoice classes.";
-        assertEquals(expectedErrorMessge, actualErrorMessage);
-    }
-
-    @Test
-    void shouldCreateChatRequestWhenStopIsRightClass() {
-        Object[] testData = {
-                "stop",
-                List.of("stop", "end", "quit", "finish")
-        };
-        for (Object data : testData) {
-            var chatRequestBuilder = ChatRequest.builder()
-                    .model("model")
-                    .message(new ChatMsgUser("My Content"))
-                    .stop(data);
-            assertDoesNotThrow(() -> chatRequestBuilder.build());
-        }
-    }
-
-    @Test
-    void shouldThrownExceptionWhenCreatingChatRequestWithStopWrongClass() {
-        Object[] testData = {
-                1001,
-                List.of(17.65, 23.68),
-                List.of("one", "two", "three", "four", "five")
-        };
-        for (Object data : testData) {
-            var chatRequestBuilder = ChatRequest.builder()
-                    .model("model")
-                    .message(new ChatMsgUser("My Content"))
-                    .stop(data);
-            var exception = assertThrows(SimpleUncheckedException.class, () -> chatRequestBuilder.build());
-            var actualErrorMessage = exception.getMessage();
-            var expectedErrorMessge = "The field stop must be String or List<String> (max 4 items) classes.";
-            assertEquals(expectedErrorMessge, actualErrorMessage);
-        }
-    }
-
-    @Test
-    void shouldCreateChtMsgUserWhenContentIsRigthClass() {
-        Object[] testData = {
-                "test data",
-                List.of(new ContentPartText("text"), new ContentPartImage(new ImageUrl("image url", ImageDetail.AUTO)))
-        };
-        for (Object data : testData) {
-            assertDoesNotThrow(() -> new ChatMsgUser(data));
-        }
-    }
-
-    @Test
-    void shouldThrownExceptionWhenCreatingChatMsgUserWithContentWrongClass() {
-        Object[] testData = {
-                1001,
-                List.of("first", "second")
-        };
-        for (Object data : testData) {
-            var exception = assertThrows(SimpleUncheckedException.class, () -> new ChatMsgUser(data));
-            var actualErrorMessage = exception.getMessage();
-            var expectedErrorMessge = "The field content must be String or List<ContentPart> classes.";
-            assertEquals(expectedErrorMessge, actualErrorMessage);
-        }
     }
 
     @Test

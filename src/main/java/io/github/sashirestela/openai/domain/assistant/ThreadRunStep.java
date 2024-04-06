@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.cleverclient.util.UnixTimestampDeserializer;
+import io.github.sashirestela.openai.domain.OpenAIUsage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -41,6 +42,7 @@ public class ThreadRunStep {
     @JsonDeserialize(using = UnixTimestampDeserializer.class)
     private ZonedDateTime completedAt;
     private Map<String, String> metadata;
+    private OpenAIUsage usage;
 
     public interface Type {
 

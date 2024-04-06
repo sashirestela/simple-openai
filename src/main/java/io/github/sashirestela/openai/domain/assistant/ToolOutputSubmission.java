@@ -2,9 +2,9 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Singular;
 import lombok.With;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ToolOutputSubmission {
 
-    @NonNull
+    @Required
     @Singular
     private List<ToolOutput> toolOutputs;
 

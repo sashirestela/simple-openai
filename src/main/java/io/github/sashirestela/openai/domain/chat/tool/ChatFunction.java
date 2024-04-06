@@ -6,21 +6,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.github.sashirestela.openai.function.Functional;
 import io.github.sashirestela.openai.function.ParametersSerializer;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 @Getter
 @Builder
 public class ChatFunction {
 
-    @NonNull
+    @Required
     private String name;
 
     @JsonInclude(Include.NON_NULL)
     private String description;
 
-    @NonNull
+    @Required
     @JsonSerialize(using = ParametersSerializer.class)
     @JsonProperty("parameters")
     private Class<? extends Functional> functionalClass;

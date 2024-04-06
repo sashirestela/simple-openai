@@ -1,8 +1,8 @@
 package io.github.sashirestela.openai.domain.file;
 
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 import java.nio.file.Path;
 
@@ -10,9 +10,10 @@ import java.nio.file.Path;
 @Builder
 public class FileRequest {
 
-    @NonNull
+    @Required
     private Path file;
-    @NonNull
+
+    @Required
     private PurposeType purpose;
 
 }

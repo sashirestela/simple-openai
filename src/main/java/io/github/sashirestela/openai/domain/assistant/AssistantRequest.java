@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Singular;
 
 import java.util.List;
@@ -18,15 +19,27 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AssistantRequest {
 
-    @NonNull
+    @Required
     private String model;
+
+    @Size(max = 256)
     private String name;
+
+    @Size(max = 512)
     private String description;
+
+    @Size(max = 32768)
     private String instructions;
+
     @Singular
+    @Size(max = 128)
     private List<AssistantTool> tools;
+
     @Singular
+    @Size(max = 20)
     private List<String> fileIds;
+
+    @Size(max = 16)
     private Map<String, String> metadata;
 
     public static class AssistantRequestBuilder {

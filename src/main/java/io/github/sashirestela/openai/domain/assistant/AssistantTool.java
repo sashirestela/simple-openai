@@ -1,11 +1,11 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @AllArgsConstructor
@@ -23,7 +23,7 @@ public class AssistantTool {
             .type("retrieval")
             .build();
 
-    @NonNull
+    @Required
     @Builder.Default
     private String type = "function";
 

@@ -3,9 +3,10 @@ package io.github.sashirestela.openai.domain.assistant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Singular;
 
 import java.util.List;
@@ -17,12 +18,17 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ThreadMessageRequest {
 
-    @NonNull
+    @Required
     private String role;
-    @NonNull
+
+    @Required
     private String content;
+
     @Singular
+    @Size(max = 10)
     private List<String> fileIds;
+
+    @Size(max = 16)
     private Map<String, String> metadata;
 
 }
