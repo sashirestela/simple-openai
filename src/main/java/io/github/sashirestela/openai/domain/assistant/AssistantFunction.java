@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
 import io.github.sashirestela.openai.support.JsonSchemaUtil;
+import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @AllArgsConstructor
@@ -20,9 +21,12 @@ import lombok.ToString;
 public class AssistantFunction {
 
     private String description;
-    @NonNull
+
+    @Required
+    @Size(max = 64)
     private String name;
-    @NonNull
+
+    @Required
     private JsonNode parameters;
 
     public static AssistantFunction function(ChatFunction function) {
