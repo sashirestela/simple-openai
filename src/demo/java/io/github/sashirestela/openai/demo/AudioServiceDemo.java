@@ -5,6 +5,7 @@ import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
 import io.github.sashirestela.openai.domain.audio.SpeechRespFmt;
+import io.github.sashirestela.openai.domain.audio.TimestampGranularity;
 import io.github.sashirestela.openai.domain.audio.Voice;
 
 import java.io.FileOutputStream;
@@ -48,6 +49,9 @@ public class AudioServiceDemo extends AbstractDemo {
                 .file(Paths.get(fileName))
                 .model(MODEL)
                 .responseFormat(AudioRespFmt.VERBOSE_JSON)
+                .temperature(0.2)
+                .timestampGranularity(TimestampGranularity.WORD)
+                .timestampGranularity(TimestampGranularity.SEGMENT)
                 .build();
         var futureAudio = openAI.audios().transcribe(audioRequest);
         var audioResponse = futureAudio.join();
