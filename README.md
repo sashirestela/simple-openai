@@ -81,7 +81,7 @@ Full support for all of the OpenAI services:
 NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 
 
-## 🛠️ Installation
+## ⚙ Installation
 You can install Simple-OpenAI by adding the following dependency to your Maven project:
 
 ```xml

@@ -111,8 +111,8 @@ class SimpleOpenAITest {
                 new TestData(OpenAI.Images.class, openAI::images),
                 new TestData(OpenAI.Models.class, openAI::models),
                 new TestData(OpenAI.Moderations.class, openAI::moderations),
-                new TestData(OpenAI.Assistants.class, openAI::assistants),
-                new TestData(OpenAI.Threads.class, openAI::threads)
+                new TestData(OpenAIBeta.Assistants.class, openAI::assistants),
+                new TestData(OpenAIBeta.Threads.class, openAI::threads)
         };
         for (TestData testData : data) {
             when(cleverClient.create(any()))
