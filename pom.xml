@@ -52,7 +52,7 @@
     <maven.compiler.release>11</maven.compiler.release>
     <!-- Dependencies Versions -->
     <slf4j.version>2.0.12</slf4j.version>
-    <cleverclient.version>1.4.0</cleverclient.version>
+    <cleverclient.version>1.4.1</cleverclient.version>
     <slimvalidator.version>1.2.1</slimvalidator.version>
     <lombok.version>1.18.32</lombok.version>
     <jackson.version>2.17.0</jackson.version>

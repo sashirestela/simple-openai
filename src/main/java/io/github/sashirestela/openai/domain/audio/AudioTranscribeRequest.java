@@ -7,11 +7,14 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.Extension;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 import lombok.With;
 
 import java.nio.file.Path;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -35,5 +38,9 @@ public class AudioTranscribeRequest {
 
     @Range(min = 0.0, max = 1.0)
     private Double temperature;
+
+    @Singular
+    @Size(max = 2)
+    private Set<TimestampGranularity> timestampGranularities;
 
 }
