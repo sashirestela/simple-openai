@@ -115,14 +115,14 @@ public abstract class BaseSimpleOpenAI {
     /**
      * Throw not implemented
      */
-    public OpenAI.Assistants assistants() {
+    public OpenAIBeta.Assistants assistants() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     /**
      * Throw not implemented
      */
-    public OpenAI.Threads threads() {
+    public OpenAIBeta.Threads threads() {
         throw new UnsupportedOperationException("Not implemented");
     }
 

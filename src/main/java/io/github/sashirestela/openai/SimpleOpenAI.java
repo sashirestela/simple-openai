@@ -22,8 +22,8 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     private OpenAI.Images imageService;
     private OpenAI.Models modelService;
     private OpenAI.Moderations moderationService;
-    private OpenAI.Assistants assistantService;
-    private OpenAI.Threads threadService;
+    private OpenAIBeta.Assistants assistantService;
+    private OpenAIBeta.Threads threadService;
 
     /**
      * Constructor used to generate a builder.
@@ -156,9 +156,9 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-    public OpenAI.Assistants assistants() {
+    public OpenAIBeta.Assistants assistants() {
         if (assistantService == null) {
-            assistantService = cleverClient.create(OpenAI.Assistants.class);
+            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
         }
         return assistantService;
     }
@@ -168,9 +168,9 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-    public OpenAI.Threads threads() {
+    public OpenAIBeta.Threads threads() {
         if (threadService == null) {
-            threadService = cleverClient.create(OpenAI.Threads.class);
+            threadService = cleverClient.create(OpenAIBeta.Threads.class);
         }
         return threadService;
     }
