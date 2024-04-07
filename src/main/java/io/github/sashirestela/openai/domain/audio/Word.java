@@ -12,4 +12,5 @@ public class Word {
     private String word;
     private Double start;
     private Double end;
+
 }
