@@ -48,7 +48,7 @@ public class ThreadDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads__create.json");
         var request = ThreadRequest.builder()
                 .message(ThreadMessageRequest.builder()
-                        .role("user")
+                        .role(ThreadMessageRequest.Role.USER)
                         .content("What are the order of precedence in artihmetic operations?")
                         .build())
                 .build();
@@ -88,7 +88,7 @@ public class ThreadDomainTest {
     void testThreadsMessagesCreate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_messages_create.json");
         var request = ThreadMessageRequest.builder()
-                .role("user")
+                .role(ThreadMessageRequest.Role.USER)
                 .content("What is the product of 123 and 456?")
                 .fileId(fileId)
                 .build();
@@ -239,7 +239,7 @@ public class ThreadDomainTest {
                 .assistantId(assistantId)
                 .thread(ThreadMessageList.builder()
                         .message(ThreadMessageRequest.builder()
-                                .role("user")
+                                .role(ThreadMessageRequest.Role.USER)
                                 .content("What are the order of precedence in artihmetic operations?")
                                 .build())
                         .metadata(Map.of("stage", "test"))
@@ -261,7 +261,7 @@ public class ThreadDomainTest {
                 .assistantId(assistantId)
                 .thread(ThreadMessageList.builder()
                         .message(ThreadMessageRequest.builder()
-                                .role("user")
+                                .role(ThreadMessageRequest.Role.USER)
                                 .content(
                                         "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
                                 .build())

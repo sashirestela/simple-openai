@@ -52,6 +52,8 @@ class AudioDomainTest {
                 .prompt("It is a greeting")
                 .responseFormat(AudioRespFmt.VERBOSE_JSON)
                 .temperature(0.0)
+                .timestampGranularity(TimestampGranularity.WORD)
+                .timestampGranularity(TimestampGranularity.SEGMENT)
                 .language("en")
                 .build();
         var audioResponse = openAI.audios().transcribe(audioRequest).join();
