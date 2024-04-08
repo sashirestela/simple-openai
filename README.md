@@ -74,9 +74,9 @@ Full support for all of the OpenAI services:
 * Assistants API (Beta)
 * Assistant Stream Events (Beta) 📣
 
-![Services](media/supported_services.png)
+![OpenAI Services](media/openai_services.png)
 
-![Assitants API](media/assistants_api.png)
+![OpenAI Beta Services](media/openai_beta_services.png)
 
 NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 
