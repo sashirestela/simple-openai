@@ -38,6 +38,17 @@ class FineTuningDomainTest {
                         .nEpochs("auto")
                         .build())
                 .suffix("suffix")
+                .integration(Integration.builder()
+                        .type(IntegrationType.WANDB)
+                        .wandb(WandbIntegration.builder()
+                                .project("my-wandb-project")
+                                .name("ft-run-display-name")
+                                .entity("testing")
+                                .tag("first-experiment")
+                                .tag("v2")
+                                .build())
+                        .build())
+                .seed(99)
                 .build();
         var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
         System.out.println(fineTuningResponse);
@@ -64,6 +75,14 @@ class FineTuningDomainTest {
     void testFineTuningsGetEvents() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/finetunings_getevents.json");
         var fineTuningResponse = openAI.fineTunings().getEvents("finetuningId", 2, null).join();
+        System.out.println(fineTuningResponse);
+        assertNotNull(fineTuningResponse);
+    }
+
+    @Test
+    void testFineTuningsGetCheckpoints() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/finetunings_getcheckpoints.json");
+        var fineTuningResponse = openAI.fineTunings().getCheckpoints("finetuningId", 2, null).join();
         System.out.println(fineTuningResponse);
         assertNotNull(fineTuningResponse);
     }
