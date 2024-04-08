@@ -1,6 +1,7 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class ThreadMessageRequest {
 
     @Required
-    private String role;
+    private ThreadMessageRequest.Role role;
 
     @Required
     private String content;
@@ -30,5 +31,15 @@ public class ThreadMessageRequest {
 
     @Size(max = 16)
     private Map<String, String> metadata;
+
+    public static enum Role {
+
+        @JsonProperty("user")
+        USER,
+
+        @JsonProperty("assistant")
+        ASSISTANT;
+
+    }
 
 }

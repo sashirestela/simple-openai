@@ -270,7 +270,7 @@ public interface OpenAIBeta {
          * @return The list of message objects.
          */
         default CompletableFuture<Page<ThreadMessage>> getMessageList(String threadId) {
-            return getMessageList(threadId, PageRequest.builder().build());
+            return getMessageList(threadId, PageRequest.builder().build(), null);
         }
 
         /**
@@ -282,7 +282,7 @@ public interface OpenAIBeta {
          */
         @GET("/{threadId}/messages")
         CompletableFuture<Page<ThreadMessage>> getMessageList(@Path("threadId") String threadId,
-                @Query PageRequest page);
+                @Query PageRequest page, @Query("run_id") String runId);
 
         /**
          * Deletes a message.
