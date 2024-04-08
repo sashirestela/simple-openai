@@ -26,6 +26,7 @@ import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
 import io.github.sashirestela.openai.domain.embedding.EncodingFormat;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
+import io.github.sashirestela.openai.domain.finetuning.Checkpoint;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningEvent;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningRequest;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningResponse;
@@ -388,6 +389,22 @@ public interface OpenAI {
 
         @GET("/{fineTuningId}/events")
         CompletableFuture<OpenAIGeneric<FineTuningEvent>> getEventsRoot(@Path("fineTuningId") String fineTuningId,
+                @Query("limit") Integer limit, @Query("after") String after);
+
+        /**
+         * List checkpoints for a fine-tuning job.
+         * 
+         * @param fineTuningId The id of the fine-tuning job to get checkpoints for.
+         * @param limit        Number of fine-tuning jobs to retrieve.
+         * @param after        Identifier for the last job from the previous pagination request.
+         * @return A list of fine-tuning checkpoint objects.
+         */
+        default CompletableFuture<List<Checkpoint>> getCheckpoints(String fineTuningId, Integer limit, String after) {
+            return getCheckpointsRoot(fineTuningId, limit, after).thenApply(OpenAIGeneric::getData);
+        }
+
+        @GET("/{fineTuningId}/checkpoints")
+        CompletableFuture<OpenAIGeneric<Checkpoint>> getCheckpointsRoot(@Path("fineTuningId") String fineTuningId,
                 @Query("limit") Integer limit, @Query("after") String after);
 
         /**

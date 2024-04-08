@@ -5,33 +5,23 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.Required;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Singular;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Builder
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class FineTuningRequest {
+public class Integration {
 
     @Required
-    private String model;
+    private IntegrationType type;
 
     @Required
-    private String trainingFile;
-
-    private String validationFile;
-
-    private HyperParams hyperparameters;
-
-    private String suffix;
-
-    @Singular
-    private List<Integration> integrations;
-
-    private Integer seed;
+    private WandbIntegration wandb;
 
 }
