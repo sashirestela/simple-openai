@@ -19,6 +19,10 @@ Spotless comes with two Maven commands that you can run at any moment, preferabl
 
 The remote build will check the code formatting, so the build will fail if the code isn't formatted correctly.
 
+## Static Analysis
+This project is configured to use [SonarCloud](https://sonarcloud.io) for static analysis. That analysis runs after every pull request to the `main` branch and the results can be examined in the project [dashboard](https://sonarcloud.io/project/overview?id=sashirestela_simple-openai).
+
+It is highly recommended you install the free [SonarLint](https://sonarlint.io) extension in your favorite IDE, so you can analyze your code in advance before your pull request.
 
 ## Configure IDE (Optional)
 You could set your favorite IDE to be aligned to the custom code format. See details below.
