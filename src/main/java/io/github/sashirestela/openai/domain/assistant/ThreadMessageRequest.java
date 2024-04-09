@@ -32,7 +32,7 @@ public class ThreadMessageRequest {
     @Size(max = 16)
     private Map<String, String> metadata;
 
-    public static enum Role {
+    public enum Role {
 
         @JsonProperty("user")
         USER,

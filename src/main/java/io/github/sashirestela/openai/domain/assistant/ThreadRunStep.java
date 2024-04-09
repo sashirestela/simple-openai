@@ -44,20 +44,26 @@ public class ThreadRunStep {
     private Map<String, String> metadata;
     private OpenAIUsage usage;
 
-    public interface Type {
+    public final class Type {
 
-        String MESSAGE_CREATION = "message_creation";
-        String TOOL_CALLS = "tool_calls";
+        private Type() {
+        }
+
+        public static final String MESSAGE_CREATION = "message_creation";
+        public static final String TOOL_CALLS = "tool_calls";
 
     }
 
-    public interface Status {
+    public final class Status {
 
-        String IN_PROGRESS = "in_progress";
-        String CANCELLED = "cancelled";
-        String FAILED = "failed";
-        String COMPLETED = "completed";
-        String EXPIRED = "expired";
+        private Status() {
+        }
+
+        public static final String IN_PROGRESS = "in_progress";
+        public static final String CANCELLED = "cancelled";
+        public static final String FAILED = "failed";
+        public static final String COMPLETED = "completed";
+        public static final String EXPIRED = "expired";
 
     }
 

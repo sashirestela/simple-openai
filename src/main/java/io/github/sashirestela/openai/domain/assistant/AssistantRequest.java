@@ -42,7 +42,4 @@ public class AssistantRequest {
     @Size(max = 16)
     private Map<String, String> metadata;
 
-    public static class AssistantRequestBuilder {
-    }
-
 }

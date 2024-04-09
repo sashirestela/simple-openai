@@ -14,9 +14,9 @@ public enum Size {
     X1024,
 
     @JsonProperty("1792x1024")
-    X1792x,
+    X1792X,
 
     @JsonProperty("1024x1792")
-    X1024x;
+    X1024X;
 
 }
