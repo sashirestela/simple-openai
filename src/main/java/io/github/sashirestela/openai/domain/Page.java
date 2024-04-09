@@ -41,4 +41,9 @@ public class Page<T> extends AbstractList<T> {
         return get(size() - 1);
     }
 
+    @Override
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
+
 }

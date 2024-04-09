@@ -2,7 +2,6 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.domain.ToolCalls;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,6 +13,6 @@ import lombok.ToString;
 public class ThreadRunAction {
 
     private String type;
-    private ToolCalls submitToolOutputs;
+    private ToolOutputs submitToolOutputs;
 
 }

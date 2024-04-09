@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class ThreadDomainTest {
+class ThreadDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;

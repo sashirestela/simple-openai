@@ -12,12 +12,13 @@ import java.util.function.Consumer;
 
 /**
  * The base abstract class that all providers extend. It generates an implementation to the
- * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a "Not implemented"
+ * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a NOT_IMPLEMENTED
  * exception for all other interfaces
  */
 public abstract class BaseSimpleOpenAI {
 
     private static final String END_OF_STREAM = "[DONE]";
+    private static final String NOT_IMPLEMENTED = "Not implemented.";
 
     @Setter
     protected CleverClient cleverClient;
@@ -47,7 +48,7 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Audios audios() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
@@ -67,63 +68,63 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Completions completions() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Embeddings embeddings() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Files files() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.FineTunings fineTunings() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Images images() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Models models() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Moderations moderations() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAIBeta.Assistants assistants() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAIBeta.Threads threads() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
 }

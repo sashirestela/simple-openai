@@ -1,6 +1,9 @@
 package io.github.sashirestela.openai.support;
 
-public class Constant {
+public final class Constant {
+
+    private Constant() {
+    }
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_AUTHORIZATION = "Bearer ";

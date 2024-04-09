@@ -50,16 +50,19 @@ public class ThreadRun {
     private OpenAIUsage usage;
     private Double temperature;
 
-    public interface Status {
+    public final class Status {
 
-        String QUEUED = "queued";
-        String IN_PROGRESS = "in_progress";
-        String REQUIRES_ACTION = "requires_action";
-        String CANCELLING = "cancelling";
-        String CANCELLED = "cancelled";
-        String FAILED = "failed";
-        String COMPLETED = "completed";
-        String EXPIRED = "expired";
+        private Status() {
+        }
+
+        public static final String QUEUED = "queued";
+        public static final String IN_PROGRESS = "in_progress";
+        public static final String REQUIRES_ACTION = "requires_action";
+        public static final String CANCELLING = "cancelling";
+        public static final String CANCELLED = "cancelled";
+        public static final String FAILED = "failed";
+        public static final String COMPLETED = "completed";
+        public static final String EXPIRED = "expired";
 
     }
 

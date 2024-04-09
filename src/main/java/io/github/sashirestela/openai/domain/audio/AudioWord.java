@@ -7,7 +7,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Word {
+public class AudioWord {
 
     private String word;
     private Double start;

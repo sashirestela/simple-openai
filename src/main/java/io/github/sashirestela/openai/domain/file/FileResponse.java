@@ -18,9 +18,17 @@ public class FileResponse {
     private String filename;
     private Integer bytes;
     private Long createdAt;
-    @Deprecated
+
+    /**
+     * @deprecated OpenAI has deperecated this field, but there isn't a known alternative for this.
+     */
+    @Deprecated(since = "1.0.0", forRemoval = true)
     private String status;
-    @Deprecated
+
+    /**
+     * @deprecated OpenAI has deperecated this field, but there isn't a known alternative for this.
+     */
+    @Deprecated(since = "1.0.0", forRemoval = true)
     private String statusDetails;
 
 }

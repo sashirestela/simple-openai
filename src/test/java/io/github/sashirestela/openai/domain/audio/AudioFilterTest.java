@@ -68,8 +68,9 @@ class AudioFilterTest {
                 .model("test_model")
                 .responseFormat(AudioRespFmt.JSON)
                 .build();
+        var audioService = openAI.audios();
         Exception exception = assertThrows(SimpleUncheckedException.class,
-                () -> openAI.audios().transcribePlain(audioRequest));
+                () -> audioService.transcribePlain(audioRequest));
         assertTrue(exception.getMessage().contains("Unexpected responseFormat for the method"));
     }
 
@@ -110,8 +111,9 @@ class AudioFilterTest {
                 .model("test_model")
                 .responseFormat(AudioRespFmt.TEXT)
                 .build();
+        var audioService = openAI.audios();
         Exception exception = assertThrows(SimpleUncheckedException.class,
-                () -> openAI.audios().transcribe(audioRequest));
+                () -> audioService.transcribe(audioRequest));
         assertTrue(exception.getMessage().contains("Unexpected responseFormat for the method"));
     }
 
