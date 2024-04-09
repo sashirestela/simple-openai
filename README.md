@@ -1,6 +1,7 @@
 # 📌 Simple-OpenAI
 A Java library to use the OpenAI Api in the simplest possible way.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sashirestela_simple-openai&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sashirestela_simple-openai)
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
