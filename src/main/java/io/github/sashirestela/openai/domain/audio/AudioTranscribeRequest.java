@@ -4,12 +4,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.slimvalidator.constraints.Extension;
+import io.github.sashirestela.slimvalidator.constraints.Range;
+import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
+import lombok.Singular;
 import lombok.With;
 
 import java.nio.file.Path;
+import java.util.Set;
 
 @Getter
 @Builder
@@ -17,14 +22,25 @@ import java.nio.file.Path;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AudioTranscribeRequest {
 
-    @NonNull
+    @Required
+    @Extension({ "flac", "mp3", "mp4", "mpeg", "mpga", "m4a", "ogg", "wav", "webm" })
     private Path file;
-    @NonNull
+
+    @Required
     private String model;
-    private String prompt;
-    private Double temperature;
+
     private String language;
+
+    private String prompt;
+
     @With
     private AudioRespFmt responseFormat;
+
+    @Range(min = 0.0, max = 1.0)
+    private Double temperature;
+
+    @Singular
+    @Size(max = 2)
+    private Set<TimestampGranularity> timestampGranularities;
 
 }

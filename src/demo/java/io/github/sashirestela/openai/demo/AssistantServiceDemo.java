@@ -77,7 +77,7 @@ public class AssistantServiceDemo extends AbstractDemo {
     public void demoCreateThread() {
         var threadRequest = ThreadRequest.builder()
                 .message(ThreadMessageRequest.builder()
-                        .role("user")
+                        .role(ThreadMessageRequest.Role.USER)
                         .content(
                                 "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
                         .build())

@@ -28,5 +28,7 @@ public class FineTuningResponse {
     private List<String> resultFiles;
     private Integer trainedTokens;
     private FineTuningError error;
+    private List<Integration> integrations;
+    private Integer seed;
 
 }

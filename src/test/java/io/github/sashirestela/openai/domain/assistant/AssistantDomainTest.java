@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class AssistantDomainTest {
+class AssistantDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;
@@ -28,6 +28,8 @@ public class AssistantDomainTest {
     @BeforeAll
     static void setup() {
         httpClient = mock(HttpClient.class);
+        assistantId = "asst_HVW5yeBxNVvEMHF5uoFspA2R";
+        fileId = "file-bI6iyBmUO1jOvZVTd3wLzjFq";
         openAI = SimpleOpenAI.builder()
                 .apiKey("apiKey")
                 .httpClient(httpClient)
@@ -49,8 +51,6 @@ public class AssistantDomainTest {
                 .fileId(fileId)
                 .metadata(Map.of("phase", "test"))
                 .build();
-        assistantId = "asst_HVW5yeBxNVvEMHF5uoFspA2R";
-        fileId = "file-bI6iyBmUO1jOvZVTd3wLzjFq";
     }
 
     @Test

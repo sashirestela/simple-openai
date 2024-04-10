@@ -2,7 +2,9 @@ package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.support.Constant;
+import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -18,6 +20,7 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -72,7 +75,7 @@ class SimpleOpenAITest {
         repeat(NO_OF_REQUESTS, () -> {
             var chatRequest = ChatRequest.builder()
                     .model("model")
-                    .messages(List.of())
+                    .message(new ChatMsgUser("prompt"))
                     .build();
             chatService.create(chatRequest);
         });
@@ -92,7 +95,7 @@ class SimpleOpenAITest {
         final int NUMBER_CALLINGS = 3;
         final int NUMBER_INVOCATIONS = 1;
 
-        SimpleOpenAI openAI = SimpleOpenAI.builder()
+        var openAI = SimpleOpenAI.builder()
                 .apiKey("apiKey")
                 .httpClient(httpClient)
                 .build();
@@ -108,8 +111,8 @@ class SimpleOpenAITest {
                 new TestData(OpenAI.Images.class, openAI::images),
                 new TestData(OpenAI.Models.class, openAI::models),
                 new TestData(OpenAI.Moderations.class, openAI::moderations),
-                new TestData(OpenAI.Assistants.class, openAI::assistants),
-                new TestData(OpenAI.Threads.class, openAI::threads)
+                new TestData(OpenAIBeta.Assistants.class, openAI::assistants),
+                new TestData(OpenAIBeta.Threads.class, openAI::threads)
         };
         for (TestData testData : data) {
             when(cleverClient.create(any()))
@@ -117,6 +120,25 @@ class SimpleOpenAITest {
             repeat(NUMBER_CALLINGS, testData.calling);
             verify(cleverClient, times(NUMBER_INVOCATIONS)).create(testData.serviceClass);
         }
+    }
+
+    @Test
+    void shouldThrownExceptionWhenBodyRequestFailsValidations() {
+        var openAI = SimpleOpenAI.builder()
+                .apiKey("apiKey")
+                .httpClient(httpClient)
+                .build();
+        var chatService = openAI.chatCompletions();
+        var chatRequest = ChatRequest.builder()
+                .model("big-model")
+                .toolChoice("ToolChoice")
+                .stop(List.of("one", "two", "three", "four", "five"))
+                .build();
+        var exception = assertThrows(ConstraintViolationException.class, () -> chatService.create(chatRequest));
+        var expectedErrorMessage = "messages must have a value.\n"
+                + "toolChoice type must be or ChatToolChoiceType or ChatToolChoice.\n"
+                + "stop type must be or String or Collection<String> (max 4 items).";
+        assertEquals(expectedErrorMessage, exception.getMessage());
     }
 
     private static void repeat(int times, Runnable action) {

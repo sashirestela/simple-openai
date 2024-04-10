@@ -1,5 +1,5 @@
 # Contributing
-Thank you very much for your interest in contributing to the improvement of **Simple-OpenAI**. Please, follow the next guidelines.
+Thank you very much for your interest in contributing to the improvement of this project. Please, follow the next guidelines.
 
 ## General Guidelines
 1. Keep the code compatible with Java 11.
@@ -7,7 +7,6 @@ Thank you very much for your interest in contributing to the improvement of **Si
 1. Avoid adding new dependencies as much as possible.
 1. Ensure to add Javadoc where necessary.
 1. Provide unit tests for your code.
-1. Provide demo code to use real services. Use environment variables for credentials.
 1. Large features should be discussed with maintainers before implementation. Use the [Discussion](https://github.com/sashirestela/simple-openai/discussions) section for this.
 
 ## Code Formatting
@@ -20,6 +19,10 @@ Spotless comes with two Maven commands that you can run at any moment, preferabl
 
 The remote build will check the code formatting, so the build will fail if the code isn't formatted correctly.
 
+## Static Analysis
+This project is configured to use [SonarCloud](https://sonarcloud.io) for static analysis. That analysis runs after every pull request to the `main` branch and the results can be examined in the project [dashboard](https://sonarcloud.io/project/overview?id=sashirestela_simple-openai).
+
+It is highly recommended you install the free [SonarLint](https://sonarlint.io) extension in your favorite IDE, so you can analyze your code in advance before your pull request.
 
 ## Configure IDE (Optional)
 You could set your favorite IDE to be aligned to the custom code format. See details below.
@@ -30,23 +33,20 @@ You could set your favorite IDE to be aligned to the custom code format. See det
 
 1. Import the custom code format:
 
-<img src="media/intellij/set_format_intellij_1.png" width="788">
+    - Settings > Editor > Code Style > Java > Scheme > ⚙ > Import Scheme > Eclipse XML Profile
 
-2. Select the file on _codestyle/spotless_java_eclipseformat.xml_:
+2. Select the file on _codestyle/spotless_java_eclipseformat.xml_
 
-<img src="media/intellij/set_format_intellij_2.png" width="372">
+3. In the _Imports_ tab for the previous scheme, change the values:
+    - In _General_ section, mark the option _Use single class import_
+    - In the field _Class count to use import with '*'_ put the value 99
+    - In the field _Names count to use static import with '*'_ put the value 99
 
-<img src="media/intellij/set_format_intellij_3.png" width="214">
-
-3. In the _Imports_ section, change the values as in the image:
-
-<img src="media/intellij/set_imports_intellij_1.png" width="788">
-
-4. At the bottom part in the _Imports_ section, change the _import statement order_ as in the image:
-
-<img src="media/intellij/set_imports_intellij_2.png" width="583">
-
-<img src="media/intellij/set_imports_intellij_3.png" width="583">
+4. At the bottom part in the _Imports_ section, change the import statement order as:
+    - **import** all other imports
+    - **import** javax.*
+    - **import** java.*
+    - **import static** all other imports
 
 </details>
 
@@ -54,21 +54,27 @@ You could set your favorite IDE to be aligned to the custom code format. See det
 
 <summary><b>VSCode</b></summary>
 
-1. Install the extension _Language Support for Java by Red Hat_:
+1. Install the extension _Language Support for Java by Red Hat_
 
-<img src="media/vscode/install_extension_vscode.png" width="511">
+2. Set the custom code format:
+    
+    - Settings > Workspace > Extensions > Language Support for Java(TM) by Red Hat > Formatting
+    - Choose the box _Java/Format/Settings:Url_ and put the value _codestyle/spotless_java_eclipseformat.xml_
 
-2. Set the custom code format using the value _codestyle/spotless_java_eclipseformat.xml_:
+3. Set the import order:
 
-<img src="media/vscode/set_format_vscode.png" width="673">
+    - Settings > Workspace > Extensions > Language Support for Java(TM) by Red Hat > Code Completion
+    - Choose the box _Java/Completion:ImportOrder_ and click the link _Edit in settings.json_
+    - In the editor, make sure to add the following entries:
 
-3. Configure the _Import Order_ by clicking in the link:
-
-<img src="media/vscode/set_imports_vscode_1.png" width="673">
-
-4. Set the _import statement order_ as in the image:
-
-<img src="media/vscode/set_imports_vscode_2.png" width="513">
+      ```json
+      "java.completion.importOrder": [
+          "",
+          "javax",
+          "java",
+          "*"
+      ]
+      ```
 
 </details>
 
@@ -78,24 +84,24 @@ You could set your favorite IDE to be aligned to the custom code format. See det
 
 1. Import the custom code format:
 
-<img src="media/eclipse/set_format_eclipse_1.png" width="668">
+    - Preferences > Java > Code Style > Formatter > Import...
 
-2. Select the file on _codestyle/spotless_java_eclipseformat.xml_:
-
-<img src="media/eclipse/set_format_eclipse_2.png" width="584">
-
-<img src="media/eclipse/set_format_eclipse_3.png" width="668">
+2. Select the file on _codestyle/spotless_java_eclipseformat.xml_
 
 3. Import the custom import statement order:
 
-<img src="media/eclipse/set_imports_eclipse_1.png" width="668">
+    - Preferences > Java > Code Style > Organize Imports > Import...
 
-4. Select the file on _codestyle/spotless_java.importorder_:
+4. Select the file on _codestyle/spotless_java.importorder_
 
-<img src="media/eclipse/set_imports_eclipse_2.png" width="584">
+5. In the _Organize Imports_ section, make sure the values are set as:
 
-5. In the _Organize Imports_ section, make sure you see the values as in the image:
-
-<img src="media/eclipse/set_imports_eclipse_3.png" width="510">
+    - Sorting order:
+      - \* - all unmatched type imports
+      - javax
+      - java
+      - \* - all unmatched static imports
+    - Number of imports needed for .*: 99
+    - Number of static imports needed for .*: 99
 
 </details>

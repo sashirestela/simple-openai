@@ -1,6 +1,7 @@
 # 📌 Simple-OpenAI
 A Java library to use the OpenAI Api in the simplest possible way.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sashirestela_simple-openai&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sashirestela_simple-openai)
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
@@ -74,14 +75,14 @@ Full support for all of the OpenAI services:
 * Assistants API (Beta)
 * Assistant Stream Events (Beta) 📣
 
-![Services](media/supported_services.png)
+![OpenAI Services](media/openai_services.png)
 
-![Assitants API](media/assistants_api.png)
+![OpenAI Beta Services](media/openai_beta_services.png)
 
 NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 
 
-## 🛠️ Installation
+## ⚙ Installation
 You can install Simple-OpenAI by adding the following dependency to your Maven project:
 
 ```xml

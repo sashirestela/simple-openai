@@ -22,8 +22,8 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     private OpenAI.Images imageService;
     private OpenAI.Models modelService;
     private OpenAI.Moderations moderationService;
-    private OpenAI.Assistants assistantService;
-    private OpenAI.Threads threadService;
+    private OpenAIBeta.Assistants assistantService;
+    private OpenAIBeta.Threads threadService;
 
     /**
      * Constructor used to generate a builder.
@@ -60,6 +60,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Audios audios() {
         if (audioService == null) {
             audioService = cleverClient.create(OpenAI.Audios.class);
@@ -72,6 +73,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Completions completions() {
         if (completionService == null) {
             completionService = cleverClient.create(OpenAI.Completions.class);
@@ -84,6 +86,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Embeddings embeddings() {
         if (embeddingService == null) {
             embeddingService = cleverClient.create(OpenAI.Embeddings.class);
@@ -96,6 +99,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Files files() {
         if (fileService == null) {
             fileService = cleverClient.create(OpenAI.Files.class);
@@ -108,6 +112,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.FineTunings fineTunings() {
         if (fineTuningService == null) {
             fineTuningService = cleverClient.create(OpenAI.FineTunings.class);
@@ -120,6 +125,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Images images() {
         if (imageService == null) {
             imageService = cleverClient.create(OpenAI.Images.class);
@@ -132,6 +138,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Models models() {
         if (modelService == null) {
             modelService = cleverClient.create(OpenAI.Models.class);
@@ -144,6 +151,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
+    @Override
     public OpenAI.Moderations moderations() {
         if (moderationService == null) {
             moderationService = cleverClient.create(OpenAI.Moderations.class);
@@ -156,9 +164,10 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-    public OpenAI.Assistants assistants() {
+    @Override
+    public OpenAIBeta.Assistants assistants() {
         if (assistantService == null) {
-            assistantService = cleverClient.create(OpenAI.Assistants.class);
+            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
         }
         return assistantService;
     }
@@ -168,9 +177,10 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-    public OpenAI.Threads threads() {
+    @Override
+    public OpenAIBeta.Threads threads() {
         if (threadService == null) {
-            threadService = cleverClient.create(OpenAI.Threads.class);
+            threadService = cleverClient.create(OpenAIBeta.Threads.class);
         }
         return threadService;
     }

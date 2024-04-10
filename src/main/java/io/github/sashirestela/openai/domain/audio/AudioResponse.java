@@ -16,5 +16,6 @@ public class AudioResponse {
     private String language;
     private Double duration;
     private List<Segment> segments;
+    private List<AudioWord> words;
 
 }

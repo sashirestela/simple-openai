@@ -1,20 +1,24 @@
 package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.slimvalidator.Validator;
+import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.Setter;
 
 import java.net.http.HttpClient;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * The base abstract class that all providers extend. It generates an implementation to the
- * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a "Not implemented"
+ * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a NOT_IMPLEMENTED
  * exception for all other interfaces
  */
 public abstract class BaseSimpleOpenAI {
 
     private static final String END_OF_STREAM = "[DONE]";
+    private static final String NOT_IMPLEMENTED = "Not implemented.";
 
     @Setter
     protected CleverClient cleverClient;
@@ -23,12 +27,20 @@ public abstract class BaseSimpleOpenAI {
 
     BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
         var httpClient = Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
+        Consumer<Object> bodyInspector = body -> {
+            var validator = new Validator();
+            var violations = validator.validate(body);
+            if (!violations.isEmpty()) {
+                throw new ConstraintViolationException(violations);
+            }
+        };
         this.cleverClient = CleverClient.builder()
                 .httpClient(httpClient)
                 .baseUrl(args.getBaseUrl())
                 .headers(args.getHeaders())
                 .endOfStream(END_OF_STREAM)
                 .requestInterceptor(args.getRequestInterceptor())
+                .bodyInspector(bodyInspector)
                 .build();
     }
 
@@ -36,7 +48,7 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Audios audios() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
@@ -56,63 +68,63 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Completions completions() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Embeddings embeddings() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Files files() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.FineTunings fineTunings() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Images images() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Models models() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
     public OpenAI.Moderations moderations() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
-    public OpenAI.Assistants assistants() {
-        throw new UnsupportedOperationException("Not implemented");
+    public OpenAIBeta.Assistants assistants() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Throw not implemented
      */
-    public OpenAI.Threads threads() {
-        throw new UnsupportedOperationException("Not implemented");
+    public OpenAIBeta.Threads threads() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
 }
