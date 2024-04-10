@@ -89,12 +89,12 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
 
     public void demoCreateThread() {
         var threadRequest = ThreadRequest.builder()
-                .message(ThreadMessageRequest.builder()
-                        .role("user")
-                        .content(
-                                "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
-                        .build())
-                .build();
+            .message(ThreadMessageRequest.builder()
+                .role(ThreadMessageRequest.Role.USER)
+                .content(
+                    "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
+                .build())
+            .build();
 
         var thread = openAI.threads().create(threadRequest).join();
         System.out.println(thread);
