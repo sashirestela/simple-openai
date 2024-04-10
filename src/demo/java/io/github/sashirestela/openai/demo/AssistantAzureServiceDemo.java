@@ -94,7 +94,7 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
                         .content(
                                 "Inspect the content of the attached text file. After that plot graph of the formula requested in it.")
                         .build())
-            .build();
+                .build();
 
         var thread = openAI.threads().create(threadRequest).join();
         System.out.println(thread);
