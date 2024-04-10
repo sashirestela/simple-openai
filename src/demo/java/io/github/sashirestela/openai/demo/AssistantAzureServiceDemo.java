@@ -177,9 +177,11 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
         demo.addTitleAction("Demo Call Assistant File Upload", demo::demoUploadAssistantFile);
         demo.addTitleAction("Demo Call Assistant Thread Create", demo::demoCreateThread);
         demo.addTitleAction("Demo Call Assistant Thread Run", demo::demoRunThreadAndWaitUntilComplete);
-        demo.addTitleAction("Demo Call Assistant Thread Run Stream", demo::demoRunThreadAndStream);
-        demo.addTitleAction("Demo Call Assistant Messages Get", demo::demoGetAssistantMessages);
         demo.addTitleAction("Demo Call Assistant Delete", demo::demoDeleteAssistant);
+
+        // Azure OPenAI does not support streaming yet
+        //demo.addTitleAction("Demo Call Assistant Thread Run Stream", demo::demoRunThreadAndStream);
+        //demo.addTitleAction("Demo Call Assistant Messages Get", demo::demoGetAssistantMessages);
 
         demo.run();
     }
