@@ -185,5 +185,5 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
 
         demo.run();
     }
-    
+
 }
