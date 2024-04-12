@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
 
 public class ChatAzureServiceDemo extends AbstractDemo {
 
@@ -117,10 +116,10 @@ public class ChatAzureServiceDemo extends AbstractDemo {
 
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
-//        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-//        chatResponse.map(ChatResponse::firstContent)
-//            .filter(Objects::nonNull)
-//            .forEach(System.out::print);
+        //        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        //        chatResponse.map(ChatResponse::firstContent)
+        //            .filter(Objects::nonNull)
+        //            .forEach(System.out::print);
         System.out.println();
 
     }
@@ -170,7 +169,8 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL_VISION");
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY_VISION");
         var visionDemo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
-        visionDemo.addTitleAction("Call Chat with Vision (External image)", visionDemo::demoCallChatWithVisionExternalImage);
+        visionDemo.addTitleAction("Call Chat with Vision (External image)",
+                visionDemo::demoCallChatWithVisionExternalImage);
         visionDemo.addTitleAction("Call Chat with Vision (Local image)", visionDemo::demoCallChatWithVisionLocalImage);
         visionDemo.run();
     }
@@ -181,4 +181,5 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         chatWithFunctionsDemo(apiVersion);
         chatWithVisionDemo(apiVersion);
     }
+
 }
