@@ -368,7 +368,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
 * Create environment variables for the Azure OpenAI demos
 
-  Azure OpenAI requires a separate deployment for each model. The Azure OpenAI require 
+  Azure OpenAI requires a separate deployment for each model. The Azure OpenAI demos require 
   two models: gpt-4-turbo (or similar) that supports /chat/completions including tool calls, 
   and gpt-4-vision-preview that supports /chat/completions including images. 
   See the for more details: [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/).  
@@ -386,6 +386,15 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   try a different region. The API keys are regional (per cognitive account). If you provision 
   multiple models in the same region they will share the same API key (actually there two keys
   per region to support alternate key rotation).
+
+  At the moment the simple-openai support for Azure OpenAI includes the following OpenAI endpoints:
+  - /chat/completions (including tool calls)
+  - /chat/completions (including images)
+  - /files
+  - /assistants (beta)
+  - /threads (beta)
+ 
+   In addition, streaming mode is not supported at the moment.
 
 * Grant execution permission to the script file:
   ```
