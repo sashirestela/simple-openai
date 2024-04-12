@@ -353,7 +353,7 @@ private static ImageUrl loadImageAsBase64(String imagePath) {
 
 ## ✳ Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
-* Clone this respository:
+* Clone this repository:
   ```
   git clone https://github.com/sashirestela/simple-openai.git
   cd simple-openai
@@ -366,15 +366,12 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
-  
 * Create environment variables for the Azure OpenAI demos (requires a deployment of gpt-4-turbo):
-
-```
-export AZURE_OPENAI_BASE_URL=<your deployment URL>/chat
-export AZURE_OPENAI_API_KEY=<here goes your api key>
-export AZURE_OPENAI_API_VERSION=2024-02-15-preview
-```
-
+  ```
+  export AZURE_OPENAI_BASE_URL=<your deployment URL>/chat
+  export AZURE_OPENAI_API_KEY=<here goes your api key>
+  export AZURE_OPENAI_API_VERSION=2024-02-15-preview
+  ```
 * Grant execution permission to the script file:
   ```
   chmod +x rundemo.sh
@@ -388,6 +385,7 @@ export AZURE_OPENAI_API_VERSION=2024-02-15-preview
   * ```<demo>``` Is mandatory and must be one of the values:
     * audio
     * chat
+    * chatAzure
     * completion
     * embedding
     * file
@@ -396,6 +394,7 @@ export AZURE_OPENAI_API_VERSION=2024-02-15-preview
     * model
     * moderation
     * assistant
+    * assistantAzure
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```

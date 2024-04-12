@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatAzureServiceDemo extends AbstractDemo {
 
@@ -116,6 +117,12 @@ public class ChatAzureServiceDemo extends AbstractDemo {
 
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
+//        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+//        chatResponse.map(ChatResponse::firstContent)
+//            .filter(Objects::nonNull)
+//            .forEach(System.out::print);
+        System.out.println();
+
     }
 
     public void demoCallChatWithVisionLocalImage() {
@@ -147,23 +154,31 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         }
     }
 
-    public static void main(String[] args) {
+    private static void chatWithFunctionsDemo(String apiVersion) {
         var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL");
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
-        var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
+        var chatDemo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
+        chatDemo.addTitleAction("Call Chat (Blocking Approach)", chatDemo::demoCallChatBlocking);
+        chatDemo.addTitleAction("Call Chat with Functions", chatDemo::demoCallChatWithFunctions);
 
-        var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
-
-        demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
-        if (baseUrl.contains("gpt-4-0125-Preview")) {
-            demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        } else if (baseUrl.contains("gpt-35-turbo")) {
-            demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
-        } else if (baseUrl.contains("gpt-4-vision")) {
-            demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
-            demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
-        }
-        demo.run();
+        // The response for streaming returns 200 with empty choices. Commented out until resolved.
+        //chatDemo.addTitleAction("Call Chat (Streaming Approach)", chatDemo::demoCallChatStreaming);
+        chatDemo.run();
     }
 
+    private static void chatWithVisionDemo(String apiVersion) {
+        var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL_VISION");
+        var apiKey = System.getenv("AZURE_OPENAI_API_KEY_VISION");
+        var visionDemo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
+        visionDemo.addTitleAction("Call Chat with Vision (External image)", visionDemo::demoCallChatWithVisionExternalImage);
+        visionDemo.addTitleAction("Call Chat with Vision (Local image)", visionDemo::demoCallChatWithVisionLocalImage);
+        visionDemo.run();
+    }
+
+    public static void main(String[] args) {
+        var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
+
+        chatWithFunctionsDemo(apiVersion);
+        chatWithVisionDemo(apiVersion);
+    }
 }
