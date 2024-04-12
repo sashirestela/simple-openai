@@ -366,12 +366,27 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
-* Create environment variables for the Azure OpenAI demos (requires a deployment of gpt-4-turbo):
+* Create environment variables for the Azure OpenAI demos
+
+  Azure OpenAI requires a separate deployment for each model. The Azure OpenAI require 
+  two models: gpt-4-turbo (or similar) that supports /chat/completions including tool calls, 
+  and gpt-4-vision-preview that supports /chat/completions including images. 
+  See the for more details: [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/).  
+
+  Once you have the deployment URLs and the API keys, Set the following environment variables:
   ```
-  export AZURE_OPENAI_BASE_URL=<your deployment URL>/chat
-  export AZURE_OPENAI_API_KEY=<here goes your api key>
+  export AZURE_OPENAI_BASE_URL=<your gpt-4-turbo deployment endpoint URL>
+  export AZURE_OPENAI_API_KEY=<here goes your regional API key>
+  export AZURE_OPENAI_BASE_URL_VISION=<your gpt-4 vision preview deployment endpoint URL>
+  export AZURE_OPENAI_API_KEY_VISION=<here goes your regional API key>
   export AZURE_OPENAI_API_VERSION=2024-02-15-preview
   ```
+  
+  Note that some models may not be available in all regions. If you have trouble finding a model, 
+  try a different region. The API keys are regional (per cognitive account). If you provision 
+  multiple models in the same region they will share the same API key (actually there two keys
+  per region to support alternate key rotation).
+
 * Grant execution permission to the script file:
   ```
   chmod +x rundemo.sh
