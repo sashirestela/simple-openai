@@ -87,22 +87,23 @@ class SimpleOpenAIAzureTest {
     void shouldInterceptUrlCorrectlyWhenUrlContainsAssistants() {
         var baseUrl = "https://example.org/openai/deployments/some-deployment";
         var request = HttpRequestData.builder()
-            .url(baseUrl + "/assistants/some-assistant")
-            .contentType(ContentType.APPLICATION_JSON)
-            .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-            .body("{\"model\":\"some-deployment\"}")
-            .build();
+                .url(baseUrl + "/assistants/some-assistant")
+                .contentType(ContentType.APPLICATION_JSON)
+                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
+                .body("{\"model\":\"some-deployment\"}")
+                .build();
         var expectedRequest = HttpRequestData.builder()
-            .url("https://example.org/openai/assistants/some-assistant?" + Constant.AZURE_API_VERSION + "=12-34-5678")
-            .contentType(ContentType.APPLICATION_JSON)
-            .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-            .body("{\"model\":\"some-deployment\"}")
-            .build();
+                .url("https://example.org/openai/assistants/some-assistant?" + Constant.AZURE_API_VERSION
+                        + "=12-34-5678")
+                .contentType(ContentType.APPLICATION_JSON)
+                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
+                .body("{\"model\":\"some-deployment\"}")
+                .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
-            "the-api-key",
-            "https://example.org/openai/deployments/some-deployment",
-            "12-34-5678",
-            null);
+                "the-api-key",
+                "https://example.org/openai/deployments/some-deployment",
+                "12-34-5678",
+                null);
         var actualRequest = args.getRequestInterceptor().apply(request);
         assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
         assertEquals(expectedRequest.getContentType(), actualRequest.getContentType());

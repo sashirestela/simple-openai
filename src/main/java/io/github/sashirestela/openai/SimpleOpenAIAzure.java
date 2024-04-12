@@ -154,8 +154,8 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
      *
      * @return An instance of the interface. It is created only once.
      */
-
-    @Override public OpenAIBeta.Assistants assistants() {
+    @Override
+    public OpenAIBeta.Assistants assistants() {
         if (assistantService == null) {
             assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
         }
