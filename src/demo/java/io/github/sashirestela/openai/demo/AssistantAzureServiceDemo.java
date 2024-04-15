@@ -10,14 +10,6 @@ public class AssistantAzureServiceDemo extends BaseAssistantServiceDemo {
                 .baseUrl(baseUrl)
                 .apiVersion(apiVersion)
                 .build(), "N/A");
-
-        //        var assistantRequest = AssistantRequest.builder()
-        //                .model("N/A")
-        //                .build();
-        //
-        //        var assistant = openAI.assistants().create(assistantRequest).join();
-        //        System.out.println(assistant);
-        //        assistantId = assistant.getId();
     }
 
     public static void main(String[] args) {
