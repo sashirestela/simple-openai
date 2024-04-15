@@ -9,6 +9,7 @@ import lombok.NonNull;
 import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 /**
  * This class provides the chatCompletion() service for the Azure OpenAI provider. Note that each
@@ -16,6 +17,10 @@ import java.util.function.UnaryOperator;
  * determine which chatCompletion() methods are available.
  */
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
+
+    private OpenAI.Files fileService;
+    private OpenAIBeta.Assistants assistantService;
+    private OpenAIBeta.Threads threadService;
 
     /**
      * Constructor used to generate a builder.
@@ -34,41 +39,91 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient));
     }
 
+    private static String extractDeployment(String url) {
+        final String DEPLOYMENT_REGEX = "/deployments/([^/]+)/";
+
+        var pattern = Pattern.compile(DEPLOYMENT_REGEX);
+        var matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
+    }
+
+    private static String getNewUrl(String url, String apiVersion) {
+        final String VERSION_REGEX = "(/v\\d+\\.*\\d*)";
+        final String DEPLOYMENT_REGEX = "/deployments/[^/]+/";
+        final String CHAT_COMPLETIONS_LITERAL = "/chat/completions";
+
+        url += (url.contains("?") ? "&" : "?") + Constant.AZURE_API_VERSION + "=" + apiVersion;
+        url = url.replaceFirst(VERSION_REGEX, "");
+
+        // Strip deployment from URL unless it's /chat/completions call
+        if (!url.contains(CHAT_COMPLETIONS_LITERAL)) {
+            url = url.replaceFirst(DEPLOYMENT_REGEX, "/");
+        }
+
+        return url;
+    }
+
+    private static Object getBodyForJson(String url, String body, String deployment) {
+        final String MODEL_REGEX = ",?\"model\":\"[^\"]*\",?";
+        final String EMPTY_REGEX = "\"\"";
+        final String QUOTED_COMMA = "\",\"";
+        final String MODEL_LITERAL = "model";
+        final String ASSISTANTS_LITERAL = "/assistants";
+
+        var model = "";
+        if (url.contains(ASSISTANTS_LITERAL)) {
+            model = "\"" + MODEL_LITERAL + "\":\"" + deployment + "\"";
+        }
+        body = body.replaceFirst(MODEL_REGEX, model);
+        body = body.replaceFirst(EMPTY_REGEX, QUOTED_COMMA);
+
+        return body;
+    }
+
+    private static Object getBodyForMap(String url, Map<String, Object> body, String deployment) {
+        final String ASSISTANTS_LITERAL = "/assistants";
+        final String MODEL_LITERAL = "model";
+
+        if (url.contains(ASSISTANTS_LITERAL)) {
+            body.put(MODEL_LITERAL, deployment);
+        } else {
+            body.remove(MODEL_LITERAL);
+        }
+        return body;
+    }
+
+    private static void updateRequestBody(HttpRequestData request, ContentType contentType, String url) {
+        var deployment = extractDeployment(url);
+        var body = request.getBody();
+        if (contentType.equals(ContentType.APPLICATION_JSON)) {
+            body = getBodyForJson(url, (String) request.getBody(), deployment);
+        } else if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
+            @SuppressWarnings("unchecked")
+            var bodyMap = getBodyForMap(url, (Map<String, Object>) body, deployment);
+            body = bodyMap;
+        } else {
+            throw new UnsupportedOperationException("Content type not supported.");
+        }
+        request.setBody(body);
+    }
+
     public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, String apiVersion,
             HttpClient httpClient) {
 
         var headers = Map.of(Constant.AZURE_APIKEY_HEADER, apiKey);
-
         UnaryOperator<HttpRequestData> requestInterceptor = request -> {
-            final String VERSION_REGEX = "(\\/v\\d+\\.*\\d*)";
-            final String MODEL_REGEX = ",?\"model\":\"[^\"]*\",?";
-            final String EMPTY_REGEX = "\"\"";
-            final String QUOTED_COMMA = "\",\"";
-            final String MODEL_LITERAL = "model";
-
             var url = request.getUrl();
             var contentType = request.getContentType();
-            var body = request.getBody();
-
-            url += (url.contains("?") ? "&" : "?") + Constant.AZURE_API_VERSION + "=" + apiVersion;
-            url = url.replaceFirst(VERSION_REGEX, "");
-            request.setUrl(url);
-
             if (contentType != null) {
-                if (contentType.equals(ContentType.APPLICATION_JSON)) {
-                    var bodyJson = (String) request.getBody();
-                    bodyJson = bodyJson.replaceFirst(MODEL_REGEX, "");
-                    bodyJson = bodyJson.replaceFirst(EMPTY_REGEX, QUOTED_COMMA);
-                    body = bodyJson;
-                }
-                if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
-                    @SuppressWarnings("unchecked")
-                    var bodyMap = (Map<String, Object>) request.getBody();
-                    bodyMap.remove(MODEL_LITERAL);
-                    body = bodyMap;
-                }
-                request.setBody(body);
+                updateRequestBody(request, contentType, url);
             }
+            url = getNewUrl(url, apiVersion);
+            request.setUrl(url);
 
             return request;
         };
@@ -79,6 +134,45 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 .httpClient(httpClient)
                 .requestInterceptor(requestInterceptor)
                 .build();
+    }
+
+    /**
+     * Generates an implementation of the Files interface to handle requests.
+     *
+     * @return An instance of the interface. It is created only once.
+     */
+    @Override
+    public OpenAI.Files files() {
+        if (fileService == null) {
+            fileService = cleverClient.create(OpenAI.Files.class);
+        }
+        return fileService;
+    }
+
+    /**
+     * Generates an implementation of the Assistant interface to handle requests.
+     *
+     * @return An instance of the interface. It is created only once.
+     */
+    @Override
+    public OpenAIBeta.Assistants assistants() {
+        if (assistantService == null) {
+            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
+        }
+        return assistantService;
+    }
+
+    /**
+     * Spawns a single instance of the Threads interface to manage requests.
+     *
+     * @return An instance of the interface. It is created only once.
+     */
+    @Override
+    public OpenAIBeta.Threads threads() {
+        if (threadService == null) {
+            threadService = cleverClient.create(OpenAIBeta.Threads.class);
+        }
+        return threadService;
     }
 
 }

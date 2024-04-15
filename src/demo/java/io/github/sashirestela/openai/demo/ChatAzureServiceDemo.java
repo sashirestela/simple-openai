@@ -5,7 +5,6 @@ import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
 import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
@@ -40,15 +39,6 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
-    }
-
-    public void demoCallChatStreaming() {
-        var futureChat = openAI.chatCompletions().createStream(chatRequest);
-        var chatResponse = futureChat.join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(ChatResponse::firstContent)
-                .forEach(System.out::print);
-        System.out.println();
     }
 
     public void demoCallChatBlocking() {
@@ -113,11 +103,11 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
+
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
         System.out.println();
+
     }
 
     public void demoCallChatWithVisionLocalImage() {
@@ -131,11 +121,8 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
-        System.out.println();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
     }
 
     private static ImageUrl loadImageAsBase64(String imagePath) {
@@ -152,23 +139,31 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         }
     }
 
-    public static void main(String[] args) {
+    private static void chatWithFunctionsDemo(String apiVersion) {
         var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL");
         var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
+        var chatDemo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
+        chatDemo.addTitleAction("Call Chat (Blocking Approach)", chatDemo::demoCallChatBlocking);
+        chatDemo.addTitleAction("Call Chat with Functions", chatDemo::demoCallChatWithFunctions);
+
+        chatDemo.run();
+    }
+
+    private static void chatWithVisionDemo(String apiVersion) {
+        var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL_VISION");
+        var apiKey = System.getenv("AZURE_OPENAI_API_KEY_VISION");
+        var visionDemo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
+        visionDemo.addTitleAction("Call Chat with Vision (External image)",
+                visionDemo::demoCallChatWithVisionExternalImage);
+        visionDemo.addTitleAction("Call Chat with Vision (Local image)", visionDemo::demoCallChatWithVisionLocalImage);
+        visionDemo.run();
+    }
+
+    public static void main(String[] args) {
         var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
 
-        var demo = new ChatAzureServiceDemo(baseUrl, apiKey, apiVersion);
-
-        demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
-        if (baseUrl.contains("gpt-35-turbo")) {
-            demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        } else if (baseUrl.contains("gpt-4")) {
-            demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
-            demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
-            demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
-        }
-
-        demo.run();
+        chatWithFunctionsDemo(apiVersion);
+        chatWithVisionDemo(apiVersion);
     }
 
 }

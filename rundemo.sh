@@ -11,7 +11,7 @@ log_file_value="demo.log"
 log_options=""
 
 if [ ! -z "$1" ]; then
-  service="${1^}"
+  service=$(echo "$1" | awk '{ print toupper(substr($0, 1, 1)) substr($0, 2) }')
 fi
 
 if [ ! -z "$2" ]; then

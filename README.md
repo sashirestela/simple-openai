@@ -353,7 +353,7 @@ private static ImageUrl loadImageAsBase64(String imagePath) {
 
 ## ✳ Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
-* Clone this respository:
+* Clone this repository:
   ```
   git clone https://github.com/sashirestela/simple-openai.git
   cd simple-openai
@@ -366,6 +366,43 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
+* Create environment variables for the Azure OpenAI demos
+
+  Azure OpenAI requires a separate deployment for each model. The Azure OpenAI demos require 
+  two models.   
+
+  1. gpt-4-turbo (or similar) that supports:
+     - /chat/completions (including tool calls)
+     - /files
+     - /assistants (beta)
+     - /threads (beta)
+  
+  3. gpt-4-vision-preview that supports:
+     - /chat/completions (including images). 
+  
+  See the Azure OpenAI docs for more details: [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/).
+  Once you have the deployment URLs and the API keys, set the following environment variables:
+  ```
+  export AZURE_OPENAI_BASE_URL=<your gpt-4-turbo deployment endpoint URL>
+  export AZURE_OPENAI_API_KEY=<here goes your regional API key>
+  export AZURE_OPENAI_BASE_URL_VISION=<your gpt-4 vision preview deployment endpoint URL>
+  export AZURE_OPENAI_API_KEY_VISION=<here goes your regional API key>
+  export AZURE_OPENAI_API_VERSION=2024-02-15-preview
+  ```
+  Note that some models may not be available in all regions. If you have trouble finding a model, 
+  try a different region. The API keys are regional (per cognitive account). If you provision 
+  multiple models in the same region they will share the same API key (actually there are two keys
+  per region to support alternate key rotation).
+
+  At the moment the simple-openai support for Azure OpenAI includes the following OpenAI endpoints:
+  - /chat/completions (including tool calls)
+  - /chat/completions (including images)
+  - /files
+  - /assistants (beta)
+  - /threads (beta)
+ 
+   In addition, streaming mode is not supported at the moment.
+
 * Grant execution permission to the script file:
   ```
   chmod +x rundemo.sh
@@ -379,6 +416,8 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   * ```<demo>``` Is mandatory and must be one of the values:
     * audio
     * chat
+    * chatAnyscale
+    * chatAzure
     * completion
     * embedding
     * file
@@ -387,6 +426,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * model
     * moderation
     * assistant
+    * assistantAzure
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
