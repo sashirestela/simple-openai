@@ -3,15 +3,11 @@ package io.github.sashirestela.openai.demo;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.Events;
 import io.github.sashirestela.openai.domain.assistant.ImageFileContent;
-import io.github.sashirestela.openai.domain.assistant.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessage;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun;
-import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.PurposeType;
 
@@ -115,15 +111,6 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
         System.out.println(messages);
     }
 
-    public void demoRunThreadAndStream() {
-        var request = ThreadRunRequest.builder().assistantId(assistantId).build();
-        var response = openAI.threads().createRunStream(threadId, request).join();
-        response.filter(e -> e.getName().equals(Events.THREAD_MESSAGE_DELTA))
-                .map(e -> ((TextContent) ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0)).getValue())
-                .forEach(System.out::print);
-        System.out.println();
-    }
-
     public void demoGetAssistantMessages() {
         List<ThreadMessage> messages = openAI.threads().getMessageList(threadId).join();
         ThreadMessage assistant = messages.get(0);
@@ -179,9 +166,6 @@ public class AssistantAzureServiceDemo extends AbstractDemo {
         demo.addTitleAction("Demo Call Assistant Thread Run", demo::demoRunThreadAndWaitUntilComplete);
         demo.addTitleAction("Demo Call Assistant Messages Get", demo::demoGetAssistantMessages);
         demo.addTitleAction("Demo Call Assistant Delete", demo::demoDeleteAssistant);
-
-        // Azure OPenAI does not support streaming yet
-        //demo.addTitleAction("Demo Call Assistant Thread Run Stream", demo::demoRunThreadAndStream);
 
         demo.run();
     }

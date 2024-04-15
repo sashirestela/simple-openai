@@ -5,7 +5,6 @@ import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
 import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
 import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
@@ -40,15 +39,6 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
-    }
-
-    public void demoCallChatStreaming() {
-        var futureChat = openAI.chatCompletions().createStream(chatRequest);
-        var chatResponse = futureChat.join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(ChatResponse::firstContent)
-                .forEach(System.out::print);
-        System.out.println();
     }
 
     public void demoCallChatBlocking() {
@@ -116,10 +106,6 @@ public class ChatAzureServiceDemo extends AbstractDemo {
 
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
-        //        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        //        chatResponse.map(ChatResponse::firstContent)
-        //            .filter(Objects::nonNull)
-        //            .forEach(System.out::print);
         System.out.println();
 
     }
@@ -160,8 +146,6 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         chatDemo.addTitleAction("Call Chat (Blocking Approach)", chatDemo::demoCallChatBlocking);
         chatDemo.addTitleAction("Call Chat with Functions", chatDemo::demoCallChatWithFunctions);
 
-        // The response for streaming returns 200 with empty choices. Commented out until resolved.
-        //chatDemo.addTitleAction("Call Chat (Streaming Approach)", chatDemo::demoCallChatStreaming);
         chatDemo.run();
     }
 

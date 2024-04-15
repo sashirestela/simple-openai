@@ -46,10 +46,10 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         var matcher = pattern.matcher(url);
 
         if (matcher.find()) {
-            return matcher.group(1); // Return the first matched group
+            return matcher.group(1);
+        } else {
+            return null;
         }
-
-        return null; // Return null if no match was found
     }
 
     private static String getNewUrl(String url, String apiVersion) {

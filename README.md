@@ -416,6 +416,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   * ```<demo>``` Is mandatory and must be one of the values:
     * audio
     * chat
+    * chatAnyscale
     * chatAzure
     * completion
     * embedding
