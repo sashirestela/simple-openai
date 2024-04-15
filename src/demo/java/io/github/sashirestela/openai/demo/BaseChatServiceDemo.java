@@ -26,9 +26,9 @@ import java.util.Objects;
 
 public class BaseChatServiceDemo extends AbstractDemo {
 
-    private ChatRequest chatRequest;
-    private String chatModelId;
-    private String visionModelId;
+    ChatRequest chatRequest;
+    String chatModelId;
+    String visionModelId;
 
     public BaseChatServiceDemo(String chatModelId, String visionModelId) {
         init(chatModelId, visionModelId);
