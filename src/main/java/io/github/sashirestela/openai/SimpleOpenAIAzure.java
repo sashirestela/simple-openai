@@ -97,15 +97,14 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         return body;
     }
 
+    @SuppressWarnings("unchecked")
     private static void updateRequestBody(HttpRequestData request, ContentType contentType, String url) {
         var deployment = extractDeployment(url);
         var body = request.getBody();
         if (contentType.equals(ContentType.APPLICATION_JSON)) {
-            body = getBodyForJson(url, (String) request.getBody(), deployment);
+            body = getBodyForJson(url, (String) body, deployment);
         } else if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
-            @SuppressWarnings("unchecked")
-            var bodyMap = getBodyForMap(url, (Map<String, Object>) body, deployment);
-            body = bodyMap;
+            body = getBodyForMap(url, (Map<String, Object>) body, deployment);
         } else {
             throw new UnsupportedOperationException("Content type not supported.");
         }
