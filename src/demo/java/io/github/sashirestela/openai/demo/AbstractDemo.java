@@ -2,7 +2,6 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -16,9 +15,6 @@ public abstract class AbstractDemo {
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private final int times = 80;
-
-    private ChatRequest chatRequest;
-    private String modelIdToUse;
 
     protected AbstractDemo() {
         apiKey = System.getenv("OPENAI_API_KEY");
