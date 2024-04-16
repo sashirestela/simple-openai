@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * exception for all other interfaces
  */
 public abstract class BaseSimpleOpenAI {
+
     private static final String END_OF_STREAM = "[DONE]";
 
     @Setter
@@ -33,7 +34,6 @@ public abstract class BaseSimpleOpenAI {
     protected OpenAI.Moderations moderationService;
     protected OpenAIBeta.Assistants assistantService;
     protected OpenAIBeta.Threads threadService;
-
 
     BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
         var httpClient = Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());

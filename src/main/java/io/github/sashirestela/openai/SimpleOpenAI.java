@@ -54,4 +54,5 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
                 .httpClient(httpClient)
                 .build();
     }
+
 }
