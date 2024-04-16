@@ -101,7 +101,7 @@ class SimpleOpenAIAzureTest {
                 .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
                 "the-api-key",
-                "https://example.org/openai/deployments/some-deployment",
+                "https://example.org/openai/assistants/some-assistant",
                 "12-34-5678",
                 null);
         var actualRequest = args.getRequestInterceptor().apply(request);
@@ -109,6 +109,18 @@ class SimpleOpenAIAzureTest {
         assertEquals(expectedRequest.getContentType(), actualRequest.getContentType());
         assertEquals(expectedRequest.getHeaders(), actualRequest.getHeaders());
         assertEquals(expectedRequest.getBody(), actualRequest.getBody());
+    }
+
+    @Test void shouldCreateEndpoints() {
+        var openAI = SimpleOpenAIAzure.builder()
+            .apiKey("apiKey")
+            .baseUrl("baseUrl")
+            .apiVersion("apiVersion")
+            .build();
+        assertNotNull(openAI.chatCompletions());
+        assertNotNull(openAI.assistants());
+        assertNotNull(openAI.files());
+        assertNotNull(openAI.threads());
     }
 
     @Test

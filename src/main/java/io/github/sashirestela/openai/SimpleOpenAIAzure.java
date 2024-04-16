@@ -104,10 +104,8 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         var body = request.getBody();
         if (contentType.equals(ContentType.APPLICATION_JSON)) {
             body = getBodyForJson(url, (String) body, deployment);
-        } else if (contentType.equals(ContentType.MULTIPART_FORMDATA)) {
-            body = getBodyForMap(url, (Map<String, Object>) body, deployment);
         } else {
-            throw new UnsupportedOperationException("Content type not supported.");
+            body = getBodyForMap(url, (Map<String, Object>) body, deployment);
         }
         request.setBody(body);
     }
