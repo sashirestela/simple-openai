@@ -92,6 +92,7 @@ class SimpleOpenAIAzureTest {
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
                 .body("{\"model\":\"some-deployment\"}")
                 .build();
+
         var expectedRequest = HttpRequestData.builder()
                 .url("https://example.org/openai/assistants/some-assistant?" + Constant.AZURE_API_VERSION
                         + "=12-34-5678")
@@ -111,12 +112,13 @@ class SimpleOpenAIAzureTest {
         assertEquals(expectedRequest.getBody(), actualRequest.getBody());
     }
 
-    @Test void shouldCreateEndpoints() {
+    @Test
+    void shouldCreateEndpoints() {
         var openAI = SimpleOpenAIAzure.builder()
-            .apiKey("apiKey")
-            .baseUrl("baseUrl")
-            .apiVersion("apiVersion")
-            .build();
+                .apiKey("apiKey")
+                .baseUrl("baseUrl")
+                .apiVersion("apiVersion")
+                .build();
         assertNotNull(openAI.chatCompletions());
         assertNotNull(openAI.assistants());
         assertNotNull(openAI.files());
