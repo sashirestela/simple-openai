@@ -1,11 +1,10 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
-import io.github.sashirestela.openai.domain.chat.ChatRequest;
 
 public class ChatAzureServiceDemo extends BaseChatServiceDemo {
 
-    private ChatRequest chatRequest;
+    private static final String NOT_IMPLEMENTED = "Not implemented.";
 
     public ChatAzureServiceDemo(String baseUrl, String apiKey, String apiVersion) {
         super(SimpleOpenAIAzure.builder()
@@ -13,6 +12,30 @@ public class ChatAzureServiceDemo extends BaseChatServiceDemo {
                 .baseUrl(baseUrl)
                 .apiVersion(apiVersion)
                 .build(), "N/A", "N/A");
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public void demoCallChatStreaming() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public void demoCallChatWithVisionExternalImageStreaming() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public void demoCallChatWithVisionLocalImageStreaming() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     private static void chatWithFunctionsDemo(String apiVersion) {
