@@ -85,31 +85,43 @@ class SimpleOpenAIAzureTest {
 
     @Test
     void shouldInterceptUrlCorrectlyWhenUrlContainsAssistants() {
-        var baseUrl = "https://example.org/openai/deployments/some-deployment";
-        var request = HttpRequestData.builder()
-                .url(baseUrl + "/assistants/some-assistant")
-                .contentType(ContentType.APPLICATION_JSON)
-                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-                .body("{\"model\":\"some-deployment\"}")
-                .build();
+        var baseUrl = "https://example.org/openai/assistants/some-assistant";
 
-        var expectedRequest = HttpRequestData.builder()
-                .url("https://example.org/openai/assistants/some-assistant?" + Constant.AZURE_API_VERSION
-                        + "=12-34-5678")
-                .contentType(ContentType.APPLICATION_JSON)
-                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-                .body("{\"model\":\"some-deployment\"}")
-                .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
                 "the-api-key",
-                "https://example.org/openai/assistants/some-assistant",
+                baseUrl,
                 "12-34-5678",
                 null);
+
+        var requestBuilder = HttpRequestData.builder()
+                .url(baseUrl)
+                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
+                .body("{\"model\":\"some-deployment\"}");
+
+        var expectedRequestBuilder = HttpRequestData.builder()
+                .url(baseUrl + "?" + Constant.AZURE_API_VERSION
+                        + "=12-34-5678")
+                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
+                .body("{\"model\":\"some-deployment\"}");
+
+        // Test with json
+        var request = requestBuilder.contentType(ContentType.APPLICATION_JSON).build();
+        var expectedRequest = expectedRequestBuilder.contentType(ContentType.APPLICATION_JSON).build();
         var actualRequest = args.getRequestInterceptor().apply(request);
         assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
         assertEquals(expectedRequest.getContentType(), actualRequest.getContentType());
         assertEquals(expectedRequest.getHeaders(), actualRequest.getHeaders());
         assertEquals(expectedRequest.getBody(), actualRequest.getBody());
+
+        // Test with multipart form data
+        request = requestBuilder.contentType(ContentType.MULTIPART_FORMDATA).build();
+        expectedRequest = expectedRequestBuilder.contentType(ContentType.MULTIPART_FORMDATA).build();
+        actualRequest = args.getRequestInterceptor().apply(request);
+        assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
+        assertEquals(expectedRequest.getContentType(), actualRequest.getContentType());
+        assertEquals(expectedRequest.getHeaders(), actualRequest.getHeaders());
+        assertEquals(expectedRequest.getBody(), actualRequest.getBody());
+
     }
 
     @Test
