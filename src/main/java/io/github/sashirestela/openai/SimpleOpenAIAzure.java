@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
  */
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
 
+    private static final String NOT_IMPLEMENTED = "Not implemented.";
     private OpenAI.Files fileService;
     private OpenAIBeta.Assistants assistantService;
     private OpenAIBeta.Threads threadService;
@@ -136,6 +137,43 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     }
 
     /**
+     * Generates an implementation of the Assistant interface to handle requests.
+     *
+     * @return An instance of the interface. It is created only once.
+     */
+    @Override
+    public OpenAIBeta.Assistants assistants() {
+        if (assistantService == null) {
+            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
+        }
+        return assistantService;
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Audios audios() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Completions completions() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Embeddings embeddings() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
      * Generates an implementation of the Files interface to handle requests.
      *
      * @return An instance of the interface. It is created only once.
@@ -149,16 +187,35 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the Assistant interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     @Override
-    public OpenAIBeta.Assistants assistants() {
-        if (assistantService == null) {
-            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
-        }
-        return assistantService;
+    public OpenAI.FineTunings fineTunings() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Images images() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Models models() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    @Override
+    public OpenAI.Moderations moderations() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
