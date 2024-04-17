@@ -1,53 +1,100 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
+import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
+import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
+import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.ChatResponse;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
+import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
+import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.function.FunctionExecutor;
 
-public class ChatAnyscaleServiceDemo extends BaseChatServiceDemo {
+import java.util.ArrayList;
 
-    private static final String NOT_IMPLEMENTED = "Not implemented.";
+public class ChatAnyscaleServiceDemo extends AbstractDemo {
 
-    public ChatAnyscaleServiceDemo(String apiKey) {
-        super(SimpleOpenAIAnyscale.builder()
-                .apiKey(apiKey)
-                .build(), "mistralai/Mixtral-8x7B-Instruct-v0.1", "");
+    public static final String MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1";
+
+    private ChatRequest chatRequest;
+
+    public ChatAnyscaleServiceDemo(String apiKey, String model) {
+        super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).build());
+        chatRequest = ChatRequest.builder()
+                .model(model)
+                .message(new ChatMsgSystem("You are an expert in AI."))
+                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .temperature(0.0)
+                .maxTokens(300)
+                .build();
     }
 
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public void demoCallChatWithVisionExternalImageBlocking() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    public void demoCallChatStreaming() {
+        var futureChat = openAI.chatCompletions().createStream(chatRequest);
+        var chatResponse = futureChat.join();
+        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+                .map(ChatResponse::firstContent)
+                .forEach(System.out::print);
+        System.out.println();
     }
 
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public void demoCallChatWithVisionExternalImageStreaming() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    public void demoCallChatBlocking() {
+        var futureChat = openAI.chatCompletions().create(chatRequest);
+        var chatResponse = futureChat.join();
+        System.out.println(chatResponse.firstContent());
     }
 
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public void demoCallChatWithVisionLocalImageBlocking() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public void demoCallChatWithVisionLocalImageStreaming() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    public void demoCallChatWithFunctions() {
+        var functionExecutor = new FunctionExecutor();
+        functionExecutor.enrollFunction(
+                ChatFunction.builder()
+                        .name("get_weather")
+                        .description("Get the current weather of a location")
+                        .functionalClass(Weather.class)
+                        .build());
+        functionExecutor.enrollFunction(
+                ChatFunction.builder()
+                        .name("product")
+                        .description("Get the product of two numbers")
+                        .functionalClass(Product.class)
+                        .build());
+        functionExecutor.enrollFunction(
+                ChatFunction.builder()
+                        .name("run_alarm")
+                        .description("Run an alarm")
+                        .functionalClass(RunAlarm.class)
+                        .build());
+        var messages = new ArrayList<ChatMsg>();
+        messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
+        var chatRequest = ChatRequest.builder()
+                .model(MODEL)
+                .messages(messages)
+                .tools(functionExecutor.getToolFunctions())
+                .build();
+        var futureChat = openAI.chatCompletions().create(chatRequest);
+        var chatResponse = futureChat.join();
+        var chatMessage = chatResponse.firstMessage();
+        var chatToolCall = chatMessage.getToolCalls().get(0);
+        var result = functionExecutor.execute(chatToolCall.getFunction());
+        messages.add(chatMessage);
+        messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
+        chatRequest = ChatRequest.builder()
+                .model(MODEL)
+                .messages(messages)
+                .tools(functionExecutor.getToolFunctions())
+                .build();
+        futureChat = openAI.chatCompletions().create(chatRequest);
+        chatResponse = futureChat.join();
+        System.out.println(chatResponse.firstContent());
     }
 
     public static void main(String[] args) {
         var apiKey = System.getenv("ANYSCALE_API_KEY");
 
-        var demo = new ChatAnyscaleServiceDemo(apiKey);
+        var demo = new ChatAnyscaleServiceDemo(apiKey, MODEL);
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
