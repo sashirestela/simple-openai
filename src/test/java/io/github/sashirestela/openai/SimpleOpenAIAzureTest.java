@@ -128,7 +128,6 @@ class SimpleOpenAIAzureTest {
         assertEquals(expectedRequest.getContentType(), actualRequest.getContentType());
         assertEquals(expectedRequest.getHeaders(), actualRequest.getHeaders());
         assertEquals(expectedRequest.getBody(), actualRequest.getBody());
-
     }
 
     @Test
