@@ -23,7 +23,6 @@ public abstract class BaseSimpleOpenAI {
     protected CleverClient cleverClient;
 
     protected OpenAI.Audios audioService;
-
     protected OpenAI.ChatCompletions chatCompletionService;
     protected OpenAI.Completions completionService;
     protected OpenAI.Embeddings embeddingService;
@@ -67,7 +66,7 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the Completions interface to handle requests.
+     * Generates an implementation of the ChatCompletions interface to handle requests.
      *
      * @return An instance of the interface. It is created only once.
      */
