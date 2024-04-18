@@ -10,6 +10,7 @@ public final class Constant {
 
     public static final String OPENAI_BASE_URL = "https://api.openai.com";
     public static final String OPENAI_ORG_HEADER = "OpenAI-Organization";
+    public static final String OPENAI_PRJ_HEADER = "OpenAI-Project";
 
     public static final String ANYSCALE_BASE_URL = "https://api.endpoints.anyscale.com";
 
