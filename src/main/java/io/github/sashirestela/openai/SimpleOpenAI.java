@@ -9,21 +9,9 @@ import java.util.HashMap;
 import java.util.Optional;
 
 /**
- * This class provides the implements additional {@link OpenAI OpenAI} interfaces targeting the
- * OpenAI service.
+ * The standard OpenAI implementation which implements the full services.
  */
 public class SimpleOpenAI extends BaseSimpleOpenAI {
-
-    private OpenAI.Audios audioService;
-    private OpenAI.Completions completionService;
-    private OpenAI.Embeddings embeddingService;
-    private OpenAI.Files fileService;
-    private OpenAI.FineTunings fineTuningService;
-    private OpenAI.Images imageService;
-    private OpenAI.Models modelService;
-    private OpenAI.Moderations moderationService;
-    private OpenAIBeta.Assistants assistantService;
-    private OpenAIBeta.Threads threadService;
 
     /**
      * Constructor used to generate a builder.
@@ -53,6 +41,97 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
                 .headers(headers)
                 .httpClient(httpClient)
                 .build();
+    }
+
+    /**
+     * Generates an implementation of the Audios interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Audios audios() {
+        if (audioService == null) {
+            audioService = cleverClient.create(OpenAI.Audios.class);
+        }
+        return audioService;
+    }
+
+    /**
+     * Generates an implementation of the Completions interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Completions completions() {
+        if (completionService == null) {
+            completionService = cleverClient.create(OpenAI.Completions.class);
+        }
+        return completionService;
+    }
+
+    /**
+     * Generates an implementation of the Embeddings interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Embeddings embeddings() {
+        if (embeddingService == null) {
+            embeddingService = cleverClient.create(OpenAI.Embeddings.class);
+        }
+        return embeddingService;
+    }
+
+    /**
+     * Generates an implementation of the FineTunings interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.FineTunings fineTunings() {
+        if (fineTuningService == null) {
+            fineTuningService = cleverClient.create(OpenAI.FineTunings.class);
+        }
+        return fineTuningService;
+    }
+
+    /**
+     * Generates an implementation of the Images interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Images images() {
+        if (imageService == null) {
+            imageService = cleverClient.create(OpenAI.Images.class);
+        }
+        return imageService;
+    }
+
+    /**
+     * Generates an implementation of the Models interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Models models() {
+        if (modelService == null) {
+            modelService = cleverClient.create(OpenAI.Models.class);
+        }
+        return modelService;
+    }
+
+    /**
+     * Generates an implementation of the Moderations interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Moderations moderations() {
+        if (moderationService == null) {
+            moderationService = cleverClient.create(OpenAI.Moderations.class);
+        }
+        return moderationService;
     }
 
 }
