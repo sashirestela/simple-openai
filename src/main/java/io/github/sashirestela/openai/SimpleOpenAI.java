@@ -18,22 +18,27 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      *
      * @param apiKey         Identifier to be used for authentication. Mandatory.
      * @param organizationId Organization's id to be charged for usage. Optional.
+     * @param projectId      Project's id to provide access to a single project. Optional.
      * @param baseUrl        Host's url, If not provided, it'll be 'https://api.openai.com'. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object. One is created by
      *                       default if not provided. Optional.
      */
     @Builder
-    public SimpleOpenAI(@NonNull String apiKey, String organizationId, String baseUrl, HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, baseUrl, httpClient));
+    public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
+            HttpClient httpClient) {
+        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, projectId, baseUrl, httpClient));
     }
 
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String organizationId, String baseUrl,
-            HttpClient httpClient) {
+    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String organizationId,
+            String projectId, String baseUrl, HttpClient httpClient) {
 
         var headers = new HashMap<String, String>();
         headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
         if (organizationId != null) {
             headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
+        }
+        if (projectId != null) {
+            headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
         }
 
         return BaseSimpleOpenAIArgs.builder()

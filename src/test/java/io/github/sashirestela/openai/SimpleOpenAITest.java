@@ -34,21 +34,22 @@ class SimpleOpenAITest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "https://example.org",
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "prjId", "https://example.org",
                 HttpClient.newHttpClient());
 
         assertEquals("https://example.org", args.getBaseUrl());
-        assertEquals(2, args.getHeaders().size());
+        assertEquals(3, args.getHeaders().size());
         assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertEquals("orgId", args.getHeaders().get(Constant.OPENAI_ORG_HEADER));
+        assertEquals("prjId", args.getHeaders().get(Constant.OPENAI_PRJ_HEADER));
         assertNotNull(args.getHttpClient());
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null);
 
         assertEquals(Constant.OPENAI_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
