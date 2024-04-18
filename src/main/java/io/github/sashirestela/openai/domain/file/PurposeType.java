@@ -8,6 +8,9 @@ public enum PurposeType {
     FINE_TUNE,
 
     @JsonProperty("assistants")
-    ASSISTANTS;
+    ASSISTANTS,
+
+    @JsonProperty("batch")
+    BATCH;
 
 }

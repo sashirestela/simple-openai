@@ -24,6 +24,7 @@ public abstract class BaseSimpleOpenAI {
     protected CleverClient cleverClient;
 
     protected OpenAI.Audios audioService;
+    protected OpenAI.Batches batchService;
     protected OpenAI.ChatCompletions chatCompletionService;
     protected OpenAI.Completions completionService;
     protected OpenAI.Embeddings embeddingService;
@@ -58,6 +59,13 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Audios audios() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    public OpenAI.Batches batches() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
