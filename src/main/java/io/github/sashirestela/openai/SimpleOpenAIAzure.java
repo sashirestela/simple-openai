@@ -12,16 +12,9 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 /**
- * This class provides the chatCompletion() service for the Azure OpenAI provider. Note that each
- * instance of SimpleOpenAIAzure is linked to a single specific model. The capabilities of the model
- * determine which chatCompletion() methods are available.
+ * The Azure OpenAI implementation which implements a subset of the standard services.
  */
 public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
-
-    private static final String NOT_IMPLEMENTED = "Not implemented.";
-    private OpenAI.Files fileService;
-    private OpenAIBeta.Assistants assistantService;
-    private OpenAIBeta.Threads threadService;
 
     /**
      * Constructor used to generate a builder.
@@ -99,15 +92,14 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     }
 
     @SuppressWarnings("unchecked")
-    private static void updateRequestBody(HttpRequestData request, ContentType contentType, String url) {
+    private static Object getNewBody(HttpRequestData request, ContentType contentType, String url) {
         var deployment = extractDeployment(url);
         var body = request.getBody();
         if (contentType.equals(ContentType.APPLICATION_JSON)) {
-            body = getBodyForJson(url, (String) body, deployment);
+            return getBodyForJson(url, (String) body, deployment);
         } else {
-            body = getBodyForMap(url, (Map<String, Object>) body, deployment);
+            return getBodyForMap(url, (Map<String, Object>) body, deployment);
         }
-        request.setBody(body);
     }
 
     public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, String apiVersion,
@@ -118,7 +110,8 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
             var url = request.getUrl();
             var contentType = request.getContentType();
             if (contentType != null) {
-                updateRequestBody(request, contentType, url);
+                var body = getNewBody(request, contentType, url);
+                request.setBody(body);
             }
             url = getNewUrl(url, apiVersion);
             request.setUrl(url);
@@ -132,101 +125,6 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 .httpClient(httpClient)
                 .requestInterceptor(requestInterceptor)
                 .build();
-    }
-
-    /**
-     * Generates an implementation of the Assistant interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
-     */
-    @Override
-    public OpenAIBeta.Assistants assistants() {
-        if (assistantService == null) {
-            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
-        }
-        return assistantService;
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Audios audios() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Completions completions() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Embeddings embeddings() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Generates an implementation of the Files interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
-     */
-    @Override
-    public OpenAI.Files files() {
-        if (fileService == null) {
-            fileService = cleverClient.create(OpenAI.Files.class);
-        }
-        return fileService;
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.FineTunings fineTunings() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Images images() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Models models() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAI.Moderations moderations() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Spawns a single instance of the Threads interface to manage requests.
-     *
-     * @return An instance of the interface. It is created only once.
-     */
-    @Override
-    public OpenAIBeta.Threads threads() {
-        if (threadService == null) {
-            threadService = cleverClient.create(OpenAIBeta.Threads.class);
-        }
-        return threadService;
     }
 
 }

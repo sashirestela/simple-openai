@@ -11,13 +11,14 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * The base abstract class that all providers extend. It generates an implementation to the
- * chatCompletions() interface of {@link OpenAI OpenAI} interfaces. It throws a NOT_IMPLEMENTED
- * exception for all other interfaces
+ * The base abstract class that all providers extend. The implmentation of services implemented by
+ * two or more providers goes here and if a provider does not implement a service implemented by
+ * others, it must override it to thrown an Unsuported exception.
  */
 public abstract class BaseSimpleOpenAI {
 
     private static final String END_OF_STREAM = "[DONE]";
+    protected static final String NOT_IMPLEMENTED = "Not implemented.";
 
     @Setter
     protected CleverClient cleverClient;
@@ -54,21 +55,16 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the Audios interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Audios audios() {
-        if (audioService == null) {
-            audioService = cleverClient.create(OpenAI.Audios.class);
-        }
-        return audioService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Generates an implementation of the ChatCompletions interface to handle requests.
      *
-     * @return An instance of the interface. It is created only once.
+     * @return An instance of the interface.
      */
     public OpenAI.ChatCompletions chatCompletions() {
         if (chatCompletionService == null) {
@@ -78,33 +74,23 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the Completions interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Completions completions() {
-        if (completionService == null) {
-            completionService = cleverClient.create(OpenAI.Completions.class);
-        }
-        return completionService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
-     * Generates an implementation of the Embeddings interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Embeddings embeddings() {
-        if (embeddingService == null) {
-            embeddingService = cleverClient.create(OpenAI.Embeddings.class);
-        }
-        return embeddingService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Generates an implementation of the Files interface to handle requests.
      *
-     * @return An instance of the interface. It is created only once.
+     * @return An instance of the interface.
      */
     public OpenAI.Files files() {
         if (fileService == null) {
@@ -114,57 +100,37 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the FineTunings interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.FineTunings fineTunings() {
-        if (fineTuningService == null) {
-            fineTuningService = cleverClient.create(OpenAI.FineTunings.class);
-        }
-        return fineTuningService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
-     * Generates an implementation of the Images interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Images images() {
-        if (imageService == null) {
-            imageService = cleverClient.create(OpenAI.Images.class);
-        }
-        return imageService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
-     * Generates an implementation of the Models interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Models models() {
-        if (modelService == null) {
-            modelService = cleverClient.create(OpenAI.Models.class);
-        }
-        return modelService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
-     * Generates an implementation of the Moderations interface to handle requests.
-     *
-     * @return An instance of the interface. It is created only once.
+     * Throw not implemented
      */
     public OpenAI.Moderations moderations() {
-        if (moderationService == null) {
-            moderationService = cleverClient.create(OpenAI.Moderations.class);
-        }
-        return moderationService;
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
      * Generates an implementation of the Assistant interface to handle requests.
      *
-     * @return An instance of the interface. It is created only once.
+     * @return An instance of the interface.
      */
     public OpenAIBeta.Assistants assistants() {
         if (assistantService == null) {
@@ -174,9 +140,9 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Spawns a single instance of the Threads interface to manage requests.
+     * Generates an implementation of the Threads interface to handle requests.
      *
-     * @return An instance of the interface. It is created only once.
+     * @return An instance of the interface.
      */
     public OpenAIBeta.Threads threads() {
         if (threadService == null) {
