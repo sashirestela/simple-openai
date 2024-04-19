@@ -9,9 +9,6 @@ A Java library to use the OpenAI Api in the simplest possible way.
 
 ### Table of Contents
 - [Description](#-description)
-- [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
-  - [Azure OpenAI](#azure-openai)
-  - [Anyscale](#anyscale)
 - [Supported Services](#-supported-services)
 - [Installation](#-installation)
 - [Usage](#-usage)
@@ -23,57 +20,37 @@ A Java library to use the OpenAI Api in the simplest possible way.
     - [Chat Completion Service (streaming mode)](#chat-completion-service-streaming-mode)
     - [Chat Completion Service with Functions](#chat-completion-service-with-functions)
     - [Chat Completion Service with Vision](#chat-completion-service-with-vision)
+- [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
+  - [Azure OpenAI](#azure-openai)
+  - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
 - [Contributing](#-contributing)
 - [License](#-license)
+- [Show Us Your Love](#-show-us-your-love)
 
 
 ## 💡 Description
-Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI API](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's a _community-maintained_ library.
+Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI API](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's an unofficial library.
 
 Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclient) library for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code, among others libraries.
 
 
-## ✴ Support for Additional OpenAI Providers
-Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
-
-### Azure OpenAI
-[Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure`, which extends the class `BaseSimpleOpenAI`, to start using this provider. 
-```java
-var openai = SimpleOpenAIAzure.builder()
-    .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
-    .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))   // Including resourceName and deploymentId
-    .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
-    .build();
-```
-Currently we are supporting the `openai.chatCompletionService()` service only.
-
-### Anyscale
-[Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
-```java
-var openai = SimpleOpenAIAnyscale.builder()
-    .apiKey(System.getenv("ANYSCALE_API_KEY"))
-    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
-    .build();
-```
-Currently we are supporting the `openai.chatCompletionService()` service only. It was tested with the model _Mistral_.
-
-
 ## ✅ Supported Services
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [April 16th, 2024](https://platform.openai.com/docs/changelog/apr-16th-2024) and will continue to update with future changes.
+
 Full support for all of the OpenAI services:
 
-* Text to speech (as part of Audio)
-* Speech to text (as part of Audio)
-* Text generation (as part of Chat)
-* Function calling (as part of Chat)
-* Image to text (as part of Chat)
-* Text to image (as part of Image)
-* Embeddings
-* Fine tuning
-* Assistants API (Beta)
-* Assistant Stream Events (Beta) 📣
+* Audio (Speech, Transcription, Translation)
+* Batch (Batches of Chat Completion)
+* Chat Completion (Text Generation, Streaming, Function Calling, Vision)
+* Completion (Legacy Text Generation)
+* Embedding  (Vectoring Text)
+* Files (Upload Files)
+* Fine Tuning (Customize Models)
+* Image (Generate, Edit, Variation)
+* Models (List)
+* Moderation (Check Harmful Text)
+* Assistants Beta (Assistants, Threads, Runs, Steps, Streaming)
 
 ![OpenAI Services](media/openai_services.png)
 
@@ -111,11 +88,12 @@ var openai = SimpleOpenAI.builder()
     .apiKey(System.getenv("OPENAI_API_KEY"))
     .build();
 ```
-Optionally you could pass your _OpenAI Organization Id_ ([See here](https://platform.openai.com/account/org-settings) for more details) in case you have multiple organizations and you want to identify usage by orgazanization. In the the following example we are getting the Organization Id from an environment variable called ```OPENAI_ORGANIZATION_ID``` which we have created to keep it:
+Optionally you could pass your _OpenAI Organization Id_ in case you have multiple organizations and you want to identify usage by organization and/or you could pass your _OpenAI Project Id_ in case you want to provides access to a single project. In the following example we are using environment variable for those Ids:
 ```java
 var openai = SimpleOpenAI.builder()
     .apiKey(System.getenv("OPENAI_API_KEY"))
     .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
+    .projectId(System.getenv("OPENAI_PROJECT_ID"))
     .build();
 ```
 Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as executors, proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
@@ -351,6 +329,38 @@ private static ImageUrl loadImageAsBase64(String imagePath) {
 }
 ```
 
+
+## ✴ Support for Additional OpenAI Providers
+Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
+
+### Azure OpenAI
+[Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure`, which extends the class `BaseSimpleOpenAI`, to start using this provider. 
+```java
+var openai = SimpleOpenAIAzure.builder()
+    .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
+    .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))   // Including resourceName and deploymentId
+    .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the following services only:
+- chatCompletionService (streaming mode is not supported)
+- fileService
+- assistantService
+- threadService (streaming mode is not supported)
+
+### Anyscale
+[Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
+```java
+var openai = SimpleOpenAIAnyscale.builder()
+    .apiKey(System.getenv("ANYSCALE_API_KEY"))
+    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the `chatCompletionService` service only. It was tested with the _Mistral_ model.
+
+
 ## ✳ Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
 * Clone this repository:
@@ -394,15 +404,6 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   multiple models in the same region they will share the same API key (actually there are two keys
   per region to support alternate key rotation).
 
-  At the moment the simple-openai support for Azure OpenAI includes the following OpenAI endpoints:
-  - /chat/completions (including tool calls)
-  - /chat/completions (including images)
-  - /files
-  - /assistants (beta)
-  - /threads (beta)
- 
-   In addition, streaming mode is not supported at the moment.
-
 * Grant execution permission to the script file:
   ```
   chmod +x rundemo.sh
@@ -415,6 +416,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
 
   * ```<demo>``` Is mandatory and must be one of the values:
     * audio
+    * batch
     * chat
     * chatAnyscale
     * chatAzure
@@ -432,9 +434,17 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
 
 ## 💼 Contributing
-Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contrinute to this project.
+Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contribute to this project.
 
 ## 📄 License
 Simple-OpenAI is licensed under the MIT License. See the
 [LICENSE](https://github.com/sashirestela/simple-openai/blob/main/LICENSE) file
 for more information.
+
+
+## ❤ Show Us Your Love
+Thanks for using **simple-openai**. If you find this project valuable there are a few ways you can show us your love:
+
+* Letting your friends know about this project 🗣📢.
+* Writing a brief review on your social networks ✍🌐.
+* Giving us a star on Github ⭐.
