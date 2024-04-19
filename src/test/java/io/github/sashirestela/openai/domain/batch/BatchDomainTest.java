@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class BatchDomainTest {
+class BatchDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;
