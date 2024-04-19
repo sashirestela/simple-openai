@@ -1,0 +1,2 @@
+{"custom_id": "request-1", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-3.5-turbo", "messages": [{"role": "system", "content": "You are an AI expert."}, {"role": "user", "content": "What is LLM?"}]}}
+{"custom_id": "request-2", "method": "POST", "url": "/v1/chat/completions", "body": {"model": "gpt-3.5-turbo", "messages": [{"role": "system", "content": "You are an AI expert."}, {"role": "user", "content": "What is a Prompt?"}]}}
