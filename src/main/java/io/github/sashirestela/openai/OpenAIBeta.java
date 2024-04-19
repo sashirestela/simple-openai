@@ -214,6 +214,7 @@ public interface OpenAIBeta {
         /**
          * Modifies a thread.
          *
+         * @param threadId      The ID of the thread to modify.
          * @param threadRequest The thread request.
          * @return the created thread object
          */
@@ -278,6 +279,7 @@ public interface OpenAIBeta {
          *
          * @param threadId The ID of the thread the messages belong to.
          * @param page     The requested result page.
+         * @param runId    Filter messages by the run ID that generated them.
          * @return The list of message objects.
          */
         @GET("/{threadId}/messages")
@@ -393,6 +395,7 @@ public interface OpenAIBeta {
          *
          * @param threadId The ID of the thread that was run.
          * @param runId    The ID of the run to modify.
+         * @param request  The requested run.
          * @return The modified run object matching the specified ID.
          */
         @POST("/{threadId}/runs/{runId}")
