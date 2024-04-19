@@ -45,7 +45,7 @@ class BatchDomainTest {
     @Test
     void testBatchesGetOne() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/batches_getone.json");
-        var batchResponse = openAI.batches().getOne("batch_kHnPT5OdGUU7Cha4Vj1RnM6i");
+        var batchResponse = openAI.batches().getOne("batch_kHnPT5OdGUU7Cha4Vj1RnM6i").join();
         System.out.println(batchResponse);
         assertNotNull(batchResponse);
     }
@@ -53,7 +53,7 @@ class BatchDomainTest {
     @Test
     void testBatchesGetList() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/batches_getlist.json");
-        var batchResponse = openAI.batches().getList("batch_kHnPT5OdGUU7Cha4Vj1RnM6i", 3);
+        var batchResponse = openAI.batches().getList("batch_kHnPT5OdGUU7Cha4Vj1RnM6i", 3).join();
         System.out.println(batchResponse);
         assertNotNull(batchResponse);
     }
@@ -61,7 +61,7 @@ class BatchDomainTest {
     @Test
     void testBatchesCancel() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/batches_cancel.json");
-        var batchResponse = openAI.batches().cancel("batch_kHnPT5OdGUU7Cha4Vj1RnM6i");
+        var batchResponse = openAI.batches().cancel("batch_kHnPT5OdGUU7Cha4Vj1RnM6i").join();
         System.out.println(batchResponse);
         assertNotNull(batchResponse);
     }
