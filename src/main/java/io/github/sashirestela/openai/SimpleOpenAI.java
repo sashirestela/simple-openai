@@ -62,6 +62,19 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     /**
+     * Generates an implementation of the Audios interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Batches batches() {
+        if (batchService == null) {
+            batchService = cleverClient.create(OpenAI.Batches.class);
+        }
+        return batchService;
+    }
+
+    /**
      * Generates an implementation of the Completions interface to handle requests.
      *
      * @return An instance of the interface.

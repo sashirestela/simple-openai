@@ -11,10 +11,10 @@ public class FileServiceDemo extends AbstractDemo {
 
     private String fileId;
 
-    public FileResponse createFileResponse() {
+    public FileResponse createFile(String filePath, PurposeType purpose) {
         var fileRequest = FileRequest.builder()
-                .file(Paths.get("src/demo/resources/test_data.jsonl"))
-                .purpose(PurposeType.FINE_TUNE)
+                .file(Paths.get(filePath))
+                .purpose(purpose)
                 .build();
         var futureFile = openAI.files().create(fileRequest);
         return futureFile.join();
@@ -33,14 +33,13 @@ public class FileServiceDemo extends AbstractDemo {
         } while (!fileResponse.getStatus().equals("processed"));
     }
 
-    public OpenAIDeletedResponse deleteFileResponse(String fileId) {
-        waitUntilFileIsProcessed(fileId);
+    public OpenAIDeletedResponse deleteFile(String fileId) {
         var futureFile = openAI.files().delete(fileId);
         return futureFile.join();
     }
 
     public void demoCallFileCreate() {
-        var fileResponse = createFileResponse();
+        var fileResponse = createFile("src/demo/resources/test_data.jsonl", PurposeType.FINE_TUNE);
         fileId = fileResponse.getId();
         System.out.println(fileResponse);
     }
@@ -65,7 +64,8 @@ public class FileServiceDemo extends AbstractDemo {
     }
 
     public void demoCallFileDelete() {
-        var fileDeleted = deleteFileResponse(fileId);
+        waitUntilFileIsProcessed(fileId);
+        var fileDeleted = deleteFile(fileId);
         System.out.println(fileDeleted);
     }
 

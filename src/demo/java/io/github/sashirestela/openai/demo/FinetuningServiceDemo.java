@@ -52,7 +52,7 @@ public class FinetuningServiceDemo extends AbstractDemo {
         var futureFineTuning = openAI.fineTunings().cancel(fineTuningId);
         var fineTuningResponse = futureFineTuning.join();
         System.out.println(fineTuningResponse);
-        fileServiceDemo.deleteFileResponse(fileId);
+        fileServiceDemo.deleteFile(fileId);
     }
 
     public static void main(String[] args) {

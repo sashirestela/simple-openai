@@ -10,11 +10,14 @@ import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
 import io.github.sashirestela.openai.domain.OpenAIGeneric;
+import io.github.sashirestela.openai.domain.Page;
 import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
 import io.github.sashirestela.openai.domain.audio.AudioResponse;
 import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
 import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
+import io.github.sashirestela.openai.domain.batch.BatchRequest;
+import io.github.sashirestela.openai.domain.batch.BatchResponse;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
@@ -139,6 +142,57 @@ public interface OpenAI {
         @Multipart
         @POST("/translations")
         CompletableFuture<String> translatePlainRoot(@Body AudioTranslateRequest audioRequest);
+
+    }
+
+    /**
+     * Create large batches of API requests to run asynchronously.
+     * 
+     * @see <a href="https://platform.openai.com/docs/api-reference/batch">OpenAI Batch</a>
+     */
+    @Resource("/v1/batches")
+    interface Batches {
+
+        /**
+         * Creates and executes a batch from an uploaded file of requests.
+         * 
+         * @param batchRequest It includes the uploade file reference.
+         * @return The batch object.
+         */
+        @POST
+        CompletableFuture<BatchResponse> create(@Body BatchRequest batchRequest);
+
+        /**
+         * Retrieves a batch.
+         * 
+         * @param batchId The id of the batch to retrieve.
+         * @return The Batch object matching the specified id.
+         */
+        @GET("/{batchId}")
+        CompletableFuture<BatchResponse> getOne(@Path("batchId") String batchId);
+
+        /**
+         * Cancels an in-progress batch.
+         * 
+         * @param batchId The id of the batch to cancel.
+         * @return The Batch object matching the specified id.
+         */
+        @POST("/{batchId}/cancel")
+        CompletableFuture<BatchResponse> cancel(@Path("batchId") String batchId);
+
+        /**
+         * List your organization's batches.
+         * 
+         * @param after A cursor for use in pagination. It is an object ID that defines your place in the
+         *              list. For instance, if you make a list request and receive 100 objects, ending with
+         *              obj_foo, your subsequent call can include after=obj_foo in order to fetch the next
+         *              page of the list.
+         * @param limit A limit on the number of objects to be returned. Limit can range between 1 and 100,
+         *              and the default is 20.
+         * @return A list of paginated Batch objects.
+         */
+        @GET
+        CompletableFuture<Page<BatchResponse>> getList(@Query("after") String after, @Query("limit") Integer limit);
 
     }
 

@@ -44,6 +44,7 @@ class SimpleOpenAIAnyscaleTest {
                 .build();
         Runnable[] callingData = {
                 openAI::audios,
+                openAI::batches,
                 openAI::completions,
                 openAI::embeddings,
                 openAI::files,

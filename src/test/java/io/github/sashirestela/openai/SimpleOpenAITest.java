@@ -104,6 +104,7 @@ class SimpleOpenAITest {
 
         TestData[] data = {
                 new TestData(OpenAI.Audios.class, openAI::audios),
+                new TestData(OpenAI.Batches.class, openAI::batches),
                 new TestData(OpenAI.ChatCompletions.class, openAI::chatCompletions),
                 new TestData(OpenAI.Completions.class, openAI::completions),
                 new TestData(OpenAI.Embeddings.class, openAI::embeddings),
