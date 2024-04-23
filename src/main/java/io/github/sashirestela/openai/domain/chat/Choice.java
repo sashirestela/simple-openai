@@ -21,4 +21,6 @@ public class Choice {
 
     private String finishReason;
 
+    private LogprobInfo logprobs;
+
 }
