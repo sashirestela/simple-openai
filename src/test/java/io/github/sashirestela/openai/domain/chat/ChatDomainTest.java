@@ -90,7 +90,7 @@ class ChatDomainTest {
     void testChatCompletionsCreate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create.json");
         var chatResponse = openAI.chatCompletions().create(chatTextRequest).join();
-        System.out.println(chatResponse.firstContent());
+        System.out.println(chatResponse);
         assertNotNull(chatResponse);
     }
 
