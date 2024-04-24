@@ -158,6 +158,7 @@ class ChatDomainTest {
                 .message(new ChatMsgSystem("You are an expert in Mathematics"))
                 .message(new ChatMsgUser("What is the product of 123 and 456?"))
                 .message(new ChatMsgAssistant(null, List.of(new ChatToolCall(
+                        0,
                         "call_tAoX6VHyjQVLnM9CZvEsTEwW",
                         ChatToolType.FUNCTION,
                         new ChatFunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
