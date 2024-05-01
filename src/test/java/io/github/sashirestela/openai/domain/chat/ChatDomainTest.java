@@ -90,7 +90,7 @@ class ChatDomainTest {
     void testChatCompletionsCreate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create.json");
         var chatResponse = openAI.chatCompletions().create(chatTextRequest).join();
-        System.out.println(chatResponse.firstContent());
+        System.out.println(chatResponse);
         assertNotNull(chatResponse);
     }
 
@@ -158,6 +158,7 @@ class ChatDomainTest {
                 .message(new ChatMsgSystem("You are an expert in Mathematics"))
                 .message(new ChatMsgUser("What is the product of 123 and 456?"))
                 .message(new ChatMsgAssistant(null, List.of(new ChatToolCall(
+                        0,
                         "call_tAoX6VHyjQVLnM9CZvEsTEwW",
                         ChatToolType.FUNCTION,
                         new ChatFunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))

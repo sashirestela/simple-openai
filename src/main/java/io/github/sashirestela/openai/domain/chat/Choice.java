@@ -6,10 +6,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Choice {
@@ -20,5 +22,7 @@ public class Choice {
     private ChatMsgResponse message;
 
     private String finishReason;
+
+    private LogprobInfo logprobs;
 
 }

@@ -10,4 +10,8 @@ public abstract class ChatMsg {
         return role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
 }
