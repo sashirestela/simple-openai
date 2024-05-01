@@ -22,7 +22,8 @@ public class JsonSchemaUtil {
     public static JsonNode classToJsonSchema(Class<?> clazz) {
         JsonNode jsonSchema = null;
         try {
-            var jacksonModule = new JacksonModule(JacksonOption.RESPECT_JSONPROPERTY_REQUIRED);
+            var jacksonModule = new JacksonModule(JacksonOption.RESPECT_JSONPROPERTY_REQUIRED,
+                    JacksonOption.RESPECT_JSONPROPERTY_ORDER);
             var configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12,
                     OptionPreset.PLAIN_JSON)
                     .with(jacksonModule)

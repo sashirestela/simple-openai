@@ -1,6 +1,7 @@
 package io.github.sashirestela.openai.support;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,16 @@ class JsonSchemaUtilTest {
         assertEquals(expectedJsonSchema, actualJsonSchema);
     }
 
+    @Test
+    void shouldGenerateOrderedJsonSchemaWhenClassHasJsonPropertyOrderAnnotation() {
+        var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(OrderedTestClass.class).toString();
+        var expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
+                "\"second\":{\"type\":\"integer\"}," +
+                "\"third\":{\"type\":\"string\"}}," +
+                "\"required\":[\"first\"]}";
+        assertEquals(expectedJsonSchema, actualJsonSchema);
+    }
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Getter
@@ -39,6 +50,21 @@ class JsonSchemaUtilTest {
     }
 
     static class EmptyClass {
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @JsonPropertyOrder({ "first", "second", "third" })
+    static class OrderedTestClass {
+
+        @JsonProperty(required = true)
+        public String first;
+
+        public Integer second;
+
+        public String third;
+
     }
 
 }
