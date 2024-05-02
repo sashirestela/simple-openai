@@ -2,6 +2,7 @@ package io.github.sashirestela.openai.domain.chat.message;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,6 @@ public class ChatMsgResponse extends ChatMsg {
 
     private String content;
     private List<ChatToolCall> toolCalls;
+    private Role role;
 
 }

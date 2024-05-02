@@ -10,7 +10,7 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 
 import java.util.ArrayList;
@@ -50,19 +50,19 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
     public void demoCallChatWithFunctions() {
         var functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
-                ChatFunction.builder()
+                FunctionDef.builder()
                         .name("get_weather")
                         .description("Get the current weather of a location")
                         .functionalClass(Weather.class)
                         .build());
         functionExecutor.enrollFunction(
-                ChatFunction.builder()
+                FunctionDef.builder()
                         .name("product")
                         .description("Get the product of two numbers")
                         .functionalClass(Product.class)
                         .build());
         functionExecutor.enrollFunction(
-                ChatFunction.builder()
+                FunctionDef.builder()
                         .name("run_alarm")
                         .description("Run an alarm")
                         .functionalClass(RunAlarm.class)

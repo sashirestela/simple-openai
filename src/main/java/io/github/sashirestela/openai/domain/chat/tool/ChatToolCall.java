@@ -1,26 +1,27 @@
 package io.github.sashirestela.openai.domain.chat.tool;
 
+import io.github.sashirestela.openai.function.AbstractToolCall;
+import io.github.sashirestela.openai.function.FunctionCall;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
-public class ChatToolCall {
+public class ChatToolCall extends AbstractToolCall {
 
     private Integer index;
 
     @Required
-    private String id;
-
-    @Required
     private ChatToolType type;
 
-    @Required
-    private ChatFunctionCall function;
+    public ChatToolCall(Integer index, String id, ChatToolType type, FunctionCall function) {
+        this.index = index;
+        this.id = id;
+        this.type = type;
+        this.function = function;
+    }
 
 }

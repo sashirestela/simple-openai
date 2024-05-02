@@ -33,8 +33,14 @@ public abstract class BaseSimpleOpenAI {
     protected OpenAI.Images imageService;
     protected OpenAI.Models modelService;
     protected OpenAI.Moderations moderationService;
-    protected OpenAIBeta.Assistants assistantService;
-    protected OpenAIBeta.Threads threadService;
+    protected OpenAIBeta2.Assistants assistantService;
+    protected OpenAIBeta2.Threads threadService;
+    protected OpenAIBeta2.ThreadMessages threadMessageService;
+    protected OpenAIBeta2.ThreadRuns threadRunService;
+    protected OpenAIBeta2.ThreadRunSteps threadRunStepService;
+    protected OpenAIBeta2.VectorStores vectorStoreService;
+    protected OpenAIBeta2.VectorStoreFiles vectorStoreFileService;
+    protected OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatchService;
 
     BaseSimpleOpenAI(@NonNull BaseSimpleOpenAIArgs args) {
         var httpClient = Optional.ofNullable(args.getHttpClient()).orElse(HttpClient.newHttpClient());
@@ -140,11 +146,8 @@ public abstract class BaseSimpleOpenAI {
      *
      * @return An instance of the interface.
      */
-    public OpenAIBeta.Assistants assistants() {
-        if (assistantService == null) {
-            assistantService = cleverClient.create(OpenAIBeta.Assistants.class);
-        }
-        return assistantService;
+    public OpenAIBeta2.Assistants assistants() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
@@ -152,11 +155,32 @@ public abstract class BaseSimpleOpenAI {
      *
      * @return An instance of the interface.
      */
-    public OpenAIBeta.Threads threads() {
-        if (threadService == null) {
-            threadService = cleverClient.create(OpenAIBeta.Threads.class);
-        }
-        return threadService;
+    public OpenAIBeta2.Threads threads() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    public OpenAIBeta2.ThreadMessages threadMessages() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    public OpenAIBeta2.ThreadRuns threadRuns() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    public OpenAIBeta2.ThreadRunSteps threadRunSteps() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    public OpenAIBeta2.VectorStores vectorStores() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
+    }
+
+    public OpenAIBeta2.VectorStoreFiles vectorStoreFiles() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
+    }
+
+    public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
     }
 
 }

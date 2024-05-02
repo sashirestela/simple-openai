@@ -1,8 +1,6 @@
 package io.github.sashirestela.openai.function;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
 import org.junit.jupiter.api.Test;
@@ -17,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FunctionExecutorTest {
 
-    private List<ChatFunction> functionList = Arrays.asList(
-            ChatFunction.builder()
+    private List<FunctionDef> functionList = Arrays.asList(
+            FunctionDef.builder()
                     .name("convert_to_celsius")
                     .description("Convert Fahrenheit to Celsius degrees")
                     .functionalClass(ConvertToCelsius.class)
                     .build(),
-            ChatFunction.builder()
+            FunctionDef.builder()
                     .name("exponentiation")
                     .description("Multiply a base number a number n times")
                     .functionalClass(MathPower.class)
@@ -77,9 +75,9 @@ class FunctionExecutorTest {
 
     @Test
     void shouldThrownAnExceptionWhenTryingToExecuteWithBadArgument() {
-        List<ChatFunctionCall> testData = Arrays.asList(null,
-                new ChatFunctionCall(null, null),
-                new ChatFunctionCall("", ""));
+        List<FunctionCall> testData = Arrays.asList(null,
+                new FunctionCall(null, null),
+                new FunctionCall("", ""));
         var executor = new FunctionExecutor(functionList);
         for (var functionToCall : testData) {
             var exception = assertThrows(SimpleUncheckedException.class,
@@ -93,7 +91,7 @@ class FunctionExecutorTest {
     @Test
     void shouldThrownAnExceptionWhenTryingToExecuteANonEnrolledFunction() {
         var executor = new FunctionExecutor(functionList);
-        var functionToCall = new ChatFunctionCall("send_email", null);
+        var functionToCall = new FunctionCall("send_email", null);
         var exception = assertThrows(SimpleUncheckedException.class,
                 () -> executor.execute(functionToCall));
         var actualErrorMessage = exception.getMessage();
@@ -104,7 +102,7 @@ class FunctionExecutorTest {
     @Test
     void shouldThrowAnExceptionWhenTryingToExecuteFunctionArgumentsThatDoNotMatchItsClassStructure() {
         var executor = new FunctionExecutor(functionList);
-        var functionToCall = new ChatFunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":\"ten\"}");
+        var functionToCall = new FunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":\"ten\"}");
         var exception = assertThrows(SimpleUncheckedException.class,
                 () -> executor.execute(functionToCall));
         var actualErrorMessage = exception.getMessage();
@@ -115,7 +113,7 @@ class FunctionExecutorTest {
     @Test
     void shouldReturnACorrectValueWhenExecutingRightFunctionArguments() {
         var executor = new FunctionExecutor(functionList);
-        var functionToCall = new ChatFunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":10.0}");
+        var functionToCall = new FunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":10.0}");
         var actualResult = executor.execute(functionToCall);
         var expectedResult = 1024.0;
         assertEquals(actualResult, expectedResult);

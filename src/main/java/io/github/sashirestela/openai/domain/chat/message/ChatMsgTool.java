@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.domain.chat.Role;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ChatMsgTool extends ChatMsg {
 

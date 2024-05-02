@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
@@ -29,7 +29,7 @@ public class AssistantFunction {
     @Required
     private JsonNode parameters;
 
-    public static AssistantFunction function(ChatFunction function) {
+    public static AssistantFunction function(FunctionDef function) {
         return AssistantFunction.builder()
                 .name(function.getName())
                 .description(function.getDescription())

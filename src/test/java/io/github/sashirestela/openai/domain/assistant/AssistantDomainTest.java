@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
+import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.Functional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class AssistantDomainTest {
                 .instructions("You are a personal math tutor. Use the added function if necessary or the added files.")
                 .tool(AssistantTool.builder()
                         .type("function")
-                        .function(AssistantFunction.function(ChatFunction.builder()
+                        .function(AssistantFunction.function(FunctionDef.builder()
                                 .name("product")
                                 .description("Get the product of two numbers")
                                 .functionalClass(Product.class)

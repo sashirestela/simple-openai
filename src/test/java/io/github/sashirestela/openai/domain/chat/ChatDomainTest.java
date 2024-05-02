@@ -13,13 +13,13 @@ import io.github.sashirestela.openai.domain.chat.message.ChatMsgAssistant;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionName;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import io.github.sashirestela.openai.function.FunctionCall;
+import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,7 +69,7 @@ class ChatDomainTest {
                 .build();
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
-                ChatFunction.builder()
+                FunctionDef.builder()
                         .name("product")
                         .description("Get the product of two numbers")
                         .functionalClass(Product.class)
@@ -161,7 +161,7 @@ class ChatDomainTest {
                         0,
                         "call_tAoX6VHyjQVLnM9CZvEsTEwW",
                         ChatToolType.FUNCTION,
-                        new ChatFunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
+                        new FunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
                 .message(new ChatMsgTool("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW"))
                 .tools(functionExecutor.getToolFunctions())
                 .temperature(0.2)
