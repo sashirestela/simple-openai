@@ -31,10 +31,10 @@ public class AssistantV2Demo extends AbstractDemo {
 
     public void modifyAssistant() {
         var assistantModifyRequest = AssistantModifyRequest.builder()
-            .metadata(Map.of("env", "test"))
-            .temperature(0.3)
-            .responseFormat(AssistantResponseFormat.TEXT)
-            .build();
+                .metadata(Map.of("env", "test"))
+                .temperature(0.3)
+                .responseFormat(AssistantResponseFormat.TEXT)
+                .build();
         var assistant = openAI.assistants().modify(assistantId, assistantModifyRequest).join();
         System.out.println(assistant);
     }

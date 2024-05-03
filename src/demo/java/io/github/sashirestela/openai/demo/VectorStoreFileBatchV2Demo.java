@@ -16,8 +16,7 @@ public class VectorStoreFileBatchV2Demo extends AbstractDemo {
         fileIdList = new ArrayList<>();
         fileDemo = new FileServiceDemo();
         for (int i = 0; i < 2; i++) {
-            var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt",
-                    PurposeType.ASSISTANTS);
+            var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
             fileIdList.add(file.getId());
         }
         var vectorStore = openAI.vectorStores().create().join();

@@ -113,8 +113,14 @@ class SimpleOpenAITest {
                 new TestData(OpenAI.Images.class, openAI::images),
                 new TestData(OpenAI.Models.class, openAI::models),
                 new TestData(OpenAI.Moderations.class, openAI::moderations),
-                new TestData(OpenAIBeta.Assistants.class, openAI::assistants),
-                new TestData(OpenAIBeta.Threads.class, openAI::threads)
+                new TestData(OpenAIBeta2.Assistants.class, openAI::assistants),
+                new TestData(OpenAIBeta2.Threads.class, openAI::threads),
+                new TestData(OpenAIBeta2.ThreadMessages.class, openAI::threadMessages),
+                new TestData(OpenAIBeta2.ThreadRuns.class, openAI::threadRuns),
+                new TestData(OpenAIBeta2.ThreadRunSteps.class, openAI::threadRunSteps),
+                new TestData(OpenAIBeta2.VectorStores.class, openAI::vectorStores),
+                new TestData(OpenAIBeta2.VectorStoreFiles.class, openAI::vectorStoreFiles),
+                new TestData(OpenAIBeta2.VectorStoreFileBatches.class, openAI::vectorStoreFileBatches)
         };
         for (TestData testData : data) {
             when(cleverClient.create(any()))

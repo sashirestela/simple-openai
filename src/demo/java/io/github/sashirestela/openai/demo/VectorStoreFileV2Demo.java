@@ -10,8 +10,7 @@ public class VectorStoreFileV2Demo extends AbstractDemo {
 
     public VectorStoreFileV2Demo() {
         fileDemo = new FileServiceDemo();
-        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt",
-                PurposeType.ASSISTANTS);
+        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
         var vectorStore = openAI.vectorStores().create().join();

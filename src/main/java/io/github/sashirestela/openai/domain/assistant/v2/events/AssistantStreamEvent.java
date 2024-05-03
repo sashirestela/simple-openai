@@ -1,5 +1,18 @@
 package io.github.sashirestela.openai.domain.assistant.v2.events;
 
+import io.github.sashirestela.cleverclient.annotation.StreamType;
+import io.github.sashirestela.openai.domain.assistant.v2.Thread;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessage;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageDelta;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunStep;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunStepDelta;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.ERROR;
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.THREAD_CREATED;
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.THREAD_MESSAGE_COMPLETED;
@@ -23,19 +36,6 @@ import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.THREAD_RUN_STEP_EXPIRED;
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.THREAD_RUN_STEP_FAILED;
 import static io.github.sashirestela.openai.domain.assistant.v2.events.EventName.THREAD_RUN_STEP_IN_PROGRESS;
-
-import io.github.sashirestela.cleverclient.annotation.StreamType;
-import io.github.sashirestela.openai.domain.assistant.v2.Thread;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessage;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageDelta;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunStep;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunStepDelta;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 @StreamType(type = Thread.class, events = { THREAD_CREATED })
 @StreamType(type = ThreadRun.class, events = { THREAD_RUN_CREATED, THREAD_RUN_QUEUED, THREAD_RUN_IN_PROGRESS,

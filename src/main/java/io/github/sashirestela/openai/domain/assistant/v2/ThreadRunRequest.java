@@ -88,12 +88,12 @@ public class ThreadRunRequest {
 
             @JsonProperty("auto")
             AUTO,
-    
+
             @JsonProperty("last_messages")
             LAST_MESSAGES;
-    
+
         }
-    
+
     }
 
 }

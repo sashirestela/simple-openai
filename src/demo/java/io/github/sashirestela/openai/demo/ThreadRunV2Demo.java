@@ -2,21 +2,26 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.openai.domain.assistant.Events;
 import io.github.sashirestela.openai.domain.assistant.v2.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.v2.AssistantTool;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadCreateAndRunRequest;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageContent.TextContent;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageContent.TextContent.TextAnnotation.FileAnnotation.FileCitationAnnotation;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRequest;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun.RunStatus;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunSubmitOutputRequest.ToolOutput;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunRequest;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunSubmitOutputRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageContent.TextContent;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageDelta;
+import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunSubmitOutputRequest.ToolOutput;
+import io.github.sashirestela.openai.domain.assistant.v2.ToolResourceFull;
+import io.github.sashirestela.openai.domain.assistant.v2.ToolResourceFull.FileSearch;
+import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreRequest;
+import io.github.sashirestela.openai.domain.assistant.v2.events.EventName;
+import io.github.sashirestela.openai.domain.file.PurposeType;
 import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
@@ -27,6 +32,9 @@ import java.util.Map;
 
 public class ThreadRunV2Demo extends AbstractDemo {
 
+    private FileServiceDemo fileDemo;
+    private String fileId;
+    private String vectorStoreId;
     private FunctionExecutor functionExecutor;
     private String assistantId;
     private String threadId;
@@ -34,6 +42,13 @@ public class ThreadRunV2Demo extends AbstractDemo {
     private String threadRunId;
 
     private void prepareDemo() {
+        fileDemo = new FileServiceDemo();
+        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
+        fileId = file.getId();
+
+        var vectorStore = openAI.vectorStores().createAndPoll(VectorStoreRequest.builder().fileId(fileId).build());
+        vectorStoreId = vectorStore.getId();
+
         List<FunctionDef> functionList = new ArrayList<>();
         functionList.add(FunctionDef.builder()
                 .name("CurrentTemperature")
@@ -57,6 +72,12 @@ public class ThreadRunV2Demo extends AbstractDemo {
                                 + "questions, you have to refer to the attached files or use the functions provided. "
                                 + "Finally, if you receive math questions, you must write and run code to answer them.")
                         .tools(AssistantTool.functions(functionList))
+                        .tool(AssistantTool.FILE_SEARCH)
+                        .toolResources(ToolResourceFull.builder()
+                                .fileSearch(FileSearch.builder()
+                                        .vectorStoreId(vectorStoreId)
+                                        .build())
+                                .build())
                         .temperature(0.2)
                         .build())
                 .join();
@@ -134,7 +155,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
         System.out.print("Answer: ");
         response.forEach(e -> {
             switch (e.getName()) {
-                case Events.THREAD_MESSAGE_DELTA:
+                case EventName.THREAD_MESSAGE_DELTA:
                     var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
                     if (messageDeltaFirstContent instanceof TextContent) {
                         System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
@@ -194,7 +215,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
             System.out.print("Answer: ");
             response.forEach(e -> {
                 switch (e.getName()) {
-                    case Events.THREAD_MESSAGE_DELTA:
+                    case EventName.THREAD_MESSAGE_DELTA:
                         var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta()
                                 .getContent()
                                 .get(0);
@@ -212,7 +233,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
     }
 
     public void cancelThreadRun() {
-        var question = "How's the Peru's politician system?";
+        var question = "Tell me about the origins of the soccer game";
         System.out.println("Question: " + question);
         var threadRunRequest = ThreadRunRequest.builder()
                 .assistantId(assistantId)
@@ -229,7 +250,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
     }
 
     public void createThreadAndThreadRun() {
-        var question = "Tell me something brief about the Java language.";
+        var question = "What's the main focus of Mistral and what models are available?.";
         System.out.println("Question: " + question);
         var threadCreateAndRunRequest = ThreadCreateAndRunRequest.builder()
                 .assistantId(assistantId)
@@ -244,7 +265,17 @@ public class ThreadRunV2Demo extends AbstractDemo {
         var threadRun = openAI.threadRuns().createThreadAndRunAndPoll(threadCreateAndRunRequest);
         newThreadId = threadRun.getThreadId();
         var threadMessages = openAI.threadMessages().getList(newThreadId).join();
-        var answer = ((TextContent) threadMessages.first().getContent().get(0)).getText().getValue();
+        var textAnnotation = ((TextContent) threadMessages.first().getContent().get(0)).getText();
+        var answer = textAnnotation.getValue();
+        var refNumber = 1;
+        for (var fileAnnotation : textAnnotation.getAnnotations()) {
+            if (fileAnnotation instanceof FileCitationAnnotation) {
+                var fileCitation = (FileCitationAnnotation) fileAnnotation;
+                answer = answer.substring(0, fileCitation.getStartIndex())
+                        + " [" + refNumber++ + "]"
+                        + answer.substring(fileCitation.getEndIndex());
+            }
+        }
         System.out.println("Answer: " + answer);
         openAI.threads().delete(newThreadId).join();
     }
@@ -266,11 +297,11 @@ public class ThreadRunV2Demo extends AbstractDemo {
         System.out.print("Answer: ");
         response.forEach(e -> {
             switch (e.getName()) {
-                case Events.THREAD_RUN_CREATED:
+                case EventName.THREAD_RUN_CREATED:
                     var threadRun = (ThreadRun) e.getData();
                     newThreadId = threadRun.getThreadId();
                     break;
-                case Events.THREAD_MESSAGE_DELTA:
+                case EventName.THREAD_MESSAGE_DELTA:
                     var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
                     if (messageDeltaFirstContent instanceof TextContent) {
                         System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
@@ -308,6 +339,12 @@ public class ThreadRunV2Demo extends AbstractDemo {
 
         var deletedAssistant = openAI.assistants().delete(assistantId).join();
         System.out.println(deletedAssistant);
+
+        var deletedFile = fileDemo.deleteFile(fileId);
+        System.out.println(deletedFile);
+
+        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
+        System.out.println(deletedVectorStore);
     }
 
     public static void main(String[] args) {

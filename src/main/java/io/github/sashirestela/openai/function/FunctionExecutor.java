@@ -3,8 +3,6 @@ package io.github.sashirestela.openai.function;
 import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.ToolCall;
-import io.github.sashirestela.openai.domain.assistant.ToolOutput;
 import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
 
@@ -65,26 +63,8 @@ public class FunctionExecutor {
         }
     }
 
-    @Deprecated
-    public List<ToolOutput> executeAll(List<ToolCall> toolsToCalls) {
-        var toolOutputs = new ArrayList<ToolOutput>();
-        for (ToolCall toolToCall : toolsToCalls)
-            if (toolToCall.getFunction() != null)
-                toolOutputs.add(execute(toolToCall.getId(), toolToCall.getFunction()));
-
-        return toolOutputs;
-    }
-
-    @Deprecated
-    private ToolOutput execute(String toolCallId, FunctionCall functionToCall) {
-        try {
-            return ToolOutput.of(toolCallId, ("" + execute(functionToCall)));
-        } catch (Exception e) {
-            return ToolOutput.of(toolCallId, e.toString());
-        }
-    }
-
-    public <R> List<R> executeAll(List<? extends AbstractToolCall> toolCalls, BiFunction<String, String, R> toolOutputItem) {
+    public <R> List<R> executeAll(List<? extends AbstractToolCall> toolCalls,
+            BiFunction<String, String, R> toolOutputItem) {
         List<R> toolOutputs = new ArrayList<>();
         for (var toolCall : toolCalls) {
             if (toolCall.getFunction() != null) {

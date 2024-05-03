@@ -35,7 +35,7 @@ public class Attachment {
 
         public static final AttachmentTool CODE_INTERPRETER = new AttachmentTool(ToolType.CODE_INTERPRETER);
         public static final AttachmentTool FILE_SEARCH = new AttachmentTool(ToolType.FILE_SEARCH);
-    
+
         private ToolType type;
 
     }

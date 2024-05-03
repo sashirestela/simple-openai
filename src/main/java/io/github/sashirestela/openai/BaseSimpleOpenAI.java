@@ -172,15 +172,15 @@ public abstract class BaseSimpleOpenAI {
     }
 
     public OpenAIBeta2.VectorStores vectorStores() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     public OpenAIBeta2.VectorStoreFiles vectorStoreFiles() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);        
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
 }

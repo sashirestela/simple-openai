@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.domain.assistant.v2.Attachment;
+import io.github.sashirestela.openai.domain.assistant.v2.Attachment.AttachmentTool;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.Attachment.AttachmentTool;
 import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.file.PurposeType;
 
@@ -18,8 +18,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
 
     public ThreadMessageV2Demo() {
         fileDemo = new FileServiceDemo();
-        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt",
-                PurposeType.ASSISTANTS);
+        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
         var thread = openAI.threads().create().join();

@@ -25,7 +25,7 @@ public class VectorStoreFile {
 
         @JsonProperty("in_progress")
         IN_PROGRESS,
-    
+
         @JsonProperty("completed")
         COMPLETED,
 
@@ -34,7 +34,7 @@ public class VectorStoreFile {
 
         @JsonProperty("failed")
         FAILED;
-    
+
     }
 
 }

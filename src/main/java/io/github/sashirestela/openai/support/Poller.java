@@ -17,10 +17,10 @@ public class Poller<T> {
 
     @NonNull
     private Integer timeValue;
-    
+
     @NonNull
     private UnaryOperator<T> queryMethod;
-    
+
     @NonNull
     private Predicate<T> whileMethod;
 

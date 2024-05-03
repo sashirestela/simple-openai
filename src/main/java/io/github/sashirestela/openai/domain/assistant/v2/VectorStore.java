@@ -31,15 +31,15 @@ public class VectorStore {
 
         @JsonProperty("expired")
         EXPIRED,
-    
+
         @JsonProperty("in_progress")
         IN_PROGRESS,
-    
+
         @JsonProperty("completed")
         COMPLETED;
-    
+
     }
-    
+
     @NoArgsConstructor
     @Getter
     @ToString

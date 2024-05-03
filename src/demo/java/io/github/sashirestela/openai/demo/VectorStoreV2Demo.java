@@ -16,8 +16,7 @@ public class VectorStoreV2Demo extends AbstractDemo {
 
     public VectorStoreV2Demo() {
         fileDemo = new FileServiceDemo();
-        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt",
-                PurposeType.ASSISTANTS);
+        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
     }
 
