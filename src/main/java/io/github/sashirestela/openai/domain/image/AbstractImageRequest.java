@@ -19,9 +19,9 @@ public abstract class AbstractImageRequest {
     @Range(min = 1, max = 10)
     protected Integer n;
 
-    protected Size size;
-
     protected ImageRespFmt responseFormat;
+
+    protected Size size;
 
     protected String user;
 

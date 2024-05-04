@@ -2,9 +2,9 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun.RequiredAction.SubmitToolOutput.ThreadRunToolCall;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunSubmitOutputRequest.ToolOutput;
-import io.github.sashirestela.openai.domain.assistant.v2.ToolType;
+import io.github.sashirestela.openai.domain.assistant.ThreadRun.RequiredAction.SubmitToolOutput.ThreadRunToolCall;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest.ToolOutput;
+import io.github.sashirestela.openai.domain.assistant.ToolType;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
@@ -21,12 +21,12 @@ public class Demo {
     public static void main(String[] args) {
         List<FunctionDef> functionList = new ArrayList<>();
         functionList.add(FunctionDef.builder()
-                .name("getCurrentTemperature")
+                .name("CurrentTemperature")
                 .description("Get the current temperature for a specific location")
                 .functionalClass(CurrentTemperature.class)
                 .build());
         functionList.add(FunctionDef.builder()
-                .name("getRainProbability")
+                .name("RainProbability")
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
                 .build());

@@ -39,7 +39,7 @@ class AudioFilterTest {
 
     @Test
     void shouldSendRespFmtTextWhenCallingTranscribePlainMethodOfAudioServiceWithoutRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
                 .build();
@@ -47,26 +47,26 @@ class AudioFilterTest {
 
         var httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
         verify(httpClient).sendAsync(httpRequest.capture(), any());
-        assertContainsText(AudioRespFmt.TEXT, httpRequest);
+        assertContainsText(AudioResponseFormat.TEXT, httpRequest);
     }
 
     @Test
     void shouldKeepRespFmtWhenCallingTranscribePlainMethodOfAudioServiceWithTextishRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
-                .responseFormat(AudioRespFmt.SRT)
+                .responseFormat(AudioResponseFormat.SRT)
                 .build();
         openAI.audios().transcribePlain(audioRequest);
-        assertEquals(AudioRespFmt.SRT, audioRequest.getResponseFormat());
+        assertEquals(AudioResponseFormat.SRT, audioRequest.getResponseFormat());
     }
 
     @Test
     void shouldThrowExceptionWhenCallingTranscribePlainMethodOfAudioServiceWithJsonishRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
-                .responseFormat(AudioRespFmt.JSON)
+                .responseFormat(AudioResponseFormat.JSON)
                 .build();
         var audioService = openAI.audios();
         Exception exception = assertThrows(SimpleUncheckedException.class,
@@ -76,7 +76,7 @@ class AudioFilterTest {
 
     @Test
     void shouldSetRespFmtToJsonWhenCallingTranscribeMethodOfAudioServiceWithoutRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
                 .build();
@@ -84,10 +84,10 @@ class AudioFilterTest {
 
         var httpRequest = ArgumentCaptor.forClass(HttpRequest.class);
         verify(httpClient).sendAsync(httpRequest.capture(), any());
-        assertContainsText(AudioRespFmt.JSON, httpRequest);
+        assertContainsText(AudioResponseFormat.JSON, httpRequest);
     }
 
-    static void assertContainsText(AudioRespFmt responseFormat, ArgumentCaptor<HttpRequest> httpRequest) {
+    static void assertContainsText(AudioResponseFormat responseFormat, ArgumentCaptor<HttpRequest> httpRequest) {
         String requestBody = CapturedValues.getRequestBodyAsString(httpRequest);
         assertTrue(requestBody.contains(responseFormat.name().toLowerCase()),
                 "Should contain " + requestBody + " in HttpRequest");
@@ -95,21 +95,21 @@ class AudioFilterTest {
 
     @Test
     void shouldKeepRespFmtWhenCallingTranscribeMethodOfAudioServiceWithJsonishRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
-                .responseFormat(AudioRespFmt.VERBOSE_JSON)
+                .responseFormat(AudioResponseFormat.VERBOSE_JSON)
                 .build();
         openAI.audios().transcribe(audioRequest);
-        assertEquals(AudioRespFmt.VERBOSE_JSON, audioRequest.getResponseFormat());
+        assertEquals(AudioResponseFormat.VERBOSE_JSON, audioRequest.getResponseFormat());
     }
 
     @Test
     void shouldThrowExceptionWhenCallingTranscribeMethodOfAudioServiceWithTextishRespFmt() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Path.of("src/demo/resources/hello_audio.mp3"))
                 .model("test_model")
-                .responseFormat(AudioRespFmt.TEXT)
+                .responseFormat(AudioResponseFormat.TEXT)
                 .build();
         var audioService = openAI.audios();
         Exception exception = assertThrows(SimpleUncheckedException.class,

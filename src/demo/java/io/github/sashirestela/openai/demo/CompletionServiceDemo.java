@@ -1,7 +1,7 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.domain.completion.Completion;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
-import io.github.sashirestela.openai.domain.completion.CompletionResponse;
 
 public class CompletionServiceDemo extends AbstractDemo {
 
@@ -23,7 +23,7 @@ public class CompletionServiceDemo extends AbstractDemo {
         var futureCompletion = openAI.completions().createStream(completionRequest);
         var completionResponse = futureCompletion.join();
         completionResponse.filter(complResponse -> complResponse.firstText() != null)
-                .map(CompletionResponse::firstText)
+                .map(Completion::firstText)
                 .forEach(System.out::print);
         System.out.println();
     }

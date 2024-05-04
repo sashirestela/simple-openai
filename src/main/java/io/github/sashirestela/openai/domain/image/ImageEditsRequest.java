@@ -18,10 +18,10 @@ public class ImageEditsRequest extends AbstractImageRequest {
     @Extension({ "png" })
     private Path image;
 
-    @Extension({ "png" })
-    private Path mask;
-
     @Required
     private String prompt;
+
+    @Extension({ "png" })
+    private Path mask;
 
 }

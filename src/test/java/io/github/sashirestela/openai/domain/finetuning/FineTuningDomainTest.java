@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.domain.finetuning;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.finetuning.Integration.IntegrationType;
+import io.github.sashirestela.openai.domain.finetuning.Integration.WandbIntegration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

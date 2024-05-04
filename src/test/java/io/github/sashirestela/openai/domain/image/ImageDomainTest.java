@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.domain.image;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.image.ImageRequest.Quality;
+import io.github.sashirestela.openai.domain.image.ImageRequest.Style;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

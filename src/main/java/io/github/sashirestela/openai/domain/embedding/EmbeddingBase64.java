@@ -10,7 +10,7 @@ import lombok.ToString;
 public class EmbeddingBase64 {
 
     private Integer index;
-    private String object;
     private String embedding;
+    private String object;
 
 }

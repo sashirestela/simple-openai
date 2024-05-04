@@ -12,7 +12,7 @@ import java.util.List;
 public class EmbeddingFloat {
 
     private Integer index;
-    private String object;
     private List<Double> embedding;
+    private String object;
 
 }

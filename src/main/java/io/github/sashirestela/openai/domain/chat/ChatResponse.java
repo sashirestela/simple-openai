@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.chat;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.domain.OpenAIUsage;
+import io.github.sashirestela.openai.domain.Usage;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class ChatResponse {
     private String model;
     private String systemFingerprint;
     private List<Choice> choices;
-    private OpenAIUsage usage;
+    private Usage usage;
 
     public ChatMsgResponse firstMessage() {
         return getChoices().get(0).getMessage();

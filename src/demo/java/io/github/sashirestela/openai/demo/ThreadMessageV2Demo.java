@@ -1,11 +1,11 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.assistant.v2.Attachment;
-import io.github.sashirestela.openai.domain.assistant.v2.Attachment.AttachmentTool;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest.ThreadMessageRole;
-import io.github.sashirestela.openai.domain.file.PurposeType;
+import io.github.sashirestela.openai.domain.assistant.Attachment;
+import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 import java.util.Map;
 

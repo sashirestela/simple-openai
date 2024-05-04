@@ -3,7 +3,6 @@ package io.github.sashirestela.openai.domain.batch;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.batch.BatchRequest.CompletionWindowType;
-import io.github.sashirestela.openai.domain.batch.BatchRequest.EndpointType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

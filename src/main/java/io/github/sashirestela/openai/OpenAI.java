@@ -8,38 +8,39 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
-import io.github.sashirestela.openai.domain.OpenAIGeneric;
+import io.github.sashirestela.openai.domain.Deleted;
+import io.github.sashirestela.openai.domain.Generic;
 import io.github.sashirestela.openai.domain.Page;
-import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
-import io.github.sashirestela.openai.domain.audio.AudioResponse;
-import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
-import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
-import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
+import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest;
+import io.github.sashirestela.openai.domain.audio.Transcription;
+import io.github.sashirestela.openai.domain.audio.TranscriptionRequest;
+import io.github.sashirestela.openai.domain.audio.TranslationRequest;
+import io.github.sashirestela.openai.domain.batch.Batch;
 import io.github.sashirestela.openai.domain.batch.BatchRequest;
-import io.github.sashirestela.openai.domain.batch.BatchResponse;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatResponse;
 import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
+import io.github.sashirestela.openai.domain.completion.Completion;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
-import io.github.sashirestela.openai.domain.completion.CompletionResponse;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64Response;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingFloatResponse;
+import io.github.sashirestela.openai.domain.embedding.Embedding;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
-import io.github.sashirestela.openai.domain.embedding.EncodingFormat;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest.EncodingFormat;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileResponse;
-import io.github.sashirestela.openai.domain.finetuning.Checkpoint;
+import io.github.sashirestela.openai.domain.finetuning.FineTuning;
+import io.github.sashirestela.openai.domain.finetuning.FineTuningCheckpoint;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningEvent;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningRequest;
-import io.github.sashirestela.openai.domain.finetuning.FineTuningResponse;
+import io.github.sashirestela.openai.domain.image.Image;
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
-import io.github.sashirestela.openai.domain.image.ImageResponse;
 import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
-import io.github.sashirestela.openai.domain.model.ModelResponse;
+import io.github.sashirestela.openai.domain.model.Model;
+import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
-import io.github.sashirestela.openai.domain.moderation.ModerationResponse;
 
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -73,7 +74,7 @@ public interface OpenAI {
          * @return The audio file content.
          */
         @POST("/speech")
-        CompletableFuture<InputStream> speak(@Body AudioSpeechRequest speechRequest);
+        CompletableFuture<InputStream> speak(@Body SpeechRequest speechRequest);
 
         /**
          * Transcribes audio into the input language. Response as object.
@@ -82,15 +83,16 @@ public interface OpenAI {
          *                     audio file.
          * @return Transcription as an object.
          */
-        default CompletableFuture<AudioResponse> transcribe(AudioTranscribeRequest audioRequest) {
-            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioRespFmt.JSON, "transcribe");
+        default CompletableFuture<Transcription> transcribe(TranscriptionRequest audioRequest) {
+            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.JSON,
+                    "transcribe");
             var request = audioRequest.withResponseFormat(responseFormat);
             return transcribeRoot(request);
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<AudioResponse> transcribeRoot(@Body AudioTranscribeRequest audioRequest);
+        CompletableFuture<Transcription> transcribeRoot(@Body TranscriptionRequest audioRequest);
 
         /**
          * Translates audio into English. Response as object.
@@ -99,15 +101,16 @@ public interface OpenAI {
          *                     audio file.
          * @return Translation as an object.
          */
-        default CompletableFuture<AudioResponse> translate(AudioTranslateRequest audioRequest) {
-            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioRespFmt.JSON, "translate");
+        default CompletableFuture<Transcription> translate(TranslationRequest audioRequest) {
+            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.JSON,
+                    "translate");
             var request = audioRequest.withResponseFormat(responseFormat);
             return translateRoot(request);
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<AudioResponse> translateRoot(@Body AudioTranslateRequest audioRequest);
+        CompletableFuture<Transcription> translateRoot(@Body TranslationRequest audioRequest);
 
         /**
          * Transcribes audio into the input language. Response as plain text.
@@ -116,15 +119,16 @@ public interface OpenAI {
          *                     file.
          * @return Transcription as plain text.
          */
-        default CompletableFuture<String> transcribePlain(AudioTranscribeRequest audioRequest) {
-            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioRespFmt.TEXT, "transcribe");
+        default CompletableFuture<String> transcribePlain(TranscriptionRequest audioRequest) {
+            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.TEXT,
+                    "transcribe");
             var request = audioRequest.withResponseFormat(responseFormat);
             return transcribePlainRoot(request);
         }
 
         @Multipart
         @POST("/transcriptions")
-        CompletableFuture<String> transcribePlainRoot(@Body AudioTranscribeRequest audioRequest);
+        CompletableFuture<String> transcribePlainRoot(@Body TranscriptionRequest audioRequest);
 
         /**
          * Translates audio into English. Response as plain text.
@@ -133,15 +137,16 @@ public interface OpenAI {
          *                     file.
          * @return Translation as plain text.
          */
-        default CompletableFuture<String> translatePlain(AudioTranslateRequest audioRequest) {
-            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioRespFmt.TEXT, "translate");
+        default CompletableFuture<String> translatePlain(TranslationRequest audioRequest) {
+            var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.TEXT,
+                    "translate");
             var request = audioRequest.withResponseFormat(responseFormat);
             return translatePlainRoot(request);
         }
 
         @Multipart
         @POST("/translations")
-        CompletableFuture<String> translatePlainRoot(@Body AudioTranslateRequest audioRequest);
+        CompletableFuture<String> translatePlainRoot(@Body TranslationRequest audioRequest);
 
     }
 
@@ -160,7 +165,7 @@ public interface OpenAI {
          * @return The batch object.
          */
         @POST
-        CompletableFuture<BatchResponse> create(@Body BatchRequest batchRequest);
+        CompletableFuture<Batch> create(@Body BatchRequest batchRequest);
 
         /**
          * Retrieves a batch.
@@ -169,7 +174,7 @@ public interface OpenAI {
          * @return The Batch object matching the specified id.
          */
         @GET("/{batchId}")
-        CompletableFuture<BatchResponse> getOne(@Path("batchId") String batchId);
+        CompletableFuture<Batch> getOne(@Path("batchId") String batchId);
 
         /**
          * Cancels an in-progress batch.
@@ -178,7 +183,7 @@ public interface OpenAI {
          * @return The Batch object matching the specified id.
          */
         @POST("/{batchId}/cancel")
-        CompletableFuture<BatchResponse> cancel(@Path("batchId") String batchId);
+        CompletableFuture<Batch> cancel(@Path("batchId") String batchId);
 
         /**
          * List your organization's batches.
@@ -192,7 +197,7 @@ public interface OpenAI {
          * @return A list of paginated Batch objects.
          */
         @GET
-        CompletableFuture<Page<BatchResponse>> getList(@Query("after") String after, @Query("limit") Integer limit);
+        CompletableFuture<Page<Batch>> getList(@Query("after") String after, @Query("limit") Integer limit);
 
     }
 
@@ -252,13 +257,13 @@ public interface OpenAI {
          *                          attribute is setted to false automatically.
          * @return Response is delivered as a full text when is ready.
          */
-        default CompletableFuture<CompletionResponse> create(@Body CompletionRequest completionRequest) {
+        default CompletableFuture<Completion> create(@Body CompletionRequest completionRequest) {
             var request = completionRequest.withStream(Boolean.FALSE);
             return createRoot(request);
         }
 
         @POST
-        CompletableFuture<CompletionResponse> createRoot(@Body CompletionRequest completionRequest);
+        CompletableFuture<Completion> createRoot(@Body CompletionRequest completionRequest);
 
         /**
          * Creates a completion for the provided prompt and parameters. Streaming mode.
@@ -267,13 +272,13 @@ public interface OpenAI {
          *                          attribute is setted to true automatically.
          * @return Response is delivered as a continuous flow of tokens.
          */
-        default CompletableFuture<Stream<CompletionResponse>> createStream(@Body CompletionRequest completionRequest) {
+        default CompletableFuture<Stream<Completion>> createStream(@Body CompletionRequest completionRequest) {
             var request = completionRequest.withStream(Boolean.TRUE);
             return createStreamRoot(request);
         }
 
         @POST
-        CompletableFuture<Stream<CompletionResponse>> createStreamRoot(@Body CompletionRequest completionRequest);
+        CompletableFuture<Stream<Completion>> createStreamRoot(@Body CompletionRequest completionRequest);
 
     }
 
@@ -292,13 +297,13 @@ public interface OpenAI {
          * @param embeddingRequest The input text to embed and the model to use.
          * @return Represents an embedding vector in array of float format.
          */
-        default CompletableFuture<EmbeddingFloatResponse> create(@Body EmbeddingRequest embeddingRequest) {
+        default CompletableFuture<Embedding<EmbeddingFloat>> create(@Body EmbeddingRequest embeddingRequest) {
             var request = embeddingRequest.withEncodingFormat(EncodingFormat.FLOAT);
             return createRoot(request);
         }
 
         @POST
-        CompletableFuture<EmbeddingFloatResponse> createRoot(@Body EmbeddingRequest embeddingRequest);
+        CompletableFuture<Embedding<EmbeddingFloat>> createRoot(@Body EmbeddingRequest embeddingRequest);
 
         /**
          * Creates an embedding vector representing the input text.
@@ -306,13 +311,13 @@ public interface OpenAI {
          * @param embeddingRequest The input text to embed and the model to use.
          * @return Represents an embedding vector in base64 format.
          */
-        default CompletableFuture<EmbeddingBase64Response> createBase64(@Body EmbeddingRequest embeddingRequest) {
+        default CompletableFuture<Embedding<EmbeddingBase64>> createBase64(@Body EmbeddingRequest embeddingRequest) {
             var request = embeddingRequest.withEncodingFormat(EncodingFormat.BASE64);
             return createBase64Root(request);
         }
 
         @POST
-        CompletableFuture<EmbeddingBase64Response> createBase64Root(@Body EmbeddingRequest embeddingRequest);
+        CompletableFuture<Embedding<EmbeddingBase64>> createBase64Root(@Body EmbeddingRequest embeddingRequest);
 
     }
 
@@ -342,11 +347,11 @@ public interface OpenAI {
          * @return List of files.
          */
         default CompletableFuture<List<FileResponse>> getList(String purpose) {
-            return getListRoot(purpose).thenApply(OpenAIGeneric::getData);
+            return getListRoot(purpose).thenApply(Generic::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FileResponse>> getListRoot(@Query("purpose") String purpose);
+        CompletableFuture<Generic<FileResponse>> getListRoot(@Query("purpose") String purpose);
 
         /**
          * Returns information about a specific file.
@@ -382,7 +387,7 @@ public interface OpenAI {
          * @return Deletion status.
          */
         @DELETE("/{fileId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("fileId") String fileId);
+        CompletableFuture<Deleted> delete(@Path("fileId") String fileId);
 
     }
 
@@ -403,7 +408,7 @@ public interface OpenAI {
          *         fine-tuned models once complete.
          */
         @POST
-        CompletableFuture<FineTuningResponse> create(@Body FineTuningRequest fineTuningRequest);
+        CompletableFuture<FineTuning> create(@Body FineTuningRequest fineTuningRequest);
 
         /**
          * List your organization's fine-tuning jobs.
@@ -412,12 +417,12 @@ public interface OpenAI {
          * @param after Identifier for the last job from the previous pagination request.
          * @return A list of paginated fine-tuning job objects.
          */
-        default CompletableFuture<List<FineTuningResponse>> getList(Integer limit, String after) {
-            return getListRoot(limit, after).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<FineTuning>> getList(Integer limit, String after) {
+            return getListRoot(limit, after).thenApply(Generic::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<FineTuningResponse>> getListRoot(@Query("limit") Integer limit,
+        CompletableFuture<Generic<FineTuning>> getListRoot(@Query("limit") Integer limit,
                 @Query("after") String after);
 
         /**
@@ -427,7 +432,7 @@ public interface OpenAI {
          * @return The fine-tuning object with the given id.
          */
         @GET("/{fineTuningId}")
-        CompletableFuture<FineTuningResponse> getOne(@Path("fineTuningId") String fineTuningId);
+        CompletableFuture<FineTuning> getOne(@Path("fineTuningId") String fineTuningId);
 
         /**
          * Get status updates for a fine-tuning job.
@@ -438,11 +443,11 @@ public interface OpenAI {
          * @return A list of fine-tuning event objects.
          */
         default CompletableFuture<List<FineTuningEvent>> getEvents(String fineTuningId, Integer limit, String after) {
-            return getEventsRoot(fineTuningId, limit, after).thenApply(OpenAIGeneric::getData);
+            return getEventsRoot(fineTuningId, limit, after).thenApply(Generic::getData);
         }
 
         @GET("/{fineTuningId}/events")
-        CompletableFuture<OpenAIGeneric<FineTuningEvent>> getEventsRoot(@Path("fineTuningId") String fineTuningId,
+        CompletableFuture<Generic<FineTuningEvent>> getEventsRoot(@Path("fineTuningId") String fineTuningId,
                 @Query("limit") Integer limit, @Query("after") String after);
 
         /**
@@ -453,12 +458,13 @@ public interface OpenAI {
          * @param after        Identifier for the last job from the previous pagination request.
          * @return A list of fine-tuning checkpoint objects.
          */
-        default CompletableFuture<List<Checkpoint>> getCheckpoints(String fineTuningId, Integer limit, String after) {
-            return getCheckpointsRoot(fineTuningId, limit, after).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<FineTuningCheckpoint>> getCheckpoints(String fineTuningId, Integer limit,
+                String after) {
+            return getCheckpointsRoot(fineTuningId, limit, after).thenApply(Generic::getData);
         }
 
         @GET("/{fineTuningId}/checkpoints")
-        CompletableFuture<OpenAIGeneric<Checkpoint>> getCheckpointsRoot(@Path("fineTuningId") String fineTuningId,
+        CompletableFuture<Generic<FineTuningCheckpoint>> getCheckpointsRoot(@Path("fineTuningId") String fineTuningId,
                 @Query("limit") Integer limit, @Query("after") String after);
 
         /**
@@ -468,7 +474,7 @@ public interface OpenAI {
          * @return The cancelled fine-tuning object.
          */
         @POST("/{fineTuningId}/cancel")
-        CompletableFuture<FineTuningResponse> cancel(@Path("fineTuningId") String fineTuningId);
+        CompletableFuture<FineTuning> cancel(@Path("fineTuningId") String fineTuningId);
 
     }
 
@@ -487,12 +493,12 @@ public interface OpenAI {
          *                     number, size or responseFormat.
          * @return Returns a list of image objects (the url or the binary content).
          */
-        default CompletableFuture<List<ImageResponse>> create(ImageRequest imageRequest) {
-            return createRoot(imageRequest).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<Image>> create(ImageRequest imageRequest) {
+            return createRoot(imageRequest).thenApply(Generic::getData);
         }
 
         @POST("/generations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createRoot(@Body ImageRequest imageRequest);
+        CompletableFuture<Generic<Image>> createRoot(@Body ImageRequest imageRequest);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
@@ -501,13 +507,13 @@ public interface OpenAI {
          *                     image(s).
          * @return Returns a list of image objects (the url or the binary content).
          */
-        default CompletableFuture<List<ImageResponse>> createEdits(ImageEditsRequest imageRequest) {
-            return createEditsRoot(imageRequest).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<Image>> createEdits(ImageEditsRequest imageRequest) {
+            return createEditsRoot(imageRequest).thenApply(Generic::getData);
         }
 
         @Multipart
         @POST("/edits")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createEditsRoot(@Body ImageEditsRequest imageRequest);
+        CompletableFuture<Generic<Image>> createEditsRoot(@Body ImageEditsRequest imageRequest);
 
         /**
          * Creates a variation of a given image.
@@ -515,13 +521,13 @@ public interface OpenAI {
          * @param imageRequest Includes the image file to use as the basis for the variation(s).
          * @return Returns a list of image objects (the url or the binary content).
          */
-        default CompletableFuture<List<ImageResponse>> createVariations(ImageVariationsRequest imageRequest) {
-            return createVariationsRoot(imageRequest).thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<Image>> createVariations(ImageVariationsRequest imageRequest) {
+            return createVariationsRoot(imageRequest).thenApply(Generic::getData);
         }
 
         @Multipart
         @POST("/variations")
-        CompletableFuture<OpenAIGeneric<ImageResponse>> createVariationsRoot(@Body ImageVariationsRequest imageRequest);
+        CompletableFuture<Generic<Image>> createVariationsRoot(@Body ImageVariationsRequest imageRequest);
 
     }
 
@@ -539,12 +545,12 @@ public interface OpenAI {
          * 
          * @return A list of model objects.
          */
-        default CompletableFuture<List<ModelResponse>> getList() {
-            return getListRoot().thenApply(OpenAIGeneric::getData);
+        default CompletableFuture<List<Model>> getList() {
+            return getListRoot().thenApply(Generic::getData);
         }
 
         @GET
-        CompletableFuture<OpenAIGeneric<ModelResponse>> getListRoot();
+        CompletableFuture<Generic<Model>> getListRoot();
 
         /**
          * Retrieves a model instance, providing basic information about the model such as the owner and
@@ -554,7 +560,7 @@ public interface OpenAI {
          * @return The model object matching the specified id.
          */
         @GET("/{modelId}")
-        CompletableFuture<ModelResponse> getOne(@Path("modelId") String modelId);
+        CompletableFuture<Model> getOne(@Path("modelId") String modelId);
 
         /**
          * Delete a fine tuned model.
@@ -563,7 +569,7 @@ public interface OpenAI {
          * @return Deletion status.
          */
         @DELETE("/{modelId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("modelId") String modelId);
+        CompletableFuture<Deleted> delete(@Path("modelId") String modelId);
 
     }
 
@@ -582,12 +588,13 @@ public interface OpenAI {
          * @return Response including a list of moderation objects.
          */
         @POST
-        CompletableFuture<ModerationResponse> create(@Body ModerationRequest moderationRequest);
+        CompletableFuture<Moderation> create(@Body ModerationRequest moderationRequest);
 
     }
 
-    static AudioRespFmt getResponseFormat(AudioRespFmt currValue, AudioRespFmt orDefault, String methodName) {
-        final var jsonEnumSet = EnumSet.of(AudioRespFmt.JSON, AudioRespFmt.VERBOSE_JSON);
+    static AudioResponseFormat getResponseFormat(AudioResponseFormat currValue, AudioResponseFormat orDefault,
+            String methodName) {
+        final var jsonEnumSet = EnumSet.of(AudioResponseFormat.JSON, AudioResponseFormat.VERBOSE_JSON);
         final var textEnumSet = EnumSet.complementOf(jsonEnumSet);
 
         var isText = textEnumSet.contains(orDefault);

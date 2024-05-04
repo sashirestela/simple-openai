@@ -2,8 +2,8 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.domain.batch.BatchRequest;
 import io.github.sashirestela.openai.domain.batch.BatchRequest.CompletionWindowType;
-import io.github.sashirestela.openai.domain.batch.BatchRequest.EndpointType;
-import io.github.sashirestela.openai.domain.file.PurposeType;
+import io.github.sashirestela.openai.domain.batch.EndpointType;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 import java.util.Map;
 

@@ -2,12 +2,12 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.CurrentTemperature;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.RainProbability;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageContent.TextContent;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest.ThreadMessageRole;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantTool;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
 import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 

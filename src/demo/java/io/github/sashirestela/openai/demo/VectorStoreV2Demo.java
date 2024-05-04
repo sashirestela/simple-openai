@@ -1,10 +1,10 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreRequest.ExpiresAfter;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreRequest.ExpiresAfter.Anchor;
-import io.github.sashirestela.openai.domain.file.PurposeType;
+import io.github.sashirestela.openai.domain.assistant.ExpiresAfter;
+import io.github.sashirestela.openai.domain.assistant.ExpiresAfter.Anchor;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 import java.util.Map;
 

@@ -1,12 +1,12 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.audio.AudioRespFmt;
-import io.github.sashirestela.openai.domain.audio.AudioSpeechRequest;
-import io.github.sashirestela.openai.domain.audio.AudioTranscribeRequest;
-import io.github.sashirestela.openai.domain.audio.AudioTranslateRequest;
-import io.github.sashirestela.openai.domain.audio.SpeechRespFmt;
-import io.github.sashirestela.openai.domain.audio.TimestampGranularity;
-import io.github.sashirestela.openai.domain.audio.Voice;
+import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest.SpeechResponseFormat;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest.Voice;
+import io.github.sashirestela.openai.domain.audio.TranscriptionRequest;
+import io.github.sashirestela.openai.domain.audio.TranscriptionRequest.TimestampGranularity;
+import io.github.sashirestela.openai.domain.audio.TranslationRequest;
 
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
@@ -25,11 +25,11 @@ public class AudioServiceDemo extends AbstractDemo {
     }
 
     public void demoCallAudioSpeech() {
-        var speechRequest = AudioSpeechRequest.builder()
+        var speechRequest = SpeechRequest.builder()
                 .model(MODEL_TTS)
                 .input("Hello world, welcome to the AI universe!")
                 .voice(Voice.ALLOY)
-                .responseFormat(SpeechRespFmt.MP3)
+                .responseFormat(SpeechResponseFormat.MP3)
                 .speed(1.0)
                 .build();
         var futureSpeech = openAI.audios().speak(speechRequest);
@@ -45,10 +45,10 @@ public class AudioServiceDemo extends AbstractDemo {
     }
 
     public void demoCallAudioTranscription() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Paths.get(fileName))
                 .model(MODEL)
-                .responseFormat(AudioRespFmt.VERBOSE_JSON)
+                .responseFormat(AudioResponseFormat.VERBOSE_JSON)
                 .temperature(0.2)
                 .timestampGranularity(TimestampGranularity.WORD)
                 .timestampGranularity(TimestampGranularity.SEGMENT)
@@ -59,7 +59,7 @@ public class AudioServiceDemo extends AbstractDemo {
     }
 
     public void demoCallAudioTranslation() {
-        var audioRequest = AudioTranslateRequest.builder()
+        var audioRequest = TranslationRequest.builder()
                 .file(Paths.get(fileName))
                 .model(MODEL)
                 .build();
@@ -69,7 +69,7 @@ public class AudioServiceDemo extends AbstractDemo {
     }
 
     public void demoCallAudioTranscriptionPlain() {
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Paths.get(fileName))
                 .model(MODEL)
                 .build();
@@ -79,10 +79,10 @@ public class AudioServiceDemo extends AbstractDemo {
     }
 
     public void demoCallAudioTranslationPlain() {
-        var audioRequest = AudioTranslateRequest.builder()
+        var audioRequest = TranslationRequest.builder()
                 .file(Paths.get(fileName))
                 .model(MODEL)
-                .responseFormat(AudioRespFmt.VTT)
+                .responseFormat(AudioResponseFormat.VTT)
                 .build();
         var futureAudio = openAI.audios().translatePlain(audioRequest);
         var audioResponse = futureAudio.join();

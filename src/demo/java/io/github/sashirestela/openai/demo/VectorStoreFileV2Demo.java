@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.file.PurposeType;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 public class VectorStoreFileV2Demo extends AbstractDemo {
 

@@ -13,10 +13,10 @@ import lombok.ToString;
 public class FineTuningEvent {
 
     private String id;
-    private String object;
     private Long createdAt;
     private String level;
     private String message;
+    private String object;
     private String type;
 
 }

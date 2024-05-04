@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantResponseFormat;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantTool;
+import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantResponseFormat;
+import io.github.sashirestela.openai.domain.assistant.AssistantTool;
 
 import java.util.Map;
 

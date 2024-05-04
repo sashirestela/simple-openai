@@ -9,35 +9,35 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.domain.OpenAIDeletedResponse;
+import io.github.sashirestela.openai.domain.Deleted;
 import io.github.sashirestela.openai.domain.Page;
 import io.github.sashirestela.openai.domain.PageRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.Assistant;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.Thread;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadCreateAndRunRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessage;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadMessageRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRun.RunStatus;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunStep;
-import io.github.sashirestela.openai.domain.assistant.v2.ThreadRunSubmitOutputRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStore;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStore.VectorStoreStatus;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreFile;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreFile.FileStatus;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreFileBatch;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreFileBatchRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreFileRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreModifyRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.VectorStoreRequest;
-import io.github.sashirestela.openai.domain.assistant.v2.events.AssistantStreamEvent;
+import io.github.sashirestela.openai.domain.assistant.Assistant;
+import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
+import io.github.sashirestela.openai.domain.assistant.FileStatus;
+import io.github.sashirestela.openai.domain.assistant.Thread;
+import io.github.sashirestela.openai.domain.assistant.ThreadCreateAndRunRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessage;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRun;
+import io.github.sashirestela.openai.domain.assistant.ThreadRun.RunStatus;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest;
+import io.github.sashirestela.openai.domain.assistant.VectorStore;
+import io.github.sashirestela.openai.domain.assistant.VectorStore.VectorStoreStatus;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreFile;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreFileBatch;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreFileBatchRequest;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreFileRequest;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreModifyRequest;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
+import io.github.sashirestela.openai.domain.assistant.events.AssistantStreamEvent;
 import io.github.sashirestela.openai.support.Poller;
 
 import java.util.List;
@@ -126,7 +126,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{assistantId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("assistantId") String assistantId);
+        CompletableFuture<Deleted> delete(@Path("assistantId") String assistantId);
 
     }
 
@@ -183,7 +183,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{threadId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("threadId") String threadId);
+        CompletableFuture<Deleted> delete(@Path("threadId") String threadId);
 
     }
 
@@ -642,7 +642,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{vectorStoreId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("vectorStoreId") String vectorStoreId);
+        CompletableFuture<Deleted> delete(@Path("vectorStoreId") String vectorStoreId);
 
     }
 
@@ -707,7 +707,7 @@ public interface OpenAIBeta2 {
          */
         @GET
         CompletableFuture<Page<VectorStoreFile>> getList(@Path("vectorStoreId") String vectorStoreId,
-                @Query PageRequest page, @Query("filter") VectorStoreFile.FileStatus filter);
+                @Query PageRequest page, @Query("filter") FileStatus filter);
 
         /**
          * Returns a list of vector store files (first page).
@@ -738,7 +738,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{fileId}")
-        CompletableFuture<OpenAIDeletedResponse> delete(@Path("vectorStoreId") String vectorStoreId,
+        CompletableFuture<Deleted> delete(@Path("vectorStoreId") String vectorStoreId,
                 @Path("fileId") String fileId);
 
     }
@@ -827,7 +827,7 @@ public interface OpenAIBeta2 {
         @GET("/{batchId}/files")
         CompletableFuture<Page<VectorStoreFile>> getFiles(@Path("vectorStoreId") String vectorStoreId,
                 @Path("batchId") String batchId, @Query PageRequest page,
-                @Query("filter") VectorStoreFile.FileStatus filter);
+                @Query("filter") FileStatus filter);
 
         /**
          * Returns a list of vector store files in a batch (first page).
