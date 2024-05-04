@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.domain.image;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum ImageRespFmt {
+public enum ImageResponseFormat {
 
     @JsonProperty("url")
     URL,

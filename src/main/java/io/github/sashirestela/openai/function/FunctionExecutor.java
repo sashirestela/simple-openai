@@ -3,8 +3,8 @@ package io.github.sashirestela.openai.function;
 import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import io.github.sashirestela.openai.tool.Tool;
+import io.github.sashirestela.openai.tool.ToolCall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +24,10 @@ public class FunctionExecutor {
         enrollFunctions(functions);
     }
 
-    @Deprecated
-    public List<ChatTool> getToolFunctions() {
+    public List<Tool> getToolFunctions() {
         return mapFunctions.values()
                 .stream()
-                .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+                .map(func -> Tool.function(func))
                 .collect(Collectors.toList());
     }
 
@@ -45,26 +44,25 @@ public class FunctionExecutor {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T execute(FunctionCall functionToCall) {
-        if (functionToCall == null || CommonUtil.isNullOrEmpty(functionToCall.getName())) {
+    public <T> T execute(FunctionCall functionCall) {
+        if (functionCall == null || CommonUtil.isNullOrEmpty(functionCall.getName())) {
             throw new SimpleUncheckedException("No function was entered or it does not has a name.", "", null);
         }
-        String functionName = functionToCall.getName();
+        String functionName = functionCall.getName();
         if (!mapFunctions.containsKey(functionName)) {
             throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName,
                     null);
         }
         try {
             var function = mapFunctions.get(functionName);
-            var object = JsonUtil.jsonToObject(functionToCall.getArguments(), function.getFunctionalClass());
+            var object = JsonUtil.jsonToObject(functionCall.getArguments(), function.getFunctionalClass());
             return (T) object.execute();
         } catch (RuntimeException e) {
             throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
         }
     }
 
-    public <R> List<R> executeAll(List<? extends AbstractToolCall> toolCalls,
-            BiFunction<String, String, R> toolOutputItem) {
+    public <R> List<R> executeAll(List<ToolCall> toolCalls, BiFunction<String, String, R> toolOutputItem) {
         List<R> toolOutputs = new ArrayList<>();
         for (var toolCall : toolCalls) {
             if (toolCall.getFunction() != null) {

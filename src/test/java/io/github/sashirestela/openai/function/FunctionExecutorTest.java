@@ -1,8 +1,7 @@
 package io.github.sashirestela.openai.function;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
-import io.github.sashirestela.openai.domain.chat.tool.ChatTool;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import io.github.sashirestela.openai.tool.Tool;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -31,7 +30,7 @@ class FunctionExecutorTest {
     void shouldReturnEmptyListWhenObjectWasNotInitialized() {
         var executor = new FunctionExecutor();
         var actualList = executor.getToolFunctions();
-        List<ChatTool> expectedList = Collections.emptyList();
+        List<Tool> expectedList = Collections.emptyList();
         assertEquals(expectedList, actualList);
     }
 
@@ -50,12 +49,12 @@ class FunctionExecutorTest {
         executor.enrollFunctions(functionList);
         var actualList = executor.getToolFunctions();
         var expectedList = functionList.stream()
-                .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+                .map(func -> Tool.function(func))
                 .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
-        assertEquals(expectedList.get(0).getFunction(), actualList.get(0).getFunction());
-        assertEquals(expectedList.get(1).getFunction(), actualList.get(1).getFunction());
+        assertEquals(expectedList.get(0).getFunction().toString(), actualList.get(0).getFunction().toString());
+        assertEquals(expectedList.get(1).getFunction().toString(), actualList.get(1).getFunction().toString());
     }
 
     @Test
@@ -65,12 +64,12 @@ class FunctionExecutorTest {
         executor.enrollFunction(functionList.get(1));
         var actualList = executor.getToolFunctions();
         var expectedList = functionList.stream()
-                .map(func -> new ChatTool(ChatToolType.FUNCTION, func))
+                .map(func -> Tool.function(func))
                 .collect(Collectors.toList());
         sortListFunction(actualList);
         sortListFunction(expectedList);
-        assertEquals(expectedList.get(0).getFunction(), actualList.get(0).getFunction());
-        assertEquals(expectedList.get(1).getFunction(), actualList.get(1).getFunction());
+        assertEquals(expectedList.get(0).getFunction().toString(), actualList.get(0).getFunction().toString());
+        assertEquals(expectedList.get(1).getFunction().toString(), actualList.get(1).getFunction().toString());
     }
 
     @Test
@@ -119,7 +118,7 @@ class FunctionExecutorTest {
         assertEquals(actualResult, expectedResult);
     }
 
-    private void sortListFunction(List<ChatTool> list) {
+    private void sortListFunction(List<Tool> list) {
         list.sort((o1, o2) -> o1.getFunction().getName().compareTo(o2.getFunction().getName()));
     }
 

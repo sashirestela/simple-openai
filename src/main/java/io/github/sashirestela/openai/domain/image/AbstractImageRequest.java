@@ -19,7 +19,7 @@ public abstract class AbstractImageRequest {
     @Range(min = 1, max = 10)
     protected Integer n;
 
-    protected ImageRespFmt responseFormat;
+    protected ImageResponseFormat responseFormat;
 
     protected Size size;
 

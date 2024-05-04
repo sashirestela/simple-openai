@@ -138,9 +138,7 @@ class SimpleOpenAIAzureTest {
                 .apiVersion("apiVersion")
                 .build();
         assertNotNull(openAI.chatCompletions());
-        assertNotNull(openAI.assistants());
         assertNotNull(openAI.files());
-        assertNotNull(openAI.threads());
     }
 
     @Test

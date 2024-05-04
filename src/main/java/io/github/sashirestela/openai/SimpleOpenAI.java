@@ -1,13 +1,5 @@
 package io.github.sashirestela.openai;
 
-import io.github.sashirestela.openai.OpenAIBeta2.Assistants;
-import io.github.sashirestela.openai.OpenAIBeta2.ThreadMessages;
-import io.github.sashirestela.openai.OpenAIBeta2.ThreadRunSteps;
-import io.github.sashirestela.openai.OpenAIBeta2.ThreadRuns;
-import io.github.sashirestela.openai.OpenAIBeta2.Threads;
-import io.github.sashirestela.openai.OpenAIBeta2.VectorStoreFileBatches;
-import io.github.sashirestela.openai.OpenAIBeta2.VectorStoreFiles;
-import io.github.sashirestela.openai.OpenAIBeta2.VectorStores;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
@@ -161,7 +153,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public Assistants assistants() {
+    public OpenAIBeta2.Assistants assistants() {
         if (assistantService == null) {
             assistantService = cleverClient.create(OpenAIBeta2.Assistants.class);
         }
@@ -169,7 +161,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public Threads threads() {
+    public OpenAIBeta2.Threads threads() {
         if (threadService == null) {
             threadService = cleverClient.create(OpenAIBeta2.Threads.class);
         }
@@ -177,7 +169,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public ThreadMessages threadMessages() {
+    public OpenAIBeta2.ThreadMessages threadMessages() {
         if (threadMessageService == null) {
             threadMessageService = cleverClient.create(OpenAIBeta2.ThreadMessages.class);
         }
@@ -185,7 +177,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public ThreadRuns threadRuns() {
+    public OpenAIBeta2.ThreadRuns threadRuns() {
         if (threadRunService == null) {
             threadRunService = cleverClient.create(OpenAIBeta2.ThreadRuns.class);
         }
@@ -193,7 +185,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public ThreadRunSteps threadRunSteps() {
+    public OpenAIBeta2.ThreadRunSteps threadRunSteps() {
         if (threadRunStepService == null) {
             threadRunStepService = cleverClient.create(OpenAIBeta2.ThreadRunSteps.class);
         }
@@ -201,7 +193,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public VectorStores vectorStores() {
+    public OpenAIBeta2.VectorStores vectorStores() {
         if (vectorStoreService == null) {
             vectorStoreService = cleverClient.create(OpenAIBeta2.VectorStores.class);
         }
@@ -209,7 +201,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public VectorStoreFiles vectorStoreFiles() {
+    public OpenAIBeta2.VectorStoreFiles vectorStoreFiles() {
         if (vectorStoreFileService == null) {
             vectorStoreFileService = cleverClient.create(OpenAIBeta2.VectorStoreFiles.class);
         }
@@ -217,7 +209,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
     }
 
     @Override
-    public VectorStoreFileBatches vectorStoreFileBatches() {
+    public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
         if (vectorStoreFileBatchService == null) {
             vectorStoreFileBatchService = cleverClient.create(OpenAIBeta2.VectorStoreFileBatches.class);
         }

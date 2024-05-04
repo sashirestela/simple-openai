@@ -1,8 +1,8 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.domain.ResponseFormat;
 import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.AssistantResponseFormat;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
 
 import java.util.Map;
@@ -33,7 +33,7 @@ public class AssistantV2Demo extends AbstractDemo {
         var assistantModifyRequest = AssistantModifyRequest.builder()
                 .metadata(Map.of("env", "test"))
                 .temperature(0.3)
-                .responseFormat(AssistantResponseFormat.TEXT)
+                .responseFormat(ResponseFormat.TEXT)
                 .build();
         var assistant = openAI.assistants().modify(assistantId, assistantModifyRequest).join();
         System.out.println(assistant);

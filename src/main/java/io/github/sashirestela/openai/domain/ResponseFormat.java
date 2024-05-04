@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.assistant;
+package io.github.sashirestela.openai.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AssistantResponseFormat {
+public class ResponseFormat {
 
-    public static final AssistantResponseFormat TEXT = new AssistantResponseFormat(ResponseFormat.TEXT);
-    public static final AssistantResponseFormat JSON_OBJECT = new AssistantResponseFormat(ResponseFormat.JSON_OBJECT);
+    public static final ResponseFormat TEXT = new ResponseFormat(ResponseFormatType.TEXT);
+    public static final ResponseFormat JSON_OBJECT = new ResponseFormat(ResponseFormatType.JSON_OBJECT);
 
-    private ResponseFormat type;
+    private ResponseFormatType type;
 
-    public enum ResponseFormat {
+    public enum ResponseFormatType {
 
         @JsonProperty("text")
         TEXT,

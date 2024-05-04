@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.tool.ToolType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -48,16 +49,16 @@ public class StepDetail {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ToolCallsStep extends StepDetail {
 
-        private List<ToolCall> toolCalls;
+        private List<StepToolCall> toolCalls;
 
         @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
         @JsonSubTypes({
-                @JsonSubTypes.Type(value = ToolCall.CodeInterpreterToolCall.class, name = "code_interpreter"),
-                @JsonSubTypes.Type(value = ToolCall.FileSearchToolCall.class, name = "file_search"),
-                @JsonSubTypes.Type(value = ToolCall.FunctionToolCall.class, name = "function")
+                @JsonSubTypes.Type(value = StepToolCall.CodeInterpreterToolCall.class, name = "code_interpreter"),
+                @JsonSubTypes.Type(value = StepToolCall.FileSearchToolCall.class, name = "file_search"),
+                @JsonSubTypes.Type(value = StepToolCall.FunctionToolCall.class, name = "function")
         })
         @Getter
-        public static class ToolCall {
+        public abstract static class StepToolCall {
 
             protected Integer index;
             protected String id;
@@ -67,7 +68,7 @@ public class StepDetail {
             @Getter
             @ToString
             @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-            public static class CodeInterpreterToolCall extends ToolCall {
+            public static class CodeInterpreterToolCall extends StepToolCall {
 
                 private CodeInterpreterTool codeInterpreter;
 
@@ -142,7 +143,7 @@ public class StepDetail {
             @Getter
             @ToString
             @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-            public static class FileSearchToolCall extends ToolCall {
+            public static class FileSearchToolCall extends StepToolCall {
 
                 private Map<String, String> fileSearch;
 
@@ -152,7 +153,7 @@ public class StepDetail {
             @Getter
             @ToString
             @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-            public static class FunctionToolCall extends ToolCall {
+            public static class FunctionToolCall extends StepToolCall {
 
                 private FunctionTool function;
 

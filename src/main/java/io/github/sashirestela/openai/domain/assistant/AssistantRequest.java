@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.domain.ResponseFormat;
+import io.github.sashirestela.openai.tool.Tool;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -35,7 +37,7 @@ public class AssistantRequest {
 
     @Singular
     @Size(max = 128)
-    private List<AssistantTool> tools;
+    private List<Tool> tools;
 
     private ToolResourceFull toolResources;
 
@@ -49,7 +51,7 @@ public class AssistantRequest {
     private Double topP;
 
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = AssistantResponseFormat.class)
+    @ObjectType(baseClass = ResponseFormat.class)
     private Object responseFormat;
 
 }

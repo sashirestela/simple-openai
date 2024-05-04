@@ -4,14 +4,14 @@ import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
-import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
-import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 
@@ -34,8 +34,8 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                 .build());
         chatRequest = ChatRequest.builder()
                 .model("N/A")
-                .message(new ChatMsgSystem("You are an expert in AI."))
-                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .message(SystemMessage.of("You are an expert in AI."))
+                .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
@@ -67,8 +67,8 @@ public class ChatAzureServiceDemo extends AbstractDemo {
                         .description("Run an alarm")
                         .functionalClass(RunAlarm.class)
                         .build());
-        var messages = new ArrayList<ChatMsg>();
-        messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
+        var messages = new ArrayList<ChatMessage>();
+        messages.add(UserMessage.of("What is the product of 123 and 456?"));
         chatRequest = ChatRequest.builder()
                 .model("N/A")
                 .messages(messages)
@@ -80,7 +80,7 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var chatToolCall = chatMessage.getToolCalls().get(0);
         var result = functionExecutor.execute(chatToolCall.getFunction());
         messages.add(chatMessage);
-        messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
+        messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
                 .model("N/A")
                 .messages(messages)
@@ -95,10 +95,10 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var chatRequest = ChatRequest.builder()
                 .model("N/A")
                 .messages(List.of(
-                        new ChatMsgUser(List.of(
-                                new ContentPartText(
+                        UserMessage.of(List.of(
+                                ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                new ContentPartImage(new ImageUrl(
+                                ContentPartImage.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
                 .maxTokens(500)
@@ -114,10 +114,10 @@ public class ChatAzureServiceDemo extends AbstractDemo {
         var chatRequest = ChatRequest.builder()
                 .model("N/A")
                 .messages(List.of(
-                        new ChatMsgUser(List.of(
-                                new ContentPartText(
+                        UserMessage.of(List.of(
+                                ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                new ContentPartImage(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                                ContentPartImage.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
@@ -132,7 +132,7 @@ public class ChatAzureServiceDemo extends AbstractDemo {
             String base64String = Base64.getEncoder().encodeToString(imageBytes);
             var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
             var prefix = "data:image/" + extension + ";base64,";
-            return new ImageUrl(prefix + base64String);
+            return ImageUrl.of(prefix + base64String);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

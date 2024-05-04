@@ -1,20 +1,24 @@
-package io.github.sashirestela.openai.domain.assistant;
+package io.github.sashirestela.openai.tool;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.sashirestela.slimvalidator.constraints.Required;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Getter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ToolChoice {
 
+    @Required
     private ToolType type;
+
+    @Required
     private FunctionName function;
 
     public static ToolChoice function(String name) {

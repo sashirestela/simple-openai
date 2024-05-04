@@ -2,16 +2,14 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.openai.domain.assistant.ThreadRun.RequiredAction.SubmitToolOutput.ThreadRunToolCall;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest.ToolOutput;
-import io.github.sashirestela.openai.domain.assistant.ToolType;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.function.FunctionCall;
 import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 import io.github.sashirestela.openai.function.Functional;
+import io.github.sashirestela.openai.tool.ToolCall;
+import io.github.sashirestela.openai.tool.ToolType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +30,20 @@ public class Demo {
                 .build());
         var functionExecutor = new FunctionExecutor(functionList);
 
-        List<ChatToolCall> chatToolCalls = List.of(
-                new ChatToolCall(0, "1a", ChatToolType.FUNCTION,
-                        new FunctionCall("getCurrentTemperature", "{\"location\": \"Lima, Peru\", \"unit\": \"C\"}")),
-                new ChatToolCall(1, "2b", ChatToolType.FUNCTION,
-                        new FunctionCall("getRainProbability", "{\"location\": \"Lima, Peru\"}")));
-        List<ChatMsgTool> chatToolOutputs = functionExecutor.executeAll(chatToolCalls,
-                (toolCallId, result) -> new ChatMsgTool(result, toolCallId));
+        List<ToolCall> chatToolCalls = List.of(
+                new ToolCall(0, "1a", ToolType.FUNCTION,
+                        new FunctionCall("CurrentTemperature", "{\"location\": \"Lima, Peru\", \"unit\": \"C\"}")),
+                new ToolCall(1, "2b", ToolType.FUNCTION,
+                        new FunctionCall("RainProbability", "{\"location\": \"Lima, Peru\"}")));
+        List<ToolMessage> chatToolOutputs = functionExecutor.executeAll(chatToolCalls,
+                (toolCallId, result) -> ToolMessage.of(result, toolCallId));
         chatToolOutputs.forEach(System.out::println);
 
-        List<ThreadRunToolCall> runToolCalls = List.of(
-                new ThreadRunToolCall("3c", ToolType.FUNCTION,
-                        new FunctionCall("getCurrentTemperature", "{\"location\": \"Lima, Peru\", \"unit\": \"C\"}")),
-                new ThreadRunToolCall("4d", ToolType.FUNCTION,
-                        new FunctionCall("getRainProbability", "{\"location\": \"Lima, Peru\"}")));
+        List<ToolCall> runToolCalls = List.of(
+                new ToolCall(null, "3c", ToolType.FUNCTION,
+                        new FunctionCall("CurrentTemperature", "{\"location\": \"Lima, Peru\", \"unit\": \"C\"}")),
+                new ToolCall(null, "4d", ToolType.FUNCTION,
+                        new FunctionCall("RainProbability", "{\"location\": \"Lima, Peru\"}")));
         List<ToolOutput> runToolOutputs = functionExecutor.executeAll(runToolCalls,
                 (toolCallId, result) -> ToolOutput.builder().toolCallId(toolCallId).output(result).build());
         runToolOutputs.forEach(System.out::println);

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
- * The base abstract class that all providers extend. The implmentation of services implemented by
+ * The base abstract class that all providers extend. The implementation of services implemented by
  * two or more providers goes here and if a provider does not implement a service implemented by
  * others, it must override it to thrown an Unsuported exception.
  */
@@ -142,43 +142,57 @@ public abstract class BaseSimpleOpenAI {
     }
 
     /**
-     * Generates an implementation of the Assistant interface to handle requests.
-     *
-     * @return An instance of the interface.
+     * Throw not implemented
      */
     public OpenAIBeta2.Assistants assistants() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
     /**
-     * Generates an implementation of the Threads interface to handle requests.
-     *
-     * @return An instance of the interface.
+     * Throw not implemented
      */
     public OpenAIBeta2.Threads threads() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.ThreadMessages threadMessages() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.ThreadRuns threadRuns() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.ThreadRunSteps threadRunSteps() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.VectorStores vectorStores() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.VectorStoreFiles vectorStoreFiles() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
+    /**
+     * Throw not implemented
+     */
     public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }

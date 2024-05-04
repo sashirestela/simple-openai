@@ -3,6 +3,7 @@ package io.github.sashirestela.openai.domain.assistant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.tool.ToolType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

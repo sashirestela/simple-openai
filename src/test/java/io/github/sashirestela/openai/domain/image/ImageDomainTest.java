@@ -35,7 +35,7 @@ class ImageDomainTest {
                 .prompt("A cartoon of a hummingbird that is flying around a flower.")
                 .n(2)
                 .size(Size.X1024)
-                .responseFormat(ImageRespFmt.URL)
+                .responseFormat(ImageResponseFormat.URL)
                 .model("dall-e-3")
                 .quality(Quality.STANDARD)
                 .style(Style.NATURAL)
@@ -54,7 +54,7 @@ class ImageDomainTest {
                 .prompt("A cartoon of a little cute cat playing with a ball in the grass.")
                 .n(1)
                 .size(Size.X256)
-                .responseFormat(ImageRespFmt.B64JSON)
+                .responseFormat(ImageResponseFormat.B64JSON)
                 .model("dall-e-2")
                 .user("test")
                 .build();
@@ -70,7 +70,7 @@ class ImageDomainTest {
                 .image(Paths.get("src/demo/resources/little_cat.png"))
                 .n(1)
                 .size(Size.X256)
-                .responseFormat(ImageRespFmt.B64JSON)
+                .responseFormat(ImageResponseFormat.B64JSON)
                 .model("dall-e-2")
                 .user("test")
                 .build();

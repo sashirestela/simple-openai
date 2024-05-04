@@ -4,12 +4,12 @@ import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Product;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.RunAlarm;
 import io.github.sashirestela.openai.demo.ChatServiceDemo.Weather;
+import io.github.sashirestela.openai.domain.chat.Chat;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.ChatResponse;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsg;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.function.FunctionDef;
 import io.github.sashirestela.openai.function.FunctionExecutor;
 
@@ -25,8 +25,8 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
         super(SimpleOpenAIAnyscale.builder().apiKey(apiKey).build());
         chatRequest = ChatRequest.builder()
                 .model(model)
-                .message(new ChatMsgSystem("You are an expert in AI."))
-                .message(new ChatMsgUser("Write a technical article about ChatGPT, no more than 100 words."))
+                .message(SystemMessage.of("You are an expert in AI."))
+                .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
@@ -36,7 +36,7 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
         var futureChat = openAI.chatCompletions().createStream(chatRequest);
         var chatResponse = futureChat.join();
         chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(ChatResponse::firstContent)
+                .map(Chat::firstContent)
                 .forEach(System.out::print);
         System.out.println();
     }
@@ -67,8 +67,8 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
                         .description("Run an alarm")
                         .functionalClass(RunAlarm.class)
                         .build());
-        var messages = new ArrayList<ChatMsg>();
-        messages.add(new ChatMsgUser("What is the product of 123 and 456?"));
+        var messages = new ArrayList<ChatMessage>();
+        messages.add(UserMessage.of("What is the product of 123 and 456?"));
         var chatRequest = ChatRequest.builder()
                 .model(MODEL)
                 .messages(messages)
@@ -80,7 +80,7 @@ public class ChatAnyscaleServiceDemo extends AbstractDemo {
         var chatToolCall = chatMessage.getToolCalls().get(0);
         var result = functionExecutor.execute(chatToolCall.getFunction());
         messages.add(chatMessage);
-        messages.add(new ChatMsgTool(result.toString(), chatToolCall.getId()));
+        messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
                 .model(MODEL)
                 .messages(messages)

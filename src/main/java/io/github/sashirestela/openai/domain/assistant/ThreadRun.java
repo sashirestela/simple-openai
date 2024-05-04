@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.domain.Usage;
-import io.github.sashirestela.openai.function.AbstractToolCall;
-import io.github.sashirestela.openai.function.FunctionCall;
+import io.github.sashirestela.openai.tool.ToolCall;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -96,23 +95,7 @@ public class ThreadRun {
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class SubmitToolOutput {
 
-            private List<ThreadRunToolCall> toolCalls;
-
-            @NoArgsConstructor
-            @Getter
-            @ToString
-            @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-            public static class ThreadRunToolCall extends AbstractToolCall {
-
-                private ToolType type;
-
-                public ThreadRunToolCall(String id, ToolType type, FunctionCall function) {
-                    this.id = id;
-                    this.type = type;
-                    this.function = function;
-                }
-
-            }
+            private List<ToolCall> toolCalls;
 
         }
 

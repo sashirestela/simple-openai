@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.domain.image.ImageEditsRequest;
 import io.github.sashirestela.openai.domain.image.ImageRequest;
-import io.github.sashirestela.openai.domain.image.ImageRespFmt;
+import io.github.sashirestela.openai.domain.image.ImageResponseFormat;
 import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.image.Size;
 
@@ -15,7 +15,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .prompt("A cartoon of a hummingbird that is flying around a flower.")
                 .n(2)
                 .size(Size.X256)
-                .responseFormat(ImageRespFmt.URL)
+                .responseFormat(ImageResponseFormat.URL)
                 .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().create(imageRequest);
@@ -29,7 +29,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .prompt("A cartoon of a little cute cat playing with a ball in the grass.")
                 .n(1)
                 .size(Size.X256)
-                .responseFormat(ImageRespFmt.URL)
+                .responseFormat(ImageResponseFormat.URL)
                 .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().createEdits(imageEditsRequest);
@@ -42,7 +42,7 @@ public class ImageServiceDemo extends AbstractDemo {
                 .image(Paths.get("src/demo/resources/little_cat.png"))
                 .n(1)
                 .size(Size.X256)
-                .responseFormat(ImageRespFmt.URL)
+                .responseFormat(ImageResponseFormat.URL)
                 .model("dall-e-2")
                 .build();
         var futureImage = openAI.images().createVariations(imageVariationsRequest);

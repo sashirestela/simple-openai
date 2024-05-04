@@ -1,8 +1,8 @@
 package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ class SimpleOpenAITest {
         repeat(NO_OF_REQUESTS, () -> {
             var chatRequest = ChatRequest.builder()
                     .model("model")
-                    .message(new ChatMsgUser("prompt"))
+                    .message(UserMessage.of("prompt"))
                     .build();
             chatService.create(chatRequest);
         });
@@ -144,8 +144,8 @@ class SimpleOpenAITest {
                 .build();
         var exception = assertThrows(ConstraintViolationException.class, () -> chatService.create(chatRequest));
         var expectedErrorMessage = "messages must have a value.\n"
-                + "toolChoice type must be or ChatToolChoiceType or ChatToolChoice.\n"
-                + "stop type must be or String or Collection<String> (max 4 items).";
+                + "stop type must be or String or Collection<String> (max 4 items).\n"
+                + "toolChoice type must be or ToolChoiceOption or ToolChoice.";
         assertEquals(expectedErrorMessage, exception.getMessage());
     }
 
