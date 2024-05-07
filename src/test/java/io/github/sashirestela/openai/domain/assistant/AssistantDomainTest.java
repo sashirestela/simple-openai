@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class AssistantDomainTest {
+class AssistantDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;
@@ -43,6 +43,14 @@ public class AssistantDomainTest {
                 .responseFormat("auto")
                 .build();
         var assistant = openAI.assistants().create(assistantRequest).join();
+        System.out.println(assistant);
+        assertNotNull(assistant);
+    }
+
+    @Test
+    void testCreateMinimalAssistant() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/assistants_create.json");
+        var assistant = openAI.assistants().create("gpt-4-turbo").join();
         System.out.println(assistant);
         assertNotNull(assistant);
     }

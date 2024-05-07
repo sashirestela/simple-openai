@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class VectorStoreFileDomainTest {
+class VectorStoreFileDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;

@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class ThreadDomainTest {
+class ThreadDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;
@@ -47,6 +47,14 @@ public class ThreadDomainTest {
                 .metadata(Map.of("env", "test"))
                 .build();
         var thread = openAI.threads().create(threadRequest).join();
+        System.out.println(thread);
+        assertNotNull(thread);
+    }
+
+    @Test
+    void testCreateMinimalThread() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads__create.json");
+        var thread = openAI.threads().create().join();
         System.out.println(thread);
         assertNotNull(thread);
     }

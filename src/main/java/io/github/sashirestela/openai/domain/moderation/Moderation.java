@@ -1,8 +1,6 @@
 package io.github.sashirestela.openai.domain.moderation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -21,7 +19,6 @@ public class Moderation {
     @NoArgsConstructor
     @Getter
     @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ModerationResult {
 
         private Boolean flagged;

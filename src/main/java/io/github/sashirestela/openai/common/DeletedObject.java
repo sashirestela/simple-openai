@@ -7,7 +7,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Deleted {
+public class DeletedObject {
 
     private String id;
     private String object;

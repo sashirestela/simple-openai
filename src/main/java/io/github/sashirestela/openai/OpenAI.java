@@ -8,7 +8,7 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.common.Deleted;
+import io.github.sashirestela.openai.common.DeletedObject;
 import io.github.sashirestela.openai.common.Generic;
 import io.github.sashirestela.openai.common.Page;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
@@ -460,7 +460,7 @@ public interface OpenAI {
          * @return Deletion status.
          */
         @DELETE("/{fileId}")
-        CompletableFuture<Deleted> delete(@Path("fileId") String fileId);
+        CompletableFuture<DeletedObject> delete(@Path("fileId") String fileId);
 
     }
 
@@ -693,7 +693,7 @@ public interface OpenAI {
          * @return Deletion status.
          */
         @DELETE("/{modelId}")
-        CompletableFuture<Deleted> delete(@Path("modelId") String modelId);
+        CompletableFuture<DeletedObject> delete(@Path("modelId") String modelId);
 
     }
 

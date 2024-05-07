@@ -157,6 +157,14 @@ class SimpleOpenAIAzureTest {
                 openAI::images,
                 openAI::models,
                 openAI::moderations,
+                openAI::assistants,
+                openAI::threads,
+                openAI::threadMessages,
+                openAI::threadRuns,
+                openAI::threadRunSteps,
+                openAI::vectorStores,
+                openAI::vectorStoreFiles,
+                openAI::vectorStoreFileBatches
         };
         for (Runnable calling : callingData) {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());

@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class ThreadMessageDomainTest {
+class ThreadMessageDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;

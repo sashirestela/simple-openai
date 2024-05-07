@@ -9,7 +9,7 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.common.Deleted;
+import io.github.sashirestela.openai.common.DeletedObject;
 import io.github.sashirestela.openai.common.Page;
 import io.github.sashirestela.openai.common.PageRequest;
 import io.github.sashirestela.openai.domain.assistant.Assistant;
@@ -126,7 +126,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{assistantId}")
-        CompletableFuture<Deleted> delete(@Path("assistantId") String assistantId);
+        CompletableFuture<DeletedObject> delete(@Path("assistantId") String assistantId);
 
     }
 
@@ -183,7 +183,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{threadId}")
-        CompletableFuture<Deleted> delete(@Path("threadId") String threadId);
+        CompletableFuture<DeletedObject> delete(@Path("threadId") String threadId);
 
     }
 
@@ -258,7 +258,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{messageId}")
-        CompletableFuture<Deleted> delete(@Path("threadId") String threadId, @Path("messageId") String messageId);
+        CompletableFuture<DeletedObject> delete(@Path("threadId") String threadId, @Path("messageId") String messageId);
 
     }
 
@@ -570,7 +570,7 @@ public interface OpenAIBeta2 {
     /**
      * Vector stores are used to store files for use by the file_search tool.
      * 
-     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores>Vector Stores</a>
+     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores">Vector Stores</a>
      */
     @Resource("/v1/vector_stores")
     @Header(name = "OpenAI-Beta", value = "assistants=v2")
@@ -652,14 +652,14 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{vectorStoreId}")
-        CompletableFuture<Deleted> delete(@Path("vectorStoreId") String vectorStoreId);
+        CompletableFuture<DeletedObject> delete(@Path("vectorStoreId") String vectorStoreId);
 
     }
 
     /**
      * Vector store files represent files inside a vector store.
      * 
-     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores-files>Vector Store
+     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores-files">Vector Store
      *      Files</a>
      */
     @Resource("/v1/vector_stores/{vectorStoreId}/files")
@@ -748,7 +748,7 @@ public interface OpenAIBeta2 {
          * @return Deletion status.
          */
         @DELETE("/{fileId}")
-        CompletableFuture<Deleted> delete(@Path("vectorStoreId") String vectorStoreId,
+        CompletableFuture<DeletedObject> delete(@Path("vectorStoreId") String vectorStoreId,
                 @Path("fileId") String fileId);
 
     }
@@ -756,7 +756,7 @@ public interface OpenAIBeta2 {
     /**
      * Vector store file batches represent operations to add multiple files to a vector store.
      * 
-     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores-file-batches>Vector
+     * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores-file-batches">Vector
      *      Store File Batches</a>
      */
     @Resource("/v1/vector_stores/{vectorStoreId}/file_batches")

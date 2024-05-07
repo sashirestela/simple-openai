@@ -38,6 +38,7 @@ class ThreadRunStepDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_runssteps_getone.json");
         var threadRunStep = openAI.threadRunSteps().getOne("threadId", "threadRunId", "threadRunStepId").join();
         System.out.println(threadRunStep);
+        assertNotNull(threadRunStep);
     }
 
 }

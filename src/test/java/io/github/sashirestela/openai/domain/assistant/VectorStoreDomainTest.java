@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class VectorStoreDomainTest {
+class VectorStoreDomainTest {
 
     static HttpClient httpClient;
     static SimpleOpenAI openAI;
@@ -46,6 +46,14 @@ public class VectorStoreDomainTest {
                 .metadata(Map.of("env", "test"))
                 .build();
         var vectorStore = openAI.vectorStores().createAndPoll(vectorStoreRequest);
+        System.out.println(vectorStore);
+        assertNotNull(vectorStore);
+    }
+
+    @Test
+    void testCreateMinimalVectorStore() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/vector_store__create.json");
+        var vectorStore = openAI.vectorStores().create().join();
         System.out.println(vectorStore);
         assertNotNull(vectorStore);
     }

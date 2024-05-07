@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.common.Deleted;
+import io.github.sashirestela.openai.common.DeletedObject;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 import io.github.sashirestela.openai.domain.file.FileResponse;
@@ -33,7 +33,7 @@ public class FileDemo extends AbstractDemo {
         } while (!fileResponse.getStatus().equals("processed"));
     }
 
-    public Deleted deleteFile(String fileId) {
+    public DeletedObject deleteFile(String fileId) {
         var futureFile = openAI.files().delete(fileId);
         return futureFile.join();
     }
