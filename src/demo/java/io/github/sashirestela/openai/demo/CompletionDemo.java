@@ -22,10 +22,22 @@ public class CompletionDemo extends AbstractDemo {
     public void demoCallCompletionStreaming() {
         var futureCompletion = openAI.completions().createStream(completionRequest);
         var completionResponse = futureCompletion.join();
-        completionResponse.filter(complResponse -> complResponse.firstText() != null)
-                .map(Completion::firstText)
-                .forEach(System.out::print);
+        completionResponse.forEach(CompletionDemo::processResponseChunk);
+        ;
         System.out.println();
+    }
+
+    private static void processResponseChunk(Completion responseChunk) {
+        var choices = responseChunk.getChoices();
+        if (choices.size() > 0) {
+            var delta = choices.get(0).getText();
+            System.out.print(delta);
+        }
+        var usage = responseChunk.getUsage();
+        if (usage != null) {
+            System.out.println("\n");
+            System.out.println(usage);
+        }
     }
 
     public void demoCallCompletionBlocking() {

@@ -11,6 +11,7 @@ import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.common.DeletedObject;
 import io.github.sashirestela.openai.common.Generic;
 import io.github.sashirestela.openai.common.Page;
+import io.github.sashirestela.openai.common.StreamOptions;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
 import io.github.sashirestela.openai.domain.audio.SpeechRequest;
@@ -331,7 +332,7 @@ public interface OpenAI {
          * @return Response is delivered as a continuous flow of tokens.
          */
         default CompletableFuture<Stream<Completion>> createStream(@Body CompletionRequest completionRequest) {
-            var request = completionRequest.withStream(Boolean.TRUE);
+            var request = completionRequest.withStream(Boolean.TRUE).withStreamOptions(StreamOptions.of(Boolean.TRUE));
             return createStreamPrimitive(request);
         }
 
@@ -736,6 +737,9 @@ public interface OpenAI {
 
     static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
         var updatedChatRequest = chatRequest.withStream(useStream);
+        if (useStream) {
+            updatedChatRequest = updatedChatRequest.withStreamOptions(StreamOptions.of(useStream));
+        }
         if (!isNullOrEmpty(chatRequest.getTools()) && chatRequest.getToolChoice() == null) {
             updatedChatRequest = updatedChatRequest.withToolChoice(ToolChoiceOption.AUTO);
         }

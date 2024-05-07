@@ -41,10 +41,7 @@ public class ChatDemo extends AbstractDemo {
     public void demoCallChatStreaming() {
         var futureChat = openAI.chatCompletions().createStream(chatRequest);
         var chatResponse = futureChat.join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(Chat::firstContent)
-                .forEach(System.out::print);
-        System.out.println();
+        chatResponse.forEach(ChatDemo::processResponseChunk);
     }
 
     public void demoCallChatBlocking() {
@@ -110,9 +107,7 @@ public class ChatDemo extends AbstractDemo {
                 .maxTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
+        chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
 
@@ -128,13 +123,11 @@ public class ChatDemo extends AbstractDemo {
                 .maxTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
+        chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
 
-    private static ImageUrl loadImageAsBase64(String imagePath) {
+    private ImageUrl loadImageAsBase64(String imagePath) {
         try {
             Path path = Paths.get(imagePath);
             byte[] imageBytes = Files.readAllBytes(path);
@@ -145,6 +138,21 @@ public class ChatDemo extends AbstractDemo {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static void processResponseChunk(Chat responseChunk) {
+        var choices = responseChunk.getChoices();
+        if (choices.size() > 0) {
+            var delta = choices.get(0).getMessage();
+            if (delta.getContent() != null) {
+                System.out.print(delta.getContent());
+            }
+        }
+        var usage = responseChunk.getUsage();
+        if (usage != null) {
+            System.out.println("\n");
+            System.out.println(usage);
         }
     }
 
