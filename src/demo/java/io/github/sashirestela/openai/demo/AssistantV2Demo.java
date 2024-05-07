@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.domain.ResponseFormat;
+import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;

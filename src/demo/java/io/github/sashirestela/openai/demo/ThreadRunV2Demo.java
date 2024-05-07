@@ -2,6 +2,9 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.common.function.FunctionDef;
+import io.github.sashirestela.openai.common.function.FunctionExecutor;
+import io.github.sashirestela.openai.common.function.Functional;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
 import io.github.sashirestela.openai.domain.assistant.FileAnnotation.FileCitationAnnotation;
@@ -22,9 +25,6 @@ import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearc
 import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
 import io.github.sashirestela.openai.domain.assistant.events.EventName;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
-import io.github.sashirestela.openai.function.FunctionDef;
-import io.github.sashirestela.openai.function.FunctionExecutor;
-import io.github.sashirestela.openai.function.Functional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class ThreadRunV2Demo extends AbstractDemo {
 
-    private FileServiceDemo fileDemo;
+    private FileDemo fileDemo;
     private String fileId;
     private String vectorStoreId;
     private FunctionExecutor functionExecutor;
@@ -42,7 +42,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
     private String threadRunId;
 
     private void prepareDemo() {
-        fileDemo = new FileServiceDemo();
+        fileDemo = new FileDemo();
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
@@ -228,24 +228,6 @@ public class ThreadRunV2Demo extends AbstractDemo {
                 }
             });
             System.out.println();
-
-        }
-    }
-
-    public void cancelThreadRun() {
-        var question = "Tell me about the origins of the soccer game";
-        System.out.println("Question: " + question);
-        var threadRunRequest = ThreadRunRequest.builder()
-                .assistantId(assistantId)
-                .additionalMessage(ThreadMessageRequest.builder()
-                        .role(ThreadMessageRole.USER)
-                        .content(question)
-                        .build())
-                .build();
-        var threadRun = openAI.threadRuns().create(threadId, threadRunRequest).join();
-        var cancelledThreadRun = openAI.threadRuns().cancel(threadId, threadRun.getId()).join();
-        if (cancelledThreadRun.getStatus().equals(RunStatus.CANCELLING)) {
-            System.out.println("The answer was cancelled.");
         }
     }
 
@@ -271,9 +253,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
         for (var fileAnnotation : textAnnotation.getAnnotations()) {
             if (fileAnnotation instanceof FileCitationAnnotation) {
                 var fileCitation = (FileCitationAnnotation) fileAnnotation;
-                answer = answer.substring(0, fileCitation.getStartIndex())
-                        + " [" + refNumber++ + "]"
-                        + answer.substring(fileCitation.getEndIndex());
+                answer = answer.replaceFirst(fileCitation.getText(), " [" + refNumber++ + "]");
             }
         }
         System.out.println("Answer: " + answer);
@@ -313,6 +293,23 @@ public class ThreadRunV2Demo extends AbstractDemo {
         });
         System.out.println();
         openAI.threads().delete(newThreadId).join();
+    }
+
+    public void cancelThreadRun() {
+        var question = "Tell me about the origins of the soccer game";
+        System.out.println("Question: " + question);
+        var threadRunRequest = ThreadRunRequest.builder()
+                .assistantId(assistantId)
+                .additionalMessage(ThreadMessageRequest.builder()
+                        .role(ThreadMessageRole.USER)
+                        .content(question)
+                        .build())
+                .build();
+        var threadRun = openAI.threadRuns().create(threadId, threadRunRequest).join();
+        var cancelledThreadRun = openAI.threadRuns().cancel(threadId, threadRun.getId()).join();
+        if (cancelledThreadRun.getStatus().equals(RunStatus.CANCELLING)) {
+            System.out.println("The answer was cancelled.");
+        }
     }
 
     public void modifyThreadRun() {

@@ -1,0 +1,527 @@
+event: thread.created
+data: {"id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","object":"thread","created_at":1714853375,"metadata":{},"tool_resources":{"code_interpreter":{"file_ids":[]}}}
+
+event: thread.run.created
+data: {"id":"run_52tHMSE6i1HsqrHXPYYSmSJG","object":"thread.run","created_at":1714853375,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","status":"queued","started_at":null,"expires_at":1714853975,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.queued
+data: {"id":"run_52tHMSE6i1HsqrHXPYYSmSJG","object":"thread.run","created_at":1714853375,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","status":"queued","started_at":null,"expires_at":1714853975,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.in_progress
+data: {"id":"run_52tHMSE6i1HsqrHXPYYSmSJG","object":"thread.run","created_at":1714853375,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","status":"in_progress","started_at":1714853375,"expires_at":1714853975,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.step.created
+data: {"id":"step_lXgWrHJ0ERIM4VQW0QjIkrG4","object":"thread.run.step","created_at":1714853376,"run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853975,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_lXgWrHJ0ERIM4VQW0QjIkrG4","object":"thread.run.step","created_at":1714853376,"run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853975,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message","created_at":1714853376,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message","created_at":1714853376,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Mount","annotations":[]}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Everest"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" is"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Earth"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"'s"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" highest"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" mountain"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" above"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" sea"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" level"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" located"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" in"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Mah"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"al"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ang"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ur"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Himal"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" sub"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"-range"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Himal"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ayas"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" The"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" international"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" border"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" between"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Nepal"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Tibet"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Autonomous"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Region"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" China"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" runs"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" across"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" its"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" summit"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" point"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Its"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" elevation"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" officially"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" recognized"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" by"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" China"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Nepal"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" is"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" "}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"8"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"848"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"86"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" meters"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" ("}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"29"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"031"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"7"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" feet"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":")."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" It"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" was"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" first"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" asc"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ended"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" on"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" May"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" "}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"29"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" "}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"195"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"3"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" by"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Sir"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Edmund"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Hillary"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" from"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" New"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Zealand"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" T"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"enz"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ing"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" N"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"org"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ay"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" a"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Sher"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"pa"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Nepal"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" through"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" South"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Col"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Route"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":".\n\n"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"Mount"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Everest"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" attracts"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" many"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" climbers"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" including"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" highly"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" experienced"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" mount"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"aine"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ers"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" as"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" well"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" as"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" capable"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" climbers"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" willing"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" to"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" hire"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" professional"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" guides"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Due"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" to"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" its"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" extreme"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" height"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" mountain"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" poses"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" severe"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" challenges"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" such"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" as"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" altitude"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" sickness"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" weather"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" wind"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" significant"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" physical"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" demands"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" placed"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" on"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" body"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.completed
+data: {"id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj","object":"thread.message","created_at":1714853376,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1714853381,"role":"assistant","content":[{"type":"text","text":{"value":"Mount Everest is the Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas. The international border between Nepal and the Tibet Autonomous Region of China runs across its summit point. Its elevation, officially recognized by China and Nepal, is 8,848.86 meters (29,031.7 feet). It was first ascended on May 29, 1953, by Sir Edmund Hillary from New Zealand and Tenzing Norgay, a Sherpa of Nepal, through the South Col Route.\n\nMount Everest attracts many climbers including highly experienced mountaineers as well as capable climbers willing to hire professional guides. Due to its extreme height, the mountain poses severe challenges such as altitude sickness, weather, wind, and the significant physical demands placed on the body.","annotations":[]}}],"attachments":[],"metadata":{}}
+
+event: thread.run.step.completed
+data: {"id":"step_lXgWrHJ0ERIM4VQW0QjIkrG4","object":"thread.run.step","created_at":1714853376,"run_id":"run_52tHMSE6i1HsqrHXPYYSmSJG","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1714853381,"expires_at":1714853975,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_HWUh1Wmyd1bK2CMgZ98vyyZj"}},"usage":{"prompt_tokens":957,"completion_tokens":166,"total_tokens":1123}}
+
+event: thread.run.completed
+data: {"id":"run_52tHMSE6i1HsqrHXPYYSmSJG","object":"thread.run","created_at":1714853375,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_ZBbf7KAjtlMu5V7yULv3TdTy","status":"completed","started_at":1714853375,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1714853381,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":957,"completion_tokens":166,"total_tokens":1123},"response_format":"auto","tool_choice":"auto"}
+
+event: done
+data: [DONE]

@@ -8,9 +8,10 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.domain.Deleted;
-import io.github.sashirestela.openai.domain.Generic;
-import io.github.sashirestela.openai.domain.Page;
+import io.github.sashirestela.openai.common.Deleted;
+import io.github.sashirestela.openai.common.Generic;
+import io.github.sashirestela.openai.common.Page;
+import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
 import io.github.sashirestela.openai.domain.audio.SpeechRequest;
 import io.github.sashirestela.openai.domain.audio.Transcription;
@@ -40,7 +41,6 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
-import io.github.sashirestela.openai.tool.ToolChoiceOption;
 
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -77,7 +77,51 @@ public interface OpenAI {
         CompletableFuture<InputStream> speak(@Body SpeechRequest speechRequest);
 
         /**
-         * Transcribes audio into the input language. Response as object.
+         * Transcribes audio into the input language as object (don't call it directly).
+         * 
+         * @param audioRequest Its 'responseFormat' attribute should be: json, verbose_json. Includes the
+         *                     audio file.
+         * @return Transcription as an object.
+         */
+        @Multipart
+        @POST("/transcriptions")
+        CompletableFuture<Transcription> transcribePrimitive(@Body TranscriptionRequest audioRequest);
+
+        /**
+         * Translates audio into English as object (don't call it directly).
+         * 
+         * @param audioRequest Its 'responseFormat' attribute should be: json, verbose_json. Includes the
+         *                     audio file.
+         * @return Translation as an object.
+         */
+        @Multipart
+        @POST("/translations")
+        CompletableFuture<Transcription> translatePrimitive(@Body TranslationRequest audioRequest);
+
+        /**
+         * Transcribes audio into the input language as plain text (don't call it directly).
+         * 
+         * @param audioRequest Its 'responseFormat' attribute should be: text, srt, vtt. Includes the audio
+         *                     file.
+         * @return Transcription as plain text.
+         */
+        @Multipart
+        @POST("/transcriptions")
+        CompletableFuture<String> transcribePlainPrimitive(@Body TranscriptionRequest audioRequest);
+
+        /**
+         * Translates audio into English as plain text (don't call it directly).
+         * 
+         * @param audioRequest Its 'responseFormat' attribute should be: text, srt, vtt. Includes the audio
+         *                     file.
+         * @return Translation as plain text.
+         */
+        @Multipart
+        @POST("/translations")
+        CompletableFuture<String> translatePlainPrimitive(@Body TranslationRequest audioRequest);
+
+        /**
+         * Transcribes audio into the input language as object.
          * 
          * @param audioRequest Its 'responseFormat' attribute should be: json, verbose_json. Includes the
          *                     audio file.
@@ -87,15 +131,11 @@ public interface OpenAI {
             var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.JSON,
                     "transcribe");
             var request = audioRequest.withResponseFormat(responseFormat);
-            return transcribeRoot(request);
+            return transcribePrimitive(request);
         }
 
-        @Multipart
-        @POST("/transcriptions")
-        CompletableFuture<Transcription> transcribeRoot(@Body TranscriptionRequest audioRequest);
-
         /**
-         * Translates audio into English. Response as object.
+         * Translates audio into English as object.
          * 
          * @param audioRequest Its 'responseFormat' attribute should be: json, verbose_json. Includes the
          *                     audio file.
@@ -105,15 +145,11 @@ public interface OpenAI {
             var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.JSON,
                     "translate");
             var request = audioRequest.withResponseFormat(responseFormat);
-            return translateRoot(request);
+            return translatePrimitive(request);
         }
 
-        @Multipart
-        @POST("/translations")
-        CompletableFuture<Transcription> translateRoot(@Body TranslationRequest audioRequest);
-
         /**
-         * Transcribes audio into the input language. Response as plain text.
+         * Transcribes audio into the input language as plain text.
          * 
          * @param audioRequest Its 'responseFormat' attribute should be: text, srt, vtt. Includes the audio
          *                     file.
@@ -123,15 +159,11 @@ public interface OpenAI {
             var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.TEXT,
                     "transcribe");
             var request = audioRequest.withResponseFormat(responseFormat);
-            return transcribePlainRoot(request);
+            return transcribePlainPrimitive(request);
         }
 
-        @Multipart
-        @POST("/transcriptions")
-        CompletableFuture<String> transcribePlainRoot(@Body TranscriptionRequest audioRequest);
-
         /**
-         * Translates audio into English. Response as plain text.
+         * Translates audio into English as plain text.
          * 
          * @param audioRequest Its 'responseFormat' attribute should be: text, srt, vtt. Includes the audio
          *                     file.
@@ -141,12 +173,8 @@ public interface OpenAI {
             var responseFormat = getResponseFormat(audioRequest.getResponseFormat(), AudioResponseFormat.TEXT,
                     "translate");
             var request = audioRequest.withResponseFormat(responseFormat);
-            return translatePlainRoot(request);
+            return translatePlainPrimitive(request);
         }
-
-        @Multipart
-        @POST("/translations")
-        CompletableFuture<String> translatePlainRoot(@Body TranslationRequest audioRequest);
 
     }
 
@@ -210,7 +238,26 @@ public interface OpenAI {
     interface ChatCompletions {
 
         /**
-         * Creates a model response for the given chat conversation. Blocking mode.
+         * Creates a model response for the given chat conversation without streaming (don't call it
+         * directly).
+         * 
+         * @param chatRequest Includes a list of messages comprising the conversation.
+         * @return Response is delivered as a full text when is ready.
+         */
+        @POST
+        CompletableFuture<Chat> createPrimitive(@Body ChatRequest chatRequest);
+
+        /**
+         * Creates a model response for the given chat conversation with streaming (don't call it directly).
+         * 
+         * @param chatRequest Includes a list of messages comprising the conversation.
+         * @return Response is delivered as a continuous stream of tokens.
+         */
+        @POST
+        CompletableFuture<Stream<Chat>> createStreamPrimitive(@Body ChatRequest chatRequest);
+
+        /**
+         * Creates a model response for the given chat conversation without streaming.
          * 
          * @param chatRequest Includes a list of messages comprising the conversation. Its 'stream'
          *                    attribute is setted to false automatically.
@@ -218,26 +265,20 @@ public interface OpenAI {
          */
         default CompletableFuture<Chat> create(@Body ChatRequest chatRequest) {
             var request = updateRequest(chatRequest, Boolean.FALSE);
-            return createRoot(request);
+            return createPrimitive(request);
         }
 
-        @POST
-        CompletableFuture<Chat> createRoot(@Body ChatRequest chatRequest);
-
         /**
-         * Creates a model response for the given chat conversation. Streaming Mode.
+         * Creates a model response for the given chat conversation with streaming.
          * 
          * @param chatRequest Includes a list of messages comprising the conversation. Its 'stream'
          *                    attribute is setted to true automatically.
-         * @return Response is delivered as a continues flow of tokens.
+         * @return Response is delivered as a continuous stream of tokens.
          */
         default CompletableFuture<Stream<Chat>> createStream(@Body ChatRequest chatRequest) {
             var request = updateRequest(chatRequest, Boolean.TRUE);
-            return createStreamRoot(request);
+            return createStreamPrimitive(request);
         }
-
-        @POST
-        CompletableFuture<Stream<Chat>> createStreamRoot(@Body ChatRequest chatRequest);
 
     }
 
@@ -251,7 +292,27 @@ public interface OpenAI {
     interface Completions {
 
         /**
-         * Creates a completion for the provided prompt and parameters. Blocking mode.
+         * Creates a completion for the provided prompt and parameters without streaming (don't call it
+         * directly).
+         * 
+         * @param completionRequest Includes the prompt(s) to generate completions for.
+         * @return Response is delivered as a full text when is ready.
+         */
+        @POST
+        CompletableFuture<Completion> createPrimitive(@Body CompletionRequest completionRequest);
+
+        /**
+         * Creates a completion for the provided prompt and parameters with streaming (don't call it
+         * directly).
+         * 
+         * @param completionRequest Includes the prompt(s) to generate completions for.
+         * @return Response is delivered as a continuous flow of tokens.
+         */
+        @POST
+        CompletableFuture<Stream<Completion>> createStreamPrimitive(@Body CompletionRequest completionRequest);
+
+        /**
+         * Creates a completion for the provided prompt and parameters without streaming.
          * 
          * @param completionRequest Includes the prompt(s) to generate completions for. Its 'stream'
          *                          attribute is setted to false automatically.
@@ -259,14 +320,11 @@ public interface OpenAI {
          */
         default CompletableFuture<Completion> create(@Body CompletionRequest completionRequest) {
             var request = completionRequest.withStream(Boolean.FALSE);
-            return createRoot(request);
+            return createPrimitive(request);
         }
 
-        @POST
-        CompletableFuture<Completion> createRoot(@Body CompletionRequest completionRequest);
-
         /**
-         * Creates a completion for the provided prompt and parameters. Streaming mode.
+         * Creates a completion for the provided prompt and parameters with streaming.
          * 
          * @param completionRequest Includes the prompt(s) to generate completions for. Its 'stream'
          *                          attribute is setted to true automatically.
@@ -274,11 +332,8 @@ public interface OpenAI {
          */
         default CompletableFuture<Stream<Completion>> createStream(@Body CompletionRequest completionRequest) {
             var request = completionRequest.withStream(Boolean.TRUE);
-            return createStreamRoot(request);
+            return createStreamPrimitive(request);
         }
-
-        @POST
-        CompletableFuture<Stream<Completion>> createStreamRoot(@Body CompletionRequest completionRequest);
 
     }
 
@@ -292,6 +347,24 @@ public interface OpenAI {
     interface Embeddings {
 
         /**
+         * Creates an embedding vector representing the input text (don't call it directly).
+         * 
+         * @param embeddingRequest The input text to embed and the model to use.
+         * @return Represents an embedding vector in array of float format.
+         */
+        @POST
+        CompletableFuture<Embedding<EmbeddingFloat>> createPrimitive(@Body EmbeddingRequest embeddingRequest);
+
+        /**
+         * Creates an embedding vector representing the input text (don't call it directly).
+         * 
+         * @param embeddingRequest The input text to embed and the model to use.
+         * @return Represents an embedding vector in base64 format.
+         */
+        @POST
+        CompletableFuture<Embedding<EmbeddingBase64>> createBase64Primitive(@Body EmbeddingRequest embeddingRequest);
+
+        /**
          * Creates an embedding vector representing the input text.
          * 
          * @param embeddingRequest The input text to embed and the model to use.
@@ -299,11 +372,8 @@ public interface OpenAI {
          */
         default CompletableFuture<Embedding<EmbeddingFloat>> create(@Body EmbeddingRequest embeddingRequest) {
             var request = embeddingRequest.withEncodingFormat(EncodingFormat.FLOAT);
-            return createRoot(request);
+            return createPrimitive(request);
         }
-
-        @POST
-        CompletableFuture<Embedding<EmbeddingFloat>> createRoot(@Body EmbeddingRequest embeddingRequest);
 
         /**
          * Creates an embedding vector representing the input text.
@@ -313,11 +383,8 @@ public interface OpenAI {
          */
         default CompletableFuture<Embedding<EmbeddingBase64>> createBase64(@Body EmbeddingRequest embeddingRequest) {
             var request = embeddingRequest.withEncodingFormat(EncodingFormat.BASE64);
-            return createBase64Root(request);
+            return createBase64Primitive(request);
         }
-
-        @POST
-        CompletableFuture<Embedding<EmbeddingBase64>> createBase64Root(@Body EmbeddingRequest embeddingRequest);
 
     }
 
@@ -341,17 +408,23 @@ public interface OpenAI {
         CompletableFuture<FileResponse> create(@Body FileRequest fileRequest);
 
         /**
+         * Returns a Generic of files that belong to the user's organization (don't call it directly).
+         * 
+         * @param purpose Only return files with the given purpose.
+         * @return Generic object of files.
+         */
+        @GET
+        CompletableFuture<Generic<FileResponse>> getListPrimitive(@Query("purpose") String purpose);
+
+        /**
          * Returns a list of files that belong to the user's organization.
          * 
          * @param purpose Only return files with the given purpose.
          * @return List of files.
          */
         default CompletableFuture<List<FileResponse>> getList(String purpose) {
-            return getListRoot(purpose).thenApply(Generic::getData);
+            return getListPrimitive(purpose).thenApply(Generic::getData);
         }
-
-        @GET
-        CompletableFuture<Generic<FileResponse>> getListRoot(@Query("purpose") String purpose);
 
         /**
          * Returns information about a specific file.
@@ -411,6 +484,17 @@ public interface OpenAI {
         CompletableFuture<FineTuning> create(@Body FineTuningRequest fineTuningRequest);
 
         /**
+         * Generic of your organization's fine-tuning jobs (don't call it directly).
+         * 
+         * @param limit Number of fine-tuning jobs to retrieve.
+         * @param after Identifier for the last job from the previous pagination request.
+         * @return Generic object of fine-tunings.
+         */
+        @GET
+        CompletableFuture<Generic<FineTuning>> getListPrimitive(@Query("limit") Integer limit,
+                @Query("after") String after);
+
+        /**
          * List your organization's fine-tuning jobs.
          * 
          * @param limit Number of fine-tuning jobs to retrieve.
@@ -418,12 +502,8 @@ public interface OpenAI {
          * @return A list of paginated fine-tuning job objects.
          */
         default CompletableFuture<List<FineTuning>> getList(Integer limit, String after) {
-            return getListRoot(limit, after).thenApply(Generic::getData);
+            return getListPrimitive(limit, after).thenApply(Generic::getData);
         }
-
-        @GET
-        CompletableFuture<Generic<FineTuning>> getListRoot(@Query("limit") Integer limit,
-                @Query("after") String after);
 
         /**
          * Get info about a fine-tuning job.
@@ -435,6 +515,18 @@ public interface OpenAI {
         CompletableFuture<FineTuning> getOne(@Path("fineTuningId") String fineTuningId);
 
         /**
+         * Get status updates for a fine-tuning job as Generic object (don't call it directly).
+         * 
+         * @param fineTuningId The id of the fine-tuning job to get events for.
+         * @param limit        Number of fine-tuning jobs to retrieve.
+         * @param after        Identifier for the last job from the previous pagination request.
+         * @return Generic of fine-tuning event object.
+         */
+        @GET("/{fineTuningId}/events")
+        CompletableFuture<Generic<FineTuningEvent>> getEventsPrimitive(@Path("fineTuningId") String fineTuningId,
+                @Query("limit") Integer limit, @Query("after") String after);
+
+        /**
          * Get status updates for a fine-tuning job.
          * 
          * @param fineTuningId The id of the fine-tuning job to get events for.
@@ -443,11 +535,20 @@ public interface OpenAI {
          * @return A list of fine-tuning event objects.
          */
         default CompletableFuture<List<FineTuningEvent>> getEvents(String fineTuningId, Integer limit, String after) {
-            return getEventsRoot(fineTuningId, limit, after).thenApply(Generic::getData);
+            return getEventsPrimitive(fineTuningId, limit, after).thenApply(Generic::getData);
         }
 
-        @GET("/{fineTuningId}/events")
-        CompletableFuture<Generic<FineTuningEvent>> getEventsRoot(@Path("fineTuningId") String fineTuningId,
+        /**
+         * Generic of checkpoints for a fine-tuning job (don't call it directly).
+         * 
+         * @param fineTuningId The id of the fine-tuning job to get checkpoints for.
+         * @param limit        Number of fine-tuning jobs to retrieve.
+         * @param after        Identifier for the last job from the previous pagination request.
+         * @return Generic of fine-tuning checkpoint object.
+         */
+        @GET("/{fineTuningId}/checkpoints")
+        CompletableFuture<Generic<FineTuningCheckpoint>> getCheckpointsPrimitive(
+                @Path("fineTuningId") String fineTuningId,
                 @Query("limit") Integer limit, @Query("after") String after);
 
         /**
@@ -460,12 +561,8 @@ public interface OpenAI {
          */
         default CompletableFuture<List<FineTuningCheckpoint>> getCheckpoints(String fineTuningId, Integer limit,
                 String after) {
-            return getCheckpointsRoot(fineTuningId, limit, after).thenApply(Generic::getData);
+            return getCheckpointsPrimitive(fineTuningId, limit, after).thenApply(Generic::getData);
         }
-
-        @GET("/{fineTuningId}/checkpoints")
-        CompletableFuture<Generic<FineTuningCheckpoint>> getCheckpointsRoot(@Path("fineTuningId") String fineTuningId,
-                @Query("limit") Integer limit, @Query("after") String after);
 
         /**
          * Immediately cancel a fine-tune job.
@@ -487,6 +584,38 @@ public interface OpenAI {
     interface Images {
 
         /**
+         * Creates a Genric object of image given a prompt (don't call it directly).
+         * 
+         * @param imageRequest A text description of the desired image(s) and other parameters such as
+         *                     number, size or responseFormat.
+         * @return Returns a Generic of image objects (the url or the binary content).
+         */
+        @POST("/generations")
+        CompletableFuture<Generic<Image>> createPrimitive(@Body ImageRequest imageRequest);
+
+        /**
+         * Creates a Generic of edited or extended image given an original image and a prompt (don't call it
+         * directly).
+         * 
+         * @param imageRequest Includes the image file to edit and a text description of the desired
+         *                     image(s).
+         * @return Returns a Generic of image objects (the url or the binary content).
+         */
+        @Multipart
+        @POST("/edits")
+        CompletableFuture<Generic<Image>> createEditsPrimitive(@Body ImageEditsRequest imageRequest);
+
+        /**
+         * Creates a Generic of variation of a given image (don't call it directly).
+         * 
+         * @param imageRequest Includes the image file to use as the basis for the variation(s).
+         * @return Returns a Generic of image objects (the url or the binary content).
+         */
+        @Multipart
+        @POST("/variations")
+        CompletableFuture<Generic<Image>> createVariationsPrimitive(@Body ImageVariationsRequest imageRequest);
+
+        /**
          * Creates an image given a prompt.
          * 
          * @param imageRequest A text description of the desired image(s) and other parameters such as
@@ -494,11 +623,8 @@ public interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<Image>> create(ImageRequest imageRequest) {
-            return createRoot(imageRequest).thenApply(Generic::getData);
+            return createPrimitive(imageRequest).thenApply(Generic::getData);
         }
-
-        @POST("/generations")
-        CompletableFuture<Generic<Image>> createRoot(@Body ImageRequest imageRequest);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
@@ -508,12 +634,8 @@ public interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<Image>> createEdits(ImageEditsRequest imageRequest) {
-            return createEditsRoot(imageRequest).thenApply(Generic::getData);
+            return createEditsPrimitive(imageRequest).thenApply(Generic::getData);
         }
-
-        @Multipart
-        @POST("/edits")
-        CompletableFuture<Generic<Image>> createEditsRoot(@Body ImageEditsRequest imageRequest);
 
         /**
          * Creates a variation of a given image.
@@ -522,12 +644,8 @@ public interface OpenAI {
          * @return Returns a list of image objects (the url or the binary content).
          */
         default CompletableFuture<List<Image>> createVariations(ImageVariationsRequest imageRequest) {
-            return createVariationsRoot(imageRequest).thenApply(Generic::getData);
+            return createVariationsPrimitive(imageRequest).thenApply(Generic::getData);
         }
-
-        @Multipart
-        @POST("/variations")
-        CompletableFuture<Generic<Image>> createVariationsRoot(@Body ImageVariationsRequest imageRequest);
 
     }
 
@@ -540,17 +658,23 @@ public interface OpenAI {
     interface Models {
 
         /**
+         * Generic of the currently available models, and provides basic information about each one such as
+         * the owner and availability (don't call it directly).
+         * 
+         * @return A Generic of model objects.
+         */
+        @GET
+        CompletableFuture<Generic<Model>> getListPrimitive();
+
+        /**
          * Lists the currently available models, and provides basic information about each one such as the
          * owner and availability.
          * 
          * @return A list of model objects.
          */
         default CompletableFuture<List<Model>> getList() {
-            return getListRoot().thenApply(Generic::getData);
+            return getListPrimitive().thenApply(Generic::getData);
         }
-
-        @GET
-        CompletableFuture<Generic<Model>> getListRoot();
 
         /**
          * Retrieves a model instance, providing basic information about the model such as the owner and

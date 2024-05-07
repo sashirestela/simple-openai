@@ -4,12 +4,12 @@ import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 public class VectorStoreFileV2Demo extends AbstractDemo {
 
-    private FileServiceDemo fileDemo;
+    private FileDemo fileDemo;
     private String fileId;
     private String vectorStoreId;
 
     public VectorStoreFileV2Demo() {
-        fileDemo = new FileServiceDemo();
+        fileDemo = new FileDemo();
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 

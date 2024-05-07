@@ -9,9 +9,9 @@ import io.github.sashirestela.cleverclient.annotation.POST;
 import io.github.sashirestela.cleverclient.annotation.Path;
 import io.github.sashirestela.cleverclient.annotation.Query;
 import io.github.sashirestela.cleverclient.annotation.Resource;
-import io.github.sashirestela.openai.domain.Deleted;
-import io.github.sashirestela.openai.domain.Page;
-import io.github.sashirestela.openai.domain.PageRequest;
+import io.github.sashirestela.openai.common.Deleted;
+import io.github.sashirestela.openai.common.Page;
+import io.github.sashirestela.openai.common.PageRequest;
 import io.github.sashirestela.openai.domain.assistant.Assistant;
 import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
@@ -249,6 +249,16 @@ public interface OpenAIBeta2 {
         @POST("/{messageId}")
         CompletableFuture<ThreadMessage> modify(@Path("threadId") String threadId, @Path("messageId") String messageId,
                 @Body ThreadMessageModifyRequest request);
+
+        /**
+         * Deletes a message.
+         * 
+         * @param threadId  The ID of the thread to which this message belongs.
+         * @param messageId The ID of the message to delete.
+         * @return Deletion status.
+         */
+        @DELETE("/{messageId}")
+        CompletableFuture<Deleted> delete(@Path("threadId") String threadId, @Path("messageId") String messageId);
 
     }
 

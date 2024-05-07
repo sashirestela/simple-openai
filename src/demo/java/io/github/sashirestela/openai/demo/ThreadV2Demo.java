@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class ThreadV2Demo extends AbstractDemo {
 
-    private FileServiceDemo fileDemo;
+    private FileDemo fileDemo;
     private String fileId;
     private String threadId;
 
     public ThreadV2Demo() {
-        fileDemo = new FileServiceDemo();
+        fileDemo = new FileDemo();
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
     }

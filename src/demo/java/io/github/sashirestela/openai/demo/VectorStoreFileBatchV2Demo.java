@@ -7,14 +7,14 @@ import java.util.List;
 
 public class VectorStoreFileBatchV2Demo extends AbstractDemo {
 
-    private FileServiceDemo fileDemo;
+    private FileDemo fileDemo;
     private List<String> fileIdList;
     private String vectorStoreId;
     private String vectorStoreFileBatchId;
 
     public VectorStoreFileBatchV2Demo() {
         fileIdList = new ArrayList<>();
-        fileDemo = new FileServiceDemo();
+        fileDemo = new FileDemo();
         for (int i = 0; i < 2; i++) {
             var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
             fileIdList.add(file.getId());

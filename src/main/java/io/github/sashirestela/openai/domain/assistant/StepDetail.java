@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.tool.ToolType;
+import io.github.sashirestela.openai.common.tool.ToolType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

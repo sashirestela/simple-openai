@@ -1,5 +1,7 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.common.function.FunctionDef;
+import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.CurrentTemperature;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.RainProbability;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
@@ -8,8 +10,6 @@ import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextC
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
-import io.github.sashirestela.openai.function.FunctionDef;
-import io.github.sashirestela.openai.function.FunctionExecutor;
 
 import java.util.ArrayList;
 import java.util.List;

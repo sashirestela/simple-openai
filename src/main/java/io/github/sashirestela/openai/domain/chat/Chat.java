@@ -3,7 +3,7 @@ package io.github.sashirestela.openai.domain.chat;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.domain.Usage;
+import io.github.sashirestela.openai.common.Usage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

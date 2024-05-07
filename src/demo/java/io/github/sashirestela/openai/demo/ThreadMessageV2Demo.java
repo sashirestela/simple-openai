@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class ThreadMessageV2Demo extends AbstractDemo {
 
-    private FileServiceDemo fileDemo;
+    private FileDemo fileDemo;
     private String fileId;
     private String threadId;
     private String threadMessageId;
 
     public ThreadMessageV2Demo() {
-        fileDemo = new FileServiceDemo();
+        fileDemo = new FileDemo();
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
@@ -60,7 +60,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         threadMessages.forEach(System.out::println);
     }
 
-    public void deleteThread() {
+    public void deleteThreadMessage() {
         var thread = openAI.threads().getOne(threadId).join();
         var vectorStoreId = thread.getToolResources().getFileSearch().getVectorStoreIds().get(0);
 
@@ -69,6 +69,9 @@ public class ThreadMessageV2Demo extends AbstractDemo {
 
         var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
         System.out.println(deletedVectorStore);
+
+        var deletedThreadMessage = openAI.threadMessages().delete(threadId, threadMessageId).join();
+        System.out.println(deletedThreadMessage);
 
         var deletedThread = openAI.threads().delete(threadId).join();
         System.out.println(deletedThread);
@@ -81,7 +84,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         demo.addTitleAction("Demo Thread Message v2 Modify", demo::modifyThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 Retrieve", demo::retrieveThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 List", demo::listThreadMessages);
-        demo.addTitleAction("Demo Thread v2 Delete", demo::deleteThread);
+        demo.addTitleAction("Demo Thread Message v2 Delete", demo::deleteThreadMessage);
         demo.run();
     }
 
