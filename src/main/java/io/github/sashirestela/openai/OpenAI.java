@@ -737,7 +737,7 @@ public interface OpenAI {
 
     static ChatRequest updateRequest(ChatRequest chatRequest, Boolean useStream) {
         var updatedChatRequest = chatRequest.withStream(useStream);
-        if (useStream) {
+        if (Boolean.TRUE.equals(useStream)) {
             updatedChatRequest = updatedChatRequest.withStreamOptions(StreamOptions.of(useStream));
         }
         if (!isNullOrEmpty(chatRequest.getTools()) && chatRequest.getToolChoice() == null) {
