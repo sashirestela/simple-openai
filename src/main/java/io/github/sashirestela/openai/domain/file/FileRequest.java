@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.domain.file;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +16,18 @@ public class FileRequest {
 
     @Required
     private PurposeType purpose;
+
+    public enum PurposeType {
+
+        @JsonProperty("fine-tune")
+        FINE_TUNE,
+
+        @JsonProperty("assistants")
+        ASSISTANTS,
+
+        @JsonProperty("batch")
+        BATCH;
+
+    }
 
 }

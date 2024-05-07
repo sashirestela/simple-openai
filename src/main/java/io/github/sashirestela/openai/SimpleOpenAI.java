@@ -152,4 +152,68 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
         return moderationService;
     }
 
+    @Override
+    public OpenAIBeta2.Assistants assistants() {
+        if (assistantService == null) {
+            assistantService = cleverClient.create(OpenAIBeta2.Assistants.class);
+        }
+        return assistantService;
+    }
+
+    @Override
+    public OpenAIBeta2.Threads threads() {
+        if (threadService == null) {
+            threadService = cleverClient.create(OpenAIBeta2.Threads.class);
+        }
+        return threadService;
+    }
+
+    @Override
+    public OpenAIBeta2.ThreadMessages threadMessages() {
+        if (threadMessageService == null) {
+            threadMessageService = cleverClient.create(OpenAIBeta2.ThreadMessages.class);
+        }
+        return threadMessageService;
+    }
+
+    @Override
+    public OpenAIBeta2.ThreadRuns threadRuns() {
+        if (threadRunService == null) {
+            threadRunService = cleverClient.create(OpenAIBeta2.ThreadRuns.class);
+        }
+        return threadRunService;
+    }
+
+    @Override
+    public OpenAIBeta2.ThreadRunSteps threadRunSteps() {
+        if (threadRunStepService == null) {
+            threadRunStepService = cleverClient.create(OpenAIBeta2.ThreadRunSteps.class);
+        }
+        return threadRunStepService;
+    }
+
+    @Override
+    public OpenAIBeta2.VectorStores vectorStores() {
+        if (vectorStoreService == null) {
+            vectorStoreService = cleverClient.create(OpenAIBeta2.VectorStores.class);
+        }
+        return vectorStoreService;
+    }
+
+    @Override
+    public OpenAIBeta2.VectorStoreFiles vectorStoreFiles() {
+        if (vectorStoreFileService == null) {
+            vectorStoreFileService = cleverClient.create(OpenAIBeta2.VectorStoreFiles.class);
+        }
+        return vectorStoreFileService;
+    }
+
+    @Override
+    public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
+        if (vectorStoreFileBatchService == null) {
+            vectorStoreFileBatchService = cleverClient.create(OpenAIBeta2.VectorStoreFileBatches.class);
+        }
+        return vectorStoreFileBatchService;
+    }
+
 }

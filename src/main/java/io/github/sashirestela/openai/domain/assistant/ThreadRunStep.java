@@ -1,21 +1,15 @@
 package io.github.sashirestela.openai.domain.assistant;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.cleverclient.util.UnixTimestampDeserializer;
-import io.github.sashirestela.openai.domain.OpenAIUsage;
+import io.github.sashirestela.openai.common.Usage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Map;
 
-/**
- * Represents a step in execution of a run.
- */
 @NoArgsConstructor
 @Getter
 @ToString
@@ -24,128 +18,37 @@ public class ThreadRunStep {
 
     private String id;
     private String object;
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private ZonedDateTime createdAt;
+    private Integer createdAt;
     private String assistantId;
     private String threadId;
     private String runId;
-    private String type;
-    private String status;
-    private Details stepDetails;
-    private ThreadRun.Error lastError;
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private ZonedDateTime expiredAt;
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private ZonedDateTime cancelledAt;
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private ZonedDateTime failedAt;
-    @JsonDeserialize(using = UnixTimestampDeserializer.class)
-    private ZonedDateTime completedAt;
+    private RunStepType type;
+    private RunStepStatus status;
+    private StepDetail stepDetails;
+    private LastError lastError;
+    private Integer expiredAt;
+    private Integer cancelledAt;
+    private Integer failedAt;
+    private Integer completedAt;
     private Map<String, String> metadata;
-    private OpenAIUsage usage;
+    private Usage usage;
 
-    public final class Type {
+    public enum RunStepStatus {
 
-        private Type() {
-        }
+        @JsonProperty("in_progress")
+        IN_PROGRESS,
 
-        public static final String MESSAGE_CREATION = "message_creation";
-        public static final String TOOL_CALLS = "tool_calls";
+        @JsonProperty("cancelled")
+        CANCELLED,
 
-    }
+        @JsonProperty("failed")
+        FAILED,
 
-    public final class Status {
+        @JsonProperty("completed")
+        COMPLETED,
 
-        private Status() {
-        }
-
-        public static final String IN_PROGRESS = "in_progress";
-        public static final String CANCELLED = "cancelled";
-        public static final String FAILED = "failed";
-        public static final String COMPLETED = "completed";
-        public static final String EXPIRED = "expired";
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Details {
-
-        private String type;
-        private MessageCreation messageCreation;
-        private List<ToolCall> toolCalls;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class MessageCreation {
-
-        private ThreadMessageId messageId;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ToolCall {
-
-        private int index;
-        private String id;
-        private String type;
-        private CodeInterpreter codeInterpreter;
-        private Map<?, ?> retrieval;
-        private Function function;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class CodeInterpreter {
-
-        private String input;
-        private List<CodeInterpreterOutput> outputs;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class CodeInterpreterOutput {
-
-        private String type;
-        private String logs;
-        private Image image;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Image {
-
-        private String fileId;
-
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Function {
-
-        private String name;
-        private String arguments;
-        private String output;
+        @JsonProperty("expired")
+        EXPIRED;
 
     }
 

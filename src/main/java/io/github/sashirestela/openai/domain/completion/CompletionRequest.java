@@ -29,43 +29,43 @@ public class CompletionRequest {
     @ObjectType(baseClass = Integer.class, firstGroup = true, secondGroup = true)
     private Object prompt;
 
-    private String suffix;
+    @Range(min = 0, max = 20)
+    private Integer bestOf;
+
+    private Boolean echo;
+
+    @Range(min = -2.0, max = 2.0)
+    private Double frequencyPenalty;
+
+    private Map<String, Integer> logitBias;
+
+    @Range(min = 0, max = 5)
+    private Integer logprobs;
 
     private Integer maxTokens;
+
+    @Range(min = 1, max = 128)
+    private Integer n;
+
+    @Range(min = -2.0, max = 2.0)
+    private Double presencePenalty;
+
+    private Integer seed;
+
+    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = String.class, firstGroup = true, maxSize = 4)
+    private Object stop;
+
+    @With
+    private Boolean stream;
+
+    private String suffix;
 
     @Range(min = 0.0, max = 2.0)
     private Double temperature;
 
     @Range(min = 0.0, max = 1.0)
     private Double topP;
-
-    @Range(min = 1, max = 128)
-    private Integer n;
-
-    @With
-    private Boolean stream;
-
-    @Range(min = 0, max = 5)
-    private Integer logprobs;
-
-    private Boolean echo;
-
-    @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = String.class, firstGroup = true, maxSize = 4)
-    private Object stop;
-
-    private Integer seed;
-
-    @Range(min = -2.0, max = 2.0)
-    private Double presencePenalty;
-
-    @Range(min = -2.0, max = 2.0)
-    private Double frequencyPenalty;
-
-    @Range(min = 0, max = 20)
-    private Integer bestOf;
-
-    private Map<String, Integer> logitBias;
 
     private String user;
 

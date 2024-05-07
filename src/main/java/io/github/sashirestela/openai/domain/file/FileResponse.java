@@ -13,11 +13,11 @@ import lombok.ToString;
 public class FileResponse {
 
     private String id;
-    private String object;
-    private String purpose;
-    private String filename;
     private Integer bytes;
     private Long createdAt;
+    private String filename;
+    private String object;
+    private String purpose;
 
     /**
      * @deprecated OpenAI has deperecated this field, but there isn't a known alternative for this.

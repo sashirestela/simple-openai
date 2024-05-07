@@ -45,20 +45,4 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAIBeta.Assistants assistants() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
-    /**
-     * Throw not implemented
-     */
-    @Override
-    public OpenAIBeta.Threads threads() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
-    }
-
 }

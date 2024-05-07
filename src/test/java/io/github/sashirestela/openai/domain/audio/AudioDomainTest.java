@@ -2,6 +2,9 @@ package io.github.sashirestela.openai.domain.audio;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest.SpeechResponseFormat;
+import io.github.sashirestela.openai.domain.audio.SpeechRequest.Voice;
+import io.github.sashirestela.openai.domain.audio.TranscriptionRequest.TimestampGranularity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,11 +34,11 @@ class AudioDomainTest {
     @Test
     void testAudiosSpeech() throws IOException {
         DomainTestingHelper.get().mockForBinary(httpClient, "src/test/resources/audios_speak.mp3");
-        var speechRequest = AudioSpeechRequest.builder()
+        var speechRequest = SpeechRequest.builder()
                 .model("tts-1")
                 .input("Hello world, welcome to the AI universe!")
                 .voice(Voice.ALLOY)
-                .responseFormat(SpeechRespFmt.MP3)
+                .responseFormat(SpeechResponseFormat.MP3)
                 .speed(1.0)
                 .build();
         var speechResponse = openAI.audios().speak(speechRequest).join();
@@ -46,11 +49,11 @@ class AudioDomainTest {
     @Test
     void testAudiosTranscribe() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_transcribe.json");
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
-                .responseFormat(AudioRespFmt.VERBOSE_JSON)
+                .responseFormat(AudioResponseFormat.VERBOSE_JSON)
                 .temperature(0.0)
                 .timestampGranularity(TimestampGranularity.WORD)
                 .timestampGranularity(TimestampGranularity.SEGMENT)
@@ -64,11 +67,11 @@ class AudioDomainTest {
     @Test
     void testAudiosTranslate() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_translate.json");
-        var audioRequest = AudioTranslateRequest.builder()
+        var audioRequest = TranslationRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
-                .responseFormat(AudioRespFmt.JSON)
+                .responseFormat(AudioResponseFormat.JSON)
                 .temperature(0.0)
                 .build();
         var audioResponse = openAI.audios().translate(audioRequest).join();
@@ -79,11 +82,11 @@ class AudioDomainTest {
     @Test
     void testAudiosTranscribePlain() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_transcribe_plain.txt");
-        var audioRequest = AudioTranscribeRequest.builder()
+        var audioRequest = TranscriptionRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
-                .responseFormat(AudioRespFmt.TEXT)
+                .responseFormat(AudioResponseFormat.TEXT)
                 .temperature(0.0)
                 .language("en")
                 .build();
@@ -95,11 +98,11 @@ class AudioDomainTest {
     @Test
     void testAudiosTranslatePlain() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/audios_translate_plain.txt");
-        var audioRequest = AudioTranslateRequest.builder()
+        var audioRequest = TranslationRequest.builder()
                 .file(Paths.get(fileName))
                 .model("whisper-1")
                 .prompt("It is a greeting")
-                .responseFormat(AudioRespFmt.VTT)
+                .responseFormat(AudioResponseFormat.VTT)
                 .temperature(0.0)
                 .build();
         var audioResponse = openAI.audios().translatePlain(audioRequest).join();

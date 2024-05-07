@@ -1,0 +1,80 @@
+event: thread.run.step.completed
+data: {"id":"step_iSAdisa8jKetGFKqiRbpvW85","object":"thread.run.step","created_at":1714853365,"run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"tool_calls","status":"completed","cancelled_at":null,"completed_at":1714853366,"expires_at":1714853963,"failed_at":null,"last_error":null,"step_details":{"type":"tool_calls","tool_calls":[{"id":"call_vnwkHhHXhL2aZjtT82XyoTe2","type":"function","function":{"name":"RainProbability","arguments":"{\"location\":\"Lima, Peru\"}","output":"20.164465313460656"}}]},"usage":{"prompt_tokens":1375,"completion_tokens":19,"total_tokens":1394}}
+
+event: thread.run.queued
+data: {"id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","object":"thread.run","created_at":1714853363,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"queued","started_at":1714853363,"expires_at":1714853963,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.in_progress
+data: {"id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","object":"thread.run","created_at":1714853363,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"in_progress","started_at":1714853366,"expires_at":1714853963,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.step.created
+data: {"id":"step_oisliSrXkFP6UlnZRSLKFgbb","object":"thread.run.step","created_at":1714853366,"run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853963,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_oisliSrXkFP6UlnZRSLKFgbb","object":"thread.run.step","created_at":1714853366,"run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853963,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message","created_at":1714853366,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message","created_at":1714853366,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"The","annotations":[]}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" current"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" probability"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" rain"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" in"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Lima"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Peru"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" is"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" approximately"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" "}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"20"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"2"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"%."}}]}}
+
+event: thread.message.completed
+data: {"id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO","object":"thread.message","created_at":1714853366,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","status":"completed","incomplete_details":null,"incomplete_at":null,"completed_at":1714853367,"role":"assistant","content":[{"type":"text","text":{"value":"The current probability of rain in Lima, Peru is approximately 20.2%.","annotations":[]}}],"attachments":[],"metadata":{}}
+
+event: thread.run.step.completed
+data: {"id":"step_oisliSrXkFP6UlnZRSLKFgbb","object":"thread.run.step","created_at":1714853366,"run_id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"message_creation","status":"completed","cancelled_at":null,"completed_at":1714853367,"expires_at":1714853963,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_Gi4BvlTytbJ1j7ybhUi43UZO"}},"usage":{"prompt_tokens":1410,"completion_tokens":18,"total_tokens":1428}}
+
+event: thread.run.completed
+data: {"id":"run_aGcGlDn9ucGF5OvSAWBYY6bM","object":"thread.run","created_at":1714853363,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"completed","started_at":1714853366,"expires_at":null,"cancelled_at":null,"failed_at":null,"completed_at":1714853367,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":{"prompt_tokens":2785,"completion_tokens":37,"total_tokens":2822},"response_format":"auto","tool_choice":"auto"}
+
+event: done
+data: [DONE]

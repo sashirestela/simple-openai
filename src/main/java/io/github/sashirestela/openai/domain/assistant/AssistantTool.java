@@ -1,32 +1,23 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.sashirestela.slimvalidator.constraints.Required;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import io.github.sashirestela.openai.common.tool.Tool;
+import io.github.sashirestela.openai.common.tool.ToolType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AssistantTool {
+public class AssistantTool extends Tool {
 
-    public static final AssistantTool CODE_INTERPRETER = AssistantTool.builder()
-            .type("code_interpreter")
-            .build();
-    public static final AssistantTool RETRIEVAL = AssistantTool.builder()
-            .type("retrieval")
-            .build();
+    public static final AssistantTool CODE_INTERPRETER = new AssistantTool(ToolType.CODE_INTERPRETER, null);
+    public static final AssistantTool FILE_SEARCH = new AssistantTool(ToolType.FILE_SEARCH, null);
 
-    @Required
-    @Builder.Default
-    private String type = "function";
-
-    private AssistantFunction function;
+    private AssistantTool(ToolType type, ToolFunctionDef function) {
+        super(type, function);
+    }
 
 }

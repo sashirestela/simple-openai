@@ -16,17 +16,16 @@ public class ThreadMessageDelta {
 
     private String id;
     private String object;
-    private ThreadMessageDeltaDetail delta;
+    private MessageDeltaDetail delta;
 
     @NoArgsConstructor
     @Getter
     @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class ThreadMessageDeltaDetail {
+    public static class MessageDeltaDetail {
 
-        private String role;
+        private ThreadMessageRole role;
         private List<ThreadMessageContent> content;
-        private List<String> fileIds;
 
     }
 

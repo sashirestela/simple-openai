@@ -1,0 +1,8 @@
+Mistral AI
+
+Mistral AI is a French company selling artificial intelligence (AI) products. It was founded in April 2023 by previous employees of Meta Platforms and Google DeepMind.
+The company raised €385 million in October 2023, and in December 2023, it was valued at more than $2 billion.
+
+It produces open source large language models, citing the foundational importance of open-source software, and as a response to proprietary models.
+
+As of March 2024, two models have been published and are available as weights. Three more models, Small, Medium and Large, are available via API only.

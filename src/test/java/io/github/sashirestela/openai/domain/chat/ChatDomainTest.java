@@ -4,24 +4,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.function.FunctionCall;
+import io.github.sashirestela.openai.common.function.FunctionDef;
+import io.github.sashirestela.openai.common.function.FunctionExecutor;
+import io.github.sashirestela.openai.common.function.Functional;
+import io.github.sashirestela.openai.common.tool.ToolCall;
+import io.github.sashirestela.openai.common.tool.ToolChoice;
+import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import io.github.sashirestela.openai.common.tool.ToolType;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
-import io.github.sashirestela.openai.domain.chat.content.ContentPartImage;
-import io.github.sashirestela.openai.domain.chat.content.ContentPartText;
-import io.github.sashirestela.openai.domain.chat.content.ImageDetail;
-import io.github.sashirestela.openai.domain.chat.content.ImageUrl;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgAssistant;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgTool;
-import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunction;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionCall;
-import io.github.sashirestela.openai.domain.chat.tool.ChatFunctionName;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolCall;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoice;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolChoiceType;
-import io.github.sashirestela.openai.domain.chat.tool.ChatToolType;
-import io.github.sashirestela.openai.function.FunctionExecutor;
-import io.github.sashirestela.openai.function.Functional;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
+import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartText;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -51,8 +51,8 @@ class ChatDomainTest {
                 .build();
         chatTextRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .message(new ChatMsgSystem("You are an expert in Mathematics", "tutor"))
-                .message(new ChatMsgUser("Tell me the Pitagoras theorem in less than 50 words.", "student"))
+                .message(SystemMessage.of("You are an expert in Mathematics", "tutor"))
+                .message(UserMessage.of("Tell me the Pitagoras theorem in less than 50 words.", "student"))
                 .temperature(0.2)
                 .maxTokens(500)
                 .topP(1.0)
@@ -62,14 +62,14 @@ class ChatDomainTest {
                 .frequencyPenalty(0.0)
                 .logitBias(Map.of("21943", 0))
                 .user("test")
-                .responseFormat(new ChatRespFmt(ChatRespFmtType.TEXT))
+                .responseFormat(ResponseFormat.TEXT)
                 .seed(2)
                 .logprobs(true)
                 .topLogprobs(1)
                 .build();
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
-                ChatFunction.builder()
+                FunctionDef.builder()
                         .name("product")
                         .description("Get the product of two numbers")
                         .functionalClass(Product.class)
@@ -99,12 +99,12 @@ class ChatDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/chatcompletions_create_vision.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-vision-preview")
-                .message(new ChatMsgUser(List.of(
-                        new ContentPartText("What are in these images? Is there any difference between them?"),
-                        new ContentPartImage(new ImageUrl(
+                .message(UserMessage.of(List.of(
+                        ContentPartText.of("What are in these images? Is there any difference between them?"),
+                        ContentPartImage.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
                                 ImageDetail.AUTO)),
-                        new ContentPartImage(new ImageUrl(
+                        ContentPartImage.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg")))))
                 .temperature(0.2)
                 .maxTokens(500)
@@ -127,10 +127,10 @@ class ChatDomainTest {
                 .mockForObject(httpClient, "src/test/resources/chatcompletions_create_function_question.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .message(new ChatMsgSystem("You are an expert in Mathematics"))
-                .message(new ChatMsgUser("What is the product of 123 and 456?"))
+                .message(SystemMessage.of("You are an expert in Mathematics"))
+                .message(UserMessage.of("What is the product of 123 and 456?"))
                 .tools(functionExecutor.getToolFunctions())
-                .toolChoice(new ChatToolChoice(ChatToolType.FUNCTION, new ChatFunctionName("product")))
+                .toolChoice(ToolChoice.function("product"))
                 .temperature(0.2)
                 .maxTokens(500)
                 .topP(1.0)
@@ -140,7 +140,7 @@ class ChatDomainTest {
                 .frequencyPenalty(0.0)
                 .logitBias(Map.of("21943", 0))
                 .user("test")
-                .responseFormat(new ChatRespFmt(ChatRespFmtType.TEXT))
+                .responseFormat(ResponseFormat.TEXT)
                 .seed(1)
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
@@ -155,14 +155,14 @@ class ChatDomainTest {
                 .mockForObject(httpClient, "src/test/resources/chatcompletions_create_function_answer.json");
         var chatRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
-                .message(new ChatMsgSystem("You are an expert in Mathematics"))
-                .message(new ChatMsgUser("What is the product of 123 and 456?"))
-                .message(new ChatMsgAssistant(null, List.of(new ChatToolCall(
+                .message(SystemMessage.of("You are an expert in Mathematics"))
+                .message(UserMessage.of("What is the product of 123 and 456?"))
+                .message(AssistantMessage.of(null, List.of(new ToolCall(
                         0,
                         "call_tAoX6VHyjQVLnM9CZvEsTEwW",
-                        ChatToolType.FUNCTION,
-                        new ChatFunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
-                .message(new ChatMsgTool("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW"))
+                        ToolType.FUNCTION,
+                        new FunctionCall("product", "{\"multiplicand\":123,\"multiplier\":456}")))))
+                .message(ToolMessage.of("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW"))
                 .tools(functionExecutor.getToolFunctions())
                 .temperature(0.2)
                 .maxTokens(500)
@@ -173,7 +173,7 @@ class ChatDomainTest {
                 .frequencyPenalty(0.0)
                 .logitBias(Map.of("21943", 0))
                 .user("test")
-                .responseFormat(new ChatRespFmt(ChatRespFmtType.TEXT))
+                .responseFormat(ResponseFormat.TEXT)
                 .seed(1)
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
@@ -185,22 +185,22 @@ class ChatDomainTest {
     void shouldUpdateChatRequestWithAutoToolChoiceWhenToolsAreProvidedWithoutToolChoice() {
         var charRequest = ChatRequest.builder()
                 .model("model")
-                .message(new ChatMsgUser("content"))
+                .message(UserMessage.of("content"))
                 .tools(functionExecutor.getToolFunctions())
                 .build();
 
         assertNull(charRequest.getToolChoice());
         var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
-        assertEquals(ChatToolChoiceType.AUTO, updatedChatRequest.getToolChoice());
+        assertEquals(ToolChoiceOption.AUTO, updatedChatRequest.getToolChoice());
     }
 
     @Test
     void shouldCreateChatMsgAssistantWhenParametersAreCorrect() {
-        ChatMsgAssistant[] testData = {
-                new ChatMsgAssistant("content", "name"),
-                new ChatMsgAssistant("content")
+        AssistantMessage[] testData = {
+                AssistantMessage.of("content", "name"),
+                AssistantMessage.of("content")
         };
-        for (ChatMsgAssistant data : testData) {
+        for (AssistantMessage data : testData) {
             assertNotNull(data);
         }
     }

@@ -30,13 +30,6 @@ public class BatchRequest {
     @Size(max = 16)
     private Map<String, String> metadata;
 
-    public enum EndpointType {
-
-        @JsonProperty("/v1/chat/completions")
-        CHAT_COMPLETIONS;
-
-    }
-
     public enum CompletionWindowType {
 
         @JsonProperty("24h")
