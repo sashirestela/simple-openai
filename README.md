@@ -36,7 +36,7 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [April 29th, 2024](https://platform.openai.com/docs/changelog/apr-29th-2024) and will continue to update with future changes.
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [May 6th, 2024](https://platform.openai.com/docs/changelog/may-6th-2024) and will continue to update with future changes.
 
 Full support for all of the OpenAI services:
 
