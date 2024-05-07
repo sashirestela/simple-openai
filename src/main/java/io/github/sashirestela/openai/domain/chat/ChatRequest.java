@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.StreamOptions;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
@@ -60,6 +61,9 @@ public class ChatRequest {
 
     @With
     private Boolean stream;
+
+    @With
+    private StreamOptions streamOptions;
 
     @Range(min = 0.0, max = 2.0)
     private Double temperature;

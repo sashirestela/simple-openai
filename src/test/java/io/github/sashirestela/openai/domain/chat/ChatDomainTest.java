@@ -80,9 +80,20 @@ class ChatDomainTest {
     void testChatCompletionsCreateStream() throws IOException {
         DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/chatcompletions_create_stream.txt");
         var chatResponse = openAI.chatCompletions().createStream(chatTextRequest).join();
-        chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-                .map(chatResp -> chatResp.firstContent())
-                .forEach(System.out::print);
+        chatResponse.forEach(responseChunk -> {
+            var choices = responseChunk.getChoices();
+            if (choices.size() > 0) {
+                var delta = choices.get(0).getMessage();
+                if (delta.getContent() != null) {
+                    System.out.print(delta.getContent());
+                }
+            }
+            var usage = responseChunk.getUsage();
+            if (usage != null) {
+                System.out.println("\n");
+                System.out.println(usage);
+            }
+        });
         assertNotNull(chatResponse);
     }
 

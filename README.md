@@ -695,9 +695,9 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * ChatAzure
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
-  * For example, to run the chat demo with a log file: ```./rundemo.sh chat debug```
+  * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
 
-  * Create environment variables for the Azure OpenAI demos
+* Indications for Azure OpenAI demos
 
     Azure OpenAI requires a separate deployment for each model. The Azure OpenAI demos require 
     two models.   

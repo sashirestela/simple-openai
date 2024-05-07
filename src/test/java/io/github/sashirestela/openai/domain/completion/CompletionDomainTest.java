@@ -48,9 +48,18 @@ class CompletionDomainTest {
     void testCompletionsCreateStream() throws IOException {
         DomainTestingHelper.get().mockForStream(httpClient, "src/test/resources/completions_create_stream.txt");
         var completionResponse = openAI.completions().createStream(completionRequest).join();
-        completionResponse.filter(chatResp -> chatResp.firstText() != null)
-                .map(chatResp -> chatResp.firstText())
-                .forEach(System.out::print);
+        completionResponse.forEach(responseChunk -> {
+            var choices = responseChunk.getChoices();
+            if (choices.size() > 0) {
+                var delta = choices.get(0).getText();
+                System.out.print(delta);
+            }
+            var usage = responseChunk.getUsage();
+            if (usage != null) {
+                System.out.println("\n");
+                System.out.println(usage);
+            }
+        });
         assertNotNull(completionResponse);
     }
 
