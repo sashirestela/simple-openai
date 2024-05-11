@@ -1,6 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImage;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.demo.ChatDemo.Product;
@@ -11,9 +14,6 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartText;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.ContentPart.ChatContentPart;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -68,7 +69,7 @@ public abstract class ChatMessage {
 
         @Required
         @ObjectType(baseClass = String.class)
-        @ObjectType(baseClass = ContentPart.class, firstGroup = true)
+        @ObjectType(baseClass = ChatContentPart.class, firstGroup = true)
         private Object content;
 
         private String name;
