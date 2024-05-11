@@ -2,9 +2,9 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImage;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.function.Functional;
@@ -101,7 +101,7 @@ public class ChatDemo extends AbstractDemo {
                         UserMessage.of(List.of(
                                 ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                ContentPartImage.of(ImageUrl.of(
+                                ContentPartImageUrl.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
                 .maxTokens(500)
@@ -118,7 +118,7 @@ public class ChatDemo extends AbstractDemo {
                         UserMessage.of(List.of(
                                 ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                ContentPartImage.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                                ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();

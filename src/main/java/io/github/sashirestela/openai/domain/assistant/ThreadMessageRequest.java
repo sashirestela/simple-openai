@@ -3,7 +3,7 @@ package io.github.sashirestela.openai.domain.assistant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.common.ContentPart;
+import io.github.sashirestela.openai.common.content.ContentPart;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;

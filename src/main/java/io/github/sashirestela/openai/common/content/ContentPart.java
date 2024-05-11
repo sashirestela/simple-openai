@@ -1,15 +1,28 @@
-package io.github.sashirestela.openai.common;
+package io.github.sashirestela.openai.common.content;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.util.List;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ContentPart.ContentPartImageFile.class, name = "image_file"),
+        @JsonSubTypes.Type(value = ContentPart.ContentPartImageUrl.class, name = "image_url"),
+        @JsonSubTypes.Type(value = ContentPart.ContentPartTextAnnotation.class, name = "text")
+})
+@NoArgsConstructor
 @Getter
+@ToString
 public abstract class ContentPart {
 
     protected ContentPartType type;
@@ -30,11 +43,13 @@ public abstract class ContentPart {
     public abstract static class ChatContentPart extends ContentPart {
     }
 
+    @NoArgsConstructor
     @Getter
+    @ToString
     public static class ContentPartText extends ChatContentPart {
 
         @Required
-        private String text;
+        private Object text;
 
         private ContentPartText(String text) {
             this.type = ContentPartType.TEXT;
@@ -47,23 +62,27 @@ public abstract class ContentPart {
 
     }
 
+    @NoArgsConstructor
     @Getter
+    @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ContentPartImage extends ChatContentPart {
+    public static class ContentPartImageUrl extends ChatContentPart {
 
         @Required
         private ImageUrl imageUrl;
 
-        private ContentPartImage(ImageUrl imageUrl) {
+        private ContentPartImageUrl(ImageUrl imageUrl) {
             this.type = ContentPartType.IMAGE_URL;
             this.imageUrl = imageUrl;
         }
 
-        public static ContentPartImage of(ImageUrl imageUrl) {
-            return new ContentPartImage(imageUrl);
+        public static ContentPartImageUrl of(ImageUrl imageUrl) {
+            return new ContentPartImageUrl(imageUrl);
         }
 
+        @NoArgsConstructor
         @Getter
+        @ToString
         @JsonInclude(Include.NON_EMPTY)
         public static class ImageUrl {
 
@@ -85,24 +104,13 @@ public abstract class ContentPart {
                 return new ImageUrl(url, null);
             }
 
-            public enum ImageDetail {
-
-                @JsonProperty("auto")
-                AUTO,
-
-                @JsonProperty("low")
-                LOW,
-
-                @JsonProperty("high")
-                HIGH;
-
-            }
-
         }
 
     }
 
+    @NoArgsConstructor
     @Getter
+    @ToString
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ContentPartImageFile extends ContentPart {
 
@@ -118,7 +126,9 @@ public abstract class ContentPart {
             return new ContentPartImageFile(imageFile);
         }
 
+        @NoArgsConstructor
         @Getter
+        @ToString
         @JsonInclude(Include.NON_EMPTY)
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class ImageFile {
@@ -140,6 +150,26 @@ public abstract class ContentPart {
             public static ImageFile of(String fileId) {
                 return new ImageFile(fileId, null);
             }
+
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    public static class ContentPartTextAnnotation extends ContentPartText {
+
+        private TextAnnotation text;
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class TextAnnotation {
+
+            private String value;
+            private List<FileAnnotation> annotations;
 
         }
 

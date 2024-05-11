@@ -1,13 +1,15 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile.ImageFile;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile.ImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
+import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.Attachment;
 import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
@@ -71,7 +73,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
     }
 
     public void visionThreadMessage() {
-        var question = "Tell me what do you see in the attached image?";
+        var question = "Do you see any similarity or difference between the attached images?";
         System.out.println("Question: " + question);
         var file = fileDemo.createFile("src/demo/resources/machupicchu.jpg", PurposeType.VISION);
         var assistant = openAI.assistants()
@@ -86,7 +88,10 @@ public class ThreadMessageV2Demo extends AbstractDemo {
                         .role(ThreadMessageRole.USER)
                         .content(List.of(
                                 ContentPartText.of(question),
-                                ContentPartImageFile.of(ImageFile.of(file.getId(), ImageDetail.LOW))))
+                                ContentPartImageFile.of(ImageFile.of(file.getId(), ImageDetail.LOW)),
+                                ContentPartImageUrl.of(ImageUrl.of(
+                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+                                        ImageDetail.LOW))))
                         .build())
                 .join();
         var responseStream = openAI.threadRuns()
@@ -99,8 +104,8 @@ public class ThreadMessageV2Demo extends AbstractDemo {
             switch (e.getName()) {
                 case EventName.THREAD_MESSAGE_DELTA:
                     var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
-                    if (messageDeltaFirstContent instanceof TextContent) {
-                        System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
+                    if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                        System.out.print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
                     }
                     break;
                 default:

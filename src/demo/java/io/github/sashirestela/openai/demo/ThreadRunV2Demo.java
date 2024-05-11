@@ -2,14 +2,14 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
+import io.github.sashirestela.openai.common.content.FileAnnotation.FileCitationAnnotation;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.function.Functional;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.FileAnnotation.FileCitationAnnotation;
 import io.github.sashirestela.openai.domain.assistant.ThreadCreateAndRunRequest;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
@@ -136,7 +136,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                 .build();
         var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
         var threadMessages = openAI.threadMessages().getList(threadId).join();
-        var answer = ((TextContent) threadMessages.first().getContent().get(0)).getText().getValue();
+        var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
         System.out.println("Answer: " + answer);
         threadRunId = threadRun.getId();
     }
@@ -157,8 +157,8 @@ public class ThreadRunV2Demo extends AbstractDemo {
             switch (e.getName()) {
                 case EventName.THREAD_MESSAGE_DELTA:
                     var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
-                    if (messageDeltaFirstContent instanceof TextContent) {
-                        System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
+                    if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                        System.out.print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
                     }
                     break;
                 default:
@@ -188,7 +188,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                             .toolOutputs(toolOutputs)
                             .build());
             var threadMessages = openAI.threadMessages().getList(threadId).join();
-            var answer = ((TextContent) threadMessages.first().getContent().get(0)).getText().getValue();
+            var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
             System.out.println("Answer: " + answer);
         }
     }
@@ -219,8 +219,9 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta()
                                 .getContent()
                                 .get(0);
-                        if (messageDeltaFirstContent instanceof TextContent) {
-                            System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
+                        if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                            System.out
+                                    .print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
                         }
                         break;
                     default:
@@ -247,7 +248,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
         var threadRun = openAI.threadRuns().createThreadAndRunAndPoll(threadCreateAndRunRequest);
         newThreadId = threadRun.getThreadId();
         var threadMessages = openAI.threadMessages().getList(newThreadId).join();
-        var textAnnotation = ((TextContent) threadMessages.first().getContent().get(0)).getText();
+        var textAnnotation = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText();
         var answer = textAnnotation.getValue();
         var refNumber = 1;
         for (var fileAnnotation : textAnnotation.getAnnotations()) {
@@ -283,8 +284,8 @@ public class ThreadRunV2Demo extends AbstractDemo {
                     break;
                 case EventName.THREAD_MESSAGE_DELTA:
                     var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
-                    if (messageDeltaFirstContent instanceof TextContent) {
-                        System.out.print(((TextContent) messageDeltaFirstContent).getText().getValue());
+                    if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                        System.out.print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
                     }
                     break;
                 default:

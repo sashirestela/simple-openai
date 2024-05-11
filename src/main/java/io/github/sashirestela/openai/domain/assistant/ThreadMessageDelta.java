@@ -2,6 +2,7 @@ package io.github.sashirestela.openai.domain.assistant;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.content.ContentPart;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -25,7 +26,7 @@ public class ThreadMessageDelta {
     public static class MessageDeltaDetail {
 
         private ThreadMessageRole role;
-        private List<ThreadMessageContent> content;
+        private List<ContentPart> content;
 
     }
 

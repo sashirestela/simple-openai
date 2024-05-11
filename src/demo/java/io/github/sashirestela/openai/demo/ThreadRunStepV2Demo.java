@@ -1,12 +1,12 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.CurrentTemperature;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.RainProbability;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
@@ -72,7 +72,7 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
                 .build();
         var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
         var threadMessages = openAI.threadMessages().getList(threadId).join();
-        var answer = ((TextContent) threadMessages.first().getContent().get(0)).getText().getValue();
+        var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
         System.out.println("Answer: " + answer);
         threadRunId = threadRun.getId();
     }

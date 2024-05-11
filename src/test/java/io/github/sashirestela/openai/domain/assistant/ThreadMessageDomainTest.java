@@ -1,10 +1,12 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile.ImageFile;
-import io.github.sashirestela.openai.common.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile.ImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,8 +57,11 @@ class ThreadMessageDomainTest {
         var threadMessageRequest = ThreadMessageRequest.builder()
                 .role(ThreadMessageRole.USER)
                 .content(List.of(
-                        ContentPartText.of("Tell me what do you see in the attached image?"),
-                        ContentPartImageFile.of(ImageFile.of("fileId", ImageDetail.LOW))))
+                        ContentPartText.of("Do you see any similarity or difference between the attached images?"),
+                        ContentPartImageFile.of(ImageFile.of("fileId", ImageDetail.LOW)),
+                        ContentPartImageUrl.of(ImageUrl.of(
+                                "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+                                ImageDetail.LOW))))
                 .build();
         var threadMessage = openAI.threadMessages().create("threadId", threadMessageRequest).join();
         System.out.println(threadMessage);
