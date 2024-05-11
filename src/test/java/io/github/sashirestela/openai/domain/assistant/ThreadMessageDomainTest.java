@@ -1,6 +1,10 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImageFile.ImageFile;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,6 +43,20 @@ class ThreadMessageDomainTest {
                         .tool(AttachmentTool.FILE_SEARCH)
                         .build())
                 .metadata(Map.of("item", "first"))
+                .build();
+        var threadMessage = openAI.threadMessages().create("threadId", threadMessageRequest).join();
+        System.out.println(threadMessage);
+        assertNotNull(threadMessage);
+    }
+
+    @Test
+    void testCreateThreadMessageVision() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_messages_create_vision.json");
+        var threadMessageRequest = ThreadMessageRequest.builder()
+                .role(ThreadMessageRole.USER)
+                .content(List.of(
+                        ContentPartText.of("Tell me what do you see in the attached image?"),
+                        ContentPartImageFile.of(ImageFile.of("fileId", ImageDetail.LOW))))
                 .build();
         var threadMessage = openAI.threadMessages().create("threadId", threadMessageRequest).join();
         System.out.println(threadMessage);

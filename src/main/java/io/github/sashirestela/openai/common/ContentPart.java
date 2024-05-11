@@ -1,10 +1,11 @@
-package io.github.sashirestela.openai.domain.chat;
+package io.github.sashirestela.openai.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
 
@@ -19,12 +20,18 @@ public abstract class ContentPart {
         TEXT,
 
         @JsonProperty("image_url")
-        IMAGE_URL;
+        IMAGE_URL,
+
+        @JsonProperty("image_file")
+        IMAGE_FILE;
 
     }
 
+    public abstract static class ChatContentPart extends ContentPart {
+    }
+
     @Getter
-    public static class ContentPartText extends ContentPart {
+    public static class ContentPartText extends ChatContentPart {
 
         @Required
         private String text;
@@ -42,7 +49,7 @@ public abstract class ContentPart {
 
     @Getter
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ContentPartImage extends ContentPart {
+    public static class ContentPartImage extends ChatContentPart {
 
         @Required
         private ImageUrl imageUrl;
@@ -89,6 +96,49 @@ public abstract class ContentPart {
                 @JsonProperty("high")
                 HIGH;
 
+            }
+
+        }
+
+    }
+
+    @Getter
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ContentPartImageFile extends ContentPart {
+
+        @Required
+        private ImageFile imageFile;
+
+        private ContentPartImageFile(ImageFile imageFile) {
+            this.type = ContentPartType.IMAGE_FILE;
+            this.imageFile = imageFile;
+        }
+
+        public static ContentPartImageFile of(ImageFile imageFile) {
+            return new ContentPartImageFile(imageFile);
+        }
+
+        @Getter
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class ImageFile {
+
+            @Required
+            private String fileId;
+
+            private ImageDetail detail;
+
+            private ImageFile(String fileId, ImageDetail detail) {
+                this.fileId = fileId;
+                this.detail = detail;
+            }
+
+            public static ImageFile of(String fileId, ImageDetail detail) {
+                return new ImageFile(fileId, detail);
+            }
+
+            public static ImageFile of(String fileId) {
+                return new ImageFile(fileId, null);
             }
 
         }

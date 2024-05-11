@@ -3,6 +3,8 @@ package io.github.sashirestela.openai.domain.assistant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.ContentPart;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
@@ -22,8 +24,9 @@ public class ThreadMessageRequest {
     private ThreadMessageRole role;
 
     @Required
-    @Size(max = 256_000)
-    private String content;
+    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = ContentPart.class, firstGroup = true)
+    private Object content;
 
     @Singular
     private List<Attachment> attachments;

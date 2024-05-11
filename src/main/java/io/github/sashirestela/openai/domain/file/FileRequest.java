@@ -26,7 +26,10 @@ public class FileRequest {
         ASSISTANTS,
 
         @JsonProperty("batch")
-        BATCH;
+        BATCH,
+
+        @JsonProperty("vision")
+        VISION;
 
     }
 
