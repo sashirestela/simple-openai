@@ -1,12 +1,24 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile.ImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
+import io.github.sashirestela.openai.common.content.ImageDetail;
+import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.Attachment;
 import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
+import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
+import io.github.sashirestela.openai.domain.assistant.events.EventName;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
+import java.util.List;
 import java.util.Map;
 
 public class ThreadMessageV2Demo extends AbstractDemo {
@@ -60,6 +72,52 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         threadMessages.forEach(System.out::println);
     }
 
+    public void visionThreadMessage() {
+        var question = "Do you see any similarity or difference between the attached images?";
+        System.out.println("Question: " + question);
+        var file = fileDemo.createFile("src/demo/resources/machupicchu.jpg", PurposeType.VISION);
+        var assistant = openAI.assistants()
+                .create(AssistantRequest.builder()
+                        .model("gpt-4-vision-preview")
+                        .instructions("You are a tutor on geography.")
+                        .build())
+                .join();
+        var newThread = openAI.threads().create().join();
+        openAI.threadMessages()
+                .create(newThread.getId(), ThreadMessageRequest.builder()
+                        .role(ThreadMessageRole.USER)
+                        .content(List.of(
+                                ContentPartText.of(question),
+                                ContentPartImageFile.of(ImageFile.of(file.getId(), ImageDetail.LOW)),
+                                ContentPartImageUrl.of(ImageUrl.of(
+                                        "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+                                        ImageDetail.LOW))))
+                        .build())
+                .join();
+        var responseStream = openAI.threadRuns()
+                .createStream(newThread.getId(), ThreadRunRequest.builder()
+                        .assistantId(assistant.getId())
+                        .build())
+                .join();
+        System.out.print("Answer: ");
+        responseStream.forEach(e -> {
+            switch (e.getName()) {
+                case EventName.THREAD_MESSAGE_DELTA:
+                    var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta().getContent().get(0);
+                    if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                        System.out.print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+        System.out.println();
+        fileDemo.deleteFile(file.getId());
+        openAI.assistants().delete(assistant.getId()).join();
+        openAI.threads().delete(newThread.getId()).join();
+    }
+
     public void deleteThreadMessage() {
         var thread = openAI.threads().getOne(threadId).join();
         var vectorStoreId = thread.getToolResources().getFileSearch().getVectorStoreIds().get(0);
@@ -84,6 +142,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         demo.addTitleAction("Demo Thread Message v2 Modify", demo::modifyThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 Retrieve", demo::retrieveThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 List", demo::listThreadMessages);
+        demo.addTitleAction("Demo Thread Message v2 Vision", demo::visionThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 Delete", demo::deleteThreadMessage);
         demo.run();
     }

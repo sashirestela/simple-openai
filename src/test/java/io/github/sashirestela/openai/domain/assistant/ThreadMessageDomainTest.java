@@ -1,6 +1,12 @@
 package io.github.sashirestela.openai.domain.assistant;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageFile.ImageFile;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.assistant.Attachment.AttachmentTool;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,6 +45,23 @@ class ThreadMessageDomainTest {
                         .tool(AttachmentTool.FILE_SEARCH)
                         .build())
                 .metadata(Map.of("item", "first"))
+                .build();
+        var threadMessage = openAI.threadMessages().create("threadId", threadMessageRequest).join();
+        System.out.println(threadMessage);
+        assertNotNull(threadMessage);
+    }
+
+    @Test
+    void testCreateThreadMessageVision() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/threads_messages_create_vision.json");
+        var threadMessageRequest = ThreadMessageRequest.builder()
+                .role(ThreadMessageRole.USER)
+                .content(List.of(
+                        ContentPartText.of("Do you see any similarity or difference between the attached images?"),
+                        ContentPartImageFile.of(ImageFile.of("fileId", ImageDetail.LOW)),
+                        ContentPartImageUrl.of(ImageUrl.of(
+                                "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
+                                ImageDetail.LOW))))
                 .build();
         var threadMessage = openAI.threadMessages().create("threadId", threadMessageRequest).join();
         System.out.println(threadMessage);

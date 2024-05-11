@@ -1,4 +1,4 @@
-package io.github.sashirestela.openai.domain.assistant;
+package io.github.sashirestela.openai.common.content;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;

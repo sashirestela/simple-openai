@@ -30,6 +30,7 @@ import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest.EncodingFormat;
 import io.github.sashirestela.openai.domain.file.FileRequest;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 import io.github.sashirestela.openai.domain.file.FileResponse;
 import io.github.sashirestela.openai.domain.finetuning.FineTuning;
 import io.github.sashirestela.openai.domain.finetuning.FineTuningCheckpoint;
@@ -415,7 +416,7 @@ public interface OpenAI {
          * @return Generic object of files.
          */
         @GET
-        CompletableFuture<Generic<FileResponse>> getListPrimitive(@Query("purpose") String purpose);
+        CompletableFuture<Generic<FileResponse>> getListPrimitive(@Query("purpose") PurposeType purpose);
 
         /**
          * Returns a list of files that belong to the user's organization.
@@ -423,7 +424,7 @@ public interface OpenAI {
          * @param purpose Only return files with the given purpose.
          * @return List of files.
          */
-        default CompletableFuture<List<FileResponse>> getList(String purpose) {
+        default CompletableFuture<List<FileResponse>> getList(PurposeType purpose) {
             return getListPrimitive(purpose).thenApply(Generic::getData);
         }
 

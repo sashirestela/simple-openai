@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
+import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.common.function.FunctionCall;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
@@ -18,10 +22,6 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartImage.ImageUrl.ImageDetail;
-import io.github.sashirestela.openai.domain.chat.ContentPart.ContentPartText;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -112,10 +112,10 @@ class ChatDomainTest {
                 .model("gpt-4-vision-preview")
                 .message(UserMessage.of(List.of(
                         ContentPartText.of("What are in these images? Is there any difference between them?"),
-                        ContentPartImage.of(ImageUrl.of(
+                        ContentPartImageUrl.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg",
                                 ImageDetail.AUTO)),
-                        ContentPartImage.of(ImageUrl.of(
+                        ContentPartImageUrl.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg")))))
                 .temperature(0.2)
                 .maxTokens(500)

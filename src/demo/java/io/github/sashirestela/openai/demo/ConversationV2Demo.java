@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.cleverclient.Event;
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.function.Functional;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
@@ -142,8 +142,8 @@ public class ConversationV2Demo {
                 case EventName.THREAD_MESSAGE_DELTA:
                     var msgDelta = (ThreadMessageDelta) event.getData();
                     var content = msgDelta.getDelta().getContent().get(0);
-                    if (content instanceof TextContent) {
-                        var textContent = (TextContent) content;
+                    if (content instanceof ContentPartTextAnnotation) {
+                        var textContent = (ContentPartTextAnnotation) content;
                         System.out.print(textContent.getText().getValue());
                     }
                     break;

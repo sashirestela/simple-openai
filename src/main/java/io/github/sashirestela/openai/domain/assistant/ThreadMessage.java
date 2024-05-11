@@ -3,6 +3,7 @@ package io.github.sashirestela.openai.domain.assistant;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.content.ContentPart;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -25,7 +26,7 @@ public class ThreadMessage {
     private Integer completedAt;
     private Integer incompleteAt;
     private ThreadMessageRole role;
-    private List<ThreadMessageContent> content;
+    private List<ContentPart> content;
     private String assistantId;
     private String runId;
     private List<Attachment> attachments;
