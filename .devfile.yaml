@@ -20,7 +20,11 @@ components:
         - name: m2
           path: /home/user/.m2
       mountSources: true
+      memoryRequest: 2G
+      memoryLimit: 6G
+      cpuRequest: 2000m
+      cpuLimit: 4000m
   - name: m2
     volume:
-      size: 5Gi
+      size: 8Gi
 commands: []

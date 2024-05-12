@@ -51,14 +51,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>11</maven.compiler.release>
     <!-- Dependencies Versions -->
-    <slf4j.version>2.0.12</slf4j.version>
+    <slf4j.version>2.0.13</slf4j.version>
     <cleverclient.version>1.4.2</cleverclient.version>
     <slimvalidator.version>1.2.1</slimvalidator.version>
     <lombok.version>1.18.32</lombok.version>
-    <jackson.version>2.17.0</jackson.version>
+    <jackson.version>2.17.1</jackson.version>
     <json.schema.version>4.35.0</json.schema.version>
-    <junit.version>5.10.2</junit.version>
-    <mockito.version>5.11.0</mockito.version>
+    <junit.version>5.11.0-M1</junit.version>
+    <mockito.version>5.12.0</mockito.version>
     <!-- Plugins Versions -->
     <compiler.version>3.13.0</compiler.version>
     <enforcer.version>3.4.1</enforcer.version>
