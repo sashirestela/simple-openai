@@ -5,6 +5,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
+[![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai)
 
 
 ### Table of Contents
@@ -36,7 +37,7 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [May 6th, 2024](https://platform.openai.com/docs/changelog/may-6th-2024) and will continue to update with future changes.
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [May 9th, 2024](https://platform.openai.com/docs/changelog/may-9th-2024) and will continue to update with future changes.
 
 Full support for all of the OpenAI services:
 
@@ -50,13 +51,15 @@ Full support for all of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming)
+* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision)
 
 ![OpenAI Services](media/openai_services.png)
 
 ![OpenAI Beta Services](media/openai_beta_services.png)
 
-NOTE: All the responses are ```CompletableFuture<ResponseObject>```, which means they are asynchronous, but you can call the join() method to return the result value when complete.
+NOTES:
+1. The methods's responses are `CompletableFuture<ResponseObject>`, which means they are asynchronous, but you can call the join() method to return the result value when complete.
+1. Exceptions for the above point are the methods whose names end with the suffix `AndPoll()`. These methods are synchronous and block until a Predicate function that you provide returns false.
 
 
 ## ⚙ Installation
@@ -293,15 +296,13 @@ var chatRequest = ChatRequest.builder()
                 UserMessage.of(List.of(
                         ContentPartText.of(
                                 "What do you see in the image? Give in details in no more than 100 words."),
-                        ContentPartImage.of(ImageUrl.of(
+                        ContentPartImageUrl.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
         .temperature(0.0)
         .maxTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-        .map(chatResp -> chatResp.firstContent())
-        .forEach(System.out::print);
+chatResponse.forEach(ChatDemo::processResponseChunk);
 System.out.println();
 ```
 Example to call the Chat Completion service to allow the model to take in local images and answer questions about them:
@@ -312,14 +313,12 @@ var chatRequest = ChatRequest.builder()
                 UserMessage.of(List.of(
                         ContentPartText.of(
                                 "What do you see in the image? Give in details in no more than 100 words."),
-                        ContentPartImage.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                        ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
         .temperature(0.0)
         .maxTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-chatResponse.filter(chatResp -> chatResp.firstContent() != null)
-        .map(chatResp -> chatResp.firstContent())
-        .forEach(System.out::print);
+chatResponse.forEach(ChatDemo::processResponseChunk);
 System.out.println();
 
 private static ImageUrl loadImageAsBase64(String imagePath) {
@@ -604,7 +603,7 @@ Write any message (or write 'exit' to finish): Tell me something about the Mistr
 =====>> Thread Run: id=run_5u0t8kDQy87p5ouaTRXsCG8m, status=QUEUED
 Mistral AI is a French company that specializes in selling artificial intelligence products. It was established in April 2023 by former employees of Meta Platforms and Google DeepMind. Notably, the company secured a significant amount of funding, raising €385 million in October 2023, and achieved a valuation exceeding $2 billion by December of the same year.
 
-The prime focus of Mistral AI is on developing and producing open-source large language models. This approach underscores the foundational role of open-source software as a counter to proprietary models. As of March 2024, Mistral AI has published two models, which are available in terms of weights, while three more models—categorized as Small, Medium, and Large—are accessible only through an API【11:0†mistral-ai.txt】.
+The prime focus of Mistral AI is on developing and producing open-source large language models. This approach underscores the foundational role of open-source software as a counter to proprietary models. As of March 2024, Mistral AI has published two models, which are available in terms of weights, while three more models—categorized as Small, Medium, and Large—are accessible only through an API[1].
 =====>> Thread Run: id=run_5u0t8kDQy87p5ouaTRXsCG8m, status=COMPLETED
 
 Write any message (or write 'exit' to finish): exit

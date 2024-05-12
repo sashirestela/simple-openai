@@ -21,9 +21,9 @@ public class ThreadRequest {
     @Singular
     private List<ThreadMessageRequest> messages;
 
-    protected ToolResourceFull toolResources;
+    private ToolResourceFull toolResources;
 
     @Size(max = 16)
-    protected Map<String, String> metadata;
+    private Map<String, String> metadata;
 
 }

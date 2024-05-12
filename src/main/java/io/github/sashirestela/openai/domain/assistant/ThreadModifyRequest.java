@@ -16,9 +16,9 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ThreadModifyRequest {
 
-    protected ToolResource toolResources;
+    private ToolResource toolResources;
 
     @Size(max = 16)
-    protected Map<String, String> metadata;
+    private Map<String, String> metadata;
 
 }
