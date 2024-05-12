@@ -53,7 +53,7 @@ public class Tool {
         private String description;
 
         @Required
-        JsonNode parameters;
+        private JsonNode parameters;
 
     }
 

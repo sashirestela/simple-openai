@@ -88,7 +88,7 @@ public class StepDetail {
                             @JsonSubTypes.Type(value = Output.ImageOutput.class, name = "image")
                     })
                     @Getter
-                    public static class Output {
+                    public abstract static class Output {
 
                         protected Integer index;
                         protected OutputType type;
