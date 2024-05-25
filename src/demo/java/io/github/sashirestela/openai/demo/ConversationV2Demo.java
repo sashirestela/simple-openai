@@ -80,7 +80,7 @@ public class ConversationV2Demo {
                         .name("World Assistant")
                         .model("gpt-4-turbo")
                         .instructions("You are a skilled tutor on geo-politic topics.")
-                        .tools(AssistantTool.functions(functionList))
+                        .tools(functionExecutor.getToolFunctions())
                         .tool(AssistantTool.FILE_SEARCH)
                         .toolResources(ToolResourceFull.builder()
                                 .fileSearch(FileSearch.builder()

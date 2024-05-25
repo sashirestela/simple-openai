@@ -71,7 +71,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                                 + "questions, you have to refer to the attached files or use the functions provided. "
                                 + "Finally, if you receive math questions, you must write and run code to answer them.")
-                        .tools(AssistantTool.functions(functionList))
+                        .tools(functionExecutor.getToolFunctions())
                         .tool(AssistantTool.FILE_SEARCH)
                         .toolResources(ToolResourceFull.builder()
                                 .fileSearch(FileSearch.builder()

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
@@ -34,7 +35,7 @@ public class ThreadCreateAndRunRequest {
     private String instructions;
     @Singular
     @Size(max = 20)
-    private List<AssistantTool> tools;
+    private List<Tool> tools;
 
     private ToolResource toolResources;
 
