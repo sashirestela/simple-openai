@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.common.function;
 
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.tool.Tool;
+import io.github.sashirestela.openai.common.tool.ToolChoice;
+import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -116,6 +118,41 @@ class FunctionExecutorTest {
         var actualResult = executor.execute(functionToCall);
         var expectedResult = 1024.0;
         assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    void shouldReturnListOfFunctionsWhenToolChoiceIsPassed() {
+        Object[][] testData = {
+                { ToolChoiceOption.NONE, 0 },
+                { ToolChoiceOption.AUTO, 2, "convert_to_celsius", "exponentiation" },
+                { ToolChoiceOption.REQUIRED, 2, "convert_to_celsius", "exponentiation" },
+                { ToolChoice.function("exponentiation"), 1, "exponentiation" }
+        };
+        var executor = new FunctionExecutor(functionList);
+        for (var data : testData) {
+            var actualTools = executor.getToolFunctions(data[0]);
+            var actualSize = actualTools.size();
+            assertEquals(data[1], actualSize);
+            if (actualSize > 0) {
+                sortListFunction(actualTools);
+                for (int i = 0, idx = 2; i < actualSize; i++, idx++) {
+                    assertEquals(data[idx], actualTools.get(i).getFunction().getName());
+                }
+            }
+        }
+    }
+
+    @Test
+    void shouldThownExceptionWhenTryingToGetToolFunctionsWithWrongArgument() {
+        Object[][] testData = {
+                { ToolChoice.function("send_email"), "The function send_email was not enrolled in the executor." },
+                { "CalculateWeather", "The object CalculateWeather is of an unexpected type." }
+        };
+        var executor = new FunctionExecutor(functionList);
+        for (var data : testData) {
+            var exception = assertThrows(SimpleUncheckedException.class, () -> executor.getToolFunctions(data[0]));
+            assertEquals(exception.getMessage(), data[1]);
+        }
     }
 
     private void sortListFunction(List<Tool> list) {
