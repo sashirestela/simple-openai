@@ -5,8 +5,11 @@ import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolCall;
+import io.github.sashirestela.openai.common.tool.ToolChoice;
+import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,26 @@ public class FunctionExecutor {
                 .collect(Collectors.toList());
     }
 
+    public List<Tool> getToolFunctions(Object toolChoice) {
+        if (toolChoice instanceof ToolChoiceOption) {
+            var choice = (ToolChoiceOption) toolChoice;
+            if (choice.equals(ToolChoiceOption.NONE)) {
+                return Arrays.asList();
+            } else {
+                return getToolFunctions();
+            }
+        } else if (toolChoice instanceof ToolChoice) {
+            var functionName = ((ToolChoice) toolChoice).getFunction().getName();
+            if (!mapFunctions.containsKey(functionName)) {
+                throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName,
+                        null);
+            }
+            return Arrays.asList(Tool.function(mapFunctions.get(functionName)));
+        } else {
+            throw new SimpleUncheckedException("The object {0} is of an unexpected type.", toolChoice.toString(), null);
+        }
+    }
+
     public void enrollFunction(FunctionDef function) {
         mapFunctions.put(function.getName(), function);
     }
@@ -48,7 +71,7 @@ public class FunctionExecutor {
         if (functionCall == null || CommonUtil.isNullOrEmpty(functionCall.getName())) {
             throw new SimpleUncheckedException("No function was entered or it does not has a name.", "", null);
         }
-        String functionName = functionCall.getName();
+        var functionName = functionCall.getName();
         if (!mapFunctions.containsKey(functionName)) {
             throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName,
                     null);
