@@ -6,7 +6,6 @@ import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +29,7 @@ public class Tool {
                         JsonSchemaUtil.classToJsonSchema(function.getFunctionalClass())));
     }
 
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @ToString
