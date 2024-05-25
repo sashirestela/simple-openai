@@ -12,9 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -31,12 +28,6 @@ public class Tool {
                         function.getName(),
                         function.getDescription(),
                         JsonSchemaUtil.classToJsonSchema(function.getFunctionalClass())));
-    }
-
-    public static List<Tool> functions(List<FunctionDef> functions) {
-        return functions.stream()
-                .map(funDef -> function(funDef))
-                .collect(Collectors.toList());
     }
 
     @AllArgsConstructor(access = AccessLevel.PROTECTED)

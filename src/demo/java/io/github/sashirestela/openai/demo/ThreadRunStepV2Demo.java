@@ -6,7 +6,6 @@ import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.CurrentTemperature;
 import io.github.sashirestela.openai.demo.ThreadRunV2Demo.RainProbability;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.AssistantTool;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
@@ -45,7 +44,7 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
                         .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                                 + "questions, you have to refer to the attached files or use the functions provided. "
                                 + "Finally, if you receive math questions, you must write and run code to answer them.")
-                        .tools(AssistantTool.functions(functionList))
+                        .tools(functionExecutor.getToolFunctions())
                         .temperature(0.2)
                         .build())
                 .join();

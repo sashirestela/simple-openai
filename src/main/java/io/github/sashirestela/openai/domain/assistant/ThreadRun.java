@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.Usage;
+import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,7 @@ public class ThreadRun {
     private IncompleteDetail incompleteDetails;
     private String model;
     private String instructions;
-    private List<AssistantTool> tools;
+    private List<Tool> tools;
     private Map<String, String> metadata;
     private Usage usage;
     private Double temperature;
