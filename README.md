@@ -20,6 +20,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
+  - [Chat Completion Conversation Example](#chat-completion-conversation-example) **New**
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example) **New**
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
@@ -335,6 +336,223 @@ private static ImageUrl loadImageAsBase64(String imagePath) {
     }
 }
 ```
+### Chat Completion Conversation Example
+This example simulates a conversation chat by the command console and demonstrates the usage of ChatCompletion with streaming and call functions.
+
+You can see the full demo code as well as the results from running the demo code:
+
+<details>
+
+<summary><b>Demo Code</b></summary>
+
+```java
+package io.github.sashirestela.openai.demo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.function.FunctionDef;
+import io.github.sashirestela.openai.common.function.FunctionExecutor;
+import io.github.sashirestela.openai.common.function.Functional;
+import io.github.sashirestela.openai.common.tool.ToolCall;
+import io.github.sashirestela.openai.domain.chat.Chat;
+import io.github.sashirestela.openai.domain.chat.Chat.Choice;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class ConversationDemo {
+
+    private SimpleOpenAI openAI;
+    private FunctionExecutor functionExecutor;
+
+    private int indexTool;
+    private StringBuilder content;
+    private StringBuilder functionArgs;
+
+    public ConversationDemo() {
+        openAI = SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    }
+
+    public void prepareConversation() {
+        List<FunctionDef> functionList = new ArrayList<>();
+        functionList.add(FunctionDef.builder()
+                .name("getCurrentTemperature")
+                .description("Get the current temperature for a specific location")
+                .functionalClass(CurrentTemperature.class)
+                .build());
+        functionList.add(FunctionDef.builder()
+                .name("getRainProbability")
+                .description("Get the probability of rain for a specific location")
+                .functionalClass(RainProbability.class)
+                .build());
+        functionExecutor = new FunctionExecutor(functionList);
+    }
+
+    public void runConversation() {
+        List<ChatMessage> messages = new ArrayList<>();
+        var myMessage = System.console().readLine("\nWelcome! Write any message: ");
+        messages.add(UserMessage.of(myMessage));
+        while (!myMessage.toLowerCase().equals("exit")) {
+            var chatStream = openAI.chatCompletions()
+                    .createStream(ChatRequest.builder()
+                            .model("gpt-4o")
+                            .messages(messages)
+                            .tools(functionExecutor.getToolFunctions())
+                            .temperature(0.2)
+                            .stream(true)
+                            .build())
+                    .join();
+
+            indexTool = -1;
+            content = new StringBuilder();
+            functionArgs = new StringBuilder();
+
+            var response = getResponse(chatStream);
+
+            if (response.getMessage().getContent() != null) {
+                messages.add(AssistantMessage.of(response.getMessage().getContent()));
+            }
+            if (response.getFinishReason().equals("tool_calls")) {
+                messages.add(response.getMessage());
+                var toolCalls = response.getMessage().getToolCalls();
+                var toolMessages = functionExecutor.executeAll(toolCalls,
+                        (toolCallId, result) -> ToolMessage.of(result, toolCallId));
+                messages.addAll(toolMessages);
+            } else {
+                myMessage = System.console().readLine("\n\nWrite any message (or write 'exit' to finish): ");
+                messages.add(UserMessage.of(myMessage));
+            }
+        }
+    }
+
+    private Choice getResponse(Stream<Chat> chatStream) {
+        var choice = new Choice();
+        choice.setIndex(0);
+        var chatMsgResponse = new ResponseMessage();
+        List<ToolCall> toolCalls = new ArrayList<>();
+
+        chatStream.forEach(responseChunk -> {
+            var choices = responseChunk.getChoices();
+            if (choices.size() > 0) {
+                var innerChoice = choices.get(0);
+                var delta = innerChoice.getMessage();
+                if (delta.getRole() != null) {
+                    chatMsgResponse.setRole(delta.getRole());
+                } else if (delta.getContent() != null && !delta.getContent().isEmpty()) {
+                    content.append(delta.getContent());
+                    System.out.print(delta.getContent());
+                } else if (delta.getToolCalls() != null) {
+                    var toolCall = delta.getToolCalls().get(0);
+                    if (toolCall.getIndex() != indexTool) {
+                        if (toolCalls.size() > 0) {
+                            toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
+                            functionArgs = new StringBuilder();
+                        }
+                        toolCalls.add(toolCall);
+                        indexTool++;
+                    } else {
+                        functionArgs.append(toolCall.getFunction().getArguments());
+                    }
+                } else {
+                    if (content.length() > 0) {
+                        chatMsgResponse.setContent(content.toString());
+                    }
+                    if (toolCalls.size() > 0) {
+                        toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
+                        chatMsgResponse.setToolCalls(toolCalls);
+                    }
+                    choice.setMessage(chatMsgResponse);
+                    choice.setFinishReason(innerChoice.getFinishReason());
+                }
+            }
+        });
+        return choice;
+    }
+
+    public static void main(String[] args) {
+        var demo = new ConversationDemo();
+        demo.prepareConversation();
+        demo.runConversation();
+    }
+
+    public static class CurrentTemperature implements Functional {
+
+        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
+        @JsonProperty(required = true)
+        public String location;
+
+        @JsonPropertyDescription("The temperature unit to use. Infer this from the user's location.")
+        @JsonProperty(required = true)
+        public String unit;
+
+        @Override
+        public Object execute() {
+            double centigrades = Math.random() * (40.0 - 10.0) + 10.0;
+            double fahrenheit = centigrades * 9.0 / 5.0 + 32.0;
+            String shortUnit = unit.substring(0, 1).toUpperCase();
+            return shortUnit.equals("C") ? centigrades : (shortUnit.equals("F") ? fahrenheit : 0.0);
+        }
+
+    }
+
+    public static class RainProbability implements Functional {
+
+        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
+        @JsonProperty(required = true)
+        public String location;
+
+        @Override
+        public Object execute() {
+            return Math.random() * 100;
+        }
+
+    }
+
+}
+```
+</details>
+
+<details>
+
+<summary><b>Demo Results</b></summary>
+
+```txt
+Welcome! Write any message: Hi, can you help me with some quetions about Lima, Peru?
+Of course! What would you like to know about Lima, Peru?
+
+Write any message (or write 'exit' to finish): Tell me something brief about Lima Peru, then tell me how's the weather there right now. Finally give me three tips to travel there.
+### Brief About Lima, Peru
+Lima, the capital city of Peru, is a bustling metropolis that blends modernity with rich historical heritage. Founded by Spanish conquistador Francisco Pizarro in 1535, Lima is known for its colonial architecture, vibrant culture, and delicious cuisine, particularly its world-renowned ceviche. The city is also a gateway to exploring Peru's diverse landscapes, from the coastal deserts to the Andean highlands and the Amazon rainforest.
+
+### Current Weather in Lima, Peru
+I'll check the current temperature and the probability of rain in Lima for you.### Current Weather in Lima, Peru
+- **Temperature:** Approximately 11.8°C
+- **Probability of Rain:** Approximately 97.8%
+
+### Three Tips for Traveling to Lima, Peru
+1. **Explore the Historic Center:**
+   - Visit the Plaza Mayor, the Government Palace, and the Cathedral of Lima. These landmarks offer a glimpse into Lima's colonial past and are UNESCO World Heritage Sites.
+
+2. **Savor the Local Cuisine:**
+   - Don't miss out on trying ceviche, a traditional Peruvian dish made from fresh raw fish marinated in citrus juices. Also, explore the local markets and try other Peruvian delicacies.
+
+3. **Visit the Coastal Districts:**
+   - Head to Miraflores and Barranco for stunning ocean views, vibrant nightlife, and cultural experiences. These districts are known for their beautiful parks, cliffs, and bohemian atmosphere.
+
+Enjoy your trip to Lima! If you have any more questions, feel free to ask.
+
+Write any message (or write 'exit' to finish): exit
+```
+</details>
+
 ### Assistant v2 Conversation Example
 This example simulates a conversation chat by the command console and demonstrates the usage of the latest Assistants API v2 features:
 - _Vector Stores_ to upload files and incorporate it as new knowledge base.
@@ -355,12 +573,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.cleverclient.Event;
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.function.Functional;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageContent.TextContent;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
@@ -407,8 +625,7 @@ public class ConversationV2Demo {
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
                 .build());
-        functionExecutor = new FunctionExecutor();
-        functionExecutor.enrollFunctions(functionList);
+        functionExecutor = new FunctionExecutor(functionList);
 
         var file = openAI.files()
                 .create(FileRequest.builder()
@@ -429,9 +646,9 @@ public class ConversationV2Demo {
         var assistant = openAI.assistants()
                 .create(AssistantRequest.builder()
                         .name("World Assistant")
-                        .model("gpt-4-turbo")
+                        .model("gpt-4o")
                         .instructions("You are a skilled tutor on geo-politic topics.")
-                        .tools(AssistantTool.functions(functionList))
+                        .tools(functionExecutor.getToolFunctions())
                         .tool(AssistantTool.FILE_SEARCH)
                         .toolResources(ToolResourceFull.builder()
                                 .fileSearch(FileSearch.builder()
@@ -479,8 +696,11 @@ public class ConversationV2Demo {
                     System.out.println("=====>> Thread Run: id=" + run.getId() + ", status=" + run.getStatus());
                     if (run.getStatus().equals(RunStatus.REQUIRES_ACTION)) {
                         var toolCalls = run.getRequiredAction().getSubmitToolOutputs().getToolCalls();
-                        var toolOutputs = functionExecutor.executeAll(toolCalls, (toolCallId,
-                                result) -> ToolOutput.builder().toolCallId(toolCallId).output(result).build());
+                        var toolOutputs = functionExecutor.executeAll(toolCalls,
+                                (toolCallId, result) -> ToolOutput.builder()
+                                        .toolCallId(toolCallId)
+                                        .output(result)
+                                        .build());
                         var runSubmitToolStream = openAI.threadRuns()
                                 .submitToolOutputStream(threadId, run.getId(), ThreadRunSubmitOutputRequest.builder()
                                         .toolOutputs(toolOutputs)
@@ -493,8 +713,8 @@ public class ConversationV2Demo {
                 case EventName.THREAD_MESSAGE_DELTA:
                     var msgDelta = (ThreadMessageDelta) event.getData();
                     var content = msgDelta.getDelta().getContent().get(0);
-                    if (content instanceof TextContent) {
-                        var textContent = (TextContent) content;
+                    if (content instanceof ContentPartTextAnnotation) {
+                        var textContent = (ContentPartTextAnnotation) content;
                         System.out.print(textContent.getText().getValue());
                     }
                     break;
@@ -681,6 +901,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * Image
     * Model
     * Moderation
+    * Conversation
     * AssistantV2
     * ThreadV2
     * ThreadMessageV2
