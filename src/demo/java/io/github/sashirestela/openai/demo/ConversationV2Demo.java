@@ -56,8 +56,7 @@ public class ConversationV2Demo {
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
                 .build());
-        functionExecutor = new FunctionExecutor();
-        functionExecutor.enrollFunctions(functionList);
+        functionExecutor = new FunctionExecutor(functionList);
 
         var file = openAI.files()
                 .create(FileRequest.builder()
@@ -78,7 +77,7 @@ public class ConversationV2Demo {
         var assistant = openAI.assistants()
                 .create(AssistantRequest.builder()
                         .name("World Assistant")
-                        .model("gpt-4-turbo")
+                        .model("gpt-4o")
                         .instructions("You are a skilled tutor on geo-politic topics.")
                         .tools(functionExecutor.getToolFunctions())
                         .tool(AssistantTool.FILE_SEARCH)
@@ -128,8 +127,11 @@ public class ConversationV2Demo {
                     System.out.println("=====>> Thread Run: id=" + run.getId() + ", status=" + run.getStatus());
                     if (run.getStatus().equals(RunStatus.REQUIRES_ACTION)) {
                         var toolCalls = run.getRequiredAction().getSubmitToolOutputs().getToolCalls();
-                        var toolOutputs = functionExecutor.executeAll(toolCalls, (toolCallId,
-                                result) -> ToolOutput.builder().toolCallId(toolCallId).output(result).build());
+                        var toolOutputs = functionExecutor.executeAll(toolCalls,
+                                (toolCallId, result) -> ToolOutput.builder()
+                                        .toolCallId(toolCallId)
+                                        .output(result)
+                                        .build());
                         var runSubmitToolStream = openAI.threadRuns()
                                 .submitToolOutputStream(threadId, run.getId(), ThreadRunSubmitOutputRequest.builder()
                                         .toolOutputs(toolOutputs)
