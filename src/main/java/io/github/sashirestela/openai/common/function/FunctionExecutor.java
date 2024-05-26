@@ -91,9 +91,9 @@ public class FunctionExecutor {
      * @param <R>            Specific type to gather the result. ToolMessage for ChatCompletion or
      *                       ToolOutput for Assistants.
      * @param toolCalls      Response from the model to call functions.
-     * @param toolOutputItem BiFunction with two arguments: 'toolCallId' and 'result'. Returns a new <R>
+     * @param toolOutputItem BiFunction with two arguments: 'toolCallId' and 'result'. Returns a new R
      *                       object with those arguments.
-     * @return List of <R> objects.
+     * @return List of R objects.
      */
     public <R> List<R> executeAll(List<ToolCall> toolCalls, BiFunction<String, String, R> toolOutputItem) {
         List<R> toolOutputs = new ArrayList<>();
