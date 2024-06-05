@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ToolResource {
     @NoArgsConstructor
     @Getter
     @ToString
-    @Builder
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class FileSearch {

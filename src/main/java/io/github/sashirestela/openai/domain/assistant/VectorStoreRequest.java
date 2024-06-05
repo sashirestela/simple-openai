@@ -26,6 +26,8 @@ public class VectorStoreRequest {
 
     private ExpiresAfter expiresAfter;
 
+    private ChunkingStrategy chunkingStrategy;
+
     @Size(max = 16)
     private Map<String, String> metadata;
 

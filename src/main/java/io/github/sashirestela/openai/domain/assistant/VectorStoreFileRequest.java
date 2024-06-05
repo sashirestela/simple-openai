@@ -17,4 +17,6 @@ public class VectorStoreFileRequest {
     @Required
     private String fileId;
 
+    private ChunkingStrategy chunkingStrategy;
+
 }

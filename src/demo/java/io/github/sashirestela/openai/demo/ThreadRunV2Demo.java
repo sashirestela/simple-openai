@@ -72,7 +72,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                                 + "questions, you have to refer to the attached files or use the functions provided. "
                                 + "Finally, if you receive math questions, you must write and run code to answer them.")
                         .tools(functionExecutor.getToolFunctions())
-                        .tool(AssistantTool.FILE_SEARCH)
+                        .tool(AssistantTool.fileSearch())
                         .toolResources(ToolResourceFull.builder()
                                 .fileSearch(FileSearch.builder()
                                         .vectorStoreId(vectorStoreId)

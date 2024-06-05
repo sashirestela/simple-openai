@@ -649,7 +649,7 @@ public class ConversationV2Demo {
                         .model("gpt-4o")
                         .instructions("You are a skilled tutor on geo-politic topics.")
                         .tools(functionExecutor.getToolFunctions())
-                        .tool(AssistantTool.FILE_SEARCH)
+                        .tool(AssistantTool.fileSearch())
                         .toolResources(ToolResourceFull.builder()
                                 .fileSearch(FileSearch.builder()
                                         .vectorStoreId(vectorStoreId)

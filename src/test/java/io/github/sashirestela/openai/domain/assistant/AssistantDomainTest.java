@@ -3,6 +3,9 @@ package io.github.sashirestela.openai.domain.assistant;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.assistant.ChunkingStrategy.StaticChunking;
+import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch;
+import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch.VectorStore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +40,18 @@ class AssistantDomainTest {
                 .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                         + "questions, you have to refer to the attached files or use the functions provided. "
                         + "Finally, if you receive math questions, you must write and run code to answer them.")
-                .tool(AssistantTool.FILE_SEARCH)
+                .tool(AssistantTool.fileSearch(10))
+                .toolResources(ToolResourceFull.builder()
+                        .fileSearch(FileSearch.builder()
+                                .vectorStore(VectorStore.builder()
+                                        .fileId("fileId")
+                                        .chunkingStrategy(ChunkingStrategy.staticType(StaticChunking.builder()
+                                                .maxChunkSizeTokens(100)
+                                                .chunkOverlapTokens(50)
+                                                .build()))
+                                        .build())
+                                .build())
+                        .build())
                 .metadata(Map.of("user", "tester"))
                 .temperature(0.2)
                 .responseFormat("auto")

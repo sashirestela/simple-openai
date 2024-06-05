@@ -19,5 +19,6 @@ public class VectorStoreFile {
     private String vectorStoreId;
     private FileStatus status;
     private LastError lastError;
+    private ChunkingStrategy chunkingStrategy;
 
 }

@@ -4,12 +4,26 @@ import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.assistant.AssistantModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.AssistantTool;
+import io.github.sashirestela.openai.domain.assistant.ChunkingStrategy;
+import io.github.sashirestela.openai.domain.assistant.ChunkingStrategy.StaticChunking;
+import io.github.sashirestela.openai.domain.assistant.ToolResourceFull;
+import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch;
+import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch.VectorStore;
+import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 
 import java.util.Map;
 
 public class AssistantV2Demo extends AbstractDemo {
 
+    private FileDemo fileDemo;
+    private String fileId;
     private String assistantId;
+
+    public AssistantV2Demo() {
+        fileDemo = new FileDemo();
+        var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
+        fileId = file.getId();
+    }
 
     public void createAssistant() {
         var assistantRequest = AssistantRequest.builder()
@@ -19,7 +33,18 @@ public class AssistantV2Demo extends AbstractDemo {
                 .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                         + "questions, you have to refer to the attached files or use the functions provided. "
                         + "Finally, if you receive math questions, you must write and run code to answer them.")
-                .tool(AssistantTool.FILE_SEARCH)
+                .tool(AssistantTool.fileSearch(10))
+                .toolResources(ToolResourceFull.builder()
+                        .fileSearch(FileSearch.builder()
+                                .vectorStore(VectorStore.builder()
+                                        .fileId(fileId)
+                                        .chunkingStrategy(ChunkingStrategy.staticType(StaticChunking.builder()
+                                                .maxChunkSizeTokens(100)
+                                                .chunkOverlapTokens(50)
+                                                .build()))
+                                        .build())
+                                .build())
+                        .build())
                 .metadata(Map.of("user", "tester"))
                 .temperature(0.2)
                 .responseFormat("auto")
@@ -50,6 +75,15 @@ public class AssistantV2Demo extends AbstractDemo {
     }
 
     public void deleteAssistant() {
+        var assistant = openAI.assistants().getOne(assistantId).join();
+        var vectorStoreId = assistant.getToolResources().getFileSearch().getVectorStoreIds().get(0);
+
+        var deletedFile = fileDemo.deleteFile(fileId);
+        System.out.println(deletedFile);
+
+        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
+        System.out.println(deletedVectorStore);
+
         var deletedAssistant = openAI.assistants().delete(assistantId).join();
         System.out.println(deletedAssistant);
     }

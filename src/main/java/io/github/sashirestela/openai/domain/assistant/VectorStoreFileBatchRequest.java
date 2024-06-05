@@ -23,4 +23,6 @@ public class VectorStoreFileBatchRequest {
     @Size(min = 1, max = 500)
     private List<String> fileIds;
 
+    private ChunkingStrategy chunkingStrategy;
+
 }
