@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.3.0</version>
+  <version>3.4.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -61,16 +61,16 @@
     <mockito.version>5.12.0</mockito.version>
     <!-- Plugins Versions -->
     <compiler.version>3.13.0</compiler.version>
-    <enforcer.version>3.4.1</enforcer.version>
+    <enforcer.version>3.5.0</enforcer.version>
     <surefire.version>3.2.5</surefire.version>
     <exec.version>3.3.0</exec.version>
     <jacoco.version>0.8.12</jacoco.version>
     <helper.version>3.6.0</helper.version>
     <versions.version>2.16.2</versions.version>
     <source.version>3.3.1</source.version>
-    <javadoc.version>3.6.3</javadoc.version>
+    <javadoc.version>3.7.0</javadoc.version>
     <gpg.version>3.1.0</gpg.version>
-    <sonatype.version>1.6.13</sonatype.version>
+    <sonatype.version>1.7.0</sonatype.version>
     <spotless.version>2.43.0</spotless.version>
   </properties>
 
