@@ -44,6 +44,7 @@ public class ThreadRun {
     private Integer maxCompletionTokens;
     private TruncationStrategy truncationStrategy;
     private Object toolChoice;
+    private Boolean parallelToolCalls;
     private Object responseFormat;
 
     public enum RunStatus {
