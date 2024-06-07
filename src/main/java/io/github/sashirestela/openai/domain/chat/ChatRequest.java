@@ -79,6 +79,8 @@ public class ChatRequest {
     @ObjectType(baseClass = ToolChoice.class)
     private Object toolChoice;
 
+    private Boolean parallelToolCalls;
+
     private String user;
 
 }

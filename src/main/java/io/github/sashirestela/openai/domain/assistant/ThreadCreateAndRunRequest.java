@@ -63,6 +63,8 @@ public class ThreadCreateAndRunRequest {
     @ObjectType(baseClass = ToolChoice.class)
     private Object toolChoice;
 
+    private Boolean parallelToolCalls;
+
     @ObjectType(baseClass = String.class)
     @ObjectType(baseClass = ResponseFormat.class)
     private Object responseFormat;

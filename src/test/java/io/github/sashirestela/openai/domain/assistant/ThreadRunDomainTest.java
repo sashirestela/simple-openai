@@ -93,6 +93,7 @@ class ThreadRunDomainTest {
                         .role(ThreadMessageRole.USER)
                         .content(question)
                         .build())
+                .parallelToolCalls(Boolean.TRUE)
                 .build();
         var response = openAI.threadRuns().createStream("threadId", threadRunRequest).join();
         System.out.print("Answer: ");
@@ -269,6 +270,7 @@ class ThreadRunDomainTest {
                                         .content(question)
                                         .build())
                         .build())
+                .parallelToolCalls(Boolean.TRUE)
                 .build();
         var response = openAI.threadRuns().createThreadAndRunStream(threadCreateAndRunRequest).join();
         System.out.print("Answer: ");

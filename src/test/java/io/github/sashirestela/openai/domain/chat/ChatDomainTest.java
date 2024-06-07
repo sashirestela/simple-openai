@@ -153,6 +153,7 @@ class ChatDomainTest {
                 .user("test")
                 .responseFormat(ResponseFormat.TEXT)
                 .seed(1)
+                .parallelToolCalls(Boolean.TRUE)
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstMessage().getToolCalls().get(0).getFunction().getName());
