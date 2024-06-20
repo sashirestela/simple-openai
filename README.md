@@ -194,7 +194,7 @@ var chatRequest = ChatRequest.builder()
         .build();
 var futureChat = openAI.chatCompletions().createStream(chatRequest);
 var chatResponse = futureChat.join();
-chatResponse.filter(chatResp -> chatResp.firstContent() != null)
+chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
         .map(Chat::firstContent)
         .forEach(System.out::print);
 System.out.println();
@@ -303,7 +303,9 @@ var chatRequest = ChatRequest.builder()
         .maxTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-chatResponse.forEach(ChatDemo::processResponseChunk);
+chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
+        .map(Chat::firstContent)
+        .forEach(System.out::print);
 System.out.println();
 ```
 Example to call the Chat Completion service to allow the model to take in local images and answer questions about them:
@@ -319,7 +321,9 @@ var chatRequest = ChatRequest.builder()
         .maxTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-chatResponse.forEach(ChatDemo::processResponseChunk);
+chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
+        .map(Chat::firstContent)
+        .forEach(System.out::print);
 System.out.println();
 
 private static ImageUrl loadImageAsBase64(String imagePath) {
