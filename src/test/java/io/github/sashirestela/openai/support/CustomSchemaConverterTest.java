@@ -2,12 +2,10 @@ package io.github.sashirestela.openai.support;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sashirestela.openai.common.function.SchemaConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.github.sashirestela.openai.support.JsonSchemaUtil.JSON_EMPTY_CLASS;
@@ -15,8 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CustomSchemaConverterTest {
 
-    private static SchemaConverter schemaConverter=new CustomSchemaConverter();
-
+    private static SchemaConverter schemaConverter = new CustomSchemaConverter();
 
     @Test
     void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
@@ -68,7 +65,5 @@ class CustomSchemaConverterTest {
         public String third;
 
     }
-
-
 
 }
