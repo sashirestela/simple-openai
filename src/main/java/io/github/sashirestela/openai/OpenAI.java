@@ -43,6 +43,11 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
+import io.github.sashirestela.openai.domain.upload.Upload;
+import io.github.sashirestela.openai.domain.upload.UploadCompleteRequest;
+import io.github.sashirestela.openai.domain.upload.UploadPart;
+import io.github.sashirestela.openai.domain.upload.UploadPartRequest;
+import io.github.sashirestela.openai.domain.upload.UploadRequest;
 
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -715,6 +720,58 @@ public interface OpenAI {
          */
         @POST
         CompletableFuture<Moderation> create(@Body ModerationRequest moderationRequest);
+
+    }
+
+    /**
+     * Allows you to upload large files in multiple parts.
+     * 
+     * @see <a href= "https://platform.openai.com/docs/api-reference/uploads">OpenAI Upload</a>
+     */
+    @Resource("/v1/uploads")
+    interface Uploads {
+
+        /**
+         * Creates an intermediate Upload object that you can add Parts to.
+         * 
+         * @param uploadRequest The creation request.
+         * @return The Upload object with status pending.
+         */
+        @POST
+        CompletableFuture<Upload> create(@Body UploadRequest uploadRequest);
+
+        /**
+         * Adds a Part to an Upload object. A Part represents a chunk of bytes from the file you are trying
+         * to upload.
+         * 
+         * @param uploadId          The ID of the Upload.
+         * @param uploadPartRequest The chunk of bytes for this Part.
+         * @return The upload Part object.
+         */
+        @Multipart
+        @POST("/{uploadId}/parts")
+        CompletableFuture<UploadPart> addPart(@Path("uploadId") String uploadId,
+                @Body UploadPartRequest uploadPartRequest);
+
+        /**
+         * Completes the Upload.
+         * 
+         * @param uploadId              The ID of the Upload.
+         * @param uploadCompleteRequest The request including the ordered list of Part IDs.
+         * @return The Upload object with status completed.
+         */
+        @POST("/{uploadId}/complete")
+        CompletableFuture<Upload> complete(@Path("uploadId") String uploadId,
+                @Body UploadCompleteRequest uploadCompleteRequest);
+
+        /**
+         * Cancels the Upload. No Parts may be added after an Upload is cancelled.
+         * 
+         * @param uploadId The ID of the Upload.
+         * @return The Upload object with status cancelled.
+         */
+        @POST("/{uploadId}/cancel")
+        CompletableFuture<Upload> cancel(@Path("uploadId") String uploadId);
 
     }
 

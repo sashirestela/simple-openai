@@ -33,6 +33,7 @@ public abstract class BaseSimpleOpenAI {
     protected OpenAI.Images imageService;
     protected OpenAI.Models modelService;
     protected OpenAI.Moderations moderationService;
+    protected OpenAI.Uploads uploadService;
     protected OpenAIBeta2.Assistants assistantService;
     protected OpenAIBeta2.Threads threadService;
     protected OpenAIBeta2.ThreadMessages threadMessageService;
@@ -138,6 +139,13 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAI.Moderations moderations() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    public OpenAI.Uploads uploads() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 

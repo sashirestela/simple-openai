@@ -28,7 +28,7 @@ public class ChatDemo extends AbstractDemo {
     private String modelIdToUse;
 
     public ChatDemo() {
-        modelIdToUse = "gpt-3.5-turbo-1106";
+        modelIdToUse = "gpt-4o-mini";
         chatRequest = ChatRequest.builder()
                 .model(modelIdToUse)
                 .message(SystemMessage.of("You are an expert in AI."))
@@ -96,7 +96,7 @@ public class ChatDemo extends AbstractDemo {
 
     public void demoCallChatWithVisionExternalImage() {
         var chatRequest = ChatRequest.builder()
-                .model("gpt-4-vision-preview")
+                .model(modelIdToUse)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
@@ -113,7 +113,7 @@ public class ChatDemo extends AbstractDemo {
 
     public void demoCallChatWithVisionLocalImage() {
         var chatRequest = ChatRequest.builder()
-                .model("gpt-4-vision-preview")
+                .model(modelIdToUse)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
