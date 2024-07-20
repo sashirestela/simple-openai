@@ -3,7 +3,6 @@ package io.github.sashirestela.openai.common.tool;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.sashirestela.openai.common.function.FunctionDef;
-import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -26,7 +25,7 @@ public class Tool {
                 new ToolFunctionDef(
                         function.getName(),
                         function.getDescription(),
-                        JsonSchemaUtil.classToJsonSchema(function.getFunctionalClass())));
+                        function.getSchemaConverter().convert(function.getFunctionalClass())));
     }
 
     @AllArgsConstructor
