@@ -20,8 +20,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
-  - [Chat Completion Conversation Example](#chat-completion-conversation-example) **New**
-  - [Assistant v2 Conversation Example](#assistant-v2-conversation-example) **New**
+  - [Chat Completion Conversation Example](#chat-completion-conversation-example) 🍀
+  - [Assistant v2 Conversation Example](#assistant-v2-conversation-example) 🍀
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -38,7 +38,7 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [Jun 6th, 2024](https://platform.openai.com/docs/changelog/jun-6th-2024) and will continue to update with future changes.
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [Jul 18th, 2024](https://platform.openai.com/docs/changelog/jul-18th-2024) and will continue to update with future changes.
 
 Full support for all of the OpenAI services:
 
@@ -52,6 +52,7 @@ Full support for all of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
+* Upload (Upload Large Files in Parts) <span style="color:red">**NEW**</span>
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision)
 
 ![OpenAI Services](media/openai_services.png)
@@ -172,7 +173,7 @@ imageResponse.stream().forEach(img -> System.out.println("\n" + img.getUrl()));
 Example to call the Chat Completion service to ask a question and wait for a full answer. We are printing out it in the console:
 ```java
 var chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-1106")
+        .model("gpt-4o-mini")
         .message(SystemMessage.of("You are an expert in AI."))
         .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
         .temperature(0.0)
@@ -186,7 +187,7 @@ System.out.println(chatResponse.firstContent());
 Example to call the Chat Completion service to ask a question and wait for an answer in partial message deltas. We are printing out it in the console as soon as each delta is arriving:
 ```java
 var chatRequest = ChatRequest.builder()
-        .model("gpt-3.5-turbo-1106")
+        .model("gpt-4o-mini")
         .message(SystemMessage.of("You are an expert in AI."))
         .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
         .temperature(0.0)
@@ -225,7 +226,7 @@ public void demoCallChatWithFunctions() {
     var messages = new ArrayList<ChatMessage>();
     messages.add(UserMessage.of("What is the product of 123 and 456?"));
     chatRequest = ChatRequest.builder()
-            .model(modelIdToUse)
+            .model("gpt-4o-mini")
             .messages(messages)
             .tools(functionExecutor.getToolFunctions())
             .build();
@@ -237,7 +238,7 @@ public void demoCallChatWithFunctions() {
     messages.add(chatMessage);
     messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
     chatRequest = ChatRequest.builder()
-            .model(modelIdToUse)
+            .model("gpt-4o-mini")
             .messages(messages)
             .tools(functionExecutor.getToolFunctions())
             .build();
@@ -292,7 +293,7 @@ public static class RunAlarm implements Functional {
 Example to call the Chat Completion service to allow the model to take in external images and answer questions about them:
 ```java
 var chatRequest = ChatRequest.builder()
-        .model("gpt-4-vision-preview")
+        .model("gpt-4o-mini")
         .messages(List.of(
                 UserMessage.of(List.of(
                         ContentPartText.of(
@@ -311,7 +312,7 @@ System.out.println();
 Example to call the Chat Completion service to allow the model to take in local images and answer questions about them:
 ```java
 var chatRequest = ChatRequest.builder()
-        .model("gpt-4-vision-preview")
+        .model("gpt-4o-mini")
         .messages(List.of(
                 UserMessage.of(List.of(
                         ContentPartText.of(
@@ -905,6 +906,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * Image
     * Model
     * Moderation
+    * Upload
     * Conversation
     * AssistantV2
     * ThreadV2

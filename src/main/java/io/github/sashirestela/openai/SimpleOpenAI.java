@@ -152,6 +152,19 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
         return moderationService;
     }
 
+    /**
+     * Generates an implementation of the Uploads interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.Uploads uploads() {
+        if (uploadService == null) {
+            uploadService = cleverClient.create(OpenAI.Uploads.class);
+        }
+        return uploadService;
+    }
+
     @Override
     public OpenAIBeta2.Assistants assistants() {
         if (assistantService == null) {
