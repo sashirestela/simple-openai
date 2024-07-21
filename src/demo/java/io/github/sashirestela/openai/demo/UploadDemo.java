@@ -28,9 +28,12 @@ public class UploadDemo extends AbstractDemo {
         String fullFileName;
         String chunkSizeMB;
 
-        while ((fullFileName = System.console().readLine("Enter the full file name to upload: ")).isBlank());
-        while ((chunkSizeMB = System.console().readLine("Enter the chunk size in MB: ")).isBlank());
-        while ((splitPath = System.console().readLine("Enter the path to put splittings: ")).isBlank());
+        while ((fullFileName = System.console().readLine("Enter the full file name to upload: ")).isBlank())
+            ;
+        while ((chunkSizeMB = System.console().readLine("Enter the chunk size in MB: ")).isBlank())
+            ;
+        while ((splitPath = System.console().readLine("Enter the path to put splittings: ")).isBlank())
+            ;
         File sourceFile = new File(fullFileName);
         fileName = sourceFile.getName();
         mimeType = Files.probeContentType(Path.of(fullFileName));
