@@ -70,6 +70,7 @@ class UploadDomainTest {
                                 .build())
                 .join();
         System.out.println(uploadCompleteResponse);
+        assertNotNull(uploadCompleteResponse);
     }
 
     @Test
@@ -77,6 +78,7 @@ class UploadDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/uploads_cancel.json");
         var uploadCancelResponse = openAI.uploads().cancel("upload_DSulbCDVm0KmatTxopmPWJhB").join();
         System.out.println(uploadCancelResponse);
+        assertNotNull(uploadCancelResponse);
     }
 
 }
