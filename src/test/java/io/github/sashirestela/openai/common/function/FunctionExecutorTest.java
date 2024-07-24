@@ -26,6 +26,11 @@ class FunctionExecutorTest {
                     .name("exponentiation")
                     .description("Multiply a base number a number n times")
                     .functionalClass(MathPower.class)
+                    .build(),
+            FunctionDef.builder()
+                    .name("get_random_number")
+                    .description("Get random number")
+                    .functionalClass(RandomNumber.class)
                     .build());
 
     @Test
@@ -155,6 +160,15 @@ class FunctionExecutorTest {
         }
     }
 
+    @Test
+    void shouldHandleBlankArgumentsStringGracefully() {
+        var executor = new FunctionExecutor(functionList);
+        var functionToCall = new FunctionCall("get_random_number", "");
+        var actualResult = executor.execute(functionToCall);
+        var expectedResult = 42;
+        assertEquals(actualResult, expectedResult);
+    }
+
     private void sortListFunction(List<Tool> list) {
         list.sort((o1, o2) -> o1.getFunction().getName().compareTo(o2.getFunction().getName()));
     }
@@ -178,6 +192,15 @@ class FunctionExecutorTest {
         @Override
         public Object execute() {
             return Math.pow(base, exponent);
+        }
+
+    }
+
+    static class RandomNumber implements Functional {
+
+        @Override
+        public Object execute() {
+            return 42;
         }
 
     }
