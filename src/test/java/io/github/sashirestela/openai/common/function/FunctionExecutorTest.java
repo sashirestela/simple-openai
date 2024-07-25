@@ -26,6 +26,11 @@ class FunctionExecutorTest {
                     .name("exponentiation")
                     .description("Multiply a base number a number n times")
                     .functionalClass(MathPower.class)
+                    .build(),
+            FunctionDef.builder()
+                    .name("get_random_number")
+                    .description("Get random number")
+                    .functionalClass(RandomNumber.class)
                     .build());
 
     @Test
@@ -124,8 +129,8 @@ class FunctionExecutorTest {
     void shouldReturnListOfFunctionsWhenToolChoiceIsPassed() {
         Object[][] testData = {
                 { ToolChoiceOption.NONE, 0 },
-                { ToolChoiceOption.AUTO, 2, "convert_to_celsius", "exponentiation" },
-                { ToolChoiceOption.REQUIRED, 2, "convert_to_celsius", "exponentiation" },
+                { ToolChoiceOption.AUTO, 3, "convert_to_celsius", "exponentiation", "get_random_number" },
+                { ToolChoiceOption.REQUIRED, 3, "convert_to_celsius", "exponentiation", "get_random_number" },
                 { ToolChoice.function("exponentiation"), 1, "exponentiation" }
         };
         var executor = new FunctionExecutor(functionList);
@@ -155,6 +160,15 @@ class FunctionExecutorTest {
         }
     }
 
+    @Test
+    void shouldHandleBlankArgumentsStringGracefully() {
+        var executor = new FunctionExecutor(functionList);
+        var functionToCall = new FunctionCall("get_random_number", "");
+        var actualResult = executor.execute(functionToCall);
+        var expectedResult = 42;
+        assertEquals(actualResult, expectedResult);
+    }
+
     private void sortListFunction(List<Tool> list) {
         list.sort((o1, o2) -> o1.getFunction().getName().compareTo(o2.getFunction().getName()));
     }
@@ -178,6 +192,15 @@ class FunctionExecutorTest {
         @Override
         public Object execute() {
             return Math.pow(base, exponent);
+        }
+
+    }
+
+    static class RandomNumber implements Functional {
+
+        @Override
+        public Object execute() {
+            return 42;
         }
 
     }
