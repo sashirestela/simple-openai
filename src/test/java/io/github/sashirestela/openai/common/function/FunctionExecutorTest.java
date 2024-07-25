@@ -129,8 +129,8 @@ class FunctionExecutorTest {
     void shouldReturnListOfFunctionsWhenToolChoiceIsPassed() {
         Object[][] testData = {
                 { ToolChoiceOption.NONE, 0 },
-                { ToolChoiceOption.AUTO, 2, "convert_to_celsius", "exponentiation" },
-                { ToolChoiceOption.REQUIRED, 2, "convert_to_celsius", "exponentiation" },
+                { ToolChoiceOption.AUTO, 3, "convert_to_celsius", "exponentiation", "get_random_number" },
+                { ToolChoiceOption.REQUIRED, 3, "convert_to_celsius", "exponentiation", "get_random_number" },
                 { ToolChoice.function("exponentiation"), 1, "exponentiation" }
         };
         var executor = new FunctionExecutor(functionList);
