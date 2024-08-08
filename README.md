@@ -28,6 +28,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 - [Run Examples](#-run-examples)
 - [Contributing](#-contributing)
 - [License](#-license)
+- [Who is Using Simple-OpenAI?](#-who-is-using-simple-openai)
 - [Show Us Your Love](#-show-us-your-love)
 
 
@@ -953,10 +954,21 @@ Examples for each OpenAI service have been created in the folder [demo](https://
 ## 💼 Contributing
 Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contribute to this project.
 
+
 ## 📄 License
 Simple-OpenAI is licensed under the MIT License. See the
 [LICENSE](https://github.com/sashirestela/simple-openai/blob/main/LICENSE) file
 for more information.
+
+
+## 🔗 Who Is Using Simple-OpenAI?
+List of the main users of our library:
+- [ChatMotor](https://www.chatmotor.ai/): A framework for OpenAI services. Thanks for [credits](https://docs.chatmotor.ai/rest/soft/1.0-BETA/user-guide/User-Guide.html#credits-and-acknowledgments)!
+- [OpenOLAT](https://github.com/OpenOLAT/OpenOLAT): A learning managment system.
+- [Willy](https://github.com/laravieira/Willy): A multi-channel assistant.
+- [SuperTurtyBot](https://github.com/DaRealTurtyWurty/SuperTurtyBot): A multi-purpose discord bot.
+- [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
+- [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 
 
 ## ❤ Show Us Your Love
