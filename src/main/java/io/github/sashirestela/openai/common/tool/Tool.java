@@ -25,6 +25,7 @@ public class Tool {
                 new ToolFunctionDef(
                         function.getName(),
                         function.getDescription(),
+                        function.isStrict(),
                         function.getSchemaConverter().convert(function.getFunctionalClass())));
     }
 
@@ -40,6 +41,8 @@ public class Tool {
         private String name;
 
         private String description;
+
+        private boolean strict;
 
         @Required
         private JsonNode parameters;
