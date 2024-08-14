@@ -25,8 +25,11 @@ public class FunctionDef {
 
     private static final SchemaConverter converterWithAdditionalProperties = c -> {
         var jsonNode = JsonSchemaUtil.defaultConverter.convert(c);
+        // Default to no additional properties.
         // Ref: https://platform.openai.com/docs/guides/structured-outputs/additionalproperties-false-must-always-be-set-in-objects
-        ((ObjectNode) jsonNode).put("additionalProperties", false);
+        if (jsonNode.get("additionalProperties") == null) {
+            ((ObjectNode) jsonNode).put("additionalProperties", false);
+        }
         return jsonNode;
     };
 
