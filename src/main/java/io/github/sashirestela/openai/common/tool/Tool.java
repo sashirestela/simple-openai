@@ -25,7 +25,8 @@ public class Tool {
                 new ToolFunctionDef(
                         function.getName(),
                         function.getDescription(),
-                        function.getSchemaConverter().convert(function.getFunctionalClass())));
+                        function.getSchemaConverter().convert(function.getFunctionalClass()),
+                        function.getStrict()));
     }
 
     @AllArgsConstructor
@@ -43,6 +44,8 @@ public class Tool {
 
         @Required
         private JsonNode parameters;
+
+        private Boolean strict;
 
     }
 
