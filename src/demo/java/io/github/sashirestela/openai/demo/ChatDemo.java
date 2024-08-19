@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
@@ -57,18 +59,21 @@ public class ChatDemo extends AbstractDemo {
                         .name("get_weather")
                         .description("Get the current weather of a location")
                         .functionalClass(Weather.class)
+                        .strict(Boolean.TRUE)
                         .build());
         functionExecutor.enrollFunction(
                 FunctionDef.builder()
                         .name("product")
                         .description("Get the product of two numbers")
                         .functionalClass(Product.class)
+                        .strict(Boolean.TRUE)
                         .build());
         functionExecutor.enrollFunction(
                 FunctionDef.builder()
                         .name("run_alarm")
                         .description("Run an alarm")
                         .functionalClass(RunAlarm.class)
+                        .strict(Boolean.TRUE)
                         .build());
         var messages = new ArrayList<ChatMessage>();
         messages.add(UserMessage.of("What is the product of 123 and 456?"));
@@ -121,6 +126,22 @@ public class ChatDemo extends AbstractDemo {
                                 ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
                 .temperature(0.0)
                 .maxTokens(500)
+                .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.forEach(ChatDemo::processResponseChunk);
+        System.out.println();
+    }
+
+    public void demoCallChatWithStructuredOutputs() {
+        var chatRequest = ChatRequest.builder()
+                .model(modelIdToUse)
+                .message(SystemMessage
+                        .of("You are a helpful math tutor. Guide the user through the solution step by step."))
+                .message(UserMessage.of("How can I solve 8x + 7 = -23"))
+                .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
+                        .name("MathReasoning")
+                        .schemaClass(MathReasoning.class)
+                        .build()))
                 .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
@@ -198,6 +219,20 @@ public class ChatDemo extends AbstractDemo {
 
     }
 
+    public static class MathReasoning {
+
+        public List<Step> steps;
+        public String finalAnswer;
+
+        public static class Step {
+
+            public String explanation;
+            public String output;
+
+        }
+
+    }
+
     public static void main(String[] args) {
         var demo = new ChatDemo();
 
@@ -206,6 +241,7 @@ public class ChatDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
         demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
         demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
+        demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
 
         demo.run();
     }

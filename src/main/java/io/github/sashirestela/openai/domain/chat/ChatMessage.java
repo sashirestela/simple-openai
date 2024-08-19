@@ -158,6 +158,7 @@ public abstract class ChatMessage {
 
         private String content;
         private List<ToolCall> toolCalls;
+        private String refusal;
 
     }
 

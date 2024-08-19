@@ -17,6 +17,8 @@ public class FunctionDef {
     @NonNull
     private Class<? extends Functional> functionalClass;
 
+    private Boolean strict;
+
     @Builder.Default
     private SchemaConverter schemaConverter = JsonSchemaUtil.defaultConverter;
 

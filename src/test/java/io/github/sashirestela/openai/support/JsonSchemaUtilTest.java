@@ -16,7 +16,7 @@ class JsonSchemaUtilTest {
     void shouldGenerateFullJsonSchemaWhenClassHasSomeFields() {
         var actualJsonSchema = JsonSchemaUtil.classToJsonSchema(TestClass.class).toString();
         var expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
-                "\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"]}";
+                "\"second\":{\"type\":\"integer\"}},\"required\":[\"first\"],\"additionalProperties\":false}";
         assertEquals(expectedJsonSchema, actualJsonSchema);
     }
 
@@ -33,7 +33,7 @@ class JsonSchemaUtilTest {
         var expectedJsonSchema = "{\"type\":\"object\",\"properties\":{\"first\":{\"type\":\"string\"}," +
                 "\"second\":{\"type\":\"integer\"}," +
                 "\"third\":{\"type\":\"string\"}}," +
-                "\"required\":[\"first\"]}";
+                "\"required\":[\"first\"],\"additionalProperties\":false}";
         assertEquals(expectedJsonSchema, actualJsonSchema);
     }
 

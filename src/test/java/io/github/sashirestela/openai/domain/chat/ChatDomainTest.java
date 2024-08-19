@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
+import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
@@ -73,6 +74,7 @@ class ChatDomainTest {
                         .name("product")
                         .description("Get the product of two numbers")
                         .functionalClass(Product.class)
+                        .strict(Boolean.TRUE)
                         .build());
     }
 
@@ -126,6 +128,25 @@ class ChatDomainTest {
                 .frequencyPenalty(0.0)
                 .user("test")
                 .seed(1)
+                .build();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
+        assertNotNull(chatResponse);
+    }
+
+    @Test
+    void testChatCompletionsCreateWithStructuredOutput() throws IOException {
+        DomainTestingHelper.get()
+                .mockForObject(httpClient, "src/test/resources/chatcompletions_create_structured_output.json");
+        var chatRequest = ChatRequest.builder()
+                .model("gpt-4-vision-preview")
+                .message(SystemMessage
+                        .of("You are a helpful math tutor. Guide the user through the solution step by step."))
+                .message(UserMessage.of("How can I solve 8x + 7 = -23"))
+                .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
+                        .name("MathReasoning")
+                        .schemaClass(MathReasoning.class)
+                        .build()))
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
@@ -230,6 +251,20 @@ class ChatDomainTest {
         @Override
         public Object execute() {
             return multiplicand * multiplier;
+        }
+
+    }
+
+    static class MathReasoning {
+
+        public List<Step> steps;
+        public String finalAnswer;
+
+        static class Step {
+
+            public String explanation;
+            public String output;
+
         }
 
     }
