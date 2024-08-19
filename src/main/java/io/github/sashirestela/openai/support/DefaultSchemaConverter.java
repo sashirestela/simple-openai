@@ -26,7 +26,7 @@ public class DefaultSchemaConverter implements SchemaConverter {
     public DefaultSchemaConverter(Boolean isStructuredOutput) {
         objectMapper = new ObjectMapper();
         JacksonModule jacksonModule = null;
-        if (isStructuredOutput) {
+        if (Boolean.TRUE.equals(isStructuredOutput)) {
             jacksonModule = new JacksonModule(JacksonOption.RESPECT_JSONPROPERTY_ORDER);
         } else {
             jacksonModule = new JacksonModule(JacksonOption.RESPECT_JSONPROPERTY_ORDER,
@@ -36,7 +36,7 @@ public class DefaultSchemaConverter implements SchemaConverter {
                 .with(jacksonModule)
                 .with(Option.FORBIDDEN_ADDITIONAL_PROPERTIES_BY_DEFAULT)
                 .without(Option.SCHEMA_VERSION_INDICATOR);
-        if (isStructuredOutput) {
+        if (Boolean.TRUE.equals(isStructuredOutput)) {
             configBuilder.forFields().withRequiredCheck(field -> Boolean.TRUE);
         }
         var config = configBuilder.build();
