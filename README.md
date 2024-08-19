@@ -20,7 +20,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
-  - [Chat Completion with Structured Ouputs](#chat-completion-with-structured-outputs) **NEW**
+  - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs) **NEW**
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
