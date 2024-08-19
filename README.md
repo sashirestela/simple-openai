@@ -20,8 +20,9 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
-  - [Chat Completion Conversation Example](#chat-completion-conversation-example) 🍀
-  - [Assistant v2 Conversation Example](#assistant-v2-conversation-example) 🍀
+  - [Chat Completion with Structured Ouputs](#chat-completion-with-structured-outputs) **NEW**
+  - [Chat Completion Conversation Example](#chat-completion-conversation-example)
+  - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -39,13 +40,13 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports all existing features until [Jul 18th, 2024](https://platform.openai.com/docs/changelog/jul-18th-2024) and will continue to update with future changes.
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports most of the existing features until [Aug 15th, 2024](https://platform.openai.com/docs/changelog/aug-15th-2024) and will continue to update with future changes.
 
 Full support for all of the OpenAI services:
 
 * Audio (Speech, Transcription, Translation)
 * Batch (Batches of Chat Completion)
-* Chat Completion (Text Generation, Streaming, Function Calling, Vision)
+* Chat Completion (Text Generation, Streaming, Function Calling, Vision, **Structured Outputs**)
 * Completion (Legacy Text Generation)
 * Embedding  (Vectoring Text)
 * Files (Upload Files)
@@ -53,8 +54,8 @@ Full support for all of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Upload (Upload Large Files in Parts) <span style="color:red">**NEW**</span>
-* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision)
+* Upload (Upload Large Files in Parts)
+* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, **Structured Outputs**)
 
 ![OpenAI Services](media/openai_services.png)
 
@@ -340,6 +341,39 @@ private static ImageUrl loadImageAsBase64(String imagePath) {
         e.printStackTrace();
         return null;
     }
+}
+```
+### Chat Completion with Structured Outputs
+Example to call the Chat Completion service to ensure the model will always generate responses that adhere to a Json Schema defined through Java classes:
+```java
+public void demoCallChatWithStructuredOutputs() {
+    var chatRequest = ChatRequest.builder()
+            .model("gpt-4o-mini")
+            .message(SystemMessage
+                    .of("You are a helpful math tutor. Guide the user through the solution step by step."))
+            .message(UserMessage.of("How can I solve 8x + 7 = -23"))
+            .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
+                    .name("MathReasoning")
+                    .schemaClass(MathReasoning.class)
+                    .build()))
+            .build();
+    var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+    chatResponse.forEach(ChatDemo::processResponseChunk);
+    System.out.println();
+}
+
+public static class MathReasoning {
+
+    public List<Step> steps;
+    public String finalAnswer;
+
+    public static class Step {
+
+        public String explanation;
+        public String output;
+
+    }
+
 }
 ```
 ### Chat Completion Conversation Example
