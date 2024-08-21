@@ -180,6 +180,7 @@ public class ChatDemo extends AbstractDemo {
     public static class Weather implements Functional {
 
         @JsonPropertyDescription("City and state, for example: León, Guanajuato")
+        @JsonProperty(required = true)
         public String location;
 
         @JsonPropertyDescription("The temperature unit, can be 'celsius' or 'fahrenheit'")

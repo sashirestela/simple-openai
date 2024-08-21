@@ -133,6 +133,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .role(ThreadMessageRole.USER)
                         .content(question)
                         .build())
+                .parallelToolCalls(Boolean.FALSE)
                 .build();
         var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
         var threadMessages = openAI.threadMessages().getList(threadId).join();

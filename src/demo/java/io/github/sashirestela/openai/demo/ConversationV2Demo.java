@@ -110,6 +110,7 @@ public class ConversationV2Demo {
             var runStream = openAI.threadRuns()
                     .createStream(threadId, ThreadRunRequest.builder()
                             .assistantId(assistantId)
+                            .parallelToolCalls(Boolean.FALSE)
                             .build())
                     .join();
             handleRunEvents(runStream);
