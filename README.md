@@ -212,18 +212,21 @@ public void demoCallChatWithFunctions() {
                     .name("get_weather")
                     .description("Get the current weather of a location")
                     .functionalClass(Weather.class)
+                    .strict(Boolean.TRUE)
                     .build());
     functionExecutor.enrollFunction(
             FunctionDef.builder()
                     .name("product")
                     .description("Get the product of two numbers")
                     .functionalClass(Product.class)
+                    .strict(Boolean.TRUE)
                     .build());
     functionExecutor.enrollFunction(
             FunctionDef.builder()
                     .name("run_alarm")
                     .description("Run an alarm")
                     .functionalClass(RunAlarm.class)
+                    .strict(Boolean.TRUE)
                     .build());
     var messages = new ArrayList<ChatMessage>();
     messages.add(UserMessage.of("What is the product of 123 and 456?"));
@@ -252,6 +255,7 @@ public void demoCallChatWithFunctions() {
 public static class Weather implements Functional {
 
     @JsonPropertyDescription("City and state, for example: León, Guanajuato")
+    @JsonProperty(required = true)
     public String location;
 
     @JsonPropertyDescription("The temperature unit, can be 'celsius' or 'fahrenheit'")
@@ -358,7 +362,9 @@ public void demoCallChatWithStructuredOutputs() {
                     .build()))
             .build();
     var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
-    chatResponse.forEach(ChatDemo::processResponseChunk);
+    chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
+            .map(Chat::firstContent)
+            .forEach(System.out::print);
     System.out.println();
 }
 
@@ -427,11 +433,13 @@ public class ConversationDemo {
                 .name("getCurrentTemperature")
                 .description("Get the current temperature for a specific location")
                 .functionalClass(CurrentTemperature.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionList.add(FunctionDef.builder()
                 .name("getRainProbability")
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionExecutor = new FunctionExecutor(functionList);
     }
@@ -659,11 +667,13 @@ public class ConversationV2Demo {
                 .name("getCurrentTemperature")
                 .description("Get the current temperature for a specific location")
                 .functionalClass(CurrentTemperature.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionList.add(FunctionDef.builder()
                 .name("getRainProbability")
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionExecutor = new FunctionExecutor(functionList);
 
@@ -719,6 +729,7 @@ public class ConversationV2Demo {
             var runStream = openAI.threadRuns()
                     .createStream(threadId, ThreadRunRequest.builder()
                             .assistantId(assistantId)
+                            .parallelToolCalls(Boolean.FALSE)
                             .build())
                     .join();
             handleRunEvents(runStream);
