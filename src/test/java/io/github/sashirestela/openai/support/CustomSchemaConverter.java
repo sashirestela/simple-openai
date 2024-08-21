@@ -12,7 +12,7 @@ public class CustomSchemaConverter implements SchemaConverter {
 
     private final SchemaGenerator schemaGenerator;
     private final ObjectMapper objectMapper;
-    public static final String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{}}";
+    public static final String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{},\"additionalProperties\":false}";
 
     public CustomSchemaConverter() {
         objectMapper = new ObjectMapper();

@@ -7,7 +7,7 @@ public class JsonSchemaUtil {
 
     public static final SchemaConverter defaultConverter = new DefaultSchemaConverter();
 
-    public static final String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{}}";
+    public static final String JSON_EMPTY_CLASS = "{\"type\":\"object\",\"properties\":{},\"additionalProperties\":false}";
 
     private JsonSchemaUtil() {
     }
