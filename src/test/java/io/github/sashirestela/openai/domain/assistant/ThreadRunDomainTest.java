@@ -43,11 +43,13 @@ class ThreadRunDomainTest {
                 .name("CurrentTemperature")
                 .description("Get the current temperature for a specific location")
                 .functionalClass(CurrentTemperature.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionList.add(FunctionDef.builder()
                 .name("RainProbability")
                 .description("Get the probability of rain for a specific location")
                 .functionalClass(RainProbability.class)
+                .strict(Boolean.TRUE)
                 .build());
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunctions(functionList);
