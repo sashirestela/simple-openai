@@ -143,8 +143,8 @@ public class StepDetail {
             @ToString
             @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
             public static class FileSearchToolCall extends StepToolCall {
-            	
-            	private RankingOptions rankingOptions;
+
+                private RankingOptions rankingOptions;
                 private List<Result> results;
 
                 @NoArgsConstructor
@@ -154,7 +154,7 @@ public class StepDetail {
                 public static class RankingOptions {
 
                     private String ranker;
-                    private Number score_threshold;
+                    private Number scoreThreshold;
 
                 }
 
@@ -164,8 +164,8 @@ public class StepDetail {
                 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
                 public static class Result {
 
-                    private String file_id;
-                    private String file_name;
+                    private String fileId;
+                    private String fileName;
                     private Number score;
                     private List<Content> content;
 
@@ -179,9 +179,10 @@ public class StepDetail {
                         private String text;
 
                     }
+
                 }
 
-          }
+            }
 
             @NoArgsConstructor
             @Getter
