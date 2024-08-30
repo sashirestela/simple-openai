@@ -4,6 +4,7 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.assistant.ChunkingStrategy.StaticChunking;
+import io.github.sashirestela.openai.domain.assistant.RankingOption.RankerType;
 import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch;
 import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch.VectorStore;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +41,10 @@ class AssistantDomainTest {
                 .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                         + "questions, you have to refer to the attached files or use the functions provided. "
                         + "Finally, if you receive math questions, you must write and run code to answer them.")
-                .tool(AssistantTool.fileSearch(10))
+                .tool(AssistantTool.fileSearch(10, RankingOption.builder()
+                        .ranker(RankerType.DEFAULT_2024_08_21)
+                        .scoreThreshold(0.8)
+                        .build()))
                 .toolResources(ToolResourceFull.builder()
                         .fileSearch(FileSearch.builder()
                                 .vectorStore(VectorStore.builder()

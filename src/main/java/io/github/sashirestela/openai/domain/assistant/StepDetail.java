@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Map;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
 @JsonSubTypes({
@@ -145,7 +144,42 @@ public class StepDetail {
             @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
             public static class FileSearchToolCall extends StepToolCall {
 
-                private Map<String, String> fileSearch;
+                private FileSearch fileSearch;
+
+                @NoArgsConstructor
+                @Getter
+                @ToString
+                @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+                public static class FileSearch {
+
+                    private RankingOption rankingOptions;
+                    private List<FileSearchResult> results;
+
+                    @NoArgsConstructor
+                    @Getter
+                    @ToString
+                    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+                    public static class FileSearchResult {
+
+                        private String fileId;
+                        private String fileName;
+                        private Double score;
+                        private List<FileSearchContent> content;
+
+                        @NoArgsConstructor
+                        @Getter
+                        @ToString
+                        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+                        public static class FileSearchContent {
+
+                            private String type;
+                            private String text;
+
+                        }
+
+                    }
+
+                }
 
             }
 

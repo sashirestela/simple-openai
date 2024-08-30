@@ -36,6 +36,10 @@ public class AssistantTool extends Tool {
         return new AssistantTool(ToolType.FILE_SEARCH, new FileSearch(maxNumResults));
     }
 
+    public static AssistantTool fileSearch(Integer maxNumResults, RankingOption rankingOptions) {
+        return new AssistantTool(ToolType.FILE_SEARCH, new FileSearch(maxNumResults, rankingOptions));
+    }
+
     @NoArgsConstructor
     @Getter
     @ToString
@@ -46,8 +50,15 @@ public class AssistantTool extends Tool {
         @Range(min = 1, max = 50)
         private Integer maxNumResults;
 
+        private RankingOption rankingOptions;
+
         public FileSearch(Integer maxNumResults) {
             this.maxNumResults = maxNumResults;
+        }
+
+        public FileSearch(Integer maxNumResults, RankingOption rankingOptions) {
+            this.maxNumResults = maxNumResults;
+            this.rankingOptions = rankingOptions;
         }
 
     }

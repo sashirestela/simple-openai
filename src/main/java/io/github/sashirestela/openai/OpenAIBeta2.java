@@ -28,6 +28,7 @@ import io.github.sashirestela.openai.domain.assistant.ThreadRun.RunStatus;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
+import io.github.sashirestela.openai.domain.assistant.ThreadRunStepQuery;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest;
 import io.github.sashirestela.openai.domain.assistant.VectorStore;
 import io.github.sashirestela.openai.domain.assistant.VectorStore.VectorStoreStatus;
@@ -554,6 +555,19 @@ public interface OpenAIBeta2 {
         }
 
         /**
+         * Retrieves a run step (don't call it directly).
+         * 
+         * @param threadId The ID of the thread to which the run and run step belongs.
+         * @param runId    The ID of the run to which the run step belongs.
+         * @param stepId   The ID of the run step to retrieve.
+         * @param include  A list of additional fields to include in the response.
+         * @return The run step object matching the specified ID.
+         */
+        @GET("/{stepId}")
+        CompletableFuture<ThreadRunStep> getOnePrimitive(@Path("threadId") String threadId, @Path("runId") String runId,
+                @Path("stepId") String stepId, @Query("include[]") ThreadRunStepQuery include);
+
+        /**
          * Retrieves a run step.
          * 
          * @param threadId The ID of the thread to which the run and run step belongs.
@@ -562,8 +576,24 @@ public interface OpenAIBeta2 {
          * @return The run step object matching the specified ID.
          */
         @GET("/{stepId}")
-        CompletableFuture<ThreadRunStep> getOne(@Path("threadId") String threadId, @Path("runId") String runId,
-                @Path("stepId") String stepId);
+        default CompletableFuture<ThreadRunStep> getOne(@Path("threadId") String threadId, @Path("runId") String runId,
+                @Path("stepId") String stepId) {
+            return getOnePrimitive(threadId, runId, stepId, null);
+        }
+
+        /**
+         * Retrieves a run step including File Search result contents.
+         * 
+         * @param threadId The ID of the thread to which the run and run step belongs.
+         * @param runId    The ID of the run to which the run step belongs.
+         * @param stepId   The ID of the run step to retrieve.
+         * @return The run step object matching the specified ID.
+         */
+        @GET("/{stepId}")
+        default CompletableFuture<ThreadRunStep> getOneWithFileSearchResult(@Path("threadId") String threadId,
+                @Path("runId") String runId, @Path("stepId") String stepId) {
+            return getOnePrimitive(threadId, runId, stepId, ThreadRunStepQuery.FILE_SEARCH_RESULT);
+        }
 
     }
 
