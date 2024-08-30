@@ -146,6 +146,7 @@ public class StepDetail {
             public static class FileSearchToolCall extends StepToolCall {
 
                 private Map<String, String> fileSearch;
+                private Map<String, String> rankingOptions;
 
             }
 
