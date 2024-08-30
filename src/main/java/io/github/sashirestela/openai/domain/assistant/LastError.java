@@ -24,6 +24,12 @@ public class LastError {
         @JsonProperty("rate_limit_exceeded")
         RATE_LIMIT_EXCEEDED,
 
+		@JsonProperty("invalid_image")
+		INVALID_IMAGE,
+
+		@JsonProperty("invalid_file")
+		INVALID_FILE,
+
         @JsonProperty("invalid_prompt")
         INVALID_PROMPT;
     }
