@@ -87,6 +87,13 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
         System.out.println(threadRunStep);
     }
 
+    public void retrieveThreadRunStepWithFilters() {
+        var threadRunStep = openAI.threadRunSteps()
+                .getOneWithFileSearchResult(threadId, threadRunId, threadRunStepId)
+                .join();
+        System.out.println(threadRunStep);
+    }
+
     public void deleteDemo() {
         var deletedThread = openAI.threads().delete(threadId).join();
         System.out.println(deletedThread);
@@ -100,6 +107,7 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
         demo.addTitleAction("Demo ThreadRun v2 Create", demo::createThreadRun);
         demo.addTitleAction("Demo ThreadRunStep v2 List", demo::listThreadRunSteps);
         demo.addTitleAction("Demo ThreadRunStep v2 Retrieve", demo::retrieveThreadRunStep);
+        demo.addTitleAction("Demo ThreadRunStep v2 Retrieve with Filters", demo::retrieveThreadRunStepWithFilters);
         demo.addTitleAction("Demo ThreadRun v2 Delete", demo::deleteDemo);
         demo.run();
     }
