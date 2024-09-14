@@ -34,13 +34,13 @@ class SimpleOpenAIAzureTest {
                 .url(baseUrl + "/chat/completions")
                 .contentType(ContentType.APPLICATION_JSON)
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-                .body("{\"model\":\"model1\"}")
+                .body("{\"messages\":[],\"model\":\"model1\",\"stream\":false}")
                 .build();
         var expectedRequest = HttpRequestData.builder()
                 .url(baseUrl + "/chat/completions?" + Constant.AZURE_API_VERSION + "=12-34-5678")
                 .contentType(ContentType.APPLICATION_JSON)
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
-                .body("{}")
+                .body("{\"messages\":[],\"stream\":false}")
                 .build();
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
                 "the-api-key",

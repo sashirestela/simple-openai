@@ -63,18 +63,18 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     }
 
     private static Object getBodyForJson(String url, String body, String deployment) {
-        final String MODEL_REGEX = ",?\"model\":\"[^\"]*\",?";
-        final String EMPTY_REGEX = "\"\"";
-        final String QUOTED_COMMA = "\",\"";
+        final String MODEL_ENTRY_REGEX = "\"model\"\\s*:\\s*\"[^\"]+\"\\s*,?\\s*";
+        final String TRAILING_COMMA_REGEX = ",\\s*}";
+        final String CLOSING_BRACE = "}";
         final String MODEL_LITERAL = "model";
         final String ASSISTANTS_LITERAL = "/assistants";
 
         var model = "";
         if (url.contains(ASSISTANTS_LITERAL)) {
-            model = "\"" + MODEL_LITERAL + "\":\"" + deployment + "\"";
+            model = "\"" + MODEL_LITERAL + "\":\"" + deployment + "\",";
         }
-        body = body.replaceFirst(MODEL_REGEX, model);
-        body = body.replaceFirst(EMPTY_REGEX, QUOTED_COMMA);
+        body = body.replaceFirst(MODEL_ENTRY_REGEX, model);
+        body = body.replaceFirst(TRAILING_COMMA_REGEX, CLOSING_BRACE);
 
         return body;
     }
