@@ -900,9 +900,12 @@ var openai = SimpleOpenAIAzure.builder()
     //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
     .build();
 ```
+Azure OpenAI is powered by a diverse set of models with different capabilities and it requires a separate deployment for each model.
+Model availability varies by region and cloud. See more details about [Azure OpenAI Models](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models).
+
 Currently we are supporting the following services only:
-- `chatCompletionService` (streaming mode is not supported)
-- `fileService`
+- `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
+- `fileService` (upload files)
 
 ### Anyscale
 [Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
@@ -969,26 +972,19 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
 
-* Indications for Azure OpenAI demos
+* Indications for Azure OpenAI demo
 
-    Azure OpenAI requires a separate deployment for each model. The Azure OpenAI demos require 
-    two models.   
+    The recommended models to run this demo are:
 
-    1. gpt-4-turbo (or similar) that supports:
-        - /chat/completions (including tool calls)
-        - /files
-    
-    3. gpt-4-vision-preview that supports:
-        - /chat/completions (including images). 
+    1. gpt-4o (2024-08-06)
+    1. gpt-4o-mini (2024-07-18) 
     
     See the Azure OpenAI docs for more details: [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/).
-    Once you have the deployment URLs and the API keys, set the following environment variables:
+    Once you have the deployment URL and the API key, set the following environment variables:
     ```
-    export AZURE_OPENAI_BASE_URL=<your gpt-4-turbo deployment endpoint URL>
+    export AZURE_OPENAI_BASE_URL=<https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME>
     export AZURE_OPENAI_API_KEY=<here goes your regional API key>
-    export AZURE_OPENAI_BASE_URL_VISION=<your gpt-4 vision preview deployment endpoint URL>
-    export AZURE_OPENAI_API_KEY_VISION=<here goes your regional API key>
-    export AZURE_OPENAI_API_VERSION=2024-02-15-preview
+    export AZURE_OPENAI_API_VERSION=<for example: 2024-08-01-preview>
     ```
     Note that some models may not be available in all regions. If you have trouble finding a model, 
     try a different region. The API keys are regional (per cognitive account). If you provision 
