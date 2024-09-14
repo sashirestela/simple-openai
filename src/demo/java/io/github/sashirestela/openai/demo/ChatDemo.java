@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import io.github.sashirestela.openai.BaseSimpleOpenAI;
+import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
@@ -26,13 +28,14 @@ import java.util.List;
 
 public class ChatDemo extends AbstractDemo {
 
-    private ChatRequest chatRequest;
-    private String modelIdToUse;
+    protected ChatRequest chatRequest;
+    protected String model;
 
-    public ChatDemo() {
-        modelIdToUse = "gpt-4o-mini";
+    public ChatDemo(BaseSimpleOpenAI openAI, String model) {
+        super(openAI);
+        this.model = model;
         chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .message(SystemMessage.of("You are an expert in AI."))
                 .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
@@ -78,7 +81,7 @@ public class ChatDemo extends AbstractDemo {
         var messages = new ArrayList<ChatMessage>();
         messages.add(UserMessage.of("What is the product of 123 and 456?"));
         chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .messages(messages)
                 .tools(functionExecutor.getToolFunctions())
                 .build();
@@ -90,7 +93,7 @@ public class ChatDemo extends AbstractDemo {
         messages.add(chatMessage);
         messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .messages(messages)
                 .tools(functionExecutor.getToolFunctions())
                 .build();
@@ -101,7 +104,7 @@ public class ChatDemo extends AbstractDemo {
 
     public void demoCallChatWithVisionExternalImage() {
         var chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
@@ -118,7 +121,7 @@ public class ChatDemo extends AbstractDemo {
 
     public void demoCallChatWithVisionLocalImage() {
         var chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
@@ -134,7 +137,7 @@ public class ChatDemo extends AbstractDemo {
 
     public void demoCallChatWithStructuredOutputs() {
         var chatRequest = ChatRequest.builder()
-                .model(modelIdToUse)
+                .model(model)
                 .message(SystemMessage
                         .of("You are a helpful math tutor. Guide the user through the solution step by step."))
                 .message(UserMessage.of("How can I solve 8x + 7 = -23"))
@@ -148,7 +151,7 @@ public class ChatDemo extends AbstractDemo {
         System.out.println();
     }
 
-    private ImageUrl loadImageAsBase64(String imagePath) {
+    protected ImageUrl loadImageAsBase64(String imagePath) {
         try {
             Path path = Paths.get(imagePath);
             byte[] imageBytes = Files.readAllBytes(path);
@@ -235,7 +238,11 @@ public class ChatDemo extends AbstractDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatDemo();
+        var openAI = SimpleOpenAI.builder()
+                .apiKey(System.getenv("OPENAI_API_KEY"))
+                .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
+                .build();
+        var demo = new ChatDemo(openAI, "gpt-4o-mini");
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

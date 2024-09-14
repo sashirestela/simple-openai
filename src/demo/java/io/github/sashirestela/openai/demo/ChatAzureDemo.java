@@ -1,99 +1,25 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
-import io.github.sashirestela.openai.common.function.FunctionDef;
-import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.demo.ChatDemo.Product;
-import io.github.sashirestela.openai.demo.ChatDemo.RunAlarm;
-import io.github.sashirestela.openai.demo.ChatDemo.Weather;
-import io.github.sashirestela.openai.domain.chat.ChatMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-public class ChatAzureDemo extends AbstractDemo {
+public class ChatAzureDemo extends ChatDemo {
 
-    private ChatRequest chatRequest;
-
-    public ChatAzureDemo(String baseUrl, String apiKey, String apiVersion) {
-        super(SimpleOpenAIAzure.builder()
-                .apiKey(apiKey)
-                .baseUrl(baseUrl)
-                .apiVersion(apiVersion)
-                .build());
-        chatRequest = ChatRequest.builder()
-                .model("N/A")
-                .message(SystemMessage.of("You are an expert in AI."))
-                .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
-                .temperature(0.0)
-                .maxTokens(300)
-                .build();
+    public ChatAzureDemo(BaseSimpleOpenAI openAI, String model) {
+        super(openAI, model);
     }
 
-    public void demoCallChatBlocking() {
-        var futureChat = openAI.chatCompletions().create(chatRequest);
-        var chatResponse = futureChat.join();
-        System.out.println(chatResponse.firstContent());
-    }
-
-    public void demoCallChatWithFunctions() {
-        var functionExecutor = new FunctionExecutor();
-        functionExecutor.enrollFunction(
-                FunctionDef.builder()
-                        .name("get_weather")
-                        .description("Get the current weather of a location")
-                        .functionalClass(Weather.class)
-                        .build());
-        functionExecutor.enrollFunction(
-                FunctionDef.builder()
-                        .name("product")
-                        .description("Get the product of two numbers")
-                        .functionalClass(Product.class)
-                        .build());
-        functionExecutor.enrollFunction(
-                FunctionDef.builder()
-                        .name("run_alarm")
-                        .description("Run an alarm")
-                        .functionalClass(RunAlarm.class)
-                        .build());
-        var messages = new ArrayList<ChatMessage>();
-        messages.add(UserMessage.of("What is the product of 123 and 456?"));
-        chatRequest = ChatRequest.builder()
-                .model("N/A")
-                .messages(messages)
-                .tools(functionExecutor.getToolFunctions())
-                .build();
-        var futureChat = openAI.chatCompletions().create(chatRequest);
-        var chatResponse = futureChat.join();
-        var chatMessage = chatResponse.firstMessage();
-        var chatToolCall = chatMessage.getToolCalls().get(0);
-        var result = functionExecutor.execute(chatToolCall.getFunction());
-        messages.add(chatMessage);
-        messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
-        chatRequest = ChatRequest.builder()
-                .model("N/A")
-                .messages(messages)
-                .tools(functionExecutor.getToolFunctions())
-                .build();
-        futureChat = openAI.chatCompletions().create(chatRequest);
-        chatResponse = futureChat.join();
-        System.out.println(chatResponse.firstContent());
-    }
-
+    @Override
     public void demoCallChatWithVisionExternalImage() {
         var chatRequest = ChatRequest.builder()
-                .model("N/A")
+                .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
@@ -103,16 +29,14 @@ public class ChatAzureDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(500)
                 .build();
-
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
-        System.out.println();
-
     }
 
+    @Override
     public void demoCallChatWithVisionLocalImage() {
         var chatRequest = ChatRequest.builder()
-                .model("N/A")
+                .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
                                 ContentPartText.of(
@@ -125,45 +49,22 @@ public class ChatAzureDemo extends AbstractDemo {
         System.out.println(chatResponse.firstContent());
     }
 
-    private static ImageUrl loadImageAsBase64(String imagePath) {
-        try {
-            Path path = Paths.get(imagePath);
-            byte[] imageBytes = Files.readAllBytes(path);
-            String base64String = Base64.getEncoder().encodeToString(imageBytes);
-            var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
-            var prefix = "data:image/" + extension + ";base64,";
-            return ImageUrl.of(prefix + base64String);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private static void chatWithFunctionsDemo(String apiVersion) {
-        var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL");
-        var apiKey = System.getenv("AZURE_OPENAI_API_KEY");
-        var chatDemo = new ChatAzureDemo(baseUrl, apiKey, apiVersion);
-        chatDemo.addTitleAction("Call Chat (Blocking Approach)", chatDemo::demoCallChatBlocking);
-        chatDemo.addTitleAction("Call Chat with Functions", chatDemo::demoCallChatWithFunctions);
-
-        chatDemo.run();
-    }
-
-    private static void chatWithVisionDemo(String apiVersion) {
-        var baseUrl = System.getenv("AZURE_OPENAI_BASE_URL_VISION");
-        var apiKey = System.getenv("AZURE_OPENAI_API_KEY_VISION");
-        var visionDemo = new ChatAzureDemo(baseUrl, apiKey, apiVersion);
-        visionDemo.addTitleAction("Call Chat with Vision (External image)",
-                visionDemo::demoCallChatWithVisionExternalImage);
-        visionDemo.addTitleAction("Call Chat with Vision (Local image)", visionDemo::demoCallChatWithVisionLocalImage);
-        visionDemo.run();
-    }
-
     public static void main(String[] args) {
-        var apiVersion = System.getenv("AZURE_OPENAI_API_VERSION");
+        var openAI = SimpleOpenAIAzure.builder()
+                .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
+                .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
+                .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))
+                .build();
+        var demo = new ChatAzureDemo(openAI, "N/A");
 
-        chatWithFunctionsDemo(apiVersion);
-        chatWithVisionDemo(apiVersion);
+        demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
+        demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
+        demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
+        demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
+        demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
+        demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
+
+        demo.run();
     }
 
 }
