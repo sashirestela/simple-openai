@@ -33,4 +33,8 @@ public class HyperParams {
     @ObjectType(baseClass = String.class)
     private Object nEpochs;
 
+    public Object getnEpochs() {
+        return nEpochs;
+    }
+
 }
