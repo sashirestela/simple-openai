@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.domain.finetuning;
 
+import io.github.sashirestela.cleverclient.util.JsonUtil;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.finetuning.Integration.IntegrationType;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.http.HttpClient;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 class FineTuningDomainTest {
@@ -95,6 +98,17 @@ class FineTuningDomainTest {
         var fineTuningResponse = openAI.fineTunings().cancel("finetuningId").join();
         System.out.println(fineTuningResponse);
         assertNotNull(fineTuningResponse);
+    }
+
+    @Test
+    void testTranslateNumberEpochs() {
+        var hyperParams = HyperParams.builder()
+                .nEpochs(2)
+                .build();
+        var json = JsonUtil.objectToJson(hyperParams);
+        System.out.println(json);
+        assertTrue(json.contains("n_epochs"));
+        assertFalse(json.contains("nepochs"));
     }
 
 }
