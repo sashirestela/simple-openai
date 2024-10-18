@@ -451,7 +451,7 @@ public class ConversationDemo {
         while (!myMessage.toLowerCase().equals("exit")) {
             var chatStream = openAI.chatCompletions()
                     .createStream(ChatRequest.builder()
-                            .model("gpt-4o")
+                            .model("gpt-4o-mini")
                             .messages(messages)
                             .tools(functionExecutor.getToolFunctions())
                             .temperature(0.2)
@@ -494,10 +494,12 @@ public class ConversationDemo {
                 var delta = innerChoice.getMessage();
                 if (delta.getRole() != null) {
                     chatMsgResponse.setRole(delta.getRole());
-                } else if (delta.getContent() != null && !delta.getContent().isEmpty()) {
+                }
+                if (delta.getContent() != null && !delta.getContent().isEmpty()) {
                     content.append(delta.getContent());
                     System.out.print(delta.getContent());
-                } else if (delta.getToolCalls() != null) {
+                }
+                if (delta.getToolCalls() != null) {
                     var toolCall = delta.getToolCalls().get(0);
                     if (toolCall.getIndex() != indexTool) {
                         if (toolCalls.size() > 0) {
@@ -509,7 +511,8 @@ public class ConversationDemo {
                     } else {
                         functionArgs.append(toolCall.getFunction().getArguments());
                     }
-                } else {
+                }
+                if (innerChoice.getFinishReason() != null) {
                     if (content.length() > 0) {
                         chatMsgResponse.setContent(content.toString());
                     }
