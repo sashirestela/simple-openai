@@ -10,6 +10,9 @@ import java.util.Base64;
 
 public class Base64Util {
 
+    private Base64Util() {
+    }
+
     public static String encode(String filePath, MediaType mediaType) {
         try {
             Path path = Paths.get(filePath);
