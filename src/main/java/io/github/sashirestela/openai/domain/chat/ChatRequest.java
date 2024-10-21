@@ -51,7 +51,10 @@ public class ChatRequest {
     @Range(min = 0, max = 20)
     private Integer topLogprobs;
 
-    @Deprecated
+    /**
+     * @deprecated OpenAI has deperecated this field in favor of max_completion_tokens.
+     */
+    @Deprecated(since = "3.9.0", forRemoval = true)
     private Integer maxTokens;
 
     private Integer maxCompletionTokens;

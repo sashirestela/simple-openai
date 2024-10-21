@@ -31,7 +31,6 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
-import io.github.sashirestela.openai.support.Base64Util;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -235,7 +234,7 @@ class ChatDomainTest {
         var messages = new ArrayList<ChatMessage>();
         messages.add(SystemMessage.of("Respond in a short and concise way."));
         messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
-                Base64Util.encode("src/demo/resources/question1.mp3", null), InputAudioFormat.MP3)))));
+                "question_1_in_base64", InputAudioFormat.MP3)))));
         var chatRequest = ChatRequest.builder()
                 .model("modelAudio")
                 .modality(Modality.TEXT)
@@ -245,13 +244,12 @@ class ChatDomainTest {
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         var audio = chatResponse.firstMessage().getAudio();
-        Base64Util.decode(audio.getData(), "src/demo/resources/answer1.mp3");
         System.out.println("Answer 1: " + audio.getTranscript());
         assertNotNull(chatResponse);
 
         messages.add(AssistantMessage.builder().audioId(audio.getId()).build());
         messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
-                Base64Util.encode("src/demo/resources/question2.mp3", null), InputAudioFormat.MP3)))));
+                "question_2_in_base64", InputAudioFormat.MP3)))));
         chatRequest = ChatRequest.builder()
                 .model("modelAudio")
                 .modality(Modality.TEXT)
@@ -261,7 +259,6 @@ class ChatDomainTest {
                 .build();
         chatResponse = openAI.chatCompletions().create(chatRequest).join();
         audio = chatResponse.firstMessage().getAudio();
-        Base64Util.decode(audio.getData(), "src/demo/resources/answer2.mp3");
         System.out.println("Answer 2: " + audio.getTranscript());
         assertNotNull(chatResponse);
     }
