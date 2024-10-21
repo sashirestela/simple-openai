@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.Usage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class Chat {
     private String object;
     private Long created;
     private String model;
+    private ServiceTier serviceTier;
     private String systemFingerprint;
     private List<Choice> choices;
     private Usage usage;
@@ -57,6 +59,7 @@ public class Chat {
         public static class LogprobInfo {
 
             private List<TokenLogprob> content;
+            private List<TokenLogprob> refusal;
 
             @NoArgsConstructor
             @Getter

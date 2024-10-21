@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.audio.InputAudioFormat;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ import java.util.List;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ContentPart.ContentPartImageFile.class, name = "image_file"),
         @JsonSubTypes.Type(value = ContentPart.ContentPartImageUrl.class, name = "image_url"),
+        @JsonSubTypes.Type(value = ContentPart.ContentPartInputAudio.class, name = "input_audio"),
+        @JsonSubTypes.Type(value = ContentPart.ContentPartRefusal.class, name = "refusal"),
         @JsonSubTypes.Type(value = ContentPart.ContentPartTextAnnotation.class, name = "text")
 })
 @NoArgsConstructor
@@ -36,7 +39,13 @@ public abstract class ContentPart {
         IMAGE_URL,
 
         @JsonProperty("image_file")
-        IMAGE_FILE;
+        IMAGE_FILE,
+
+        @JsonProperty("input_audio")
+        INPUT_AUDIO,
+
+        @JsonProperty("refusal")
+        REFUSAL;
 
     }
 
@@ -104,6 +113,68 @@ public abstract class ContentPart {
                 return new ImageUrl(url, null);
             }
 
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ContentPartInputAudio extends ChatContentPart {
+
+        @Required
+        private InputAudio inputAudio;
+
+        private ContentPartInputAudio(InputAudio inputAudio) {
+            this.type = ContentPartType.INPUT_AUDIO;
+            this.inputAudio = inputAudio;
+        }
+
+        public static ContentPartInputAudio of(InputAudio inputAudio) {
+            return new ContentPartInputAudio(inputAudio);
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        public static class InputAudio {
+
+            @Required
+            private String data;
+
+            @Required
+            private InputAudioFormat format;
+
+            private InputAudio(String data, InputAudioFormat format) {
+                this.data = data;
+                this.format = format;
+            }
+
+            public static InputAudio of(String data, InputAudioFormat format) {
+                return new InputAudio(data, format);
+            }
+
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    public static class ContentPartRefusal extends ChatContentPart {
+
+        @Required
+        private String refusal;
+
+        private ContentPartRefusal(String refusal) {
+            this.type = ContentPartType.REFUSAL;
+            this.refusal = refusal;
+        }
+
+        public static ContentPartRefusal of(String refusal) {
+            return new ContentPartRefusal(refusal);
         }
 
     }

@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai.domain.audio;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.audio.AudioFormat;
+import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
-import io.github.sashirestela.openai.domain.audio.SpeechRequest.SpeechResponseFormat;
-import io.github.sashirestela.openai.domain.audio.SpeechRequest.Voice;
 import io.github.sashirestela.openai.domain.audio.TranscriptionRequest.TimestampGranularity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class AudioDomainTest {
                 .model("tts-1")
                 .input("Hello world, welcome to the AI universe!")
                 .voice(Voice.ALLOY)
-                .responseFormat(SpeechResponseFormat.MP3)
+                .responseFormat(AudioFormat.MP3)
                 .speed(1.0)
                 .build();
         var speechResponse = openAI.audios().speak(speechRequest).join();

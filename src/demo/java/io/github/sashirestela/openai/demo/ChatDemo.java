@@ -6,40 +6,48 @@ import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
+import io.github.sashirestela.openai.common.audio.AudioFormat;
+import io.github.sashirestela.openai.common.audio.InputAudioFormat;
+import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartInputAudio;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartInputAudio.InputAudio;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.function.Functional;
 import io.github.sashirestela.openai.domain.chat.Chat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.support.Base64Util;
+import io.github.sashirestela.openai.support.Base64Util.MediaType;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 public class ChatDemo extends AbstractDemo {
 
     protected ChatRequest chatRequest;
     protected String model;
+    protected String modelAudio;
 
-    public ChatDemo(BaseSimpleOpenAI openAI, String model) {
+    public ChatDemo(BaseSimpleOpenAI openAI, String model, String modelAudio) {
         super(openAI);
         this.model = model;
+        this.modelAudio = modelAudio;
         chatRequest = ChatRequest.builder()
                 .model(model)
                 .message(SystemMessage.of("You are an expert in AI."))
                 .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
-                .maxTokens(300)
+                .maxCompletionTokens(300)
                 .build();
     }
 
@@ -112,7 +120,7 @@ public class ChatDemo extends AbstractDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
@@ -126,9 +134,10 @@ public class ChatDemo extends AbstractDemo {
                         UserMessage.of(List.of(
                                 ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                                ContentPartImageUrl.of(ImageUrl.of(
+                                        Base64Util.encode("src/demo/resources/machupicchu.jpg", MediaType.IMAGE)))))))
                 .temperature(0.0)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
@@ -151,18 +160,37 @@ public class ChatDemo extends AbstractDemo {
         System.out.println();
     }
 
-    protected ImageUrl loadImageAsBase64(String imagePath) {
-        try {
-            Path path = Paths.get(imagePath);
-            byte[] imageBytes = Files.readAllBytes(path);
-            String base64String = Base64.getEncoder().encodeToString(imageBytes);
-            var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
-            var prefix = "data:image/" + extension + ";base64,";
-            return ImageUrl.of(prefix + base64String);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public void demoCallChatWithAudioInputOutput() {
+        var messages = new ArrayList<ChatMessage>();
+        messages.add(SystemMessage.of("Respond in a short and concise way."));
+        messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+                Base64Util.encode("src/demo/resources/question1.mp3", null), InputAudioFormat.MP3)))));
+        chatRequest = ChatRequest.builder()
+                .model(modelAudio)
+                .modality(Modality.TEXT)
+                .modality(Modality.AUDIO)
+                .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+                .messages(messages)
+                .build();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        var audio = chatResponse.firstMessage().getAudio();
+        Base64Util.decode(audio.getData(), "src/demo/resources/answer1.mp3");
+        System.out.println("Answer 1: " + audio.getTranscript());
+
+        messages.add(AssistantMessage.builder().audioId(audio.getId()).build());
+        messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+                Base64Util.encode("src/demo/resources/question2.mp3", null), InputAudioFormat.MP3)))));
+        chatRequest = ChatRequest.builder()
+                .model(modelAudio)
+                .modality(Modality.TEXT)
+                .modality(Modality.AUDIO)
+                .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+                .messages(messages)
+                .build();
+        chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        audio = chatResponse.firstMessage().getAudio();
+        Base64Util.decode(audio.getData(), "src/demo/resources/answer2.mp3");
+        System.out.println("Answer 2: " + audio.getTranscript());
     }
 
     private static void processResponseChunk(Chat responseChunk) {
@@ -242,7 +270,7 @@ public class ChatDemo extends AbstractDemo {
                 .apiKey(System.getenv("OPENAI_API_KEY"))
                 .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
                 .build();
-        var demo = new ChatDemo(openAI, "gpt-4o-mini");
+        var demo = new ChatDemo(openAI, "gpt-4o-mini", "gpt-4o-audio-preview");
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
@@ -250,6 +278,7 @@ public class ChatDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
         demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
         demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
+        demo.addTitleAction("Call Chat with Audio Input/Output", demo::demoCallChatWithAudioInputOutput);
 
         demo.run();
     }

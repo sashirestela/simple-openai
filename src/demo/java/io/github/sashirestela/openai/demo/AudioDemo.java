@@ -1,9 +1,9 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.common.audio.AudioFormat;
+import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
 import io.github.sashirestela.openai.domain.audio.SpeechRequest;
-import io.github.sashirestela.openai.domain.audio.SpeechRequest.SpeechResponseFormat;
-import io.github.sashirestela.openai.domain.audio.SpeechRequest.Voice;
 import io.github.sashirestela.openai.domain.audio.TranscriptionRequest;
 import io.github.sashirestela.openai.domain.audio.TranscriptionRequest.TimestampGranularity;
 import io.github.sashirestela.openai.domain.audio.TranslationRequest;
@@ -29,7 +29,7 @@ public class AudioDemo extends AbstractDemo {
                 .model(MODEL_TTS)
                 .input("Hello world, welcome to the AI universe!")
                 .voice(Voice.ALLOY)
-                .responseFormat(SpeechResponseFormat.MP3)
+                .responseFormat(AudioFormat.MP3)
                 .speed(1.0)
                 .build();
         var futureSpeech = openAI.audios().speak(speechRequest);
