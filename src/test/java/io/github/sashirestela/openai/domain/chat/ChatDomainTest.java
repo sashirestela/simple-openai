@@ -6,8 +6,13 @@ import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
+import io.github.sashirestela.openai.common.audio.AudioFormat;
+import io.github.sashirestela.openai.common.audio.InputAudioFormat;
+import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartInputAudio;
+import io.github.sashirestela.openai.common.content.ContentPart.ContentPartInputAudio.InputAudio;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.common.function.FunctionCall;
@@ -19,15 +24,20 @@ import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.openai.common.tool.ToolType;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.DomainTestingHelper.MockForType;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.support.Base64Util;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,7 +65,7 @@ class ChatDomainTest {
                 .message(SystemMessage.of("You are an expert in Mathematics", "tutor"))
                 .message(UserMessage.of("Tell me the Pitagoras theorem in less than 50 words.", "student"))
                 .temperature(0.2)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .topP(1.0)
                 .n(1)
                 .stop("end")
@@ -120,7 +130,7 @@ class ChatDomainTest {
                         ContentPartImageUrl.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg")))))
                 .temperature(0.2)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .topP(1.0)
                 .n(1)
                 .stop("end")
@@ -164,7 +174,7 @@ class ChatDomainTest {
                 .tools(functionExecutor.getToolFunctions())
                 .toolChoice(ToolChoice.function("product"))
                 .temperature(0.2)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .topP(1.0)
                 .n(1)
                 .stop("end")
@@ -190,7 +200,7 @@ class ChatDomainTest {
                 .model("gpt-4-1106-preview")
                 .message(SystemMessage.of("You are an expert in Mathematics"))
                 .message(UserMessage.of("What is the product of 123 and 456?"))
-                .message(AssistantMessage.of(null, List.of(new ToolCall(
+                .message(AssistantMessage.of(List.of(new ToolCall(
                         0,
                         "call_tAoX6VHyjQVLnM9CZvEsTEwW",
                         ToolType.FUNCTION,
@@ -198,7 +208,7 @@ class ChatDomainTest {
                 .message(ToolMessage.of("56088", "call_tAoX6VHyjQVLnM9CZvEsTEwW"))
                 .tools(functionExecutor.getToolFunctions())
                 .temperature(0.2)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .topP(1.0)
                 .n(1)
                 .stop("end")
@@ -215,6 +225,48 @@ class ChatDomainTest {
     }
 
     @Test
+    void testChatCompletionsCreateWithAudio() throws IOException {
+        DomainTestingHelper.get()
+                .mockFor(httpClient, Map.of(
+                        MockForType.OBJECT, List.of(
+                                "src/test/resources/chatcompletions_create_audio_1.json",
+                                "src/test/resources/chatcompletions_create_audio_1.json",
+                                "src/test/resources/chatcompletions_create_audio_2.json")));
+        var messages = new ArrayList<ChatMessage>();
+        messages.add(SystemMessage.of("Respond in a short and concise way."));
+        messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+                Base64Util.encode("src/demo/resources/question1.mp3", null), InputAudioFormat.MP3)))));
+        var chatRequest = ChatRequest.builder()
+                .model("modelAudio")
+                .modality(Modality.TEXT)
+                .modality(Modality.AUDIO)
+                .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+                .messages(messages)
+                .build();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        var audio = chatResponse.firstMessage().getAudio();
+        Base64Util.decode(audio.getData(), "src/demo/resources/answer1.mp3");
+        System.out.println("Answer 1: " + audio.getTranscript());
+        assertNotNull(chatResponse);
+
+        messages.add(AssistantMessage.builder().audioId(audio.getId()).build());
+        messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+                Base64Util.encode("src/demo/resources/question2.mp3", null), InputAudioFormat.MP3)))));
+        chatRequest = ChatRequest.builder()
+                .model("modelAudio")
+                .modality(Modality.TEXT)
+                .modality(Modality.AUDIO)
+                .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+                .messages(messages)
+                .build();
+        chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        audio = chatResponse.firstMessage().getAudio();
+        Base64Util.decode(audio.getData(), "src/demo/resources/answer2.mp3");
+        System.out.println("Answer 2: " + audio.getTranscript());
+        assertNotNull(chatResponse);
+    }
+
+    @Test
     void shouldUpdateChatRequestWithAutoToolChoiceWhenToolsAreProvidedWithoutToolChoice() {
         var charRequest = ChatRequest.builder()
                 .model("model")
@@ -225,17 +277,6 @@ class ChatDomainTest {
         assertNull(charRequest.getToolChoice());
         var updatedChatRequest = OpenAI.updateRequest(charRequest, Boolean.TRUE);
         assertEquals(ToolChoiceOption.AUTO, updatedChatRequest.getToolChoice());
-    }
-
-    @Test
-    void shouldCreateChatMsgAssistantWhenParametersAreCorrect() {
-        AssistantMessage[] testData = {
-                AssistantMessage.of("content", "name"),
-                AssistantMessage.of("content")
-        };
-        for (AssistantMessage data : testData) {
-            assertNotNull(data);
-        }
     }
 
     static class Product implements Functional {

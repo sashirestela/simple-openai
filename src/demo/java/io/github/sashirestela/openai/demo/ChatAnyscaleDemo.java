@@ -6,7 +6,7 @@ import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 public class ChatAnyscaleDemo extends ChatDemo {
 
     public ChatAnyscaleDemo(BaseSimpleOpenAI openAI, String model) {
-        super(openAI, model);
+        super(openAI, model, null);
     }
 
     public static void main(String[] args) {
@@ -18,9 +18,6 @@ public class ChatAnyscaleDemo extends ChatDemo {
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
-        //demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
-        //demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
-        //demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
 
         demo.run();
     }

@@ -15,5 +15,29 @@ public class Usage {
     private Integer promptTokens;
     private Integer completionTokens;
     private Integer totalTokens;
+    private CompletionTokensDetails completionTokensDetails;
+    private PromptTokensDetails promptTokensDetails;
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class CompletionTokensDetails {
+
+        private Integer audioTokens;
+        private Integer reasoningTokens;
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class PromptTokensDetails {
+
+        private Integer audioTokens;
+        private Integer cachedTokens;
+
+    }
 
 }

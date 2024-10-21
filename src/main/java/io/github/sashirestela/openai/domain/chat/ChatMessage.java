@@ -9,6 +9,7 @@ import io.github.sashirestela.openai.common.content.ContentPart.ChatContentPart;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Required;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,7 +40,9 @@ public abstract class ChatMessage {
     }
 
     @Getter
+    @ToString
     @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SystemMessage extends ChatMessage {
 
         @Required
@@ -64,7 +67,9 @@ public abstract class ChatMessage {
     }
 
     @Getter
+    @ToString
     @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class UserMessage extends ChatMessage {
 
         @Required
@@ -91,44 +96,60 @@ public abstract class ChatMessage {
     }
 
     @Getter
+    @ToString
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class AssistantMessage extends ChatMessage {
 
         @JsonInclude
-        private String content;
+        @ObjectType(baseClass = String.class)
+        @ObjectType(baseClass = ChatContentPart.class, firstGroup = true)
+        private Object content;
+
+        private String refusal;
 
         private String name;
 
+        private Audio audio;
+
         private List<ToolCall> toolCalls;
 
-        private AssistantMessage(String content, String name, List<ToolCall> toolCalls) {
+        @Builder
+        public AssistantMessage(String content, String refusal, String name, String audioId, List<ToolCall> toolCalls) {
             this.role = ChatRole.ASSISTANT;
             this.content = content;
+            this.refusal = refusal;
             this.name = name;
+            this.audio = new Audio(audioId);
             this.toolCalls = toolCalls;
         }
 
-        public static AssistantMessage of(String content, String name, List<ToolCall> toolCalls) {
-            return new AssistantMessage(content, name, toolCalls);
-        }
+        @Getter
+        @ToString
+        static class Audio {
 
-        public static AssistantMessage of(String content, List<ToolCall> toolCalls) {
-            return new AssistantMessage(content, null, toolCalls);
-        }
+            @Required
+            private String id;
 
-        public static AssistantMessage of(String content, String name) {
-            return new AssistantMessage(content, name, null);
+            public Audio(String id) {
+                this.id = id;
+            }
+
         }
 
         public static AssistantMessage of(String content) {
-            return new AssistantMessage(content, null, null);
+            return AssistantMessage.builder().content(content).build();
+        }
+
+        public static AssistantMessage of(List<ToolCall> toolCalls) {
+            return AssistantMessage.builder().toolCalls(toolCalls).build();
         }
 
     }
 
     @Getter
     @ToString
+    @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ToolMessage extends ChatMessage {
 
@@ -159,6 +180,20 @@ public abstract class ChatMessage {
         private String content;
         private List<ToolCall> toolCalls;
         private String refusal;
+        private AudioResponse audio;
+
+        @NoArgsConstructor
+        @Getter
+        @Setter
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class AudioResponse {
+
+            private String id;
+            private Integer expiresAt;
+            private String data;
+            private String transcript;
+
+        }
 
     }
 

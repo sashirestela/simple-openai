@@ -2,9 +2,10 @@ package io.github.sashirestela.openai.domain.audio;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.common.audio.AudioFormat;
+import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
@@ -27,53 +28,9 @@ public class SpeechRequest {
     @Required
     private Voice voice;
 
-    private SpeechResponseFormat responseFormat;
+    private AudioFormat responseFormat;
 
     @Range(min = 0.25, max = 4.0)
     private Double speed;
-
-    public enum Voice {
-
-        @JsonProperty("alloy")
-        ALLOY,
-
-        @JsonProperty("echo")
-        ECHO,
-
-        @JsonProperty("fable")
-        FABLE,
-
-        @JsonProperty("onyx")
-        ONYX,
-
-        @JsonProperty("nova")
-        NOVA,
-
-        @JsonProperty("shimmer")
-        SHIMMER;
-
-    }
-
-    public enum SpeechResponseFormat {
-
-        @JsonProperty("mp3")
-        MP3,
-
-        @JsonProperty("opus")
-        OPUS,
-
-        @JsonProperty("aac")
-        AAC,
-
-        @JsonProperty("flac")
-        FLAC,
-
-        @JsonProperty("wav")
-        WAV,
-
-        @JsonProperty("pcm")
-        PCM;
-
-    }
 
 }

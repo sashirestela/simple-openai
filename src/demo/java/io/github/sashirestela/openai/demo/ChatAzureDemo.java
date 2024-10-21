@@ -7,13 +7,15 @@ import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImage
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.support.Base64Util;
+import io.github.sashirestela.openai.support.Base64Util.MediaType;
 
 import java.util.List;
 
 public class ChatAzureDemo extends ChatDemo {
 
     public ChatAzureDemo(BaseSimpleOpenAI openAI, String model) {
-        super(openAI, model);
+        super(openAI, model, null);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class ChatAzureDemo extends ChatDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
@@ -41,9 +43,10 @@ public class ChatAzureDemo extends ChatDemo {
                         UserMessage.of(List.of(
                                 ContentPartText.of(
                                         "What do you see in the image? Give in details in no more than 100 words."),
-                                ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                                ContentPartImageUrl.of(ImageUrl.of(
+                                        Base64Util.encode("src/demo/resources/machupicchu.jpg", MediaType.IMAGE)))))))
                 .temperature(0.0)
-                .maxTokens(500)
+                .maxCompletionTokens(500)
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
