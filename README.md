@@ -20,7 +20,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
-  - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs) **NEW**
+  - [Chat Completion with Audio Example](#chat-completion-with-audio-example) **NEW**
+  - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
@@ -40,13 +41,13 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 
 
 ## ✅ Supported Services
-Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports most of the existing features until [Aug 15th, 2024](https://platform.openai.com/docs/changelog/aug-15th-2024) and will continue to update with future changes.
+Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports most of the existing features and will continue to update with future changes.
 
 Full support for all of the OpenAI services:
 
 * Audio (Speech, Transcription, Translation)
 * Batch (Batches of Chat Completion)
-* Chat Completion (Text Generation, Streaming, Function Calling, Vision, **Structured Outputs**)
+* Chat Completion (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, **Audio**)
 * Completion (Legacy Text Generation)
 * Embedding  (Vectoring Text)
 * Files (Upload Files)
@@ -55,7 +56,7 @@ Full support for all of the OpenAI services:
 * Models (List)
 * Moderation (Check Harmful Text)
 * Upload (Upload Large Files in Parts)
-* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, **Structured Outputs**)
+* Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
 ![OpenAI Services](media/openai_services.png)
 
@@ -179,7 +180,7 @@ var chatRequest = ChatRequest.builder()
         .message(SystemMessage.of("You are an expert in AI."))
         .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
         .temperature(0.0)
-        .maxTokens(300)
+        .maxCompletionTokens(300)
         .build();
 var futureChat = openAI.chatCompletions().create(chatRequest);
 var chatResponse = futureChat.join();
@@ -193,7 +194,7 @@ var chatRequest = ChatRequest.builder()
         .message(SystemMessage.of("You are an expert in AI."))
         .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
         .temperature(0.0)
-        .maxTokens(300)
+        .maxCompletionTokens(300)
         .build();
 var futureChat = openAI.chatCompletions().createStream(chatRequest);
 var chatResponse = futureChat.join();
@@ -307,7 +308,7 @@ var chatRequest = ChatRequest.builder()
                         ContentPartImageUrl.of(ImageUrl.of(
                                 "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
         .temperature(0.0)
-        .maxTokens(500)
+        .maxCompletionTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
 chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
@@ -315,7 +316,7 @@ chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.fir
         .forEach(System.out::print);
 System.out.println();
 ```
-Example to call the Chat Completion service to allow the model to take in local images and answer questions about them:
+Example to call the Chat Completion service to allow the model to take in local images and answer questions about them (_check the Base64Util's code in this repository_):
 ```java
 var chatRequest = ChatRequest.builder()
         .model("gpt-4o-mini")
@@ -323,29 +324,50 @@ var chatRequest = ChatRequest.builder()
                 UserMessage.of(List.of(
                         ContentPartText.of(
                                 "What do you see in the image? Give in details in no more than 100 words."),
-                        ContentPartImageUrl.of(loadImageAsBase64("src/demo/resources/machupicchu.jpg"))))))
+                        ContentPartImageUrl.of(ImageUrl.of(
+                                Base64Util.encode("src/demo/resources/machupicchu.jpg", MediaType.IMAGE)))))))
         .temperature(0.0)
-        .maxTokens(500)
+        .maxCompletionTokens(500)
         .build();
 var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
 chatResponse.filter(chatResp -> chatResp.getChoices().size() > 0 && chatResp.firstContent() != null)
         .map(Chat::firstContent)
         .forEach(System.out::print);
 System.out.println();
+```
+### Chat Completion with Audio Example
+Example to call the Chat Completion service to generate a spoken audio response to a prompt, and to use audio inputs to prompt the model (_check the Base64Util's code in this repository_):
+```java
+var messages = new ArrayList<ChatMessage>();
+messages.add(SystemMessage.of("Respond in a short and concise way."));
+messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+        Base64Util.encode("src/demo/resources/question1.mp3", null), InputAudioFormat.MP3)))));
+chatRequest = ChatRequest.builder()
+        .model("gpt-4o-audio-preview")
+        .modality(Modality.TEXT)
+        .modality(Modality.AUDIO)
+        .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+        .messages(messages)
+        .build();
+var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+var audio = chatResponse.firstMessage().getAudio();
+Base64Util.decode(audio.getData(), "src/demo/resources/answer1.mp3");
+System.out.println("Answer 1: " + audio.getTranscript());
 
-private static ImageUrl loadImageAsBase64(String imagePath) {
-    try {
-        Path path = Paths.get(imagePath);
-        byte[] imageBytes = Files.readAllBytes(path);
-        String base64String = Base64.getEncoder().encodeToString(imageBytes);
-        var extension = imagePath.substring(imagePath.lastIndexOf('.') + 1);
-        var prefix = "data:image/" + extension + ";base64,";
-        return ImageUrl.of(prefix + base64String);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
-    }
-}
+messages.add(AssistantMessage.builder().audioId(audio.getId()).build());
+messages.add(UserMessage.of(List.of(ContentPartInputAudio.of(InputAudio.of(
+        Base64Util.encode("src/demo/resources/question2.mp3", null), InputAudioFormat.MP3)))));
+chatRequest = ChatRequest.builder()
+        .model("gpt-4o-audio-preview")
+        .modality(Modality.TEXT)
+        .modality(Modality.AUDIO)
+        .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
+        .messages(messages)
+        .build();
+chatResponse = openAI.chatCompletions().create(chatRequest).join();
+audio = chatResponse.firstMessage().getAudio();
+Base64Util.decode(audio.getData(), "src/demo/resources/answer2.mp3");
+System.out.println("Answer 2: " + audio.getTranscript());
 ```
 ### Chat Completion with Structured Outputs
 Example to call the Chat Completion service to ensure the model will always generate responses that adhere to a Json Schema defined through Java classes:
@@ -1013,6 +1035,7 @@ List of the main users of our library:
 - [SuperTurtyBot](https://github.com/DaRealTurtyWurty/SuperTurtyBot): A multi-purpose discord bot.
 - [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
+- [Cryptik.ai GPT Chatbot](https://social.wubits.io/wubits/home/66b3969ec4b880134fe96886): A Telegram chatbot factory.
 
 
 ## ❤ Show Us Your Love
