@@ -70,6 +70,9 @@ public class ThreadRun {
         @JsonProperty("completed")
         COMPLETED,
 
+        @JsonProperty("incomplete")
+        INCOMPLETE,
+
         @JsonProperty("expired")
         EXPIRED;
 
