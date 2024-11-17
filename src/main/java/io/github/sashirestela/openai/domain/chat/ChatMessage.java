@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.openai.common.content.ContentPart.ChatContentPart;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
@@ -120,7 +121,7 @@ public abstract class ChatMessage {
             this.content = content;
             this.refusal = refusal;
             this.name = name;
-            this.audio = new Audio(audioId);
+            this.audio = CommonUtil.isNullOrEmpty(audioId) ? null : new Audio(audioId);
             this.toolCalls = toolCalls;
         }
 
