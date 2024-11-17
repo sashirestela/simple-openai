@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.9.0</version>
+  <version>3.9.1</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -54,21 +54,21 @@
     <slf4j.version>2.0.16</slf4j.version>
     <cleverclient.version>1.4.4</cleverclient.version>
     <slimvalidator.version>1.2.2</slimvalidator.version>
-    <lombok.version>1.18.34</lombok.version>
-    <jackson.version>2.18.0</jackson.version>
-    <json.schema.version>4.36.0</json.schema.version>
+    <lombok.version>1.18.36</lombok.version>
+    <jackson.version>2.18.1</jackson.version>
+    <json.schema.version>4.37.0</json.schema.version>
     <junit.version>5.11.3</junit.version>
     <mockito.version>5.14.2</mockito.version>
     <!-- Plugins Versions -->
     <compiler.version>3.13.0</compiler.version>
     <enforcer.version>3.5.0</enforcer.version>
-    <surefire.version>3.5.1</surefire.version>
-    <exec.version>3.4.1</exec.version>
+    <surefire.version>3.5.2</surefire.version>
+    <exec.version>3.5.0</exec.version>
     <jacoco.version>0.8.12</jacoco.version>
     <helper.version>3.6.0</helper.version>
-    <versions.version>2.17.1</versions.version>
+    <versions.version>2.18.0</versions.version>
     <source.version>3.3.1</source.version>
-    <javadoc.version>3.10.1</javadoc.version>
+    <javadoc.version>3.11.1</javadoc.version>
     <gpg.version>3.2.7</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
     <spotless.version>2.43.0</spotless.version>
