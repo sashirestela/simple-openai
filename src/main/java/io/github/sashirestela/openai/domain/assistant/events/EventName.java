@@ -12,6 +12,7 @@ public final class EventName {
     public static final String THREAD_RUN_IN_PROGRESS = "thread.run.in_progress";
     public static final String THREAD_RUN_REQUIRES_ACTION = "thread.run.requires_action";
     public static final String THREAD_RUN_COMPLETED = "thread.run.completed";
+    public static final String THREAD_RUN_INCOMPLETE = "thread.run.incomplete";
     public static final String THREAD_RUN_FAILED = "thread.run.failed";
     public static final String THREAD_RUN_CANCELLING = "thread.run.cancelling";
     public static final String THREAD_RUN_CANCELLED = "thread.run.cancelled";
