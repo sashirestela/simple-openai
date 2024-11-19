@@ -1,9 +1,12 @@
 package io.github.sashirestela.openai.common.function;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.cleverclient.support.Configurator;
 import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -32,6 +35,11 @@ class FunctionExecutorTest {
                     .description("Get random number")
                     .functionalClass(RandomNumber.class)
                     .build());
+
+    @BeforeAll
+    static void setup() {
+        Configurator.builder().objectMapper(new ObjectMapper()).build();
+    }
 
     @Test
     void shouldReturnEmptyListWhenObjectWasNotInitialized() {

@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.support.Constant;
@@ -19,18 +20,19 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     /**
      * Constructor used to generate a builder.
      *
-     * @param apiKey     Identifier to be used for authentication. Mandatory.
-     * @param baseUrl    The URL of the Azure OpenAI deployment. Mandatory.
-     * @param apiVersion Azure OpenAI API version. See: <a href=
-     *                   "https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure
-     *                   OpenAI API versioning</a>. Mandatory.
-     * @param httpClient A {@link HttpClient HttpClient} object. One is created by default if not
-     *                   provided. Optional.
+     * @param apiKey       Identifier to be used for authentication. Mandatory.
+     * @param baseUrl      The URL of the Azure OpenAI deployment. Mandatory.
+     * @param apiVersion   Azure OpenAI API version. See: <a href=
+     *                     "https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#rest-api-versioning">Azure
+     *                     OpenAI API versioning</a>. Mandatory.
+     * @param httpClient   A {@link HttpClient HttpClient} object. One is created by default if not
+     *                     provided. Optional.
+     * @param objectMapper Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl, @NonNull String apiVersion,
-            HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient));
+            HttpClient httpClient, ObjectMapper objectMapper) {
+        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient, objectMapper));
     }
 
     private static String extractDeployment(String url) {
@@ -103,7 +105,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     }
 
     public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, String apiVersion,
-            HttpClient httpClient) {
+            HttpClient httpClient, ObjectMapper objectMapper) {
 
         var headers = Map.of(Constant.AZURE_APIKEY_HEADER, apiKey);
         UnaryOperator<HttpRequestData> requestInterceptor = request -> {
@@ -124,6 +126,7 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
                 .headers(headers)
                 .httpClient(httpClient)
                 .requestInterceptor(requestInterceptor)
+                .objectMapper(objectMapper)
                 .build();
     }
 
