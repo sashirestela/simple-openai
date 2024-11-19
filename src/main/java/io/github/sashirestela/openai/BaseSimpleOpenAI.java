@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.slimvalidator.Validator;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
@@ -52,13 +53,15 @@ public abstract class BaseSimpleOpenAI {
                 throw new ConstraintViolationException(violations);
             }
         };
+        var objectMapper = Optional.ofNullable(args.getObjectMapper()).orElse(new ObjectMapper());
         this.cleverClient = CleverClient.builder()
                 .httpClient(httpClient)
                 .baseUrl(args.getBaseUrl())
                 .headers(args.getHeaders())
-                .endOfStream(END_OF_STREAM)
                 .requestInterceptor(args.getRequestInterceptor())
                 .bodyInspector(bodyInspector)
+                .endOfStream(END_OF_STREAM)
+                .objectMapper(objectMapper)
                 .build();
     }
 

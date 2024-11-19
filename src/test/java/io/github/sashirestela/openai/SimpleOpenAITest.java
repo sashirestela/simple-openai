@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
@@ -35,7 +36,7 @@ class SimpleOpenAITest {
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
         var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "prjId", "https://example.org",
-                HttpClient.newHttpClient());
+                HttpClient.newHttpClient(), new ObjectMapper());
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(3, args.getHeaders().size());
@@ -44,18 +45,20 @@ class SimpleOpenAITest {
         assertEquals("orgId", args.getHeaders().get(Constant.OPENAI_ORG_HEADER));
         assertEquals("prjId", args.getHeaders().get(Constant.OPENAI_PRJ_HEADER));
         assertNotNull(args.getHttpClient());
+        assertNotNull(args.getObjectMapper());
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null);
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null, null);
 
         assertEquals(Constant.OPENAI_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
         assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(args.getHttpClient());
+        assertNull(args.getObjectMapper());
         assertNull(args.getRequestInterceptor());
     }
 

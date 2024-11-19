@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
@@ -22,15 +23,16 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      * @param baseUrl        Host's url, If not provided, it'll be 'https://api.openai.com'. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object. One is created by
      *                       default if not provided. Optional.
+     * @param objectMapper   Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
-            HttpClient httpClient) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, projectId, baseUrl, httpClient));
+            HttpClient httpClient, ObjectMapper objectMapper) {
+        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, projectId, baseUrl, httpClient, objectMapper));
     }
 
     public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String organizationId,
-            String projectId, String baseUrl, HttpClient httpClient) {
+            String projectId, String baseUrl, HttpClient httpClient, ObjectMapper objectMapper) {
 
         var headers = new HashMap<String, String>();
         headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
@@ -45,6 +47,7 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
                 .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
                 .headers(headers)
                 .httpClient(httpClient)
+                .objectMapper(objectMapper)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.support.Constant;
@@ -18,12 +19,13 @@ class SimpleOpenAIAzureTest {
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
         var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org", "12-34-5678",
-                HttpClient.newHttpClient());
+                HttpClient.newHttpClient(), new ObjectMapper());
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
         assertEquals("the-api-key", args.getHeaders().get(Constant.AZURE_APIKEY_HEADER));
         assertNotNull(args.getHttpClient());
+        assertNotNull(args.getObjectMapper());
         assertNotNull(args.getRequestInterceptor());
     }
 
@@ -46,6 +48,7 @@ class SimpleOpenAIAzureTest {
                 "the-api-key",
                 baseUrl,
                 "12-34-5678",
+                null,
                 null);
         var actualRequest = args.getRequestInterceptor().apply(request);
         assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
@@ -75,6 +78,7 @@ class SimpleOpenAIAzureTest {
                 "the-api-key",
                 "https://example.org",
                 "12-34-5678",
+                null,
                 null);
         var actualRequest = args.getRequestInterceptor().apply(request);
         assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
@@ -90,6 +94,7 @@ class SimpleOpenAIAzureTest {
                 "the-api-key",
                 baseUrl,
                 "12-34-5678",
+                null,
                 null);
 
         var requestBuilder = HttpRequestData.builder()

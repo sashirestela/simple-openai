@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.openai.support.Constant;
 import org.junit.jupiter.api.Test;
 
@@ -15,25 +16,27 @@ class SimpleOpenAIAnyscaleTest {
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithCustomBaseURL() {
         var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org",
-                HttpClient.newHttpClient());
+                HttpClient.newHttpClient(), new ObjectMapper());
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
         assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNotNull(args.getHttpClient());
+        assertNotNull(args.getObjectMapper());
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", null, null);
+        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
 
         assertEquals(Constant.ANYSCALE_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
         assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(args.getHttpClient());
+        assertNull(args.getObjectMapper());
         assertNull(args.getRequestInterceptor());
     }
 
