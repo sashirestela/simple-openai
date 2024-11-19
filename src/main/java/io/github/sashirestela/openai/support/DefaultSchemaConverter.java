@@ -35,6 +35,7 @@ public class DefaultSchemaConverter implements SchemaConverter {
         var configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON)
                 .with(jacksonModule)
                 .with(Option.FORBIDDEN_ADDITIONAL_PROPERTIES_BY_DEFAULT)
+                .without(Option.STANDARD_FORMATS)
                 .without(Option.SCHEMA_VERSION_INDICATOR);
         if (Boolean.TRUE.equals(isStructuredOutput)) {
             configBuilder.forFields().withRequiredCheck(field -> Boolean.TRUE);
