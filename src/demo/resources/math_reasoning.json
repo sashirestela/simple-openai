@@ -1,0 +1,1 @@
+{"type":"object","properties":{"finalAnswer":{"type":"string"},"steps":{"type":"array","items":{"type":"object","properties":{"explanation":{"type":"string"},"output":{"type":"string"}},"required":["explanation","output"],"additionalProperties":false}}},"required":["finalAnswer","steps"],"additionalProperties":false}
