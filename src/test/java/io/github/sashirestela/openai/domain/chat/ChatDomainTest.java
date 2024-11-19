@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.domain.chat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.openai.OpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
@@ -36,6 +38,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,13 +152,39 @@ class ChatDomainTest {
         DomainTestingHelper.get()
                 .mockForObject(httpClient, "src/test/resources/chatcompletions_create_structured_output.json");
         var chatRequest = ChatRequest.builder()
-                .model("gpt-4-vision-preview")
+                .model("gpt-4o-mini")
                 .message(SystemMessage
                         .of("You are a helpful math tutor. Guide the user through the solution step by step."))
                 .message(UserMessage.of("How can I solve 8x + 7 = -23"))
                 .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
                         .name("MathReasoning")
                         .schemaClass(MathReasoning.class)
+                        .build()))
+                .build();
+        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        System.out.println(chatResponse.firstContent());
+        assertNotNull(chatResponse);
+    }
+
+    @Test
+    void testChatCompletionsCreateWithStructuredOutputAndCustomJsonSchema() throws IOException {
+        DomainTestingHelper.get()
+                .mockForObject(httpClient, "src/test/resources/chatcompletions_create_structured_output.json");
+        JsonNode schema = null;
+        try {
+            var json = Files.readString(Paths.get("src/demo/resources/math_reasoning.json"));
+            schema = new ObjectMapper().readTree(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        var chatRequest = ChatRequest.builder()
+                .model("gpt-4o-mini")
+                .message(SystemMessage
+                        .of("You are a helpful math tutor. Guide the user through the solution step by step."))
+                .message(UserMessage.of("How can I solve 8x + 7 = -23"))
+                .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
+                        .name("MathReasoning")
+                        .schema(schema)
                         .build()))
                 .build();
         var chatResponse = openAI.chatCompletions().create(chatRequest).join();

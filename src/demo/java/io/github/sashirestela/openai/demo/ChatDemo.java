@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.demo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.openai.BaseSimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
@@ -29,6 +31,9 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.openai.support.Base64Util;
 import io.github.sashirestela.openai.support.Base64Util.MediaType;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +165,29 @@ public class ChatDemo extends AbstractDemo {
         System.out.println();
     }
 
+    public void demoCallChatWithStructuredOutputs2() {
+        JsonNode schema = null;
+        try {
+            var json = Files.readString(Paths.get("src/demo/resources/math_reasoning.json"));
+            schema = new ObjectMapper().readTree(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        var chatRequest = ChatRequest.builder()
+                .model(model)
+                .message(SystemMessage
+                        .of("You are a helpful math tutor. Guide the user through the solution step by step."))
+                .message(UserMessage.of("How can I solve 8x + 7 = -23"))
+                .responseFormat(ResponseFormat.jsonSchema(JsonSchema.builder()
+                        .name("MathReasoning")
+                        .schema(schema)
+                        .build()))
+                .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.forEach(ChatDemo::processResponseChunk);
+        System.out.println();
+    }
+
     public void demoCallChatWithAudioInputOutput() {
         var messages = new ArrayList<ChatMessage>();
         messages.add(SystemMessage.of("Respond in a short and concise way."));
@@ -278,6 +306,7 @@ public class ChatDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat with Vision (External image)", demo::demoCallChatWithVisionExternalImage);
         demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
         demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
+        demo.addTitleAction("Call Chat with Structured Outputs 2", demo::demoCallChatWithStructuredOutputs2);
         demo.addTitleAction("Call Chat with Audio Input/Output", demo::demoCallChatWithAudioInputOutput);
 
         demo.run();
