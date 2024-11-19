@@ -67,11 +67,13 @@ public class ResponseFormat {
             this.description = description;
             this.name = name;
             this.strict = strict;
-            this.schema = schema != null
-                    ? schema
-                    : (schemaClass != null
-                            ? new DefaultSchemaConverter(Boolean.TRUE).convert(schemaClass)
-                            : null);
+            if (schema != null) {
+                this.schema = schema;
+            } else {
+                this.schema = schemaClass != null
+                        ? new DefaultSchemaConverter(Boolean.TRUE).convert(schemaClass)
+                        : null;
+            }
         }
 
     }
