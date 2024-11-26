@@ -55,6 +55,7 @@ class SimpleOpenAIAnyscaleTest {
                 openAI::images,
                 openAI::models,
                 openAI::moderations,
+                openAI::uploads,
                 openAI::assistants,
                 openAI::threads,
                 openAI::threadMessages,
@@ -62,7 +63,8 @@ class SimpleOpenAIAnyscaleTest {
                 openAI::threadRunSteps,
                 openAI::vectorStores,
                 openAI::vectorStoreFiles,
-                openAI::vectorStoreFileBatches
+                openAI::vectorStoreFileBatches,
+                openAI::realtime
         };
         for (Runnable calling : callingData) {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());
