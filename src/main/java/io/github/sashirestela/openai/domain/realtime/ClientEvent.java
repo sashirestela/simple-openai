@@ -23,6 +23,10 @@ public abstract class ClientEvent {
             this.session = session;
         }
 
+        public static SessionUpdate of(Configuration session) {
+            return new SessionUpdate(null, session);
+        }
+
         public static SessionUpdate of(String eventId, Configuration session) {
             return new SessionUpdate(eventId, session);
         }
@@ -43,6 +47,10 @@ public abstract class ClientEvent {
             this.audio = audio;
         }
 
+        public static InputAudioBufferAppend of(String audio) {
+            return new InputAudioBufferAppend(null, audio);
+        }
+
         public static InputAudioBufferAppend of(String eventId, String audio) {
             return new InputAudioBufferAppend(eventId, audio);
         }
@@ -60,6 +68,10 @@ public abstract class ClientEvent {
             this.eventId = eventId;
         }
 
+        public static InputAudioBufferCommit of() {
+            return new InputAudioBufferCommit(null);
+        }
+
         public static InputAudioBufferCommit of(String eventId) {
             return new InputAudioBufferCommit(eventId);
         }
@@ -75,6 +87,10 @@ public abstract class ClientEvent {
         private InputAudioBufferClear(String eventId) {
             this.type = Realtime.INPUT_AUDIO_BUFFER_CLEAR;
             this.eventId = eventId;
+        }
+
+        public static InputAudioBufferClear of() {
+            return new InputAudioBufferClear(null);
         }
 
         public static InputAudioBufferClear of(String eventId) {
@@ -97,6 +113,14 @@ public abstract class ClientEvent {
             this.eventId = eventId;
             this.previousItemId = previousItemId;
             this.item = item;
+        }
+
+        public static ConversationItemCreate of(Item item) {
+            return new ConversationItemCreate(null, null, item);
+        }
+
+        public static ConversationItemCreate of(String previousItemId, Item item) {
+            return new ConversationItemCreate(null, previousItemId, item);
         }
 
         public static ConversationItemCreate of(String eventId, String previousItemId, Item item) {
@@ -123,9 +147,13 @@ public abstract class ClientEvent {
             this.audioEndMs = audioEndMs;
         }
 
-        public static ConversationItemTruncate of(String eventId, String previousItemId, Integer contentIndex,
+        public static ConversationItemTruncate of(String itemId, Integer contentIndex, Integer audioEndMs) {
+            return new ConversationItemTruncate(null, itemId, contentIndex, audioEndMs);
+        }
+
+        public static ConversationItemTruncate of(String eventId, String itemId, Integer contentIndex,
                 Integer audioEndMs) {
-            return new ConversationItemTruncate(eventId, previousItemId, contentIndex, audioEndMs);
+            return new ConversationItemTruncate(eventId, itemId, contentIndex, audioEndMs);
         }
 
     }
@@ -142,6 +170,10 @@ public abstract class ClientEvent {
             this.type = Realtime.CONVERSATION_ITEM_DELETE;
             this.eventId = eventId;
             this.itemId = itemId;
+        }
+
+        public static ConversationItemDelete of(String itemId) {
+            return new ConversationItemDelete(null, itemId);
         }
 
         public static ConversationItemDelete of(String eventId, String itemId) {
@@ -164,6 +196,10 @@ public abstract class ClientEvent {
             this.response = response;
         }
 
+        public static ResponseCreate of(Configuration response) {
+            return new ResponseCreate(null, response);
+        }
+
         public static ResponseCreate of(String eventId, Configuration response) {
             return new ResponseCreate(eventId, response);
         }
@@ -179,6 +215,10 @@ public abstract class ClientEvent {
         private ResponseCancel(String eventId) {
             this.type = Realtime.RESPONSE_CANCEL;
             this.eventId = eventId;
+        }
+
+        public static ResponseCancel of() {
+            return new ResponseCancel(null);
         }
 
         public static ResponseCancel of(String eventId) {
