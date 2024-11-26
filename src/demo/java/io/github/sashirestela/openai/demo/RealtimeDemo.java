@@ -1,15 +1,5 @@
 package io.github.sashirestela.openai.demo;
 
-import java.util.Base64;
-import java.util.Scanner;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
-
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
@@ -19,7 +9,18 @@ import io.github.sashirestela.openai.domain.realtime.Configuration.AudioFormatRe
 import io.github.sashirestela.openai.domain.realtime.Configuration.VoiceRealtime;
 import io.github.sashirestela.openai.domain.realtime.ServerEvent;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
+
+import java.util.Base64;
+import java.util.Scanner;
+
 public class RealtimeDemo {
+
     private static final int BUFFER_SIZE = 512;
 
     public static void main(String[] args) throws LineUnavailableException {
