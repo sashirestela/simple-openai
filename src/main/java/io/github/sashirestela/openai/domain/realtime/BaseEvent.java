@@ -7,10 +7,21 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type",
         visible = true)
 @JsonSubTypes({
+        @JsonSubTypes.Type(value = ClientEvent.SessionUpdate.class, name = Realtime.SESSION_UPDATE),
+        @JsonSubTypes.Type(value = ClientEvent.InputAudioBufferAppend.class, name = Realtime.INPUT_AUDIO_BUFFER_APPEND),
+        @JsonSubTypes.Type(value = ClientEvent.InputAudioBufferCommit.class, name = Realtime.INPUT_AUDIO_BUFFER_COMMIT),
+        @JsonSubTypes.Type(value = ClientEvent.InputAudioBufferClear.class, name = Realtime.INPUT_AUDIO_BUFFER_CLEAR),
+        @JsonSubTypes.Type(value = ClientEvent.ConversationItemCreate.class, name = Realtime.CONVERSATION_ITEM_CREATE),
+        @JsonSubTypes.Type(value = ClientEvent.ConversationItemTruncate.class,
+                name = Realtime.CONVERSATION_ITEM_TRUNCATE),
+        @JsonSubTypes.Type(value = ClientEvent.ConversationItemDelete.class, name = Realtime.CONVERSATION_ITEM_DELETE),
+        @JsonSubTypes.Type(value = ClientEvent.ResponseCreate.class, name = Realtime.RESPONSE_CREATE),
+        @JsonSubTypes.Type(value = ClientEvent.ResponseCancel.class, name = Realtime.RESPONSE_CANCEL),
         @JsonSubTypes.Type(value = ServerEvent.Error.class, name = Realtime.ERROR),
         @JsonSubTypes.Type(value = ServerEvent.SessionCreated.class, name = Realtime.SESSION_CREATED),
         @JsonSubTypes.Type(value = ServerEvent.SessionUpdated.class, name = Realtime.SESSION_UPDATED),
@@ -59,6 +70,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
+@SuperBuilder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public abstract class BaseEvent {
 

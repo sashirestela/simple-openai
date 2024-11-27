@@ -77,7 +77,10 @@ public class Item {
         INPUT_AUDIO,
 
         @JsonProperty("text")
-        TEXT;
+        TEXT,
+
+        @JsonProperty("audio")
+        AUDIO;
 
     }
 

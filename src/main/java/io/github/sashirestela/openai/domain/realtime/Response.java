@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +15,8 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
@@ -27,6 +31,8 @@ public class Response {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class StatusDetails {
@@ -40,6 +46,8 @@ public class Response {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ErrorDetail {
@@ -52,9 +60,11 @@ public class Response {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    private static class UsageResponse {
+    public static class UsageResponse {
 
         private Integer totalTokens;
         private Integer inputTokens;
@@ -67,9 +77,11 @@ public class Response {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    private static class TokenDetails {
+    public static class TokenDetails {
 
         private Integer textTokens;
         private Integer audioTokens;

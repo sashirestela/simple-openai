@@ -57,7 +57,9 @@ public class Configuration {
     private Double temperature;
 
     @Range(min = 1, max = 4096)
-    private Integer maxResponseOutputTokens;
+    @ObjectType(baseClass = Integer.class)
+    @ObjectType(baseClass = String.class)
+    private Object maxResponseOutputTokens;
 
     public enum VoiceRealtime {
 

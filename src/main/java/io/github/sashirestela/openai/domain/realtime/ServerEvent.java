@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -15,6 +18,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Error extends BaseEvent {
@@ -26,6 +31,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionCreated extends BaseEvent {
@@ -37,6 +44,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionUpdated extends BaseEvent {
@@ -48,6 +57,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationCreated extends BaseEvent {
@@ -59,6 +70,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemCreated extends BaseEvent {
@@ -71,6 +84,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemAudioTransCompleted extends BaseEvent {
@@ -84,6 +99,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemAudioTransFailed extends BaseEvent {
@@ -97,6 +114,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemTruncated extends BaseEvent {
@@ -110,6 +129,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemDeleted extends BaseEvent {
@@ -121,6 +142,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferCommitted extends BaseEvent {
@@ -133,6 +156,7 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferCleared extends BaseEvent {
@@ -141,6 +165,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferSpeechStarted extends BaseEvent {
@@ -153,6 +179,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferSpeechStopped extends BaseEvent {
@@ -165,6 +193,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseCreated extends BaseEvent {
@@ -176,6 +206,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseDone extends BaseEvent {
@@ -187,6 +219,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseOutputItemAdded extends BaseEvent {
@@ -200,6 +234,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseOutputItemDone extends BaseEvent {
@@ -213,6 +249,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseContentPartAdded extends BaseEvent {
@@ -228,6 +266,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseContentPartDone extends BaseEvent {
@@ -243,6 +283,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseTextDelta extends BaseEvent {
@@ -258,6 +300,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseTextDone extends BaseEvent {
@@ -273,6 +317,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseAudioTranscriptDelta extends BaseEvent {
@@ -288,6 +334,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseAudioTranscriptDone extends BaseEvent {
@@ -303,6 +351,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseAudioDelta extends BaseEvent {
@@ -318,6 +368,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseAudioDone extends BaseEvent {
@@ -332,6 +384,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseFunctionCallArgumentsDelta extends BaseEvent {
@@ -347,6 +401,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseFunctionCallArgumentsDone extends BaseEvent {
@@ -362,6 +418,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class RateLimitsUpdated extends BaseEvent {
@@ -373,6 +431,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ErrorDetail {
@@ -388,6 +448,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Conversation {
@@ -400,6 +462,8 @@ public abstract class ServerEvent {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Part {
@@ -414,9 +478,11 @@ public abstract class ServerEvent {
     @Getter
     @ToString
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public class RateLimit {
+    public static class RateLimit {
 
         private String name;
         private Integer limit;

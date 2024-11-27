@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionUpdate extends BaseEvent {
@@ -35,6 +37,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferAppend extends BaseEvent {
@@ -59,6 +62,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferCommit extends BaseEvent {
@@ -80,6 +84,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioBufferClear extends BaseEvent {
@@ -101,6 +106,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemCreate extends BaseEvent {
@@ -131,6 +137,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemTruncate extends BaseEvent {
@@ -160,6 +167,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemDelete extends BaseEvent {
@@ -184,6 +192,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseCreate extends BaseEvent {
@@ -208,6 +217,7 @@ public abstract class ClientEvent {
 
     @Getter
     @ToString(callSuper = true)
+    @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseCancel extends BaseEvent {
