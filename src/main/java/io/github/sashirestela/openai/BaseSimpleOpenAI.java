@@ -24,6 +24,8 @@ public abstract class BaseSimpleOpenAI {
     @Setter
     protected CleverClient cleverClient;
 
+    protected OpenAIRealtime realtime;
+
     protected OpenAI.Audios audioService;
     protected OpenAI.Batches batchService;
     protected OpenAI.ChatCompletions chatCompletionService;
@@ -63,6 +65,13 @@ public abstract class BaseSimpleOpenAI {
                 .endOfStream(END_OF_STREAM)
                 .objectMapper(objectMapper)
                 .build();
+        var baseRealtimeConfig = args.getBaseRealtimeConfig();
+        if (baseRealtimeConfig != null) {
+            this.realtime = OpenAIRealtime.builder()
+                    .httpClient(httpClient)
+                    .baseRealtimeConfig(baseRealtimeConfig)
+                    .build();
+        }
     }
 
     /**
@@ -205,6 +214,13 @@ public abstract class BaseSimpleOpenAI {
      * Throw not implemented
      */
     public OpenAIBeta2.VectorStoreFileBatches vectorStoreFileBatches() {
+        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Throw not implemented
+     */
+    public OpenAIRealtime realtime() {
         throw new UnsupportedOperationException(NOT_IMPLEMENTED);
     }
 

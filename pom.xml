@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.9.3</version>
+  <version>3.10.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -56,7 +56,7 @@
     <cleverclient.version>1.5.0</cleverclient.version>
     <slimvalidator.version>1.2.2</slimvalidator.version>
     <lombok.version>1.18.36</lombok.version>
-    <jackson.version>2.18.1</jackson.version>
+    <jackson.version>2.18.2</jackson.version>
     <json.schema.version>4.37.0</json.schema.version>
     <junit.version>5.11.3</junit.version>
     <mockito.version>5.14.2</mockito.version>

@@ -1,9 +1,13 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.openai.OpenAIRealtime.BaseRealtimeConfig;
 import io.github.sashirestela.openai.support.Constant;
+import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
 
 import java.net.http.HttpClient;
 import java.util.HashMap;
@@ -24,15 +28,18 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object. One is created by
      *                       default if not provided. Optional.
      * @param objectMapper   Provides Json conversions either to and from objects. Optional.
+     * @param realtimeConfig Configuration for websocket Realtime API. Optional.
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
-            HttpClient httpClient, ObjectMapper objectMapper) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, projectId, baseUrl, httpClient, objectMapper));
+            HttpClient httpClient, ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
+        super(prepareBaseSimpleOpenAIArgs(apiKey, organizationId, projectId, baseUrl, httpClient, objectMapper,
+                realtimeConfig));
     }
 
     public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String organizationId,
-            String projectId, String baseUrl, HttpClient httpClient, ObjectMapper objectMapper) {
+            String projectId, String baseUrl, HttpClient httpClient, ObjectMapper objectMapper,
+            RealtimeConfig realtimeConfig) {
 
         var headers = new HashMap<String, String>();
         headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
@@ -43,11 +50,27 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
             headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
         }
 
+        BaseRealtimeConfig baseRealtimeConfig = null;
+        if (realtimeConfig != null) {
+            var realtimeHeaders = new HashMap<String, String>();
+            realtimeHeaders.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
+            realtimeHeaders.put(Constant.OPENAI_BETA_HEADER, Constant.OPENAI_REALTIME_VERSION);
+            var realtimeQueryParams = new HashMap<String, String>();
+            realtimeQueryParams.put(Constant.OPENAI_REALTIME_MODEL_NAME, realtimeConfig.getModel());
+            baseRealtimeConfig = BaseRealtimeConfig.builder()
+                    .endpointUrl(Optional.ofNullable(realtimeConfig.getEndpointUrl())
+                            .orElse(Constant.OPENAI_WS_ENDPOINT_URL))
+                    .headers(realtimeHeaders)
+                    .queryParams(realtimeQueryParams)
+                    .build();
+        }
+
         return BaseSimpleOpenAIArgs.builder()
                 .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
                 .headers(headers)
                 .httpClient(httpClient)
                 .objectMapper(objectMapper)
+                .baseRealtimeConfig(baseRealtimeConfig)
                 .build();
     }
 
@@ -230,6 +253,24 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
             vectorStoreFileBatchService = cleverClient.create(OpenAIBeta2.VectorStoreFileBatches.class);
         }
         return vectorStoreFileBatchService;
+    }
+
+    @Override
+    public OpenAIRealtime realtime() {
+        return this.realtime;
+    }
+
+    @Getter
+    @SuperBuilder
+    public static class RealtimeConfig extends BaseRealtimeConfig {
+
+        @Required
+        private String model;
+
+        public static RealtimeConfig of(String model) {
+            return RealtimeConfig.builder().model(model).build();
+        }
+
     }
 
 }

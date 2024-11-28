@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.support.Constant;
@@ -36,7 +37,7 @@ class SimpleOpenAITest {
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
         var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "prjId", "https://example.org",
-                HttpClient.newHttpClient(), new ObjectMapper());
+                HttpClient.newHttpClient(), new ObjectMapper(), RealtimeConfig.of("the-model"));
 
         assertEquals("https://example.org", args.getBaseUrl());
         assertEquals(3, args.getHeaders().size());
@@ -46,12 +47,13 @@ class SimpleOpenAITest {
         assertEquals("prjId", args.getHeaders().get(Constant.OPENAI_PRJ_HEADER));
         assertNotNull(args.getHttpClient());
         assertNotNull(args.getObjectMapper());
+        assertNotNull(args.getBaseRealtimeConfig());
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null, null);
+        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null, null, null);
 
         assertEquals(Constant.OPENAI_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
@@ -59,6 +61,7 @@ class SimpleOpenAITest {
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(args.getHttpClient());
         assertNull(args.getObjectMapper());
+        assertNull(args.getBaseRealtimeConfig());
         assertNull(args.getRequestInterceptor());
     }
 
@@ -116,6 +119,7 @@ class SimpleOpenAITest {
                 new TestData(OpenAI.Images.class, openAI::images),
                 new TestData(OpenAI.Models.class, openAI::models),
                 new TestData(OpenAI.Moderations.class, openAI::moderations),
+                new TestData(OpenAI.Uploads.class, openAI::uploads),
                 new TestData(OpenAIBeta2.Assistants.class, openAI::assistants),
                 new TestData(OpenAIBeta2.Threads.class, openAI::threads),
                 new TestData(OpenAIBeta2.ThreadMessages.class, openAI::threadMessages),
@@ -150,6 +154,15 @@ class SimpleOpenAITest {
                 + "stop type must be or String or Collection<String> (max 4 items).\n"
                 + "toolChoice type must be or ToolChoiceOption or ToolChoice.";
         assertEquals(expectedErrorMessage, exception.getMessage());
+    }
+
+    @Test
+    void shouldInstanceRealtimeWhenMinimalConfigIsPassed() {
+        var openAI = SimpleOpenAI.builder()
+                .apiKey("apiKey")
+                .realtimeConfig(RealtimeConfig.of("realtime_model"))
+                .build();
+        assertNotNull(openAI.realtime());
     }
 
     private static void repeat(int times, Runnable action) {

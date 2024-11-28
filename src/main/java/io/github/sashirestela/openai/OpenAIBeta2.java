@@ -39,6 +39,7 @@ import io.github.sashirestela.openai.domain.assistant.VectorStoreFileRequest;
 import io.github.sashirestela.openai.domain.assistant.VectorStoreModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
 import io.github.sashirestela.openai.domain.assistant.events.AssistantStreamEvent;
+import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.Poller;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/assistants">Assistants</a>
      */
     @Resource("/v1/assistants")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface Assistants {
 
         /**
@@ -137,7 +138,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/threads">Threads</a>
      */
     @Resource("/v1/threads")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface Threads {
 
         /**
@@ -194,7 +195,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/messages">Thread Messages</a>
      */
     @Resource("/v1/threads/{threadId}/messages")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface ThreadMessages {
 
         /**
@@ -269,7 +270,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/runs">Thread Runs</a>
      */
     @Resource("/v1/threads")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface ThreadRuns {
 
         /**
@@ -528,7 +529,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/run-steps">Thread Run Steps</a>
      */
     @Resource("/v1/threads/{threadId}/runs/{runId}/steps")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface ThreadRunSteps {
 
         /**
@@ -603,7 +604,7 @@ public interface OpenAIBeta2 {
      * @see <a href="https://platform.openai.com/docs/api-reference/vector-stores">Vector Stores</a>
      */
     @Resource("/v1/vector_stores")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface VectorStores {
 
         /**
@@ -693,7 +694,7 @@ public interface OpenAIBeta2 {
      *      Files</a>
      */
     @Resource("/v1/vector_stores/{vectorStoreId}/files")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface VectorStoreFiles {
 
         /**
@@ -790,7 +791,7 @@ public interface OpenAIBeta2 {
      *      Store File Batches</a>
      */
     @Resource("/v1/vector_stores/{vectorStoreId}/file_batches")
-    @Header(name = "OpenAI-Beta", value = "assistants=v2")
+    @Header(name = Constant.OPENAI_BETA_HEADER, value = Constant.OPENAI_ASSISTANT_VERSION)
     interface VectorStoreFileBatches {
 
         /**

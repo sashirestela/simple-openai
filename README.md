@@ -20,10 +20,11 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Streaming Example](#chat-completion-with-streaming-example)
   - [Chat Completion with Functions Example](#chat-completion-with-functions-example)
   - [Chat Completion with Vision Example](#chat-completion-with-vision-example)
-  - [Chat Completion with Audio Example](#chat-completion-with-audio-example) **NEW**
+  - [Chat Completion with Audio Example](#chat-completion-with-audio-example)
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
+  - [Realtime Conversation Example](#realtime-conversation-example) **NEW**
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -43,11 +44,11 @@ Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclie
 ## ✅ Supported Services
 Simple-OpenAI seeks to stay up to date with the most recent changes in OpenAI. Currently, it supports most of the existing features and will continue to update with future changes.
 
-Full support for all of the OpenAI services:
+Full support for most of the OpenAI services:
 
 * Audio (Speech, Transcription, Translation)
 * Batch (Batches of Chat Completion)
-* Chat Completion (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, **Audio**)
+* Chat Completion (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Audio)
 * Completion (Legacy Text Generation)
 * Embedding  (Vectoring Text)
 * Files (Upload Files)
@@ -55,6 +56,7 @@ Full support for all of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
+* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling) **NEW**
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
@@ -911,6 +913,10 @@ Thread was deleted: true
 ```
 </details>
 
+### Realtime Conversation Example
+In this example you can see the code to establish a speech-to-speech conversation between you and the model using your microphone and your speaker. See the full code on:
+
+[RealtimeDemo.java](src/demo/java/io/github/sashirestela/openai/demo/RealtimeDemo.java)
 
 ## ✴ Support for Additional OpenAI Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
@@ -980,6 +986,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * Image
     * Model
     * Moderation
+    * Realtime
     * Upload
     * Conversation
     * AssistantV2
@@ -1035,7 +1042,7 @@ List of the main users of our library:
 - [SuperTurtyBot](https://github.com/DaRealTurtyWurty/SuperTurtyBot): A multi-purpose discord bot.
 - [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
-- [Cryptik.ai GPT Chatbot](https://social.wubits.io/wubits/home/66b3969ec4b880134fe96886): A Telegram chatbot factory.
+- [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
 
 
 ## ❤ Show Us Your Love
