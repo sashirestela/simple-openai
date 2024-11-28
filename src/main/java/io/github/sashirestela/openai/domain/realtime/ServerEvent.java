@@ -234,15 +234,25 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ResponseOutputItemDone extends ResponseOutputItemAdded {
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
     @AllArgsConstructor
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseOutputItemDone extends BaseEvent {
+    public static abstract class BaseResponse extends BaseEvent {
 
         private String responseId;
+        private String itemId;
         private Integer outputIndex;
-        private Item item;
+        private Integer contentIndex;
 
     }
 
@@ -253,12 +263,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseContentPartAdded extends BaseEvent {
+    public static class ResponseContentPartAdded extends BaseResponse {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
         private Part part;
 
     }
@@ -266,18 +272,10 @@ public abstract class ServerEvent {
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
-    @AllArgsConstructor
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseContentPartDone extends BaseEvent {
-
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
-        private Part part;
-
+    public static class ResponseContentPartDone extends ResponseContentPartAdded {
     }
 
     @Getter
@@ -287,12 +285,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseTextDelta extends BaseEvent {
+    public static class ResponseTextDelta extends BaseResponse {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
         private String delta;
 
     }
@@ -304,12 +298,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseTextDone extends BaseEvent {
+    public static class ResponseTextDone extends BaseResponse {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
         private String text;
 
     }
@@ -321,12 +311,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseAudioTranscriptDelta extends BaseEvent {
+    public static class ResponseAudioTranscriptDelta extends BaseResponse {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
         private String delta;
 
     }
@@ -338,12 +324,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseAudioTranscriptDone extends BaseEvent {
+    public static class ResponseAudioTranscriptDone extends BaseResponse {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
         private String transcript;
 
     }
@@ -355,12 +337,46 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseAudioDelta extends BaseEvent {
+    public static class ResponseAudioDelta extends BaseResponse {
+
+        private String delta;
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ResponseAudioDone extends BaseResponse {
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static abstract class BaseResponseFunctionCallArguments extends BaseEvent {
 
         private String responseId;
         private String itemId;
         private Integer outputIndex;
-        private Integer contentIndex;
+        private String callId;
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ResponseFunctionCallArgumentsDelta extends BaseResponseFunctionCallArguments {
+
         private String delta;
 
     }
@@ -372,45 +388,8 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseAudioDone extends BaseEvent {
+    public static class ResponseFunctionCallArgumentsDone extends BaseResponseFunctionCallArguments {
 
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private Integer contentIndex;
-
-    }
-
-    @Getter
-    @ToString(callSuper = true)
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @SuperBuilder
-    @JsonInclude(Include.NON_EMPTY)
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseFunctionCallArgumentsDelta extends BaseEvent {
-
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private String callId;
-        private String delta;
-
-    }
-
-    @Getter
-    @ToString(callSuper = true)
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @SuperBuilder
-    @JsonInclude(Include.NON_EMPTY)
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ResponseFunctionCallArgumentsDone extends BaseEvent {
-
-        private String responseId;
-        private String itemId;
-        private Integer outputIndex;
-        private String callId;
         private String arguments;
 
     }
