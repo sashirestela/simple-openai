@@ -139,7 +139,11 @@ public class OpenAIRealtime {
 
         @Override
         public void onError(WebSocket webSocket, Throwable error) {
-            logger.debug("Connection error : {}", error);
+            var errorMessage = error.getMessage();
+            if (error.getCause() != null) {
+                errorMessage += "\n" + error.getCause().getMessage();
+            }
+            logger.debug("Connection error : {}", errorMessage);
             if (OpenAIRealtime.this.errorHandler != null) {
                 OpenAIRealtime.this.errorHandler.accept(error);
             }

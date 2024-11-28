@@ -194,7 +194,7 @@ class OpenAIRealtimeTest {
         CompletableFuture<WebSocket> future = CompletableFuture.completedFuture(mockWebSocket);
         when(mockWebSocketBuilder.buildAsync(any(URI.class), any(WebSocket.Listener.class))).thenAnswer(invocation -> {
             WebSocket.Listener listener = invocation.getArgument(1);
-            listener.onError(mockWebSocket, new Throwable());
+            listener.onError(mockWebSocket, new Throwable("error"));
             return future;
         });
         openAIRealtime.onError(mockErrorHandler);
