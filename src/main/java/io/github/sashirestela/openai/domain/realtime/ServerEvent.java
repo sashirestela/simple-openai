@@ -247,7 +247,7 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static abstract class BaseResponse extends BaseEvent {
+    public abstract static class BaseResponse extends BaseEvent {
 
         private String responseId;
         private String itemId;
@@ -359,7 +359,7 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static abstract class BaseResponseFunctionCallArguments extends BaseEvent {
+    public abstract static class BaseResponseFunctionCallArguments extends BaseEvent {
 
         private String responseId;
         private String itemId;
