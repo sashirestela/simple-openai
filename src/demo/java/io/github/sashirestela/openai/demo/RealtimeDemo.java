@@ -5,8 +5,6 @@ import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.openai.domain.realtime.ClientEvent;
 import io.github.sashirestela.openai.domain.realtime.Configuration;
-import io.github.sashirestela.openai.domain.realtime.Configuration.AudioFormatRealtime;
-import io.github.sashirestela.openai.domain.realtime.Configuration.VoiceRealtime;
 import io.github.sashirestela.openai.domain.realtime.ServerEvent;
 
 import javax.sound.sampled.AudioFormat;
@@ -18,34 +16,32 @@ import javax.sound.sampled.TargetDataLine;
 
 import java.util.Base64;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RealtimeDemo {
 
-    private static final int BUFFER_SIZE = 512;
+    private static final int BUFFER_SIZE = 8192;
 
-    public static void main(String[] args) throws LineUnavailableException {
+    public static void main(String[] args) throws LineUnavailableException, InterruptedException {
         var sound = new Sound();
 
         var openAI = SimpleOpenAI.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
                 .realtimeConfig(RealtimeConfig.of("gpt-4o-realtime-preview-2024-10-01"))
                 .build();
-        var realtime = openAI.realtime();
 
-        realtime.onEvent(ServerEvent.SessionCreated.class, event -> {
-            realtime.send(ClientEvent.SessionUpdate.of(Configuration.builder()
-                    .modality(Modality.TEXT)
-                    .modality(Modality.AUDIO)
-                    .instructions("Respond in a short and concise way.")
-                    .voice(VoiceRealtime.ASH)
-                    .inputAudioFormat(AudioFormatRealtime.PCM16)
-                    .outputAudioFormat(AudioFormatRealtime.PCM16)
-                    .inputAudioTranscription(null)
-                    .turnDetection(null)
-                    .temperature(0.9)
-                    .build()))
-                    .join();
-        });
+        var configuration = Configuration.builder()
+                .modality(Modality.AUDIO)
+                .instructions("Respond with short, direct sentences.")
+                .voice(Configuration.VoiceRealtime.ECHO)
+                .outputAudioFormat(Configuration.AudioFormatRealtime.PCM16)
+                .inputAudioTranscription(null)
+                .turnDetection(null)
+                .temperature(0.9)
+                .build();
+
+        var realtime = openAI.realtime();
 
         realtime.onEvent(ServerEvent.ResponseAudioDelta.class, event -> {
             var dataBase64 = Base64.getDecoder().decode(event.getDelta());
@@ -53,43 +49,60 @@ public class RealtimeDemo {
         });
 
         realtime.onEvent(ServerEvent.ResponseAudioDone.class, event -> {
+            delay(1000); // Some delay to receive trailing audio deltas
             sound.speaker.stop();
             sound.speaker.drain();
         });
 
         realtime.onEvent(ServerEvent.ResponseAudioTranscriptDone.class, event -> {
             System.out.println(event.getTranscript());
+            askForSpeaking();
         });
 
-        realtime.connect().join();
+        // Connect synchronously and wait for the connection to complete
+        realtime.connect().thenRun(() -> {
+            System.out.println("Connection established!");
+            System.out.println("(Press any key and Return to terminate)");
+            realtime.send(ClientEvent.SessionUpdate.of(configuration)).join();
+        }).join();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Press any key but Return to terminate.");
+        askForSpeaking();
         while (true) {
-            System.out.println("Speak your question (press Return when done):");
             sound.microphone.start();
-            Thread recordingThread = new Thread(() -> {
+            AtomicBoolean isRecording = new AtomicBoolean(true);
+            CompletableFuture<Void> recordingFuture = CompletableFuture.runAsync(() -> {
                 byte[] data = new byte[BUFFER_SIZE];
                 try {
-                    while (!Thread.currentThread().isInterrupted()) {
+                    while (isRecording.get()) {
                         int bytesRead = sound.microphone.read(data, 0, data.length);
                         if (bytesRead > 0) {
                             var dataBase64 = Base64.getEncoder().encodeToString(data);
-                            realtime.send(ClientEvent.InputAudioBufferAppend.of(dataBase64)).join();
+                            // Use runAsync to prevent blocking and add a small delay
+                            CompletableFuture.runAsync(() -> {
+                                delay(10); // Small delay to prevent rapid sending
+                                realtime.send(ClientEvent.InputAudioBufferAppend.of(dataBase64)).join();
+                            });
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            recordingThread.start();
+
             var keyPressed = scanner.nextLine();
             if (keyPressed.isEmpty()) {
-                recordingThread.interrupt();
+                isRecording.set(false);
                 sound.microphone.stop();
                 sound.microphone.drain();
+
+                // Wait for recording to finish
+                recordingFuture.join();
+
+                // Send ResponseCreate and wait for it to complete
                 realtime.send(ClientEvent.ResponseCreate.of(null)).join();
-                System.out.println("Waiting for AI response...");
+
+                System.out.println("Waiting for AI response...\n");
                 sound.speaker.start();
             } else {
                 break;
@@ -97,6 +110,19 @@ public class RealtimeDemo {
         }
         scanner.close();
         sound.cleanup();
+        realtime.disconnect();
+    }
+
+    private static void askForSpeaking() {
+        System.out.println("\nSpeak your question (press Return when done):");
+    }
+
+    private static void delay(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     public static class Sound {
