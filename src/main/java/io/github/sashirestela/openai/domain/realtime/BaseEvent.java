@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
         @JsonSubTypes.Type(value = ClientEvent.ConversationItemDelete.class, name = Realtime.CONVERSATION_ITEM_DELETE),
         @JsonSubTypes.Type(value = ClientEvent.ResponseCreate.class, name = Realtime.RESPONSE_CREATE),
         @JsonSubTypes.Type(value = ClientEvent.ResponseCancel.class, name = Realtime.RESPONSE_CANCEL),
-        @JsonSubTypes.Type(value = ServerEvent.Error.class, name = Realtime.ERROR),
+        @JsonSubTypes.Type(value = ServerEvent.ErrorEvent.class, name = Realtime.ERROR),
         @JsonSubTypes.Type(value = ServerEvent.SessionCreated.class, name = Realtime.SESSION_CREATED),
         @JsonSubTypes.Type(value = ServerEvent.SessionUpdated.class, name = Realtime.SESSION_UPDATED),
         @JsonSubTypes.Type(value = ServerEvent.ConversationCreated.class, name = Realtime.CONVERSATION_CREATED),

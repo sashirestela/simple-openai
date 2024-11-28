@@ -10,6 +10,9 @@ import lombok.ToString;
 
 public abstract class ClientEvent {
 
+    private ClientEvent() {
+    }
+
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor

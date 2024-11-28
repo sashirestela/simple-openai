@@ -15,6 +15,9 @@ import java.util.List;
 
 public abstract class ServerEvent {
 
+    private ServerEvent() {
+    }
+
     @Getter
     @ToString(callSuper = true)
     @NoArgsConstructor
@@ -22,7 +25,7 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Error extends BaseEvent {
+    public static class ErrorEvent extends BaseEvent {
 
         private ErrorDetail error;
 

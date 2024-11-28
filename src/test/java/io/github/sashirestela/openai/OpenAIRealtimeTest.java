@@ -90,12 +90,8 @@ class OpenAIRealtimeTest {
         openAIRealtime.connect();
 
         // Assert
-        verify(mockWebSocketBuilder).header(
-                eq(Constant.AUTHORIZATION_HEADER),
-                eq(Constant.BEARER_AUTHORIZATION + API_KEY));
-        verify(mockWebSocketBuilder).header(
-                eq(Constant.OPENAI_BETA_HEADER),
-                eq(Constant.OPENAI_REALTIME_VERSION));
+        verify(mockWebSocketBuilder).header(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + API_KEY);
+        verify(mockWebSocketBuilder).header(Constant.OPENAI_BETA_HEADER, Constant.OPENAI_REALTIME_VERSION);
         verify(mockWebSocketBuilder).buildAsync(
                 eq(URI.create(ENDPOINT_URL + "?model=" + MODEL)),
                 any(WebSocket.Listener.class));

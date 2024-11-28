@@ -226,11 +226,11 @@ class BaseEventTest {
 
     @Test
     void testSerializationDeserializationServerEventClasses() {
-        var error = ServerEvent.Error.builder()
+        var error = ServerEvent.ErrorEvent.builder()
                 .type(Realtime.ERROR)
                 .error(errorDetail)
                 .build();
-        var newError = JsonUtil.jsonToObject(JsonUtil.objectToJson(error), ServerEvent.Error.class);
+        var newError = JsonUtil.jsonToObject(JsonUtil.objectToJson(error), ServerEvent.ErrorEvent.class);
         assertEquals(error.toString(), newError.toString());
 
         var sessionCreated = ServerEvent.SessionCreated.builder()
@@ -342,6 +342,17 @@ class BaseEventTest {
                 ServerEvent.InputAudioBufferSpeechStopped.class);
         assertEquals(inputAudioBufferSpeechStopped.toString(), newInputAudioBufferSpeechStopped.toString());
 
+        var rateLimitsUpdated = ServerEvent.RateLimitsUpdated.builder()
+                .type(Realtime.RATE_LIMITS_UPDATED)
+                .rateLimits(List.of(rateLimit, rateLimit))
+                .build();
+        var newRateLimitsUpdated = JsonUtil.jsonToObject(JsonUtil.objectToJson(rateLimitsUpdated),
+                ServerEvent.RateLimitsUpdated.class);
+        assertEquals(rateLimitsUpdated.toString(), newRateLimitsUpdated.toString());
+    }
+
+    @Test
+    void testSerializationDeserializationServerEventResponseClasses() {
         var responseCreated = ServerEvent.ResponseCreated.builder()
                 .type(Realtime.RESPONSE_CREATED)
                 .response(response)
@@ -498,14 +509,6 @@ class BaseEventTest {
                 JsonUtil.objectToJson(responseFunctionCallArgumentsDone),
                 ServerEvent.ResponseFunctionCallArgumentsDone.class);
         assertEquals(responseFunctionCallArgumentsDone.toString(), newResponseFunctionCallArgumentsDone.toString());
-
-        var rateLimitsUpdated = ServerEvent.RateLimitsUpdated.builder()
-                .type(Realtime.RATE_LIMITS_UPDATED)
-                .rateLimits(List.of(rateLimit, rateLimit))
-                .build();
-        var newRateLimitsUpdated = JsonUtil.jsonToObject(JsonUtil.objectToJson(rateLimitsUpdated),
-                ServerEvent.RateLimitsUpdated.class);
-        assertEquals(rateLimitsUpdated.toString(), newRateLimitsUpdated.toString());
     }
 
     static class DemoFunction implements Functional {
