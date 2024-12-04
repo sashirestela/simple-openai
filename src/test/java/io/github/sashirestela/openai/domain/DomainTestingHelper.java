@@ -9,10 +9,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -76,7 +76,7 @@ public class DomainTestingHelper {
         for (var stepEntry : stepsByMockType.entrySet()) {
             switch (stepEntry.getKey()) {
                 case STREAM:
-                    var respStream = (Stream<String>[]) responseSequence(stepEntry);
+                    var respStream = responseSequence(stepEntry.getValue(), Stream.class);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofLines().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
@@ -89,7 +89,7 @@ public class DomainTestingHelper {
                     }
                     break;
                 case OBJECT:
-                    var respObject = (String[]) responseSequence(stepEntry);
+                    var respObject = responseSequence(stepEntry.getValue(), String.class);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofString().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseObject));
@@ -102,7 +102,7 @@ public class DomainTestingHelper {
                     }
                     break;
                 case BINARY:
-                    var respBinary = (InputStream[]) responseSequence(stepEntry);
+                    var respBinary = responseSequence(stepEntry.getValue(), InputStream.class);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofInputStream().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseBinary));
@@ -118,44 +118,39 @@ public class DomainTestingHelper {
         }
     }
 
-    private Object[] responseSequence(Entry<MockForType, List<String>> stepEntry) throws IOException {
-        switch (stepEntry.getKey()) {
-            case STREAM:
-                return stepEntry.getValue()
-                        .stream()
-                        .map(fileName -> {
-                            try {
-                                return Files.readAllLines(Paths.get(fileName)).stream();
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .toArray(Stream[]::new);
-            case OBJECT:
-                return stepEntry.getValue()
-                        .stream()
-                        .map(fileName -> {
-                            try {
-                                return Files.readAllLines(Paths.get(fileName)).get(0);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .toArray(String[]::new);
-            case BINARY:
-                return stepEntry.getValue()
-                        .stream()
-                        .map(fileName -> {
-                            try {
-                                return new FileInputStream(fileName);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .toArray(InputStream[]::new);
-            default:
-                throw new IllegalArgumentException("Unsupported mock type: " + stepEntry.getKey());
+    private Stream<String>[] responseSequenceStream(List<String> fileNames) throws IOException {
+        List<Stream<String>> response = new ArrayList<>();
+        for (var fileName : fileNames) {
+            response.add(Files.readAllLines(Paths.get(fileName)).stream());
         }
+        return response.toArray(new Stream[0]);
+    }
+
+    private String[] responseSequenceObject(List<String> fileNames) throws IOException {
+        List<String> response = new ArrayList<>();
+        for (var fileName : fileNames) {
+            response.add(Files.readAllLines(Paths.get(fileName)).get(0));
+        }
+        return response.toArray(new String[0]);
+    }
+
+    private InputStream[] responseSequenceBinary(List<String> fileNames) throws IOException {
+        List<InputStream> response = new ArrayList<>();
+        for (var fileName : fileNames) {
+            response.add(new FileInputStream(fileName));
+        }
+        return response.toArray(new InputStream[0]);
+    }
+
+    private <T> T[] responseSequence(List<String> fileNames, Class<T> type) throws IOException {
+        if (type == Stream.class) {
+            return (T[]) responseSequenceStream(fileNames);
+        } else if (type == String.class) {
+            return (T[]) responseSequenceObject(fileNames);
+        } else if (type == InputStream.class) {
+            return (T[]) responseSequenceBinary(fileNames);
+        }
+        return null;
     }
 
 }
