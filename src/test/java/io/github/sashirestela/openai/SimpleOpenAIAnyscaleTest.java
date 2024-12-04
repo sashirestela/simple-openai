@@ -69,6 +69,6 @@ class SimpleOpenAIAnyscaleTest {
         for (Runnable calling : callingData) {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());
         }
-    };
+    }
 
 }

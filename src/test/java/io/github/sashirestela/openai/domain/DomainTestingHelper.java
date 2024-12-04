@@ -9,7 +9,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +76,7 @@ public class DomainTestingHelper {
         for (var stepEntry : stepsByMockType.entrySet()) {
             switch (stepEntry.getKey()) {
                 case STREAM:
-                    var respStream = responseSequence(stepEntry, Stream.class);
+                    var respStream = (Stream<String>[]) responseSequence(stepEntry);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofLines().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
@@ -90,7 +89,7 @@ public class DomainTestingHelper {
                     }
                     break;
                 case OBJECT:
-                    var respObject = responseSequence(stepEntry, String.class);
+                    var respObject = (String[]) responseSequence(stepEntry);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofString().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseObject));
@@ -103,7 +102,7 @@ public class DomainTestingHelper {
                     }
                     break;
                 case BINARY:
-                    var respBinary = responseSequence(stepEntry, InputStream.class);
+                    var respBinary = (InputStream[]) responseSequence(stepEntry);
                     when(httpClient.sendAsync(any(HttpRequest.class),
                             any(HttpResponse.BodyHandlers.ofInputStream().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseBinary));
@@ -119,26 +118,44 @@ public class DomainTestingHelper {
         }
     }
 
-    private <T> T[] responseSequence(Entry<MockForType, List<String>> stepEntry, Class<T> type) throws IOException {
-        List<T> response = new ArrayList<>();
+    private Object[] responseSequence(Entry<MockForType, List<String>> stepEntry) throws IOException {
         switch (stepEntry.getKey()) {
             case STREAM:
-                for (var fileName : stepEntry.getValue()) {
-                    response.add((T) Files.readAllLines(Paths.get(fileName)).stream());
-                }
-                return (T[]) response.toArray(new Stream[0]);
+                return stepEntry.getValue()
+                        .stream()
+                        .map(fileName -> {
+                            try {
+                                return Files.readAllLines(Paths.get(fileName)).stream();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .toArray(Stream[]::new);
             case OBJECT:
-                for (var fileName : stepEntry.getValue()) {
-                    response.add((T) Files.readAllLines(Paths.get(fileName)).get(0));
-                }
-                return (T[]) response.toArray(new String[0]);
+                return stepEntry.getValue()
+                        .stream()
+                        .map(fileName -> {
+                            try {
+                                return Files.readAllLines(Paths.get(fileName)).get(0);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .toArray(String[]::new);
             case BINARY:
-                for (var fileName : stepEntry.getValue()) {
-                    response.add((T) new FileInputStream(fileName));
-                }
-                return (T[]) response.toArray(new InputStream[0]);
+                return stepEntry.getValue()
+                        .stream()
+                        .map(fileName -> {
+                            try {
+                                return new FileInputStream(fileName);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .toArray(InputStream[]::new);
+            default:
+                throw new IllegalArgumentException("Unsupported mock type: " + stepEntry.getKey());
         }
-        return null;
     }
 
 }
