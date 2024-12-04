@@ -176,6 +176,6 @@ class SimpleOpenAIAzureTest {
         for (Runnable calling : callingData) {
             assertThrows(UnsupportedOperationException.class, () -> calling.run());
         }
-    };
+    }
 
 }
