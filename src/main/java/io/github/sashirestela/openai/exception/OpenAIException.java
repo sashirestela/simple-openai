@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.exception;
 
 public class OpenAIException extends RuntimeException {
 
-    protected final OpenAIResponseInfo responseInfo;
+    protected final transient OpenAIResponseInfo responseInfo;
 
     public OpenAIException(OpenAIResponseInfo responseInfo) {
         this.responseInfo = responseInfo;
