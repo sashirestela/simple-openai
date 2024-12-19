@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.10.0</version>
+  <version>3.11.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -53,12 +53,12 @@
     <maven.compiler.proc>full</maven.compiler.proc>
     <!-- Dependencies Versions -->
     <slf4j.version>2.0.16</slf4j.version>
-    <cleverclient.version>1.5.0</cleverclient.version>
+    <cleverclient.version>1.6.2</cleverclient.version>
     <slimvalidator.version>1.2.2</slimvalidator.version>
     <lombok.version>1.18.36</lombok.version>
     <jackson.version>2.18.2</jackson.version>
     <json.schema.version>4.37.0</json.schema.version>
-    <junit.version>5.11.3</junit.version>
+    <junit.version>5.11.4</junit.version>
     <mockito.version>5.14.2</mockito.version>
     <!-- Plugins Versions -->
     <compiler.version>3.13.0</compiler.version>
@@ -69,7 +69,7 @@
     <helper.version>3.6.0</helper.version>
     <versions.version>2.18.0</versions.version>
     <source.version>3.3.1</source.version>
-    <javadoc.version>3.11.1</javadoc.version>
+    <javadoc.version>3.11.2</javadoc.version>
     <gpg.version>3.2.7</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
     <spotless.version>2.43.0</spotless.version>
