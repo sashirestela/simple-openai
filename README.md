@@ -24,7 +24,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
-  - [Realtime Conversation Example](#realtime-conversation-example) **NEW**
+  - [Realtime Conversation Example](#realtime-conversation-example)
+- [Exception Handling](#-exception-handling)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -918,6 +919,49 @@ In this example you can see the code to establish a speech-to-speech conversatio
 
 [RealtimeDemo.java](src/demo/java/io/github/sashirestela/openai/demo/RealtimeDemo.java)
 
+## 🔱 Exception Handling
+Simple-OpenAI provides an exception handling mechanism through the `OpenAIExceptionConverter` class. This converter maps HTTP errors to specific OpenAI exceptions, making it easier to handle different types of API errors:
+
+- `BadRequestException` (400)
+- `AuthenticationException` (401)
+- `PermissionDeniedException` (403)
+- `NotFoundException` (404) 
+- `UnprocessableEntityException` (422)
+- `RateLimitException` (429)
+- `InternalServerException` (500+)
+- `UnexpectedStatusCodeException` (other status codes)
+
+Here's a minimalist example of handling OpenAI exceptions:
+
+```java
+try {
+
+    // Your code to call the OpenAI API using simple-openai goes here;
+
+} catch (Exception e) {
+    try {
+        OpenAIExceptionConverter.rethrow(e);
+    } catch (AuthenticationException ae) {
+        // Handle this exception
+    } catch (NotFoundException ne) {
+        // Handle this exception
+
+    // Catching other exceptions
+
+    } catch (RuntimeException re) {
+        // Handle default exceptions
+    }
+}
+```
+Each exception provides access to `OpenAIResponseInfo`, which contains detailed information about the error including:
+
+- HTTP status code
+- Error message and type
+- Request and response headers
+- API endpoint URL and HTTP method
+
+This exception handling mechanism allows you to handle API errors and provide feedback in your applications.
+
 ## ✴ Support for Additional OpenAI Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
@@ -981,6 +1025,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * Chat
     * Completion
     * Embedding
+    * Exception
     * File
     * Finetuning
     * Image
