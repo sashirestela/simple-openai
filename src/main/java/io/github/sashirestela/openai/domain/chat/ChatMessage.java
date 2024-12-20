@@ -26,6 +26,9 @@ public abstract class ChatMessage {
 
     public enum ChatRole {
 
+        @JsonProperty("developer")
+        DEVELOPER,
+
         @JsonProperty("system")
         SYSTEM,
 
@@ -37,6 +40,33 @@ public abstract class ChatMessage {
 
         @JsonProperty("tool")
         TOOL;
+
+    }
+
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class DeveloperMessage extends ChatMessage {
+
+        @Required
+        private String content;
+
+        private String name;
+
+        private DeveloperMessage(String content, String name) {
+            this.role = ChatRole.DEVELOPER;
+            this.content = content;
+            this.name = name;
+        }
+
+        public static DeveloperMessage of(String content, String name) {
+            return new DeveloperMessage(content, name);
+        }
+
+        public static DeveloperMessage of(String content) {
+            return new DeveloperMessage(content, null);
+        }
 
     }
 
