@@ -28,7 +28,7 @@ public class RealtimeDemo {
 
         var openAI = SimpleOpenAI.builder()
                 .apiKey(System.getenv("OPENAI_API_KEY"))
-                .realtimeConfig(RealtimeConfig.of("gpt-4o-realtime-preview-2024-10-01"))
+                .realtimeConfig(RealtimeConfig.of("gpt-4o-mini-realtime-preview"))
                 .build();
 
         var configuration = Configuration.builder()
