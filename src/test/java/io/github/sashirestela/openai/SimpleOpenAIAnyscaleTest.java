@@ -55,6 +55,7 @@ class SimpleOpenAIAnyscaleTest {
                 openAI::images,
                 openAI::models,
                 openAI::moderations,
+                openAI::sessionTokens,
                 openAI::uploads,
                 openAI::assistants,
                 openAI::threads,

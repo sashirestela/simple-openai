@@ -191,6 +191,19 @@ public class SimpleOpenAI extends BaseSimpleOpenAI {
         return uploadService;
     }
 
+    /**
+     * Generates an implementation of the SessionTokens interface to handle requests.
+     *
+     * @return An instance of the interface.
+     */
+    @Override
+    public OpenAI.SessionTokens sessionTokens() {
+        if (sessionTokenService == null) {
+            sessionTokenService = cleverClient.create(OpenAI.SessionTokens.class);
+        }
+        return sessionTokenService;
+    }
+
     @Override
     public OpenAIBeta2.Assistants assistants() {
         if (assistantService == null) {

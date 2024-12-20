@@ -19,12 +19,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Getter
 @ToString
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(Include.NON_EMPTY)
@@ -32,34 +33,34 @@ import java.util.List;
 public class Configuration {
 
     @Singular
-    private List<Modality> modalities;
+    protected List<Modality> modalities;
 
-    private String instructions;
+    protected String instructions;
 
-    private VoiceRealtime voice;
+    protected VoiceRealtime voice;
 
-    private AudioFormatRealtime inputAudioFormat;
+    protected AudioFormatRealtime inputAudioFormat;
 
-    private AudioFormatRealtime outputAudioFormat;
+    protected AudioFormatRealtime outputAudioFormat;
 
-    private InputAudioTranscription inputAudioTranscription;
+    protected InputAudioTranscription inputAudioTranscription;
 
-    private TurnDetection turnDetection;
+    protected TurnDetection turnDetection;
 
     @Singular
-    private List<ToolRealtime> tools;
+    protected List<ToolRealtime> tools;
 
     @ObjectType(baseClass = String.class)
     @ObjectType(baseClass = ToolChoiceOption.class)
-    private Object toolChoice;
+    protected Object toolChoice;
 
     @Range(min = 0.6, max = 1.2)
-    private Double temperature;
+    protected Double temperature;
 
     @Range(min = 1, max = 4096)
     @ObjectType(baseClass = Integer.class)
     @ObjectType(baseClass = String.class)
-    private Object maxResponseOutputTokens;
+    protected Object maxResponseOutputTokens;
 
     public enum VoiceRealtime {
 
