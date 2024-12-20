@@ -28,11 +28,13 @@ import io.github.sashirestela.openai.common.tool.ToolType;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
 import io.github.sashirestela.openai.domain.DomainTestingHelper.MockForType;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.DeveloperMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.ReasoningEffort;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +68,9 @@ class ChatDomainTest {
         chatTextRequest = ChatRequest.builder()
                 .model("gpt-4-1106-preview")
                 .message(SystemMessage.of("You are an expert in Mathematics", "tutor"))
+                .message(DeveloperMessage.of("You are an expert in Mathematics"))
                 .message(UserMessage.of("Tell me the Pitagoras theorem in less than 50 words.", "student"))
+                .reasoningEffort(ReasoningEffort.LOW)
                 .temperature(0.2)
                 .maxCompletionTokens(500)
                 .topP(1.0)
