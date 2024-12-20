@@ -39,6 +39,8 @@ public class ChatRequest {
 
     private Boolean store;
 
+    private ReasoningEffort reasoningEffort;
+
     private Map<String, String> metadata;
 
     @Range(min = -2.0, max = 2.0)
@@ -145,6 +147,17 @@ public class ChatRequest {
             return new Audio(voice, format);
         }
 
+    }
+
+    public enum ReasoningEffort {
+        @JsonProperty("low")
+        LOW,
+
+        @JsonProperty("medium")
+        MEDIUM,
+
+        @JsonProperty("high")
+        HIGH;
     }
 
 }
