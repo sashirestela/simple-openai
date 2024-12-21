@@ -31,6 +31,7 @@ public class FineTuning {
     private List<Integration> integrations;
     private Integer seed;
     private Integer estimatedFinish;
+    private MethodFineTunning method;
 
     @NoArgsConstructor
     @Getter

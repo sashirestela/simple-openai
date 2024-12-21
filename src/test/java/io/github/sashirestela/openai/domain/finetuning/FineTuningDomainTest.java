@@ -31,17 +31,12 @@ class FineTuningDomainTest {
     }
 
     @Test
-    void testFineTuningsCreate() throws IOException {
+    void testFineTuningsCreateDpo() throws IOException {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/finetunings_create.json");
         var fineTuningRequest = FineTuningRequest.builder()
                 .trainingFile("fileId")
                 .validationFile("fileId")
                 .model("gpt-3.5-turbo-1106")
-                .hyperparameters(HyperParams.builder()
-                        .batchSize("auto")
-                        .learningRateMultiplier("auto")
-                        .nEpochs("auto")
-                        .build())
                 .suffix("suffix")
                 .integration(Integration.builder()
                         .type(IntegrationType.WANDB)
@@ -54,6 +49,42 @@ class FineTuningDomainTest {
                                 .build())
                         .build())
                 .seed(99)
+                .method(MethodFineTunning.dpo(HyperParams.builder()
+                        .beta("auto")
+                        .batchSize("auto")
+                        .learningRateMultiplier("auto")
+                        .nEpochs("auto")
+                        .build()))
+                .build();
+        var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
+        System.out.println(fineTuningResponse);
+        assertNotNull(fineTuningResponse);
+    }
+
+    @Test
+    void testFineTuningsCreateSupervised() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/finetunings_create.json");
+        var fineTuningRequest = FineTuningRequest.builder()
+                .trainingFile("fileId")
+                .validationFile("fileId")
+                .model("gpt-3.5-turbo-1106")
+                .suffix("suffix")
+                .integration(Integration.builder()
+                        .type(IntegrationType.WANDB)
+                        .wandb(WandbIntegration.builder()
+                                .project("my-wandb-project")
+                                .name("ft-run-display-name")
+                                .entity("testing")
+                                .tag("first-experiment")
+                                .tag("v2")
+                                .build())
+                        .build())
+                .seed(99)
+                .method(MethodFineTunning.supervised(HyperParams.builder()
+                        .batchSize("auto")
+                        .learningRateMultiplier("auto")
+                        .nEpochs("auto")
+                        .build()))
                 .build();
         var fineTuningResponse = openAI.fineTunings().create(fineTuningRequest).join();
         System.out.println(fineTuningResponse);
