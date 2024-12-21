@@ -25,6 +25,11 @@ public class FineTuningRequest {
 
     private String validationFile;
 
+    /**
+     * @deprecated OpenAI has deperecated this field in favor of method, and should be passed in under
+     *             the method parameter.
+     */
+    @Deprecated(since = "3.12.0", forRemoval = true)
     private HyperParams hyperparameters;
 
     private String suffix;
@@ -33,5 +38,7 @@ public class FineTuningRequest {
     private List<Integration> integrations;
 
     private Integer seed;
+
+    private MethodFineTunning method;
 
 }

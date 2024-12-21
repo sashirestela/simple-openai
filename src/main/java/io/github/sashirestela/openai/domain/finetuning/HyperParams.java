@@ -23,6 +23,10 @@ public class HyperParams {
 
     @ObjectType(baseClass = Integer.class)
     @ObjectType(baseClass = String.class)
+    private Object beta;
+
+    @ObjectType(baseClass = Integer.class)
+    @ObjectType(baseClass = String.class)
     private Object batchSize;
 
     @ObjectType(baseClass = Double.class)
