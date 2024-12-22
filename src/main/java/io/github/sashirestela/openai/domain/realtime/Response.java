@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @ToString
@@ -26,6 +27,7 @@ public class Response {
     private String status;
     private StatusDetails statusDetails;
     private List<Item> output;
+    private Map<String, String> metadata;
     private UsageResponse usage;
 
     @Getter

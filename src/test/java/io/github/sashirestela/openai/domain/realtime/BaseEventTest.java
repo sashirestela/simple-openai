@@ -12,12 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BaseEventTest {
 
-    static Configuration configuration;
+    static RealtimeSession realtimeSession;
+    static RealtimeResponse realtimeResponse;
     static Item item;
     static Response response;
     static ServerEvent.ErrorDetail errorDetail;
@@ -29,20 +31,21 @@ class BaseEventTest {
     static void setup() {
         Configurator.builder().objectMapper(new ObjectMapper()).build();
 
-        configuration = Configuration.builder()
+        realtimeSession = RealtimeSession.builder()
                 .modality(Modality.TEXT)
                 .modality(Modality.AUDIO)
                 .instructions("instructions")
-                .voice(Configuration.VoiceRealtime.BALLAD)
-                .inputAudioFormat(Configuration.AudioFormatRealtime.PCM16)
-                .outputAudioFormat(Configuration.AudioFormatRealtime.PCM16)
-                .inputAudioTranscription(Configuration.InputAudioTranscription.of("model"))
-                .turnDetection(Configuration.TurnDetection.builder()
+                .voice(RealtimeSession.VoiceRealtime.BALLAD)
+                .inputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
+                .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
+                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("model"))
+                .turnDetection(RealtimeSession.TurnDetection.builder()
                         .threshold(0.5)
                         .prefixPaddingMs(100)
                         .silenceDurationMs(100)
+                        .createReponse(Boolean.FALSE)
                         .build())
-                .tool(Configuration.ToolRealtime.of(FunctionDef.builder()
+                .tool(RealtimeSession.ToolRealtime.of(FunctionDef.builder()
                         .name("DemoFunction")
                         .description("A demo function")
                         .functionalClass(DemoFunction.class)
@@ -50,6 +53,42 @@ class BaseEventTest {
                 .toolChoice(null)
                 .temperature(0.9)
                 .maxResponseOutputTokens(2048)
+                .build();
+
+        realtimeResponse = RealtimeResponse.builder()
+                .modality(Modality.TEXT)
+                .modality(Modality.AUDIO)
+                .instructions("instructions")
+                .voice(RealtimeSession.VoiceRealtime.BALLAD)
+                .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
+                .tool(RealtimeSession.ToolRealtime.of(FunctionDef.builder()
+                        .name("DemoFunction")
+                        .description("A demo function")
+                        .functionalClass(DemoFunction.class)
+                        .build()))
+                .toolChoice(null)
+                .temperature(0.9)
+                .maxResponseOutputTokens(2048)
+                .conversation(RealtimeResponse.ConversationType.AUTO)
+                .metadata(Map.of("key", "value"))
+                .inputItem(Item.builder()
+                        .id("id")
+                        .type(Item.ItemType.FUNCTION_CALL)
+                        .object("object")
+                        .status("completed")
+                        .role(Item.RoleItemMessage.USER)
+                        .contentItem(Item.ContentItem.builder()
+                                .type(Item.ContentItemType.ITEM_REFERENCE)
+                                .text("text")
+                                .id("id")
+                                .audio("audio")
+                                .transcript("transcript")
+                                .build())
+                        .callId("callId")
+                        .name("name")
+                        .arguments("arguments")
+                        .output("output")
+                        .build())
                 .build();
 
         item = Item.builder()
@@ -82,6 +121,7 @@ class BaseEventTest {
                                 .build())
                         .build())
                 .output(List.of(item, item))
+                .metadata(Map.of("key", "value"))
                 .usage(Response.UsageResponse.builder()
                         .totalTokens(1000)
                         .inputTokens(1000)
@@ -128,12 +168,12 @@ class BaseEventTest {
 
     @Test
     void testSerializationDeserializationClientEventClasses() {
-        var sessionUpdate = ClientEvent.SessionUpdate.of("eventId", configuration);
+        var sessionUpdate = ClientEvent.SessionUpdate.of("eventId", realtimeSession);
         var newSessionUpdate = JsonUtil.jsonToObject(JsonUtil.objectToJson(sessionUpdate),
                 ClientEvent.SessionUpdate.class);
         assertEquals(sessionUpdate.toString(), newSessionUpdate.toString());
 
-        sessionUpdate = ClientEvent.SessionUpdate.of(configuration);
+        sessionUpdate = ClientEvent.SessionUpdate.of(realtimeSession);
         newSessionUpdate = JsonUtil.jsonToObject(JsonUtil.objectToJson(sessionUpdate),
                 ClientEvent.SessionUpdate.class);
         assertEquals(sessionUpdate.toString(), newSessionUpdate.toString());
@@ -203,22 +243,22 @@ class BaseEventTest {
                 ClientEvent.ConversationItemDelete.class);
         assertEquals(conversationItemDelete.toString(), newConversationItemDelete.toString());
 
-        var responseCreate = ClientEvent.ResponseCreate.of("eventId", configuration);
+        var responseCreate = ClientEvent.ResponseCreate.of("eventId", realtimeResponse);
         var newResponseCreate = JsonUtil.jsonToObject(JsonUtil.objectToJson(responseCreate),
                 ClientEvent.ResponseCreate.class);
         assertEquals(responseCreate.toString(), newResponseCreate.toString());
 
-        responseCreate = ClientEvent.ResponseCreate.of(configuration);
+        responseCreate = ClientEvent.ResponseCreate.of(realtimeResponse);
         newResponseCreate = JsonUtil.jsonToObject(JsonUtil.objectToJson(responseCreate),
                 ClientEvent.ResponseCreate.class);
         assertEquals(responseCreate.toString(), newResponseCreate.toString());
 
-        var responseCancel = ClientEvent.ResponseCancel.of("eventId");
+        var responseCancel = ClientEvent.ResponseCancel.of("eventId", "responseId");
         var newResponseCancel = JsonUtil.jsonToObject(JsonUtil.objectToJson(responseCancel),
                 ClientEvent.ResponseCancel.class);
         assertEquals(responseCancel.toString(), newResponseCancel.toString());
 
-        responseCancel = ClientEvent.ResponseCancel.of();
+        responseCancel = ClientEvent.ResponseCancel.of("responseId");
         newResponseCancel = JsonUtil.jsonToObject(JsonUtil.objectToJson(responseCancel),
                 ClientEvent.ResponseCancel.class);
         assertEquals(responseCancel.toString(), newResponseCancel.toString());
@@ -235,7 +275,7 @@ class BaseEventTest {
 
         var sessionCreated = ServerEvent.SessionCreated.builder()
                 .type(Realtime.SESSION_CREATED)
-                .session(configuration)
+                .session(realtimeSession)
                 .build();
         var newSessionCreated = JsonUtil.jsonToObject(JsonUtil.objectToJson(sessionCreated),
                 ServerEvent.SessionCreated.class);
@@ -243,7 +283,7 @@ class BaseEventTest {
 
         var sessionUpdated = ServerEvent.SessionUpdated.builder()
                 .type(Realtime.SESSION_UPDATED)
-                .session(configuration)
+                .session(realtimeSession)
                 .build();
         var newSessionUpdated = JsonUtil.jsonToObject(JsonUtil.objectToJson(sessionUpdated),
                 ServerEvent.SessionUpdated.class);

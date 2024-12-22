@@ -30,10 +30,16 @@ import java.util.List;
 @AllArgsConstructor
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Configuration {
+public class RealtimeSession {
+
+    protected String id;
+
+    protected String object;
 
     @Singular
     protected List<Modality> modalities;
+
+    protected String model;
 
     protected String instructions;
 
@@ -133,6 +139,8 @@ public class Configuration {
         private Integer prefixPaddingMs;
 
         private Integer silenceDurationMs;
+
+        private Boolean createReponse;
 
     }
 

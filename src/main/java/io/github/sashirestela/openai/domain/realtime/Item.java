@@ -27,6 +27,8 @@ public class Item {
 
     private ItemType type;
 
+    private String object;
+
     private String status;
 
     private RoleItemMessage role;
@@ -80,7 +82,10 @@ public class Item {
         TEXT,
 
         @JsonProperty("audio")
-        AUDIO;
+        AUDIO,
+
+        @JsonProperty("item_reference")
+        ITEM_REFERENCE;
 
     }
 
@@ -93,6 +98,7 @@ public class Item {
 
         private ContentItemType type;
         private String text;
+        private String id;
         private String audio;
         private String transcript;
 

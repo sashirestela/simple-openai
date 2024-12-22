@@ -1,12 +1,12 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
-import io.github.sashirestela.openai.domain.realtime.SessionRequest;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSession;
 
 public class SessionTokenDemo extends AbstractDemo {
 
     public void demoCallCreateSessionToken() {
-        var sessionRequest = SessionRequest.builder()
+        var sessionRequest = RealtimeSession.builder()
                 .model("gpt-4o-mini-realtime-preview")
                 .modality(Modality.TEXT)
                 .modality(Modality.AUDIO)

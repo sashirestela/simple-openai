@@ -4,7 +4,7 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.openai.domain.realtime.ClientEvent;
-import io.github.sashirestela.openai.domain.realtime.Configuration;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSession;
 import io.github.sashirestela.openai.domain.realtime.ServerEvent;
 
 import javax.sound.sampled.AudioFormat;
@@ -31,11 +31,11 @@ public class RealtimeDemo {
                 .realtimeConfig(RealtimeConfig.of("gpt-4o-mini-realtime-preview"))
                 .build();
 
-        var configuration = Configuration.builder()
+        var session = RealtimeSession.builder()
                 .modality(Modality.AUDIO)
                 .instructions("Respond with short, direct sentences.")
-                .voice(Configuration.VoiceRealtime.ECHO)
-                .outputAudioFormat(Configuration.AudioFormatRealtime.PCM16)
+                .voice(RealtimeSession.VoiceRealtime.ECHO)
+                .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
                 .inputAudioTranscription(null)
                 .turnDetection(null)
                 .temperature(0.9)
@@ -63,7 +63,7 @@ public class RealtimeDemo {
         realtime.connect().thenRun(() -> {
             System.out.println("Connection established!");
             System.out.println("(Press any key and Return to terminate)");
-            realtime.send(ClientEvent.SessionUpdate.of(configuration)).join();
+            realtime.send(ClientEvent.SessionUpdate.of(session)).join();
         }).join();
 
         Scanner scanner = new Scanner(System.in);

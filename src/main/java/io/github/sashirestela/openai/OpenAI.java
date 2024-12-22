@@ -43,8 +43,8 @@ import io.github.sashirestela.openai.domain.image.ImageVariationsRequest;
 import io.github.sashirestela.openai.domain.model.Model;
 import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
-import io.github.sashirestela.openai.domain.realtime.Session;
-import io.github.sashirestela.openai.domain.realtime.SessionRequest;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSession;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSessionToken;
 import io.github.sashirestela.openai.domain.upload.Upload;
 import io.github.sashirestela.openai.domain.upload.UploadCompleteRequest;
 import io.github.sashirestela.openai.domain.upload.UploadPart;
@@ -738,10 +738,10 @@ public interface OpenAI {
          * Create an ephemeral API token for use in client-side applications with the Realtime API.
          * 
          * @param sessionRequest A Realtime session configuration including the model.
-         * @return A new Realtime session configuration, with an ephermeral key.
+         * @return A new Realtime session configuration, with an ephermeral token.
          */
         @POST
-        CompletableFuture<Session> create(@Body SessionRequest sessionRequest);
+        CompletableFuture<RealtimeSessionToken> create(@Body RealtimeSession sessionRequest);
 
     }
 
