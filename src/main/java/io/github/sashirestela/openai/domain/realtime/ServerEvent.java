@@ -40,7 +40,7 @@ public abstract class ServerEvent {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionCreated extends BaseEvent {
 
-        private Configuration session;
+        private RealtimeSession session;
 
     }
 
@@ -53,7 +53,7 @@ public abstract class ServerEvent {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionUpdated extends BaseEvent {
 
-        private Configuration session;
+        private RealtimeSession session;
 
     }
 

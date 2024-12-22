@@ -10,10 +10,8 @@ import lombok.ToString;
 @Getter
 @ToString(callSuper = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Session extends Configuration {
+public class RealtimeSessionToken extends RealtimeSession {
 
-    private String id;
-    private String object;
     private Secret clientSecret;
 
     @NoArgsConstructor

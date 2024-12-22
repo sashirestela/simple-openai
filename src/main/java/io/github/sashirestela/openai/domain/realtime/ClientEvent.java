@@ -20,19 +20,19 @@ public abstract class ClientEvent {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class SessionUpdate extends BaseEvent {
 
-        private Configuration session;
+        private RealtimeSession session;
 
-        private SessionUpdate(String eventId, Configuration session) {
+        private SessionUpdate(String eventId, RealtimeSession session) {
             this.type = Realtime.SESSION_UPDATE;
             this.eventId = eventId;
             this.session = session;
         }
 
-        public static SessionUpdate of(Configuration session) {
+        public static SessionUpdate of(RealtimeSession session) {
             return new SessionUpdate(null, session);
         }
 
-        public static SessionUpdate of(String eventId, Configuration session) {
+        public static SessionUpdate of(String eventId, RealtimeSession session) {
             return new SessionUpdate(eventId, session);
         }
 
@@ -200,19 +200,19 @@ public abstract class ClientEvent {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseCreate extends BaseEvent {
 
-        private Configuration response;
+        private RealtimeResponse response;
 
-        private ResponseCreate(String eventId, Configuration response) {
+        private ResponseCreate(String eventId, RealtimeResponse response) {
             this.type = Realtime.RESPONSE_CREATE;
             this.eventId = eventId;
             this.response = response;
         }
 
-        public static ResponseCreate of(Configuration response) {
+        public static ResponseCreate of(RealtimeResponse response) {
             return new ResponseCreate(null, response);
         }
 
-        public static ResponseCreate of(String eventId, Configuration response) {
+        public static ResponseCreate of(String eventId, RealtimeResponse response) {
             return new ResponseCreate(eventId, response);
         }
 
@@ -225,17 +225,20 @@ public abstract class ClientEvent {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ResponseCancel extends BaseEvent {
 
-        private ResponseCancel(String eventId) {
+        private String responseId;
+
+        private ResponseCancel(String eventId, String responseId) {
             this.type = Realtime.RESPONSE_CANCEL;
             this.eventId = eventId;
+            this.responseId = responseId;
         }
 
-        public static ResponseCancel of() {
-            return new ResponseCancel(null);
+        public static ResponseCancel of(String responseId) {
+            return new ResponseCancel(null, responseId);
         }
 
-        public static ResponseCancel of(String eventId) {
-            return new ResponseCancel(eventId);
+        public static ResponseCancel of(String eventId, String responseId) {
+            return new ResponseCancel(eventId, responseId);
         }
 
     }
