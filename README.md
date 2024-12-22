@@ -24,7 +24,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
-  - [Realtime Conversation Example](#realtime-conversation-example)
+  - [Realtime Conversation Example](#realtime-conversation-example) **UPDATED**
 - [Exception Handling](#-exception-handling)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
   - [Azure OpenAI](#azure-openai)
@@ -57,7 +57,8 @@ Full support for most of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling) **NEW**
+* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling) **UPDATED**
+* Session Token (Create Ephemeral Tokens) **NEW**
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
@@ -1032,6 +1033,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * Model
     * Moderation
     * Realtime
+    * SessionToken
     * Upload
     * Conversation
     * AssistantV2
