@@ -1,8 +1,7 @@
-package io.github.sashirestela.openai;
+package io.github.sashirestela.openai.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
-import io.github.sashirestela.openai.OpenAIRealtime.BaseRealtimeConfig;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -13,7 +12,7 @@ import java.util.function.UnaryOperator;
 
 @Getter
 @Builder
-public class BaseSimpleOpenAIArgs {
+public class ClientConfig {
 
     @NonNull
     private final String baseUrl;
@@ -21,6 +20,6 @@ public class BaseSimpleOpenAIArgs {
     private final HttpClient httpClient;
     private final UnaryOperator<HttpRequestData> requestInterceptor;
     private final ObjectMapper objectMapper;
-    private final BaseRealtimeConfig baseRealtimeConfig;
+    private final RealtimeConfig realtimeConfig;
 
 }

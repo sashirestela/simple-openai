@@ -1,11 +1,10 @@
 package io.github.sashirestela.openai;
 
 import io.github.sashirestela.cleverclient.util.JsonUtil;
+import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.realtime.BaseEvent;
 import io.github.sashirestela.openai.support.Action;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +23,9 @@ public class OpenAIRealtime {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenAIRealtime.class);
 
+    private Map<Class<?>, Consumer<Object>> eventHandlers = new HashMap<>();
     private WebSocket.Builder webSocketWithHeaders;
     private String fullUrl;
-    private Map<Class<?>, Consumer<Object>> eventHandlers;
     private Action openHandler;
     private BiConsumer<Integer, String> closeHandler;
     private Consumer<Throwable> errorHandler;
@@ -34,23 +33,22 @@ public class OpenAIRealtime {
     private WebSocket webSocket;
 
     @Builder
-    public OpenAIRealtime(HttpClient httpClient, BaseRealtimeConfig baseRealtimeConfig) {
-        this.webSocketWithHeaders = buildWebSocketWithHeaders(httpClient, baseRealtimeConfig);
-        this.fullUrl = buildFullUrl(baseRealtimeConfig);
-        this.eventHandlers = new HashMap<>();
+    public OpenAIRealtime(HttpClient httpClient, RealtimeConfig realtimeConfig) {
+        this.webSocketWithHeaders = buildWebSocketWithHeaders(httpClient, realtimeConfig);
+        this.fullUrl = buildFullUrl(realtimeConfig);
     }
 
-    private WebSocket.Builder buildWebSocketWithHeaders(HttpClient httpClient, BaseRealtimeConfig baseRealtimeConfig) {
+    private WebSocket.Builder buildWebSocketWithHeaders(HttpClient httpClient, RealtimeConfig realtimeConfig) {
         var webSocketBuilder = httpClient.newWebSocketBuilder();
-        for (var entry : baseRealtimeConfig.getHeaders().entrySet()) {
+        for (var entry : realtimeConfig.getHeaders().entrySet()) {
             webSocketBuilder = webSocketBuilder.header(entry.getKey(), entry.getValue());
         }
         return webSocketBuilder;
     }
 
-    private String buildFullUrl(BaseRealtimeConfig baseRealtimeConfig) {
-        var url = new StringBuilder(baseRealtimeConfig.getEndpointUrl() + "?");
-        for (var entry : baseRealtimeConfig.getQueryParams().entrySet()) {
+    private String buildFullUrl(RealtimeConfig realtimeConfig) {
+        var url = new StringBuilder(realtimeConfig.getEndpointUrl() + "?");
+        for (var entry : realtimeConfig.getQueryParams().entrySet()) {
             url.append(entry.getKey() + "=" + entry.getValue());
         }
         return url.toString();
@@ -148,16 +146,6 @@ public class OpenAIRealtime {
                 OpenAIRealtime.this.errorHandler.accept(error);
             }
         }
-
-    }
-
-    @Getter
-    @SuperBuilder
-    public static class BaseRealtimeConfig {
-
-        protected String endpointUrl;
-        protected Map<String, String> headers;
-        protected Map<String, String> queryParams;
 
     }
 

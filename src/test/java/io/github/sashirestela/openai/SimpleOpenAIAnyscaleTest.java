@@ -9,13 +9,12 @@ import java.net.http.HttpClient;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleOpenAIAnyscaleTest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithCustomBaseURL() {
-        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org",
+        var args = SimpleOpenAIAnyscale.buildConfig("the-api-key", "https://example.org",
                 HttpClient.newHttpClient(), new ObjectMapper());
 
         assertEquals("https://example.org", args.getBaseUrl());
@@ -29,7 +28,7 @@ class SimpleOpenAIAnyscaleTest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAIAnyscale.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null);
+        var args = SimpleOpenAIAnyscale.buildConfig("the-api-key", null, null, null);
 
         assertEquals(Constant.ANYSCALE_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
@@ -41,35 +40,12 @@ class SimpleOpenAIAnyscaleTest {
     }
 
     @Test
-    void shouldThrownExceptionWhenCallingUnimplementedMethods() {
+    void shouldCreateEndpoints() {
         var openAI = SimpleOpenAIAnyscale.builder()
-                .apiKey("api-key-test")
+                .apiKey("apiKey")
+                .baseUrl("baseUrl")
                 .build();
-        Runnable[] callingData = {
-                openAI::audios,
-                openAI::batches,
-                openAI::completions,
-                openAI::embeddings,
-                openAI::files,
-                openAI::fineTunings,
-                openAI::images,
-                openAI::models,
-                openAI::moderations,
-                openAI::sessionTokens,
-                openAI::uploads,
-                openAI::assistants,
-                openAI::threads,
-                openAI::threadMessages,
-                openAI::threadRuns,
-                openAI::threadRunSteps,
-                openAI::vectorStores,
-                openAI::vectorStoreFiles,
-                openAI::vectorStoreFileBatches,
-                openAI::realtime
-        };
-        for (Runnable calling : callingData) {
-            assertThrows(UnsupportedOperationException.class, () -> calling.run());
-        }
+        assertNotNull(openAI.chatCompletions());
     }
 
 }

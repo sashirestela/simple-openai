@@ -2,7 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
+import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.support.Constant;
@@ -36,7 +36,7 @@ class SimpleOpenAITest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", "orgId", "prjId", "https://example.org",
+        var args = SimpleOpenAI.buildConfig("the-api-key", "orgId", "prjId", "https://example.org",
                 HttpClient.newHttpClient(), new ObjectMapper(), RealtimeConfig.of("the-model"));
 
         assertEquals("https://example.org", args.getBaseUrl());
@@ -47,13 +47,13 @@ class SimpleOpenAITest {
         assertEquals("prjId", args.getHeaders().get(Constant.OPENAI_PRJ_HEADER));
         assertNotNull(args.getHttpClient());
         assertNotNull(args.getObjectMapper());
-        assertNotNull(args.getBaseRealtimeConfig());
+        assertNotNull(args.getRealtimeConfig());
         assertNull(args.getRequestInterceptor());
     }
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAI.prepareBaseSimpleOpenAIArgs("the-api-key", null, null, null, null, null, null);
+        var args = SimpleOpenAI.buildConfig("the-api-key", null, null, null, null, null, null);
 
         assertEquals(Constant.OPENAI_BASE_URL, args.getBaseUrl());
         assertEquals(1, args.getHeaders().size());
@@ -61,7 +61,7 @@ class SimpleOpenAITest {
                 args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(args.getHttpClient());
         assertNull(args.getObjectMapper());
-        assertNull(args.getBaseRealtimeConfig());
+        assertNull(args.getRealtimeConfig());
         assertNull(args.getRequestInterceptor());
     }
 
