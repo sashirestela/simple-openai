@@ -1,7 +1,7 @@
 package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleOpenAI.RealtimeConfig;
+import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.openai.domain.realtime.ClientEvent;
 import io.github.sashirestela.openai.domain.realtime.RealtimeSession;

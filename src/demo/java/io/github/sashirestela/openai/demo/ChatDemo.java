@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.sashirestela.openai.BaseSimpleOpenAI;
-import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
 import io.github.sashirestela.openai.common.audio.AudioFormat;
@@ -43,8 +41,8 @@ public class ChatDemo extends AbstractDemo {
     protected String model;
     protected String modelAudio;
 
-    public ChatDemo(BaseSimpleOpenAI openAI, String model, String modelAudio) {
-        super(openAI);
+    public ChatDemo(String provider, String model, String modelAudio) {
+        super(provider);
         this.model = model;
         this.modelAudio = modelAudio;
         chatRequest = ChatRequest.builder()
@@ -52,18 +50,18 @@ public class ChatDemo extends AbstractDemo {
                 .message(SystemMessage.of("You are an expert in AI."))
                 .message(UserMessage.of("Write a technical article about ChatGPT, no more than 100 words."))
                 .temperature(0.0)
-                .maxCompletionTokens(300)
+                .maxTokens(300)
                 .build();
     }
 
     public void demoCallChatStreaming() {
-        var futureChat = openAI.chatCompletions().createStream(chatRequest);
+        var futureChat = chatProvider.chatCompletions().createStream(chatRequest);
         var chatResponse = futureChat.join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
     }
 
     public void demoCallChatBlocking() {
-        var futureChat = openAI.chatCompletions().create(chatRequest);
+        var futureChat = chatProvider.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
         System.out.println(chatResponse.firstContent());
     }
@@ -98,7 +96,7 @@ public class ChatDemo extends AbstractDemo {
                 .messages(messages)
                 .tools(functionExecutor.getToolFunctions())
                 .build();
-        var futureChat = openAI.chatCompletions().create(chatRequest);
+        var futureChat = chatProvider.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
         var chatMessage = chatResponse.firstMessage();
         var chatToolCall = chatMessage.getToolCalls().get(0);
@@ -110,7 +108,7 @@ public class ChatDemo extends AbstractDemo {
                 .messages(messages)
                 .tools(functionExecutor.getToolFunctions())
                 .build();
-        futureChat = openAI.chatCompletions().create(chatRequest);
+        futureChat = chatProvider.chatCompletions().create(chatRequest);
         chatResponse = futureChat.join();
         System.out.println(chatResponse.firstContent());
     }
@@ -127,7 +125,7 @@ public class ChatDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxCompletionTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
@@ -144,7 +142,7 @@ public class ChatDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxCompletionTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
@@ -160,7 +158,7 @@ public class ChatDemo extends AbstractDemo {
                         .schemaClass(MathReasoning.class)
                         .build()))
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
@@ -183,7 +181,7 @@ public class ChatDemo extends AbstractDemo {
                         .schema(schema)
                         .build()))
                 .build();
-        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
         chatResponse.forEach(ChatDemo::processResponseChunk);
         System.out.println();
     }
@@ -200,7 +198,7 @@ public class ChatDemo extends AbstractDemo {
                 .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
                 .messages(messages)
                 .build();
-        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().create(chatRequest).join();
         var audio = chatResponse.firstMessage().getAudio();
         Base64Util.decode(audio.getData(), "src/demo/resources/answer1.mp3");
         System.out.println("Answer 1: " + audio.getTranscript());
@@ -215,7 +213,7 @@ public class ChatDemo extends AbstractDemo {
                 .audio(Audio.of(Voice.ALLOY, AudioFormat.MP3))
                 .messages(messages)
                 .build();
-        chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        chatResponse = chatProvider.chatCompletions().create(chatRequest).join();
         audio = chatResponse.firstMessage().getAudio();
         Base64Util.decode(audio.getData(), "src/demo/resources/answer2.mp3");
         System.out.println("Answer 2: " + audio.getTranscript());
@@ -294,11 +292,7 @@ public class ChatDemo extends AbstractDemo {
     }
 
     public static void main(String[] args) {
-        var openAI = SimpleOpenAI.builder()
-                .apiKey(System.getenv("OPENAI_API_KEY"))
-                .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
-                .build();
-        var demo = new ChatDemo(openAI, "gpt-4o-mini", "gpt-4o-audio-preview");
+        var demo = new ChatDemo("standard", "gpt-4o-mini", "gpt-4o-audio-preview");
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
