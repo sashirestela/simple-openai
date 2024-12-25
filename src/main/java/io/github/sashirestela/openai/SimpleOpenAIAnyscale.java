@@ -1,6 +1,9 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.openai.base.ClientConfig;
+import io.github.sashirestela.openai.base.AbstractOpenAIProvider;
+import io.github.sashirestela.openai.service.provider.AnyscaleOpenAIServices;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
@@ -12,7 +15,7 @@ import java.util.Optional;
 /**
  * The Anyscale OpenAI implementation which implements a subset of the standard services.
  */
-public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
+public class SimpleOpenAIAnyscale extends AbstractOpenAIProvider implements AnyscaleOpenAIServices {
 
     /**
      * Constructor used to generate a builder.
@@ -26,27 +29,23 @@ public class SimpleOpenAIAnyscale extends BaseSimpleOpenAI {
     @Builder
     public SimpleOpenAIAnyscale(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
             ObjectMapper objectMapper) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, httpClient, objectMapper));
+        super(buildConfig(apiKey, baseUrl, httpClient, objectMapper));
     }
 
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl,
-            HttpClient httpClient, ObjectMapper objectMapper) {
-        var headers = Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
-
-        return BaseSimpleOpenAIArgs.builder()
+    public static ClientConfig buildConfig(String apiKey, String baseUrl, HttpClient httpClient,
+            ObjectMapper objectMapper) {
+        return ClientConfig.builder()
                 .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.ANYSCALE_BASE_URL))
-                .headers(headers)
+                .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                 .httpClient(httpClient)
                 .objectMapper(objectMapper)
                 .build();
+
     }
 
-    /**
-     * Throw not implemented
-     */
     @Override
-    public OpenAI.Files files() {
-        throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+    public OpenAI.ChatCompletions chatCompletions() {
+        return getOrCreateService(OpenAI.ChatCompletions.class);
     }
 
 }

@@ -12,13 +12,12 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleOpenAIAzureTest {
 
     @Test
     void shouldPrepareBaseOpenSimpleAIArgsCorrectly() {
-        var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs("the-api-key", "https://example.org", "12-34-5678",
+        var args = SimpleOpenAIAzure.buildConfig("the-api-key", "https://example.org", "12-34-5678",
                 HttpClient.newHttpClient(), new ObjectMapper());
 
         assertEquals("https://example.org", args.getBaseUrl());
@@ -44,7 +43,7 @@ class SimpleOpenAIAzureTest {
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
                 .body("{\"messages\":[],\"stream\":false}")
                 .build();
-        var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
+        var args = SimpleOpenAIAzure.buildConfig(
                 "the-api-key",
                 baseUrl,
                 "12-34-5678",
@@ -74,7 +73,7 @@ class SimpleOpenAIAzureTest {
                 .headers(Map.of(Constant.AZURE_APIKEY_HEADER, "the-api-key"))
                 .body(Map.of())
                 .build();
-        var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
+        var args = SimpleOpenAIAzure.buildConfig(
                 "the-api-key",
                 "https://example.org",
                 "12-34-5678",
@@ -90,7 +89,7 @@ class SimpleOpenAIAzureTest {
     @Test
     void shouldInterceptUrlCorrectlyWhenUrlContainsAssistants() {
         var baseUrl = "https://example.org/openai/deployments/some-deployment/assistants/some-assistant";
-        var args = SimpleOpenAIAzure.prepareBaseSimpleOpenAIArgs(
+        var args = SimpleOpenAIAzure.buildConfig(
                 "the-api-key",
                 baseUrl,
                 "12-34-5678",
@@ -144,39 +143,6 @@ class SimpleOpenAIAzureTest {
                 .build();
         assertNotNull(openAI.chatCompletions());
         assertNotNull(openAI.files());
-    }
-
-    @Test
-    void shouldThrownExceptionWhenCallingUnimplementedMethods() {
-        var openAI = SimpleOpenAIAzure.builder()
-                .apiKey("apiKey")
-                .baseUrl("baseUrl")
-                .apiVersion("apiVersion")
-                .build();
-        Runnable[] callingData = {
-                openAI::audios,
-                openAI::batches,
-                openAI::completions,
-                openAI::embeddings,
-                openAI::fineTunings,
-                openAI::images,
-                openAI::models,
-                openAI::moderations,
-                openAI::sessionTokens,
-                openAI::uploads,
-                openAI::assistants,
-                openAI::threads,
-                openAI::threadMessages,
-                openAI::threadRuns,
-                openAI::threadRunSteps,
-                openAI::vectorStores,
-                openAI::vectorStoreFiles,
-                openAI::vectorStoreFileBatches,
-                openAI::realtime
-        };
-        for (Runnable calling : callingData) {
-            assertThrows(UnsupportedOperationException.class, () -> calling.run());
-        }
     }
 
 }

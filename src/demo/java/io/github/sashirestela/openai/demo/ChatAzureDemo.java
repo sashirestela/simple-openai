@@ -1,7 +1,5 @@
 package io.github.sashirestela.openai.demo;
 
-import io.github.sashirestela.openai.BaseSimpleOpenAI;
-import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartImageUrl.ImageUrl;
 import io.github.sashirestela.openai.common.content.ContentPart.ContentPartText;
@@ -14,8 +12,8 @@ import java.util.List;
 
 public class ChatAzureDemo extends ChatDemo {
 
-    public ChatAzureDemo(BaseSimpleOpenAI openAI, String model) {
-        super(openAI, model, null);
+    public ChatAzureDemo(String provider, String model) {
+        super(provider, model, null);
     }
 
     @Override
@@ -29,9 +27,9 @@ public class ChatAzureDemo extends ChatDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
-                .maxCompletionTokens(500)
+                .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
     }
 
@@ -46,19 +44,14 @@ public class ChatAzureDemo extends ChatDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         Base64Util.encode("src/demo/resources/machupicchu.jpg", MediaType.IMAGE)))))))
                 .temperature(0.0)
-                .maxCompletionTokens(500)
+                .maxTokens(500)
                 .build();
-        var chatResponse = openAI.chatCompletions().create(chatRequest).join();
+        var chatResponse = chatProvider.chatCompletions().create(chatRequest).join();
         System.out.println(chatResponse.firstContent());
     }
 
     public static void main(String[] args) {
-        var openAI = SimpleOpenAIAzure.builder()
-                .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
-                .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
-                .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))
-                .build();
-        var demo = new ChatAzureDemo(openAI, "N/A");
+        var demo = new ChatAzureDemo("azure", "N/A");
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

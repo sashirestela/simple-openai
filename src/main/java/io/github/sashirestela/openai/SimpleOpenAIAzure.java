@@ -3,6 +3,9 @@ package io.github.sashirestela.openai;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.support.ContentType;
+import io.github.sashirestela.openai.base.ClientConfig;
+import io.github.sashirestela.openai.base.AbstractOpenAIProvider;
+import io.github.sashirestela.openai.service.provider.AzureOpenAIServices;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
@@ -15,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * The Azure OpenAI implementation which implements a subset of the standard services.
  */
-public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
+public class SimpleOpenAIAzure extends AbstractOpenAIProvider implements AzureOpenAIServices {
 
     /**
      * Constructor used to generate a builder.
@@ -32,19 +35,43 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
     @Builder
     public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl, @NonNull String apiVersion,
             HttpClient httpClient, ObjectMapper objectMapper) {
-        super(prepareBaseSimpleOpenAIArgs(apiKey, baseUrl, apiVersion, httpClient, objectMapper));
+        super(buildConfig(apiKey, baseUrl, apiVersion, httpClient, objectMapper));
     }
 
-    private static String extractDeployment(String url) {
-        final String DEPLOYMENT_REGEX = "/deployments/([^/]+)/";
+    public static ClientConfig buildConfig(String apiKey, String baseUrl, String apiVersion, HttpClient httpClient,
+            ObjectMapper objectMapper) {
+        return ClientConfig.builder()
+                .baseUrl(baseUrl)
+                .headers(Map.of(Constant.AZURE_APIKEY_HEADER, apiKey))
+                .httpClient(httpClient)
+                .requestInterceptor(requestInterceptor(apiVersion))
+                .objectMapper(objectMapper)
+                .build();
+    }
 
-        var pattern = Pattern.compile(DEPLOYMENT_REGEX);
-        var matcher = pattern.matcher(url);
+    private static UnaryOperator<HttpRequestData> requestInterceptor(String apiVersion) {
+        return request -> {
+            var url = request.getUrl();
+            var contentType = request.getContentType();
+            if (contentType != null) {
+                var body = getNewBody(request, contentType, url);
+                request.setBody(body);
+            }
+            url = getNewUrl(url, apiVersion);
+            request.setUrl(url);
 
-        if (matcher.find()) {
-            return matcher.group(1);
+            return request;
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Object getNewBody(HttpRequestData request, ContentType contentType, String url) {
+        var deployment = extractDeployment(url);
+        var body = request.getBody();
+        if (contentType.equals(ContentType.APPLICATION_JSON)) {
+            return getBodyForJson(url, (String) body, deployment);
         } else {
-            return null;
+            return getBodyForMap(url, (Map<String, Object>) body, deployment);
         }
     }
 
@@ -62,6 +89,19 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         }
 
         return url;
+    }
+
+    private static String extractDeployment(String url) {
+        final String DEPLOYMENT_REGEX = "/deployments/([^/]+)/";
+
+        var pattern = Pattern.compile(DEPLOYMENT_REGEX);
+        var matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return null;
+        }
     }
 
     private static Object getBodyForJson(String url, String body, String deployment) {
@@ -90,44 +130,18 @@ public class SimpleOpenAIAzure extends BaseSimpleOpenAI {
         } else {
             body.remove(MODEL_LITERAL);
         }
+
         return body;
     }
 
-    @SuppressWarnings("unchecked")
-    private static Object getNewBody(HttpRequestData request, ContentType contentType, String url) {
-        var deployment = extractDeployment(url);
-        var body = request.getBody();
-        if (contentType.equals(ContentType.APPLICATION_JSON)) {
-            return getBodyForJson(url, (String) body, deployment);
-        } else {
-            return getBodyForMap(url, (Map<String, Object>) body, deployment);
-        }
+    @Override
+    public OpenAI.ChatCompletions chatCompletions() {
+        return getOrCreateService(OpenAI.ChatCompletions.class);
     }
 
-    public static BaseSimpleOpenAIArgs prepareBaseSimpleOpenAIArgs(String apiKey, String baseUrl, String apiVersion,
-            HttpClient httpClient, ObjectMapper objectMapper) {
-
-        var headers = Map.of(Constant.AZURE_APIKEY_HEADER, apiKey);
-        UnaryOperator<HttpRequestData> requestInterceptor = request -> {
-            var url = request.getUrl();
-            var contentType = request.getContentType();
-            if (contentType != null) {
-                var body = getNewBody(request, contentType, url);
-                request.setBody(body);
-            }
-            url = getNewUrl(url, apiVersion);
-            request.setUrl(url);
-
-            return request;
-        };
-
-        return BaseSimpleOpenAIArgs.builder()
-                .baseUrl(baseUrl)
-                .headers(headers)
-                .httpClient(httpClient)
-                .requestInterceptor(requestInterceptor)
-                .objectMapper(objectMapper)
-                .build();
+    @Override
+    public OpenAI.Files files() {
+        return getOrCreateService(OpenAI.Files.class);
     }
 
 }

@@ -2,7 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.support.Configurator;
-import io.github.sashirestela.openai.OpenAIRealtime.BaseRealtimeConfig;
+import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.realtime.BaseEvent;
 import io.github.sashirestela.openai.domain.realtime.ClientEvent;
 import io.github.sashirestela.openai.domain.realtime.RealtimeResponse;
@@ -70,7 +70,7 @@ class OpenAIRealtimeTest {
 
         openAIRealtime = OpenAIRealtime.builder()
                 .httpClient(mockHttpClient)
-                .baseRealtimeConfig(BaseRealtimeConfig.builder()
+                .realtimeConfig(RealtimeConfig.builder()
                         .endpointUrl(ENDPOINT_URL)
                         .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + API_KEY,
                                 Constant.OPENAI_BETA_HEADER, Constant.OPENAI_REALTIME_VERSION))
