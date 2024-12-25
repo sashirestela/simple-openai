@@ -20,8 +20,4 @@ public class RealtimeConfig {
         return new RealtimeConfig(model, null, null, null);
     }
 
-    public static RealtimeConfig of(String model, String endpointUrl) {
-        return new RealtimeConfig(model, endpointUrl, null, null);
-    }
-
 }
