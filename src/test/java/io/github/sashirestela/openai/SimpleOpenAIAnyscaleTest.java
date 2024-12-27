@@ -13,30 +13,38 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class SimpleOpenAIAnyscaleTest {
 
     @Test
-    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithCustomBaseURL() {
-        var args = SimpleOpenAIAnyscale.buildConfig("the-api-key", "https://example.org",
-                HttpClient.newHttpClient(), new ObjectMapper());
+    void shouldCreateFullConfigWhenAllParametersArePassed() {
+        var clientConfig = SimpleOpenAIAnyscale.AnyscaleConfigurator.builder()
+                .apiKey("apiKey")
+                .baseUrl("https://example.org")
+                .httpClient(HttpClient.newHttpClient())
+                .objectMapper(new ObjectMapper())
+                .build()
+                .buildConfig();
 
-        assertEquals("https://example.org", args.getBaseUrl());
-        assertEquals(1, args.getHeaders().size());
-        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
-                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
-        assertNotNull(args.getHttpClient());
-        assertNotNull(args.getObjectMapper());
-        assertNull(args.getRequestInterceptor());
+        assertEquals("https://example.org", clientConfig.getBaseUrl());
+        assertEquals(1, clientConfig.getHeaders().size());
+        assertEquals(Constant.BEARER_AUTHORIZATION + "apiKey",
+                clientConfig.getHeaders().get(Constant.AUTHORIZATION_HEADER));
+        assertNotNull(clientConfig.getHttpClient());
+        assertNotNull(clientConfig.getObjectMapper());
+        assertNull(clientConfig.getRequestInterceptor());
     }
 
     @Test
-    void shouldPrepareBaseOpenSimpleAIArgsCorrectlyWithOnlyApiKey() {
-        var args = SimpleOpenAIAnyscale.buildConfig("the-api-key", null, null, null);
+    void shouldCreateConfigWithDefaultValuesWhenRequiredParametersArePassed() {
+        var clientConfig = SimpleOpenAIAnyscale.AnyscaleConfigurator.builder()
+                .apiKey("apiKey")
+                .build()
+                .buildConfig();
 
-        assertEquals(Constant.ANYSCALE_BASE_URL, args.getBaseUrl());
-        assertEquals(1, args.getHeaders().size());
-        assertEquals(Constant.BEARER_AUTHORIZATION + "the-api-key",
-                args.getHeaders().get(Constant.AUTHORIZATION_HEADER));
-        assertNull(args.getHttpClient());
-        assertNull(args.getObjectMapper());
-        assertNull(args.getRequestInterceptor());
+        assertEquals(Constant.ANYSCALE_BASE_URL, clientConfig.getBaseUrl());
+        assertEquals(1, clientConfig.getHeaders().size());
+        assertEquals(Constant.BEARER_AUTHORIZATION + "apiKey",
+                clientConfig.getHeaders().get(Constant.AUTHORIZATION_HEADER));
+        assertNull(clientConfig.getHttpClient());
+        assertNull(clientConfig.getObjectMapper());
+        assertNull(clientConfig.getRequestInterceptor());
     }
 
     @Test
