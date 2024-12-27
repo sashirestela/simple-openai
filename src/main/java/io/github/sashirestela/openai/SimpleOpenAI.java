@@ -1,13 +1,28 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.sashirestela.openai.base.AbstractOpenAIProvider;
 import io.github.sashirestela.openai.base.ClientConfig;
+import io.github.sashirestela.openai.base.OpenAIConfigurator;
+import io.github.sashirestela.openai.base.OpenAIProvider;
 import io.github.sashirestela.openai.base.RealtimeConfig;
-import io.github.sashirestela.openai.service.provider.StandardOpenAIServices;
+import io.github.sashirestela.openai.service.AssistantServices;
+import io.github.sashirestela.openai.service.AudioServices;
+import io.github.sashirestela.openai.service.BatchServices;
+import io.github.sashirestela.openai.service.ChatCompletionServices;
+import io.github.sashirestela.openai.service.CompletionServices;
+import io.github.sashirestela.openai.service.EmbeddingServices;
+import io.github.sashirestela.openai.service.FileServices;
+import io.github.sashirestela.openai.service.FineTunningServices;
+import io.github.sashirestela.openai.service.ImageServices;
+import io.github.sashirestela.openai.service.ModelServices;
+import io.github.sashirestela.openai.service.ModerationServices;
+import io.github.sashirestela.openai.service.RealtimeServices;
+import io.github.sashirestela.openai.service.SessionServices;
+import io.github.sashirestela.openai.service.UploadServices;
 import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.experimental.SuperBuilder;
 
 import java.net.http.HttpClient;
 import java.util.HashMap;
@@ -17,7 +32,21 @@ import java.util.Optional;
 /**
  * The standard OpenAI implementation which implements the full services.
  */
-public class SimpleOpenAI extends AbstractOpenAIProvider implements StandardOpenAIServices {
+public class SimpleOpenAI extends OpenAIProvider implements
+        AssistantServices,
+        AudioServices,
+        BatchServices,
+        ChatCompletionServices,
+        CompletionServices,
+        EmbeddingServices,
+        FileServices,
+        FineTunningServices,
+        ImageServices,
+        ModelServices,
+        ModerationServices,
+        RealtimeServices,
+        SessionServices,
+        UploadServices {
 
     /**
      * Constructor used to generate a builder.
@@ -34,47 +63,15 @@ public class SimpleOpenAI extends AbstractOpenAIProvider implements StandardOpen
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
             HttpClient httpClient, ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
-        super(buildConfig(apiKey, organizationId, projectId, baseUrl, httpClient, objectMapper, realtimeConfig));
-    }
-
-    public static ClientConfig buildConfig(String apiKey, String organizationId, String projectId, String baseUrl,
-            HttpClient httpClient, ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
-        return ClientConfig.builder()
-                .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
-                .headers(headers(apiKey, organizationId, projectId))
+        super(StandardConfigurator.builder()
+                .apiKey(apiKey)
+                .organizationId(organizationId)
+                .projectId(projectId)
+                .baseUrl(baseUrl)
                 .httpClient(httpClient)
                 .objectMapper(objectMapper)
-                .realtimeConfig(realtimeConfig(apiKey, realtimeConfig))
-                .build();
-    }
-
-    private static Map<String, String> headers(String apiKey, String organizationId, String projectId) {
-        var headers = new HashMap<String, String>();
-        headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
-        if (organizationId != null) {
-            headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
-        }
-        if (projectId != null) {
-            headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
-        }
-        return headers;
-    }
-
-    private static RealtimeConfig realtimeConfig(String apiKey, RealtimeConfig realtimeConfig) {
-        if (realtimeConfig == null) {
-            return null;
-        }
-        var headers = new HashMap<String, String>();
-        headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
-        headers.put(Constant.OPENAI_BETA_HEADER, Constant.OPENAI_REALTIME_VERSION);
-        var queryParams = new HashMap<String, String>();
-        queryParams.put(Constant.OPENAI_REALTIME_MODEL_NAME, realtimeConfig.getModel());
-        return RealtimeConfig.builder()
-                .endpointUrl(
-                        Optional.ofNullable(realtimeConfig.getEndpointUrl()).orElse(Constant.OPENAI_WS_ENDPOINT_URL))
-                .headers(headers)
-                .queryParams(queryParams)
-                .build();
+                .realtimeConfig(realtimeConfig)
+                .build());
     }
 
     @Override
@@ -180,6 +177,56 @@ public class SimpleOpenAI extends AbstractOpenAIProvider implements StandardOpen
     @Override
     public OpenAIRealtime realtime() {
         return this.realtime;
+    }
+
+    @SuperBuilder
+    static class StandardConfigurator extends OpenAIConfigurator {
+
+        private String organizationId;
+        private String projectId;
+        private RealtimeConfig realtimeConfig;
+
+        @Override
+        public ClientConfig buildConfig() {
+            return ClientConfig.builder()
+                    .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
+                    .headers(makeHeaders())
+                    .httpClient(httpClient)
+                    .objectMapper(objectMapper)
+                    .realtimeConfig(makeRealtimeConfig())
+                    .build();
+        }
+
+        private Map<String, String> makeHeaders() {
+            var headers = new HashMap<String, String>();
+            headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
+            if (organizationId != null) {
+                headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
+            }
+            if (projectId != null) {
+                headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
+            }
+            return headers;
+        }
+
+        private RealtimeConfig makeRealtimeConfig() {
+            if (realtimeConfig == null) {
+                return null;
+            }
+            var headers = new HashMap<String, String>();
+            headers.put(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey);
+            headers.put(Constant.OPENAI_BETA_HEADER, Constant.OPENAI_REALTIME_VERSION);
+            var queryParams = new HashMap<String, String>();
+            queryParams.put(Constant.OPENAI_REALTIME_MODEL_NAME, realtimeConfig.getModel());
+            return RealtimeConfig.builder()
+                    .endpointUrl(
+                            Optional.ofNullable(realtimeConfig.getEndpointUrl())
+                                    .orElse(Constant.OPENAI_WS_ENDPOINT_URL))
+                    .headers(headers)
+                    .queryParams(queryParams)
+                    .build();
+        }
+
     }
 
 }
