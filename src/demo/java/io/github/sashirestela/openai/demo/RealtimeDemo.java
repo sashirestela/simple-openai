@@ -23,7 +23,7 @@ public class RealtimeDemo {
 
     private static final int BUFFER_SIZE = 8192;
 
-    public static void main(String[] args) throws LineUnavailableException, InterruptedException {
+    public static void main(String[] args) throws LineUnavailableException {
         var sound = new Sound();
 
         var openAI = SimpleOpenAI.builder()

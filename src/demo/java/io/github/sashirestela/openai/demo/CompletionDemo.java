@@ -23,13 +23,12 @@ public class CompletionDemo extends AbstractDemo {
         var futureCompletion = openAI.completions().createStream(completionRequest);
         var completionResponse = futureCompletion.join();
         completionResponse.forEach(CompletionDemo::processResponseChunk);
-        ;
         System.out.println();
     }
 
     private static void processResponseChunk(Completion responseChunk) {
         var choices = responseChunk.getChoices();
-        if (choices.size() > 0) {
+        if (!choices.isEmpty()) {
             var delta = choices.get(0).getText();
             System.out.print(delta);
         }

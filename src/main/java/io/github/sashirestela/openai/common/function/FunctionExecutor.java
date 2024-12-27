@@ -30,7 +30,7 @@ public class FunctionExecutor {
     public List<Tool> getToolFunctions() {
         return mapFunctions.values()
                 .stream()
-                .map(func -> Tool.function(func))
+                .map(Tool::function)
                 .collect(Collectors.toList());
     }
 
@@ -63,7 +63,7 @@ public class FunctionExecutor {
             throw new SimpleUncheckedException("No functions were entered.", "", null);
         }
         mapFunctions.clear();
-        functions.forEach(function -> enrollFunction(function));
+        functions.forEach(this::enrollFunction);
     }
 
     @SuppressWarnings("unchecked")

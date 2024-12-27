@@ -34,11 +34,9 @@ public class AudioDemo extends AbstractDemo {
                 .build();
         var futureSpeech = openAI.audios().speak(speechRequest);
         var speechResponse = futureSpeech.join();
-        try {
-            var audioFile = new FileOutputStream(speechFileName);
+        try (var audioFile = new FileOutputStream(speechFileName)) {
             audioFile.write(speechResponse.readAllBytes());
             System.out.println(audioFile.getChannel().size() + " bytes");
-            audioFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
