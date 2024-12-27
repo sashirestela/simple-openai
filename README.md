@@ -1047,6 +1047,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     * ConversationV2
     * ChatAnyscale
     * ChatAzure
+    * ChatGemini
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
