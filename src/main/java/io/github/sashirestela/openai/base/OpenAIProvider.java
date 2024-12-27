@@ -17,14 +17,15 @@ import java.util.function.Consumer;
 /**
  * The abstract class that providers must extend.
  */
-public abstract class AbstractOpenAIProvider {
+public abstract class OpenAIProvider {
 
     @Setter
     protected CleverClient cleverClient;
     protected OpenAIRealtime realtime;
-    protected Map<Class<?>, Object> serviceCache = new ConcurrentHashMap<>();
+    private Map<Class<?>, Object> serviceCache = new ConcurrentHashMap<>();
 
-    protected AbstractOpenAIProvider(@NonNull ClientConfig clientConfig) {
+    protected OpenAIProvider(@NonNull OpenAIConfigurator configurator) {
+        var clientConfig = configurator.buildConfig();
         var httpClient = Optional.ofNullable(clientConfig.getHttpClient()).orElse(HttpClient.newHttpClient());
         this.cleverClient = buildClient(clientConfig, httpClient);
         this.realtime = buildRealtime(clientConfig, httpClient);
@@ -37,7 +38,6 @@ public abstract class AbstractOpenAIProvider {
 
     private CleverClient buildClient(ClientConfig clientConfig, HttpClient httpClient) {
         final String END_OF_STREAM = "[DONE]";
-        var objectMapper = Optional.ofNullable(clientConfig.getObjectMapper()).orElse(new ObjectMapper());
         return CleverClient.builder()
                 .httpClient(httpClient)
                 .baseUrl(clientConfig.getBaseUrl())
@@ -45,7 +45,7 @@ public abstract class AbstractOpenAIProvider {
                 .requestInterceptor(clientConfig.getRequestInterceptor())
                 .bodyInspector(bodyInspector())
                 .endOfStream(END_OF_STREAM)
-                .objectMapper(objectMapper)
+                .objectMapper(Optional.ofNullable(clientConfig.getObjectMapper()).orElse(new ObjectMapper()))
                 .build();
     }
 
