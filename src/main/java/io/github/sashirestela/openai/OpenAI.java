@@ -50,6 +50,7 @@ import io.github.sashirestela.openai.domain.upload.UploadCompleteRequest;
 import io.github.sashirestela.openai.domain.upload.UploadPart;
 import io.github.sashirestela.openai.domain.upload.UploadPartRequest;
 import io.github.sashirestela.openai.domain.upload.UploadRequest;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 
 import java.io.InputStream;
 import java.util.EnumSet;
@@ -806,7 +807,7 @@ public interface OpenAI {
         var requestedFormat = currValue;
         if (requestedFormat != null) {
             if (isText != textEnumSet.contains(requestedFormat)) {
-                throw new SimpleUncheckedException("Unexpected responseFormat for the method {0}.",
+                throw new SimpleOpenAIException("Unexpected responseFormat for the method {0}.",
                         methodName, null);
             }
         } else {

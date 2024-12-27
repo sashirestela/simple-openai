@@ -1,6 +1,6 @@
 package io.github.sashirestela.openai.support;
 
-import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,7 +26,7 @@ public class Base64Util {
                 return prefix + base64String;
             }
         } catch (Exception e) {
-            throw new SimpleUncheckedException("Cannot encode from file {0}.", filePath, e);
+            throw new SimpleOpenAIException("Cannot encode from file {0}.", filePath, e);
         }
     }
 
@@ -36,7 +36,7 @@ public class Base64Util {
             File outputFile = new File(filePath);
             Files.write(outputFile.toPath(), bytes);
         } catch (Exception e) {
-            throw new SimpleUncheckedException("Cannot decode to file {0}.", filePath, e);
+            throw new SimpleOpenAIException("Cannot decode to file {0}.", filePath, e);
         }
     }
 

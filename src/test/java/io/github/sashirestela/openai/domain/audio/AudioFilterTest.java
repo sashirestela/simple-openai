@@ -1,7 +1,7 @@
 package io.github.sashirestela.openai.domain.audio;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.SimpleUncheckedException;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import io.github.sashirestela.openai.test.captors.CapturedValues;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +69,7 @@ class AudioFilterTest {
                 .responseFormat(AudioResponseFormat.JSON)
                 .build();
         var audioService = openAI.audios();
-        Exception exception = assertThrows(SimpleUncheckedException.class,
+        Exception exception = assertThrows(SimpleOpenAIException.class,
                 () -> audioService.transcribePlain(audioRequest));
         assertTrue(exception.getMessage().contains("Unexpected responseFormat for the method"));
     }
@@ -112,7 +112,7 @@ class AudioFilterTest {
                 .responseFormat(AudioResponseFormat.TEXT)
                 .build();
         var audioService = openAI.audios();
-        Exception exception = assertThrows(SimpleUncheckedException.class,
+        Exception exception = assertThrows(SimpleOpenAIException.class,
                 () -> audioService.transcribe(audioRequest));
         assertTrue(exception.getMessage().contains("Unexpected responseFormat for the method"));
     }

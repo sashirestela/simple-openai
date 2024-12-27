@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.victools.jsonschema.generator.*;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.function.SchemaConverter;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 
 public class CustomSchemaConverter implements SchemaConverter {
 
@@ -40,7 +40,7 @@ public class CustomSchemaConverter implements SchemaConverter {
             }
 
         } catch (Exception e) {
-            throw new SimpleUncheckedException("Cannot generate the Json Schema for the class {0}.", clazz.getName(),
+            throw new SimpleOpenAIException("Cannot generate the Json Schema for the class {0}.", clazz.getName(),
                     e);
         }
         return jsonSchema;

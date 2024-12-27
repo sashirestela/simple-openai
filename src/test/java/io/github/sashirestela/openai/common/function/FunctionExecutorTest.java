@@ -2,10 +2,10 @@ package io.github.sashirestela.openai.common.function;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.support.Configurator;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +51,7 @@ class FunctionExecutorTest {
 
     @Test
     void shouldThrownAnExceptionWhenNullIsEnteredIntoConstructor() {
-        var exception = assertThrows(SimpleUncheckedException.class,
+        var exception = assertThrows(SimpleOpenAIException.class,
                 () -> new FunctionExecutor(null));
         var actualErrorMessage = exception.getMessage();
         var expectedErrorMessge = "No functions were entered.";
@@ -94,7 +94,7 @@ class FunctionExecutorTest {
                 new FunctionCall("", ""));
         var executor = new FunctionExecutor(functionList);
         for (var functionToCall : testData) {
-            var exception = assertThrows(SimpleUncheckedException.class,
+            var exception = assertThrows(SimpleOpenAIException.class,
                     () -> executor.execute(functionToCall));
             var actualErrorMessage = exception.getMessage();
             var expectedErrorMessge = "No function was entered or it does not has a name.";
@@ -106,7 +106,7 @@ class FunctionExecutorTest {
     void shouldThrownAnExceptionWhenTryingToExecuteANonEnrolledFunction() {
         var executor = new FunctionExecutor(functionList);
         var functionToCall = new FunctionCall("send_email", null);
-        var exception = assertThrows(SimpleUncheckedException.class,
+        var exception = assertThrows(SimpleOpenAIException.class,
                 () -> executor.execute(functionToCall));
         var actualErrorMessage = exception.getMessage();
         var expectedErrorMessge = "The function send_email was not enrolled in the executor.";
@@ -117,7 +117,7 @@ class FunctionExecutorTest {
     void shouldThrowAnExceptionWhenTryingToExecuteFunctionArgumentsThatDoNotMatchItsClassStructure() {
         var executor = new FunctionExecutor(functionList);
         var functionToCall = new FunctionCall("exponentiation", "{\"base\":2.0,\"exponent\":\"ten\"}");
-        var exception = assertThrows(SimpleUncheckedException.class,
+        var exception = assertThrows(SimpleOpenAIException.class,
                 () -> executor.execute(functionToCall));
         var actualErrorMessage = exception.getMessage();
         var expectedErrorMessge = "Cannot execute the function exponentiation.";
@@ -163,7 +163,7 @@ class FunctionExecutorTest {
         };
         var executor = new FunctionExecutor(functionList);
         for (var data : testData) {
-            var exception = assertThrows(SimpleUncheckedException.class, () -> executor.getToolFunctions(data[0]));
+            var exception = assertThrows(SimpleOpenAIException.class, () -> executor.getToolFunctions(data[0]));
             assertEquals(exception.getMessage(), data[1]);
         }
     }

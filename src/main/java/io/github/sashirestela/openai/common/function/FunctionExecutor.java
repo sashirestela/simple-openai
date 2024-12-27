@@ -2,11 +2,11 @@ package io.github.sashirestela.openai.common.function;
 
 import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.cleverclient.util.JsonUtil;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,12 +45,12 @@ public class FunctionExecutor {
         } else if (toolChoice instanceof ToolChoice) {
             var functionName = ((ToolChoice) toolChoice).getFunction().getName();
             if (!mapFunctions.containsKey(functionName)) {
-                throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName,
+                throw new SimpleOpenAIException("The function {0} was not enrolled in the executor.", functionName,
                         null);
             }
             return Arrays.asList(Tool.function(mapFunctions.get(functionName)));
         } else {
-            throw new SimpleUncheckedException("The object {0} is of an unexpected type.", toolChoice.toString(), null);
+            throw new SimpleOpenAIException("The object {0} is of an unexpected type.", toolChoice.toString(), null);
         }
     }
 
@@ -60,7 +60,7 @@ public class FunctionExecutor {
 
     public void enrollFunctions(List<FunctionDef> functions) {
         if (functions == null) {
-            throw new SimpleUncheckedException("No functions were entered.", "", null);
+            throw new SimpleOpenAIException("No functions were entered.", "", null);
         }
         mapFunctions.clear();
         functions.forEach(this::enrollFunction);
@@ -69,11 +69,11 @@ public class FunctionExecutor {
     @SuppressWarnings("unchecked")
     public <T> T execute(FunctionCall functionCall) {
         if (functionCall == null || CommonUtil.isNullOrEmpty(functionCall.getName())) {
-            throw new SimpleUncheckedException("No function was entered or it does not has a name.", "", null);
+            throw new SimpleOpenAIException("No function was entered or it does not has a name.", "", null);
         }
         var functionName = functionCall.getName();
         if (!mapFunctions.containsKey(functionName)) {
-            throw new SimpleUncheckedException("The function {0} was not enrolled in the executor.", functionName,
+            throw new SimpleOpenAIException("The function {0} was not enrolled in the executor.", functionName,
                     null);
         }
         try {
@@ -83,7 +83,7 @@ public class FunctionExecutor {
                     function.getFunctionalClass());
             return (T) object.execute();
         } catch (RuntimeException e) {
-            throw new SimpleUncheckedException("Cannot execute the function {0}.", functionName, e);
+            throw new SimpleOpenAIException("Cannot execute the function {0}.", functionName, e);
         }
     }
 
