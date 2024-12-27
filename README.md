@@ -967,7 +967,7 @@ This exception handling mechanism allows you to handle API errors and provide fe
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
 ### Azure OpenAI
-[Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure`, which extends the class `BaseSimpleOpenAI`, to start using this provider. 
+[Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure` to start using this provider. 
 ```java
 var openai = SimpleOpenAIAzure.builder()
     .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
@@ -984,7 +984,7 @@ Currently we are supporting the following services only:
 - `fileService` (upload files)
 
 ### Anyscale
-[Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale`, which extends the class `BaseSimpleOpenAI`, to start using this provider.
+[Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale` to start using this provider.
 ```java
 var openai = SimpleOpenAIAnyscale.builder()
     .apiKey(System.getenv("ANYSCALE_API_KEY"))
