@@ -9,8 +9,8 @@ import com.github.victools.jsonschema.generator.SchemaGeneratorConfigBuilder;
 import com.github.victools.jsonschema.generator.SchemaVersion;
 import com.github.victools.jsonschema.module.jackson.JacksonModule;
 import com.github.victools.jsonschema.module.jackson.JacksonOption;
-import io.github.sashirestela.openai.SimpleUncheckedException;
 import io.github.sashirestela.openai.common.function.SchemaConverter;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 
 import static io.github.sashirestela.openai.support.JsonSchemaUtil.JSON_EMPTY_CLASS;
 
@@ -54,7 +54,7 @@ public class DefaultSchemaConverter implements SchemaConverter {
             }
 
         } catch (Exception e) {
-            throw new SimpleUncheckedException("Cannot generate the JsonSchema for the class {0}.", clazz.getName(), e);
+            throw new SimpleOpenAIException("Cannot generate the JsonSchema for the class {0}.", clazz.getName(), e);
         }
         return jsonSchema;
     }

@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,13 +10,13 @@ class SimpleUncheckedExceptionTest {
 
     @Test
     void shouldSetMessageWhenItIsPassedAsTheOnlyOneArgument() {
-        var exception = new SimpleUncheckedException("Message");
+        var exception = new SimpleOpenAIException("Message");
         assertNotNull(exception.getMessage());
     }
 
     @Test
     void shouldReplaceParametersInErrorMessageWhenAnExceptionIsCreated() {
-        var exception = new SimpleUncheckedException("{0}, {1}", "parameter1", "parameter2", null);
+        var exception = new SimpleOpenAIException("{0}, {1}", "parameter1", "parameter2", null);
         var actualExceptionMessage = exception.getMessage();
         var expectedExceptionMessage = "parameter1, parameter2";
         assertEquals(expectedExceptionMessage, actualExceptionMessage);
@@ -23,7 +24,7 @@ class SimpleUncheckedExceptionTest {
 
     @Test
     void shouldSetCauseInErrorWhenItIsPassedAsLastArgumentAtExceptionCreation() {
-        var exception = new SimpleUncheckedException("Message", null, new Exception());
+        var exception = new SimpleOpenAIException("Message", null, new Exception());
         assertNotNull(exception.getCause());
     }
 
