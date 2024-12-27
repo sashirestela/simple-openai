@@ -15,13 +15,13 @@ import java.util.List;
 
 public class ThreadRunStepV2Demo extends AbstractDemo {
 
-    private FunctionExecutor functionExecutor;
     private String assistantId;
     private String threadId;
     private String threadRunId;
     private String threadRunStepId;
 
     private void prepareDemo() {
+        FunctionExecutor functionExecutor;
         List<FunctionDef> functionList = new ArrayList<>();
         functionList.add(FunctionDef.builder()
                 .name("CurrentTemperature")

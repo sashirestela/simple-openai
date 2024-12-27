@@ -221,7 +221,7 @@ public class ChatDemo extends AbstractDemo {
 
     private static void processResponseChunk(Chat responseChunk) {
         var choices = responseChunk.getChoices();
-        if (choices.size() > 0) {
+        if (!choices.isEmpty()) {
             var delta = choices.get(0).getMessage();
             if (delta.getContent() != null) {
                 System.out.print(delta.getContent());

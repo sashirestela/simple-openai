@@ -638,7 +638,7 @@ public interface OpenAIBeta2 {
                     .timeValue(1)
                     .queryMethod(vs -> getOne(vs.getId()).join())
                     .whileMethod(vs -> !vs.getStatus().equals(VectorStoreStatus.COMPLETED)
-                            || vs.getFileCounts().getCompleted() != vs.getFileCounts().getTotal())
+                            || !vs.getFileCounts().getCompleted().equals(vs.getFileCounts().getTotal()))
                     .build()
                     .execute(vectorStore);
         }

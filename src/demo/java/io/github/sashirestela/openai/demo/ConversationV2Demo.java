@@ -100,7 +100,7 @@ public class ConversationV2Demo {
 
     public void runConversation() {
         var myMessage = System.console().readLine("\nWelcome! Write any message: ");
-        while (!myMessage.toLowerCase().equals("exit")) {
+        while (!myMessage.equalsIgnoreCase("exit")) {
             openAI.threadMessages()
                     .create(threadId, ThreadMessageRequest.builder()
                             .role(ThreadMessageRole.USER)

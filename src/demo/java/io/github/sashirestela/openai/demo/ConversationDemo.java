@@ -52,7 +52,7 @@ public class ConversationDemo {
         List<ChatMessage> messages = new ArrayList<>();
         var myMessage = System.console().readLine("\nWelcome! Write any message: ");
         messages.add(UserMessage.of(myMessage));
-        while (!myMessage.toLowerCase().equals("exit")) {
+        while (!myMessage.equalsIgnoreCase("exit")) {
             var chatStream = openAI.chatCompletions()
                     .createStream(ChatRequest.builder()
                             .model("gpt-4o-mini")
@@ -93,7 +93,7 @@ public class ConversationDemo {
 
         chatStream.forEach(responseChunk -> {
             var choices = responseChunk.getChoices();
-            if (choices.size() > 0) {
+            if (!choices.isEmpty()) {
                 var innerChoice = choices.get(0);
                 var delta = innerChoice.getMessage();
                 if (delta.getRole() != null) {
@@ -106,7 +106,7 @@ public class ConversationDemo {
                 if (delta.getToolCalls() != null) {
                     var toolCall = delta.getToolCalls().get(0);
                     if (toolCall.getIndex() != indexTool) {
-                        if (toolCalls.size() > 0) {
+                        if (!toolCalls.isEmpty()) {
                             toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
                             functionArgs = new StringBuilder();
                         }
@@ -120,7 +120,7 @@ public class ConversationDemo {
                     if (content.length() > 0) {
                         chatMsgResponse.setContent(content.toString());
                     }
-                    if (toolCalls.size() > 0) {
+                    if (!toolCalls.isEmpty()) {
                         toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
                         chatMsgResponse.setToolCalls(toolCalls);
                     }
