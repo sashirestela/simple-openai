@@ -1,11 +1,23 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.openai.service.ModelServices;
+
 public class ModelDemo extends AbstractDemo {
 
-    private String modelId;
+    protected String modelId;
+    protected ModelServices modelProvider;
+
+    public ModelDemo() {
+        this("standard");
+    }
+
+    protected ModelDemo(String provider) {
+        super(provider);
+        this.modelProvider = this.openAI;
+    }
 
     public void demoGetModels() {
-        var futureModels = openAI.models().getList();
+        var futureModels = modelProvider.models().getList();
         var models = futureModels.join();
         models.forEach(System.out::println);
 
@@ -13,14 +25,14 @@ public class ModelDemo extends AbstractDemo {
     }
 
     public void demoGetModel() {
-        var futureModel = openAI.models().getOne(modelId);
+        var futureModel = modelProvider.models().getOne(modelId);
         var model = futureModel.join();
         System.out.println(model);
     }
 
     @SuppressWarnings("unused")
     public void demoDeleteModel() {
-        var futureModel = openAI.models().delete(modelId);
+        var futureModel = modelProvider.models().delete(modelId);
         try {
             var deleted = futureModel.join();
         } catch (Exception e) {

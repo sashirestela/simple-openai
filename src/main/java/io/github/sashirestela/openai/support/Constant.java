@@ -22,4 +22,6 @@ public final class Constant {
     public static final String AZURE_APIKEY_HEADER = "api-key";
     public static final String AZURE_API_VERSION = "api-version";
 
+    public static final String MISTRAL_BASE_URL = "https://api.mistral.ai";
+
 }
