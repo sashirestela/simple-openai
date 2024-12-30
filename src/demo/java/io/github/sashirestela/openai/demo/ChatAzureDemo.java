@@ -12,8 +12,9 @@ import java.util.List;
 
 public class ChatAzureDemo extends ChatDemo {
 
-    public ChatAzureDemo(String provider, String model) {
-        super(provider, model, null);
+    public ChatAzureDemo() {
+        super("azure", "N/A", null);
+        this.chatProvider = this.openAIAzure;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ChatAzureDemo extends ChatDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatAzureDemo("azure", "N/A");
+        var demo = new ChatAzureDemo();
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
