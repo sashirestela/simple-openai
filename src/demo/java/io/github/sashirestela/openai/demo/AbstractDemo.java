@@ -4,6 +4,9 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
+import io.github.sashirestela.openai.SimpleOpenAIGemini;
+import io.github.sashirestela.openai.service.ChatCompletionServices;
+
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -15,6 +18,9 @@ public abstract class AbstractDemo {
     protected SimpleOpenAIAzure openAIAzure;
     protected SimpleOpenAIAnyscale openAIAnyscale;
     protected SimpleOpenAIMistral openAIMistral;
+    protected SimpleOpenAIGemini openAIGemini;
+
+    protected ChatCompletionServices chatProvider;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private static final int TIMES = 80;
@@ -47,6 +53,13 @@ public abstract class AbstractDemo {
                 openAIMistral = SimpleOpenAIMistral.builder()
                         .apiKey(System.getenv("MISTRAL_API_KEY"))
                         .build();
+                break;
+            case "gemini":
+                openAIGemini = SimpleOpenAIGemini.builder()
+                        .baseUrl(System.getenv("GEMINI_OPENAI_BASE_URL"))
+                        .apiKeyProvider(ChatGeminiDemo::getApiKey)
+                        .build();
+                chatProvider = openAIGemini;
                 break;
             default:
                 break;
