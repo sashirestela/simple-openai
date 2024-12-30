@@ -26,6 +26,7 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.service.ChatCompletionServices;
 import io.github.sashirestela.openai.support.Base64Util;
 import io.github.sashirestela.openai.support.Base64Util.MediaType;
 
@@ -34,14 +35,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ChatDemo extends AbstractDemo {
 
     protected ChatRequest chatRequest;
     protected String model;
     protected String modelAudio;
+    protected long sleepSeconds;
+    protected ChatCompletionServices chatProvider;
 
-    public ChatDemo(String provider, String model, String modelAudio) {
+    public ChatDemo(String model, String modelAudio) {
+        this("standard", model, modelAudio);
+    }
+
+    protected ChatDemo(String provider, String model, String modelAudio) {
         super(provider);
         this.model = model;
         this.modelAudio = modelAudio;
@@ -52,12 +60,14 @@ public class ChatDemo extends AbstractDemo {
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
+        this.sleepSeconds = 0; // No sleep by default
+        this.chatProvider = this.openAI;
     }
 
     public void demoCallChatStreaming() {
         var futureChat = chatProvider.chatCompletions().createStream(chatRequest);
         var chatResponse = futureChat.join();
-        chatResponse.forEach(ChatDemo::processResponseChunk);
+        chatResponse.forEach(this::processResponseChunk);
     }
 
     public void demoCallChatBlocking() {
@@ -108,13 +118,14 @@ public class ChatDemo extends AbstractDemo {
                 .messages(messages)
                 .tools(functionExecutor.getToolFunctions())
                 .build();
+        sleep();
         futureChat = chatProvider.chatCompletions().create(chatRequest);
         chatResponse = futureChat.join();
         System.out.println(chatResponse.firstContent());
     }
 
     public void demoCallChatWithVisionExternalImage() {
-        var chatRequest = ChatRequest.builder()
+        chatRequest = ChatRequest.builder()
                 .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
@@ -123,15 +134,15 @@ public class ChatDemo extends AbstractDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         "https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg"))))))
                 .temperature(0.0)
-                .maxCompletionTokens(500)
+                .maxTokens(500)
                 .build();
         var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
-        chatResponse.forEach(ChatDemo::processResponseChunk);
+        chatResponse.forEach(this::processResponseChunk);
         System.out.println();
     }
 
     public void demoCallChatWithVisionLocalImage() {
-        var chatRequest = ChatRequest.builder()
+        chatRequest = ChatRequest.builder()
                 .model(model)
                 .messages(List.of(
                         UserMessage.of(List.of(
@@ -140,15 +151,15 @@ public class ChatDemo extends AbstractDemo {
                                 ContentPartImageUrl.of(ImageUrl.of(
                                         Base64Util.encode("src/demo/resources/machupicchu.jpg", MediaType.IMAGE)))))))
                 .temperature(0.0)
-                .maxCompletionTokens(500)
+                .maxTokens(500)
                 .build();
         var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
-        chatResponse.forEach(ChatDemo::processResponseChunk);
+        chatResponse.forEach(this::processResponseChunk);
         System.out.println();
     }
 
     public void demoCallChatWithStructuredOutputs() {
-        var chatRequest = ChatRequest.builder()
+        chatRequest = ChatRequest.builder()
                 .model(model)
                 .message(SystemMessage
                         .of("You are a helpful math tutor. Guide the user through the solution step by step."))
@@ -159,7 +170,7 @@ public class ChatDemo extends AbstractDemo {
                         .build()))
                 .build();
         var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
-        chatResponse.forEach(ChatDemo::processResponseChunk);
+        chatResponse.forEach(this::processResponseChunk);
         System.out.println();
     }
 
@@ -171,7 +182,7 @@ public class ChatDemo extends AbstractDemo {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        var chatRequest = ChatRequest.builder()
+        chatRequest = ChatRequest.builder()
                 .model(model)
                 .message(SystemMessage
                         .of("You are a helpful math tutor. Guide the user through the solution step by step."))
@@ -182,7 +193,7 @@ public class ChatDemo extends AbstractDemo {
                         .build()))
                 .build();
         var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
-        chatResponse.forEach(ChatDemo::processResponseChunk);
+        chatResponse.forEach(this::processResponseChunk);
         System.out.println();
     }
 
@@ -219,7 +230,7 @@ public class ChatDemo extends AbstractDemo {
         System.out.println("Answer 2: " + audio.getTranscript());
     }
 
-    private static void processResponseChunk(Chat responseChunk) {
+    private void processResponseChunk(Chat responseChunk) {
         var choices = responseChunk.getChoices();
         if (!choices.isEmpty()) {
             var delta = choices.get(0).getMessage();
@@ -231,6 +242,16 @@ public class ChatDemo extends AbstractDemo {
         if (usage != null) {
             System.out.println("\n");
             System.out.println(usage);
+        }
+    }
+
+    private void sleep() {
+        if (this.sleepSeconds > 0) {
+            try {
+                TimeUnit.SECONDS.sleep(this.sleepSeconds);
+            } catch (InterruptedException e) {
+                java.lang.Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -292,7 +313,7 @@ public class ChatDemo extends AbstractDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatDemo("standard", "gpt-4o-mini", "gpt-4o-audio-preview");
+        var demo = new ChatDemo("gpt-4o-mini", "gpt-4o-audio-preview");
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
