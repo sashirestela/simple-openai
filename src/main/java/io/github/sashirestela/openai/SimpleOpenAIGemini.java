@@ -21,7 +21,6 @@ import io.github.sashirestela.openai.service.SessionServices;
 import io.github.sashirestela.openai.service.UploadServices;
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.experimental.SuperBuilder;
 
 import java.net.http.HttpClient;
 import java.util.HashMap;
@@ -31,10 +30,7 @@ import java.util.function.UnaryOperator;
 /**
  * The Gemini implementation which implements a subset of the standard services.
  */
-public class SimpleOpenAIGemini extends OpenAIProvider implements
-        ChatCompletionServices,
-        EmbeddingServices,
-        ModelServices
+public class SimpleOpenAIGemini extends OpenAIProvider implements ChatCompletionServices
  {
 
     /**
@@ -49,12 +45,7 @@ public class SimpleOpenAIGemini extends OpenAIProvider implements
     @Builder
     public SimpleOpenAIGemini(@NonNull String baseUrl, @NonNull Supplier<String> apiKeyProvider,
             HttpClient httpClient, ObjectMapper objectMapper) {
-        super(GeminiConfigurator.builder()
-                .baseUrl(baseUrl)
-                .apiKeyProvider(apiKeyProvider)
-                .httpClient(httpClient)
-                .objectMapper(objectMapper)
-                .build());
+        super(new GeminiConfigurator(baseUrl, httpClient, objectMapper, apiKeyProvider));
     }
 
     @Override
@@ -62,23 +53,16 @@ public class SimpleOpenAIGemini extends OpenAIProvider implements
         return getOrCreateService(OpenAI.ChatCompletions.class);
     }
 
-
-    @Override
-    public OpenAI.Embeddings embeddings() {
-        return getOrCreateService(OpenAI.Embeddings.class);
-    }
-
-
-    @Override
-    public OpenAI.Models models() {
-        return getOrCreateService(OpenAI.Models.class);
-    }
-
-
-    @SuperBuilder
     static class GeminiConfigurator extends OpenAIConfigurator {
 
-        private Supplier<String> apiKeyProvider;
+        private final Supplier<String> apiKeyProvider;
+
+        // Constructor that directly takes parameters to initialize the fields
+        public GeminiConfigurator(String baseUrl, HttpClient httpClient, ObjectMapper objectMapper,
+                Supplier<String> apiKeyProvider) {
+            super("", baseUrl, httpClient, objectMapper);  // Call the superclass constructor
+            this.apiKeyProvider = apiKeyProvider;
+        }
 
         @Override
         public ClientConfig buildConfig() {

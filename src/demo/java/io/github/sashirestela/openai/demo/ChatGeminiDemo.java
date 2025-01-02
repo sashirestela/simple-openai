@@ -11,7 +11,6 @@ public class ChatGeminiDemo extends ChatDemo {
     public ChatGeminiDemo(String provider, String model) {
         super(provider, model, null);
         this.chatProvider = this.openAIGemini;
-        this.sleepSeconds = 1; // avoid rate limiting
     }
 
     static String getApiKey() {
