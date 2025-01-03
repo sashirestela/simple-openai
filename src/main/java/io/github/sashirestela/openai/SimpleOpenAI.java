@@ -5,6 +5,7 @@ import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
 import io.github.sashirestela.openai.base.RealtimeConfig;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import io.github.sashirestela.openai.service.AssistantServices;
 import io.github.sashirestela.openai.service.AudioServices;
 import io.github.sashirestela.openai.service.BatchServices;
@@ -204,6 +205,9 @@ public class SimpleOpenAI extends OpenAIProvider implements
                 headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
             }
             if (projectId != null) {
+                if (organizationId == null) {
+                    throw new SimpleOpenAIException("OrganizationId should be provided if ProjectId is provided.");
+                }
                 headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
             }
             return headers;
