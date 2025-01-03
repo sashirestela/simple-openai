@@ -24,9 +24,10 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
-  - [Realtime Conversation Example](#realtime-conversation-example) **UPDATED**
+  - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
+  - [Mistral API](#mistral-api)  **NEW**
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
@@ -57,8 +58,8 @@ Full support for most of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling) **UPDATED**
-* Session Token (Create Ephemeral Tokens) **NEW**
+* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
+* Session Token (Create Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
@@ -966,6 +967,20 @@ This exception handling mechanism allows you to handle API errors and provide fe
 ## ✴ Support for Additional OpenAI Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
+### Mistral API
+[Mistral API](https://docs.mistral.ai/getting-started/quickstart/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIMistral` to start using this provider.
+```java
+var openai = SimpleOpenAIMistral.builder()
+    .apiKey(System.getenv("MISTRAL_API_KEY"))
+    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming, function calling, vision)
+- `embeddingService` (float format)
+- `modelService` (list, detail, delete)
+
 ### Azure OpenAI
 [Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure` to start using this provider. 
 ```java
@@ -1006,7 +1021,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   mvn clean install
   ```
-* Create an environment variable for your OpenAI Api Key:
+* Create an environment variable for your OpenAI Api Key (the variable varies according to the OpenAI provider that we want to run):
   ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
@@ -1020,33 +1035,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   Where:
 
-  * ```<demo>``` Is mandatory and must be one of the values:
-    * Audio
-    * Batch
-    * Chat
-    * Completion
-    * Embedding
-    * Exception
-    * File
-    * Finetuning
-    * Image
-    * Model
-    * Moderation
-    * Realtime
-    * SessionToken
-    * Upload
-    * Conversation
-    * AssistantV2
-    * ThreadV2
-    * ThreadMessageV2
-    * ThreadRunV2
-    * ThreadRunStepV2
-    * VectorStoreV2
-    * VectorStoreFileV2
-    * VectorStoreFileBatchV2
-    * ConversationV2
-    * ChatAnyscale
-    * ChatAzure
+  * ```<demo>``` Is mandatory and must be one of the Java files in the folder demo without the suffix `Demo`, for example: _Audio, Chat, ChatMistral, Realtime, AssistantV2, Conversation, ConversationV2, etc._
   
   * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
