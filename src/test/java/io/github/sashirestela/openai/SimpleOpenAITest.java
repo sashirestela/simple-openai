@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
@@ -73,6 +74,16 @@ class SimpleOpenAITest {
         assertNull(clientConfig.getObjectMapper());
         assertNull(clientConfig.getRealtimeConfig());
         assertNull(clientConfig.getRequestInterceptor());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenProjectIdIsProvidedAndOrganizationIdIsNot() {
+        var configurator = SimpleOpenAI.StandardConfigurator.builder()
+                .apiKey("apiKey")
+                .projectId("projectId")
+                .build();
+        var exception = assertThrows(SimpleOpenAIException.class, () -> configurator.buildConfig());
+        assertEquals("OrganizationId should be provided if ProjectId is provided.", exception.getMessage());
     }
 
     @Test
