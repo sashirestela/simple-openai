@@ -7,6 +7,12 @@ public enum Voice {
     @JsonProperty("alloy")
     ALLOY,
 
+    @JsonProperty("ash")
+    ASH,
+
+    @JsonProperty("coral")
+    CORAL,
+
     @JsonProperty("echo")
     ECHO,
 
@@ -18,6 +24,9 @@ public enum Voice {
 
     @JsonProperty("nova")
     NOVA,
+
+    @JsonProperty("sage")
+    SAGE,
 
     @JsonProperty("shimmer")
     SHIMMER;
