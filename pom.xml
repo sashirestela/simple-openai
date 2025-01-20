@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.14.0</version>
+  <version>3.14.1</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -77,7 +77,7 @@
     <javadoc.version>3.11.2</javadoc.version>
     <gpg.version>3.2.7</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
-    <spotless.version>2.43.0</spotless.version>
+    <spotless.version>2.44.2</spotless.version>
     <dependency.version>3.8.1</dependency.version>
   </properties>
 
