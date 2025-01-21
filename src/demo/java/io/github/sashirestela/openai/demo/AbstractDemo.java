@@ -3,6 +3,7 @@ package io.github.sashirestela.openai.demo;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
+import io.github.sashirestela.openai.SimpleOpenAIDeepseek;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
 import lombok.NonNull;
 
@@ -15,6 +16,7 @@ public abstract class AbstractDemo {
     protected SimpleOpenAIAzure openAIAzure;
     protected SimpleOpenAIAnyscale openAIAnyscale;
     protected SimpleOpenAIMistral openAIMistral;
+    protected SimpleOpenAIDeepseek openAIDeepseek;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private static final int TIMES = 80;
@@ -46,6 +48,11 @@ public abstract class AbstractDemo {
             case "mistral":
                 openAIMistral = SimpleOpenAIMistral.builder()
                         .apiKey(System.getenv("MISTRAL_API_KEY"))
+                        .build();
+                break;
+            case "deepseek":
+                openAIDeepseek = SimpleOpenAIDeepseek.builder()
+                        .apiKey(System.getenv("DEEPSEEK_API_KEY"))
                         .build();
                 break;
             default:
