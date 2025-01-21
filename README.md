@@ -27,7 +27,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
 - [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
-  - [Mistral API](#mistral-api)  **NEW**
+  - [Deepseek API](#deepseek-api)  **NEW**
+  - [Mistral API](#mistral-api)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
@@ -967,6 +968,19 @@ This exception handling mechanism allows you to handle API errors and provide fe
 ## ✴ Support for Additional OpenAI Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
+### Deepseek API
+[Deepseek API](https://api-docs.deepseek.com/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIDeepseek` to start using this provider.
+```java
+var openai = SimpleOpenAIDeepseek.builder()
+    .apiKey(System.getenv("DEEPSEEK_API_KEY"))
+    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
+    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming)
+- `modelService` (list)
+
 ### Mistral API
 [Mistral API](https://docs.mistral.ai/getting-started/quickstart/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIMistral` to start using this provider.
 ```java
@@ -1079,6 +1093,7 @@ List of the main users of our library:
 - [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 - [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
+- [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
 
 
 ## ❤ Show Us Your Love
