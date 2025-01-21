@@ -24,4 +24,6 @@ public final class Constant {
 
     public static final String MISTRAL_BASE_URL = "https://api.mistral.ai";
 
+    public static final String DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+
 }
