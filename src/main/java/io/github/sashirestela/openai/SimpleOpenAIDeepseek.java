@@ -1,11 +1,6 @@
 package io.github.sashirestela.openai;
 
-import java.net.http.HttpClient;
-import java.util.Map;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.OpenAI.Models;
 import io.github.sashirestela.openai.base.ClientConfig;
@@ -17,6 +12,10 @@ import io.github.sashirestela.openai.support.Constant;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
+
+import java.net.http.HttpClient;
+import java.util.Map;
+import java.util.Optional;
 
 public class SimpleOpenAIDeepseek extends OpenAIProvider implements
         ChatCompletionServices,
