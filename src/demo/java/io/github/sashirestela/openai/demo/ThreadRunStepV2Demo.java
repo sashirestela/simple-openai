@@ -39,7 +39,7 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
 
         var assistant = openAI.assistants()
                 .create(AssistantRequest.builder()
-                        .model("gpt-4-turbo")
+                        .model("gpt-4o")
                         .name("Demo Assistant")
                         .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                                 + "questions, you have to refer to the attached files or use the functions provided. "
