@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
+import io.github.sashirestela.cleverclient.client.JavaHttpClientAdapter;
 import io.github.sashirestela.openai.OpenAIRealtime;
 import io.github.sashirestela.slimvalidator.Validator;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
@@ -27,7 +29,9 @@ public abstract class OpenAIProvider {
     protected OpenAIProvider(@NonNull OpenAIConfigurator configurator) {
         var clientConfig = configurator.buildConfig();
         var httpClient = Optional.ofNullable(clientConfig.getHttpClient()).orElse(HttpClient.newHttpClient());
-        this.cleverClient = buildClient(clientConfig, httpClient);
+        var clientAdapter = Optional.ofNullable(clientConfig.getClientAdapter())
+                .orElse(new JavaHttpClientAdapter(httpClient));
+        this.cleverClient = buildClient(clientConfig, clientAdapter);
         this.realtime = buildRealtime(clientConfig, httpClient);
     }
 
@@ -36,10 +40,14 @@ public abstract class OpenAIProvider {
         return (T) serviceCache.computeIfAbsent(serviceClass, key -> cleverClient.create(serviceClass));
     }
 
-    private CleverClient buildClient(ClientConfig clientConfig, HttpClient httpClient) {
+    public void shutDown() {
+        this.cleverClient.getClientAdapter().shutdown();
+    }
+
+    private CleverClient buildClient(ClientConfig clientConfig, HttpClientAdapter clientAdapter) {
         final String END_OF_STREAM = "[DONE]";
         return CleverClient.builder()
-                .httpClient(httpClient)
+                .clientAdapter(clientAdapter)
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
                 .requestInterceptor(clientConfig.getRequestInterceptor())
