@@ -1,6 +1,7 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.OpenAI.Models;
 import io.github.sashirestela.openai.base.ClientConfig;
@@ -21,13 +22,25 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
         ChatCompletionServices,
         ModelServices {
 
+    /**
+     * Constructor used to generate a builder.
+     *
+     * @param apiKey        Identifier to be used for authentication. Mandatory.
+     * @param baseUrl       Host's url. Optional.
+     * @param httpClient    A {@link java.net.http.HttpClient HttpClient} object. One is created by
+     *                      default if not provided. Optional. Deprecated in favor of clientAdapter.
+     * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
+     *                      will be used. Optional.
+     * @param objectMapper  Provides Json conversions either to and from objects. Optional.
+     */
     @Builder
     public SimpleOpenAIDeepseek(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
-            ObjectMapper objectMapper) {
+            HttpClientAdapter clientAdapter, ObjectMapper objectMapper) {
         super(DeepseekConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
+                .clientAdapter(clientAdapter)
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -51,6 +64,7 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
                     .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.DEEPSEEK_BASE_URL))
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                     .httpClient(httpClient)
+                    .clientAdapter(clientAdapter)
                     .objectMapper(objectMapper)
                     .build();
         }
