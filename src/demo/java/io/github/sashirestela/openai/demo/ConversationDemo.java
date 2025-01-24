@@ -83,6 +83,7 @@ public class ConversationDemo {
                 messages.add(UserMessage.of(myMessage));
             }
         }
+        openAI.shutDown();
     }
 
     private Choice getResponse(Stream<Chat> chatStream) {

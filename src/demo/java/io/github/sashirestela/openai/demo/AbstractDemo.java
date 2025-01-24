@@ -1,17 +1,22 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.cleverclient.client.OkHttpClientAdapter;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.SimpleOpenAIDeepseek;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
+import io.github.sashirestela.openai.base.OpenAIProvider;
 import lombok.NonNull;
+import okhttp3.OkHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractDemo {
 
+    private OpenAIProvider currentOpenAI;
     protected SimpleOpenAI openAI;
     protected SimpleOpenAIAzure openAIAzure;
     protected SimpleOpenAIAnyscale openAIAnyscale;
@@ -32,6 +37,7 @@ public abstract class AbstractDemo {
                         .apiKey(System.getenv("OPENAI_API_KEY"))
                         .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
                         .build();
+                currentOpenAI = openAI;
                 break;
             case "azure":
                 openAIAzure = SimpleOpenAIAzure.builder()
@@ -39,21 +45,27 @@ public abstract class AbstractDemo {
                         .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
                         .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))
                         .build();
+                currentOpenAI = openAIAzure;
                 break;
             case "anyscale":
                 openAIAnyscale = SimpleOpenAIAnyscale.builder()
                         .apiKey(System.getenv("ANYSCALE_API_KEY"))
+                        .clientAdapter(new OkHttpClientAdapter(new OkHttpClient(
+                                new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS))))
                         .build();
+                currentOpenAI = openAIAnyscale;
                 break;
             case "mistral":
                 openAIMistral = SimpleOpenAIMistral.builder()
                         .apiKey(System.getenv("MISTRAL_API_KEY"))
                         .build();
+                currentOpenAI = openAIMistral;
                 break;
             case "deepseek":
                 openAIDeepseek = SimpleOpenAIDeepseek.builder()
                         .apiKey(System.getenv("DEEPSEEK_API_KEY"))
                         .build();
+                currentOpenAI = openAIDeepseek;
                 break;
             default:
                 break;
@@ -81,6 +93,7 @@ public abstract class AbstractDemo {
             System.out.println("Duration in milliseconds: " + duration);
             System.out.println();
         });
+        currentOpenAI.shutDown();
     }
 
     @FunctionalInterface
