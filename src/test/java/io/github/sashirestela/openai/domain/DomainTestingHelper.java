@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
@@ -41,6 +42,7 @@ public class DomainTestingHelper {
         when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofLines().getClass())))
                 .thenReturn(CompletableFuture.completedFuture(httpResponse));
         when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(httpResponse.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
         when(httpResponse.body()).thenReturn(listResponse.stream());
     }
 
@@ -50,6 +52,7 @@ public class DomainTestingHelper {
         when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofString().getClass())))
                 .thenReturn(CompletableFuture.completedFuture(httpResponse));
         when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(httpResponse.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
         when(httpResponse.body()).thenReturn(jsonResponse);
     }
 
@@ -59,6 +62,7 @@ public class DomainTestingHelper {
         when(httpClient.sendAsync(any(HttpRequest.class), any(HttpResponse.BodyHandlers.ofInputStream().getClass())))
                 .thenReturn(CompletableFuture.completedFuture(httpResponse));
         when(httpResponse.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+        when(httpResponse.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
         when(httpResponse.body()).thenReturn(binaryResponse);
     }
 
@@ -81,6 +85,7 @@ public class DomainTestingHelper {
                             any(HttpResponse.BodyHandlers.ofLines().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseStream));
                     when(httpResponseStream.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+                    when(httpResponseStream.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
                     if (respStream.length == 1) {
                         when(httpResponseStream.body()).thenReturn(respStream[0]);
                     } else {
@@ -94,6 +99,7 @@ public class DomainTestingHelper {
                             any(HttpResponse.BodyHandlers.ofString().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseObject));
                     when(httpResponseObject.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+                    when(httpResponseObject.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
                     if (respObject.length == 1) {
                         when(httpResponseObject.body()).thenReturn(respObject[0]);
                     } else {
@@ -107,6 +113,7 @@ public class DomainTestingHelper {
                             any(HttpResponse.BodyHandlers.ofInputStream().getClass())))
                             .thenReturn(CompletableFuture.completedFuture(httpResponseBinary));
                     when(httpResponseBinary.statusCode()).thenReturn(HttpURLConnection.HTTP_OK);
+                    when(httpResponseBinary.headers()).thenReturn(HttpHeaders.of(Map.of(), (t, s) -> true));
                     if (respBinary.length == 1) {
                         when(httpResponseBinary.body()).thenReturn(respBinary[0]);
                     } else {
