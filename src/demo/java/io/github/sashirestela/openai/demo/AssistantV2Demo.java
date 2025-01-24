@@ -27,7 +27,7 @@ public class AssistantV2Demo extends AbstractDemo {
 
     public void createAssistant() {
         var assistantRequest = AssistantRequest.builder()
-                .model("gpt-4-turbo")
+                .model("gpt-4o")
                 .name("Demo Assistant")
                 .description("This is an assistant for demonstration purposes.")
                 .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "

@@ -77,7 +77,7 @@ public class ConversationV2Demo {
         var assistant = openAI.assistants()
                 .create(AssistantRequest.builder()
                         .name("World Assistant")
-                        .model("gpt-4o")
+                        .model("gpt-4o-mini")
                         .instructions("You are a skilled tutor on geo-politic topics.")
                         .tools(functionExecutor.getToolFunctions())
                         .tool(AssistantTool.fileSearch())
@@ -169,6 +169,8 @@ public class ConversationV2Demo {
         System.out.println("Vector Store was deleted: " + deletedVectorStore.getDeleted());
         System.out.println("Assistant was deleted: " + deletedAssistant.getDeleted());
         System.out.println("Thread was deleted: " + deletedThread.getDeleted());
+
+        openAI.shutDown();
     }
 
     public static void main(String[] args) {

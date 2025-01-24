@@ -78,7 +78,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         var file = fileDemo.createFile("src/demo/resources/machupicchu.jpg", PurposeType.VISION);
         var assistant = openAI.assistants()
                 .create(AssistantRequest.builder()
-                        .model("gpt-4-vision-preview")
+                        .model("gpt-4o")
                         .instructions("You are a tutor on geography.")
                         .build())
                 .join();
