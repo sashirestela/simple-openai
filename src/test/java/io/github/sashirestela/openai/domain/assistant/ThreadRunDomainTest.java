@@ -62,8 +62,6 @@ class ThreadRunDomainTest {
                         MockForType.OBJECT, List.of(
                                 "src/test/resources/threads_runs_create_1.json",
                                 "src/test/resources/threads_runs_create_1.json",
-                                "src/test/resources/threads_runs_create_1.json",
-                                "src/test/resources/threads_runs_create_1.json",
                                 "src/test/resources/threads_runs_create_2.json")));
         var question = "Tell me something brief about Lima, Peru.";
         System.out.println("Question: " + question);
@@ -128,10 +126,6 @@ class ThreadRunDomainTest {
                         MockForType.OBJECT, List.of(
                                 "src/test/resources/threads_runs_submittool_1.json",
                                 "src/test/resources/threads_runs_submittool_1.json",
-                                "src/test/resources/threads_runs_submittool_1.json",
-                                "src/test/resources/threads_runs_submittool_1.json",
-                                "src/test/resources/threads_runs_submittool_2.json",
-                                "src/test/resources/threads_runs_submittool_2.json",
                                 "src/test/resources/threads_runs_submittool_2.json",
                                 "src/test/resources/threads_runs_submittool_2.json",
                                 "src/test/resources/threads_runs_submittool_3.json")));
@@ -222,8 +216,6 @@ class ThreadRunDomainTest {
         DomainTestingHelper.get()
                 .mockFor(httpClient, Map.of(
                         MockForType.OBJECT, List.of(
-                                "src/test/resources/threads_runs_createthreadandrun_1.json",
-                                "src/test/resources/threads_runs_createthreadandrun_1.json",
                                 "src/test/resources/threads_runs_createthreadandrun_1.json",
                                 "src/test/resources/threads_runs_createthreadandrun_1.json",
                                 "src/test/resources/threads_runs_createthreadandrun_2.json")));
