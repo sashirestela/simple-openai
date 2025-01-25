@@ -234,6 +234,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
                                     .orElse(Constant.OPENAI_WS_ENDPOINT_URL))
                     .headers(headers)
                     .queryParams(queryParams)
+                    .webSocketAdapter(realtimeConfig.getWebSocketAdapter())
                     .build();
         }
 
