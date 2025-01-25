@@ -2,7 +2,6 @@ package io.github.sashirestela.openai.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
-import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.client.JavaHttpClientAdapter;
 import io.github.sashirestela.openai.OpenAIRealtime;
 import io.github.sashirestela.slimvalidator.Validator;
@@ -29,10 +28,8 @@ public abstract class OpenAIProvider {
     protected OpenAIProvider(@NonNull OpenAIConfigurator configurator) {
         var clientConfig = configurator.buildConfig();
         var httpClient = Optional.ofNullable(clientConfig.getHttpClient()).orElse(HttpClient.newHttpClient());
-        var clientAdapter = Optional.ofNullable(clientConfig.getClientAdapter())
-                .orElse(new JavaHttpClientAdapter(httpClient));
-        this.cleverClient = buildClient(clientConfig, clientAdapter);
-        this.realtime = buildRealtime(clientConfig, httpClient);
+        this.cleverClient = buildClient(clientConfig, httpClient);
+        this.realtime = buildRealtime(clientConfig);
     }
 
     @SuppressWarnings("unchecked")
@@ -44,10 +41,11 @@ public abstract class OpenAIProvider {
         this.cleverClient.getClientAdapter().shutdown();
     }
 
-    private CleverClient buildClient(ClientConfig clientConfig, HttpClientAdapter clientAdapter) {
+    private CleverClient buildClient(ClientConfig clientConfig, HttpClient httpClient) {
         final String END_OF_STREAM = "[DONE]";
         return CleverClient.builder()
-                .clientAdapter(clientAdapter)
+                .clientAdapter(Optional.ofNullable(clientConfig.getClientAdapter())
+                        .orElse(new JavaHttpClientAdapter(httpClient)))
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
                 .requestInterceptor(clientConfig.getRequestInterceptor())
@@ -57,13 +55,10 @@ public abstract class OpenAIProvider {
                 .build();
     }
 
-    private OpenAIRealtime buildRealtime(ClientConfig clientConfig, HttpClient httpClient) {
+    private OpenAIRealtime buildRealtime(ClientConfig clientConfig) {
         var realtimeConfig = clientConfig.getRealtimeConfig();
         if (realtimeConfig != null) {
-            return OpenAIRealtime.builder()
-                    .httpClient(httpClient)
-                    .realtimeConfig(realtimeConfig)
-                    .build();
+            return new OpenAIRealtime(realtimeConfig);
         }
         return null;
     }
