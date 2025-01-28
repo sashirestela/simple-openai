@@ -14,6 +14,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
 - [Installation](#-installation)
 - [How to Use](#-how-to-use)
   - [Creating a SimpleOpenAI Object](#creating-a-simpleopenai-object)
+  - [Using HttpClient or OkHttp](#using-httpClient-or-okhttp)
+  - [Using Realtime Feature](#using-realtime-feature)
   - [Audio Example](#audio-example)
   - [Image Example](#image-example)
   - [Chat Completion Example](#chat-completion-example)
@@ -119,6 +121,9 @@ var openAI = SimpleOpenAI.builder()
     .projectId(System.getenv("OPENAI_PROJECT_ID"))
     .build();
 ```
+After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API.
+
+### Using HttpClient or OkHttp
 Simple-OpenAI uses one of the following available http client components: [Java's HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html) (by default) or [Square's OkHttp](https://square.github.io/okhttp/) (adding a dependency).You can use the ```clientAdapter``` attribute to indicate which to use. In the following example we are providing a custom Java HttpClient:
 ```java
 var httpClient = HttpClient.newBuilder()
@@ -137,20 +142,24 @@ var openAI = SimpleOpenAI.builder()
     //.clientAdapter(new OkHttpClientAdpter())              // To use a default OkHttpClient
     .build();
 ```
-If you want to use the Realtime feature, you need to set the ```realtimeConfig``` attribute. For this feature you use another http client (similar to ```clientAdapter```): Java's HttpClient (by default) or Square's OkHttp
+
+### Using Realtime Feature
+If you want to use the Realtime feature, you need to set the ```realtimeConfig``` attribute. For this feature you will set another http client (similar to ```clientAdapter```) for WebSocket communication: Java's HttpClient (by default) or Square's OkHttp
 ```java
 var openAI = SimpleOpenAI.builder()
     .apiKey(System.getenv("OPENAI_API_KEY"))
-    .realtimeConfig(RealtimeConfig.of("model")                                             // To use a default Java HttpClient
-    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter())            // To use a default Java HttpClient
-    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter(httpClient))  // To use a custom Java HttpClient
-    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter())              // To use a default OkHttpClient
-    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter(okHttpClient))  // To use a custom OkHttpClient
+    // -- To use a default Java HttpClient for WebSocket
+    .realtimeConfig(RealtimeConfig.of("model")
+    // -- To use a default Java HttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter())
+    // -- To use a custom Java HttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter(httpClient))
+    // -- To use a default OkHttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter())
+    // -- To use a custom OkHttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter(okHttpClient))
     .build();
 ```
-
-
-After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API. Let's see some examples.
 
 ### Audio Example
 Example to call the Audio service to transform text to audio. We are requesting to receive the audio in binary format (InputStream):
@@ -602,8 +611,8 @@ Simple-OpenAI can be used with additional providers that are compatible with the
 ```java
 var openai = SimpleOpenAIDeepseek.builder()
     .apiKey(System.getenv("DEEPSEEK_API_KEY"))
-    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Currently we are supporting the following services:
@@ -615,8 +624,8 @@ Currently we are supporting the following services:
 ```java
 var openai = SimpleOpenAIMistral.builder()
     .apiKey(System.getenv("MISTRAL_API_KEY"))
-    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Currently we are supporting the following services:
@@ -631,7 +640,7 @@ var openai = SimpleOpenAIAzure.builder()
     .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
     .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))   // Including resourceName and deploymentId
     .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Azure OpenAI is powered by a diverse set of models with different capabilities and it requires a separate deployment for each model.
@@ -646,8 +655,8 @@ Currently we are supporting the following services only:
 ```java
 var openai = SimpleOpenAIAnyscale.builder()
     .apiKey(System.getenv("ANYSCALE_API_KEY"))
-    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Currently we are supporting the `chatCompletionService` service only. It was tested with the _Mistral_ model.
