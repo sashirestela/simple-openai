@@ -49,6 +49,7 @@ public abstract class OpenAIProvider {
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
                 .requestInterceptor(clientConfig.getRequestInterceptor())
+                .responseInterceptor(clientConfig.getResponseInterceptor())
                 .bodyInspector(bodyInspector())
                 .endOfStream(END_OF_STREAM)
                 .objectMapper(Optional.ofNullable(clientConfig.getObjectMapper()).orElse(new ObjectMapper()))
