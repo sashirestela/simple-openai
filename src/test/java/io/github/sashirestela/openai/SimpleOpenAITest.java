@@ -57,6 +57,7 @@ class SimpleOpenAITest {
         assertNotNull(clientConfig.getObjectMapper());
         assertNotNull(clientConfig.getRealtimeConfig());
         assertNull(clientConfig.getRequestInterceptor());
+        assertNull(clientConfig.getResponseInterceptor());
     }
 
     @Test
@@ -74,6 +75,7 @@ class SimpleOpenAITest {
         assertNull(clientConfig.getObjectMapper());
         assertNull(clientConfig.getRealtimeConfig());
         assertNull(clientConfig.getRequestInterceptor());
+        assertNull(clientConfig.getResponseInterceptor());
     }
 
     @Test
