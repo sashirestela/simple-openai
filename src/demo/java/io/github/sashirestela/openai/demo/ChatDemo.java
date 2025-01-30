@@ -230,12 +230,15 @@ public class ChatDemo extends AbstractDemo {
         System.out.println("Answer 2: " + audio.getTranscript());
     }
 
-    private void processResponseChunk(Chat responseChunk) {
+    protected void processResponseChunk(Chat responseChunk) {
         var choices = responseChunk.getChoices();
         if (!choices.isEmpty()) {
             var delta = choices.get(0).getMessage();
             if (delta.getContent() != null) {
                 System.out.print(delta.getContent());
+            }
+            if (delta.getReasoningContent() != null) {
+                System.out.print(delta.getReasoningContent());
             }
         }
         var usage = responseChunk.getUsage();
