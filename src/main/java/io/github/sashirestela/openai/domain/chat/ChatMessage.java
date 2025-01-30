@@ -209,6 +209,7 @@ public abstract class ChatMessage {
     public static class ResponseMessage extends ChatMessage {
 
         private String content;
+        private String reasoningContent;
         private List<ToolCall> toolCalls;
         private String refusal;
         private AudioResponse audio;
