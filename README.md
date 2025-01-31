@@ -29,7 +29,8 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
-  - [Deepseek API](#deepseek-api)
+  - [Gemini Google API](#gemini-google-api) **NEW**
+  - [Deepseek API](#deepseek-api) **UPDATED**
   - [Mistral API](#mistral-api)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -606,6 +607,19 @@ This exception handling mechanism allows you to handle API errors and provide fe
 ## ✴ Support for OpenAI-compatible API Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
+### Gemini Google API
+[Gemini Google API](https://ai.google.dev/gemini-api/docs/openai) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIGeminiGoogle` to start using this provider.
+```java
+var openai = SimpleOpenAIGeminiGoogle.builder()
+    .apiKey(System.getenv("GEMINIGOOGLE_API_KEY"))
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
+- `embeddingService` (float format)
+
 ### Deepseek API
 [Deepseek API](https://api-docs.deepseek.com/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIDeepseek` to start using this provider.
 ```java
@@ -616,7 +630,7 @@ var openai = SimpleOpenAIDeepseek.builder()
     .build();
 ```
 Currently we are supporting the following services:
-- `chatCompletionService` (text generation, streaming)
+- `chatCompletionService` (text generation, streaming, thinking, function calling)
 - `modelService` (list)
 
 ### Mistral API
