@@ -5,6 +5,7 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.SimpleOpenAIDeepseek;
+import io.github.sashirestela.openai.SimpleOpenAIGeminiGoogle;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
 import io.github.sashirestela.openai.base.OpenAIProvider;
 import lombok.NonNull;
@@ -22,6 +23,7 @@ public abstract class AbstractDemo {
     protected SimpleOpenAIAnyscale openAIAnyscale;
     protected SimpleOpenAIMistral openAIMistral;
     protected SimpleOpenAIDeepseek openAIDeepseek;
+    protected SimpleOpenAIGeminiGoogle openAIGeminiGoogle;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private static final int TIMES = 80;
@@ -66,6 +68,12 @@ public abstract class AbstractDemo {
                         .apiKey(System.getenv("DEEPSEEK_API_KEY"))
                         .build();
                 currentOpenAI = openAIDeepseek;
+                break;
+            case "gemini_google":
+                openAIGeminiGoogle = SimpleOpenAIGeminiGoogle.builder()
+                        .apiKey(System.getenv("GEMINIGOOGLE_API_KEY"))
+                        .build();
+                currentOpenAI = openAIGeminiGoogle;
                 break;
             default:
                 break;
