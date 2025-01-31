@@ -14,7 +14,6 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
-import java.net.http.HttpClient;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,19 +26,16 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
      *
      * @param apiKey        Identifier to be used for authentication. Mandatory.
      * @param baseUrl       Host's url. Optional.
-     * @param httpClient    A {@link java.net.http.HttpClient HttpClient} object. One is created by
-     *                      default if not provided. Optional. Deprecated in favor of clientAdapter.
      * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
      *                      will be used. Optional.
      * @param objectMapper  Provides Json conversions either to and from objects. Optional.
      */
     @Builder
-    public SimpleOpenAIDeepseek(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
-            HttpClientAdapter clientAdapter, ObjectMapper objectMapper) {
+    public SimpleOpenAIDeepseek(@NonNull String apiKey, String baseUrl, HttpClientAdapter clientAdapter,
+            ObjectMapper objectMapper) {
         super(DeepseekConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
-                .httpClient(httpClient)
                 .clientAdapter(clientAdapter)
                 .objectMapper(objectMapper)
                 .build());
@@ -63,7 +59,6 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
             return ClientConfig.builder()
                     .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.DEEPSEEK_BASE_URL))
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
-                    .httpClient(httpClient)
                     .clientAdapter(clientAdapter)
                     .objectMapper(objectMapper)
                     .build();
