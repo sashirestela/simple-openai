@@ -27,6 +27,7 @@ public class ChatDeepseekDemo extends ChatDemo {
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat (Show Thinking)", demo::demoCallChatShowThinking);
+        demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
 
         demo.run();
     }
