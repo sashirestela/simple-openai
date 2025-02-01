@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.17.1</version>
+  <version>3.17.2</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -54,7 +54,7 @@
     <maven.compiler.proc>full</maven.compiler.proc>
 
     <!-- Library Versions -->
-    <cleverclient.version>2.1.1</cleverclient.version>
+    <cleverclient.version>2.1.2</cleverclient.version>
     <okhttp.version>4.12.0</okhttp.version>
     <slimvalidator.version>1.2.3</slimvalidator.version>
     <lombok.version>1.18.36</lombok.version>
