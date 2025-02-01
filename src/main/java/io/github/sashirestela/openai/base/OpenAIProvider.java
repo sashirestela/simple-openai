@@ -27,8 +27,7 @@ public abstract class OpenAIProvider {
 
     protected OpenAIProvider(@NonNull OpenAIConfigurator configurator) {
         var clientConfig = configurator.buildConfig();
-        var httpClient = Optional.ofNullable(clientConfig.getHttpClient()).orElse(HttpClient.newHttpClient());
-        this.cleverClient = buildClient(clientConfig, httpClient);
+        this.cleverClient = buildClient(clientConfig);
         this.realtime = buildRealtime(clientConfig);
     }
 
@@ -41,11 +40,13 @@ public abstract class OpenAIProvider {
         this.cleverClient.getClientAdapter().shutdown();
     }
 
-    private CleverClient buildClient(ClientConfig clientConfig, HttpClient httpClient) {
+    private CleverClient buildClient(ClientConfig clientConfig) {
         final String END_OF_STREAM = "[DONE]";
         return CleverClient.builder()
                 .clientAdapter(Optional.ofNullable(clientConfig.getClientAdapter())
-                        .orElse(new JavaHttpClientAdapter(httpClient)))
+                        // Lazy evaluation to not fail on devices without support for HttpClient
+                        .orElseGet(() -> new JavaHttpClientAdapter(Optional.ofNullable(clientConfig.getHttpClient())
+                                .orElse(HttpClient.newHttpClient()))))
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
                 .requestInterceptor(clientConfig.getRequestInterceptor())
