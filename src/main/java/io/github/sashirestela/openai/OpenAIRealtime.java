@@ -29,7 +29,8 @@ public class OpenAIRealtime {
                 .queryParams(realtimeConfig.getQueryParams())
                 .headers(realtimeConfig.getHeaders())
                 .webSockewAdapter(Optional.ofNullable(realtimeConfig.getWebSocketAdapter())
-                        .orElse(new JavaHttpWebSocketAdapter()))
+                        // Lazy evaluation to not fail on devices without support for HttpClient
+                        .orElseGet(() -> new JavaHttpWebSocketAdapter()))
                 .build();
 
         webSocket.onMessage(message -> {
