@@ -28,6 +28,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
+- [Instructions for Android](#-instructions-for-android) **NEW**
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
   - [Gemini Google API](#gemini-google-api) **NEW**
   - [Deepseek API](#deepseek-api) **UPDATED**
@@ -99,7 +100,7 @@ Or alternatively using Gradle:
 dependencies {
     implementation 'io.github.sashirestela:simple-openai:[simple-openai_latest_version]'
     /* OkHttp dependency is optional if you decide to use it with simple-openai */
-    implementation("com.squareup.okhttp3:okhttp:[okhttp_latest_version]")
+    implementation 'com.squareup.okhttp3:okhttp:[okhttp_latest_version]'
 }
 ```
 Take in account that you need to use Java 11 or greater.
@@ -603,6 +604,56 @@ Each exception provides access to `OpenAIResponseInfo`, which contains detailed 
 - API endpoint URL and HTTP method
 
 This exception handling mechanism allows you to handle API errors and provide feedback in your applications.
+
+## 🤖 Instructions for Android
+Follow the next instructions to run Simple-OpenAI in Android devices:
+
+### Configuration (build.gradle)
+```groovy
+android {
+    ...
+    defaultConfig {
+        ...
+        minSdk 24
+        ...
+    }
+    ...
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    packagingOptions {
+        resources {
+            exclude 'simplelogger.properties'
+        }
+    }
+}
+
+dependencies {
+    ...
+    implementation 'io.github.sashirestela:simple-openai:[simple-openai_version]'
+    implementation 'com.squareup.okhttp3:okhttp:[okhttp_version]'
+}
+```
+
+### Create a SimpleOpenAI object
+In Java:
+```java
+SimpleOpenAI openAI = SimpleOpenAI.builder()
+    .apiKey(API_KEY)
+    .clientAdapter(new OkHttpClientAdapter())  // Optionally you could add a custom OkHttpClient
+    .build();
+```
+In Kotlin:
+```kotlin
+val openAI = SimpleOpenAI.builder()
+    .apiKey(API_KEY)
+    .clientAdapter(OkHttpClientAdapter())  // Optionally you could add a custom OkHttpClient
+    .build()
+```
 
 ## ✴ Support for OpenAI-compatible API Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
