@@ -5,7 +5,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
-[![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai)
+[![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai/latest/index.html)
 
 
 ### Table of Contents
@@ -14,7 +14,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 - [Installation](#-installation)
 - [How to Use](#-how-to-use)
   - [Creating a SimpleOpenAI Object](#creating-a-simpleopenai-object)
-  - [Using HttpClient or OkHttp](#using-httpClient-or-okhttp)
+  - [Using HttpClient or OkHttp](#using-httpclient-or-okhttp)
   - [Using Realtime Feature](#using-realtime-feature)
   - [Audio Example](#audio-example)
   - [Image Example](#image-example)
@@ -611,13 +611,13 @@ Follow the next instructions to run Simple-OpenAI in Android devices:
 ### Configuration (build.gradle)
 ```groovy
 android {
-    ...
+    //...
     defaultConfig {
-        ...
+        //...
         minSdk 24
-        ...
+        //...
     }
-    ...
+    //...
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -633,7 +633,7 @@ android {
 }
 
 dependencies {
-    ...
+    //...
     implementation 'io.github.sashirestela:simple-openai:[simple-openai_version]'
     implementation 'com.squareup.okhttp3:okhttp:[okhttp_version]'
 }
