@@ -50,7 +50,8 @@ public class StepDetail {
 
         private List<StepToolCall> toolCalls;
 
-        @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+        @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type",
+                defaultImpl = StepToolCall.UnknownToolCall.class)
         @JsonSubTypes({
                 @JsonSubTypes.Type(value = StepToolCall.CodeInterpreterToolCall.class, name = "code_interpreter"),
                 @JsonSubTypes.Type(value = StepToolCall.FileSearchToolCall.class, name = "file_search"),
@@ -203,6 +204,13 @@ public class StepDetail {
 
                 }
 
+            }
+
+            @NoArgsConstructor
+            @Getter
+            @ToString
+            @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+            public static class UnknownToolCall extends StepToolCall {
             }
 
         }
