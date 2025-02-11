@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.support.Constant;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ class SimpleOpenAIAzureTest {
                 .baseUrl("https://example.org")
                 .apiVersion("12-34-5678")
                 .httpClient(HttpClient.newHttpClient())
+                .retryConfig(RetryConfig.builder().maxAttempts(4).build())
                 .objectMapper(new ObjectMapper())
                 .build()
                 .buildConfig();
@@ -30,6 +32,7 @@ class SimpleOpenAIAzureTest {
         assertEquals(1, clientConfig.getHeaders().size());
         assertEquals("apiKey", clientConfig.getHeaders().get(Constant.AZURE_APIKEY_HEADER));
         assertNotNull(clientConfig.getHttpClient());
+        assertNotNull(clientConfig.getRetryConfig());
         assertNotNull(clientConfig.getObjectMapper());
         assertNotNull(clientConfig.getRequestInterceptor());
     }

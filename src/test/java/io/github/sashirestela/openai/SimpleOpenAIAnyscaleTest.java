@@ -1,6 +1,7 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.support.Constant;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ class SimpleOpenAIAnyscaleTest {
                 .apiKey("apiKey")
                 .baseUrl("https://example.org")
                 .httpClient(HttpClient.newHttpClient())
+                .retryConfig(RetryConfig.builder().maxAttempts(4).build())
                 .objectMapper(new ObjectMapper())
                 .build()
                 .buildConfig();
@@ -27,6 +29,7 @@ class SimpleOpenAIAnyscaleTest {
         assertEquals(Constant.BEARER_AUTHORIZATION + "apiKey",
                 clientConfig.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNotNull(clientConfig.getHttpClient());
+        assertNotNull(clientConfig.getRetryConfig());
         assertNotNull(clientConfig.getObjectMapper());
         assertNull(clientConfig.getRequestInterceptor());
     }
@@ -43,6 +46,7 @@ class SimpleOpenAIAnyscaleTest {
         assertEquals(Constant.BEARER_AUTHORIZATION + "apiKey",
                 clientConfig.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(clientConfig.getHttpClient());
+        assertNull(clientConfig.getRetryConfig());
         assertNull(clientConfig.getObjectMapper());
         assertNull(clientConfig.getRequestInterceptor());
     }

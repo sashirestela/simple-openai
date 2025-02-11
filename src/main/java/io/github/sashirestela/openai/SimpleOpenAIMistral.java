@@ -3,6 +3,7 @@ package io.github.sashirestela.openai;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.OpenAI.Embeddings;
@@ -41,16 +42,19 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
      *                      default if not provided. Optional.
      * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
      *                      will be used. Optional.
+     * @param retryConfig   Configuration for request retrying. If not provided, default values will be
+     *                      used. Optional.
      * @param objectMapper  Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAIMistral(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
-            HttpClientAdapter clientAdapter, ObjectMapper objectMapper) {
+            HttpClientAdapter clientAdapter, RetryConfig retryConfig, ObjectMapper objectMapper) {
         super(MistralConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
                 .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -80,6 +84,7 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                     .httpClient(httpClient)
                     .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .requestInterceptor(makeRequestInterceptor())
                     .objectMapper(objectMapper)
                     .build();

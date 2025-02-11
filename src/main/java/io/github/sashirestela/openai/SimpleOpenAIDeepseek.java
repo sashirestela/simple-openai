@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.OpenAI.Models;
 import io.github.sashirestela.openai.base.ClientConfig;
@@ -28,15 +29,18 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
      * @param baseUrl       Host's url. Optional.
      * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
      *                      will be used. Optional.
+     * @param retryConfig   Configuration for request retrying. If not provided, default values will be
+     *                      used. Optional.
      * @param objectMapper  Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAIDeepseek(@NonNull String apiKey, String baseUrl, HttpClientAdapter clientAdapter,
-            ObjectMapper objectMapper) {
+            RetryConfig retryConfig, ObjectMapper objectMapper) {
         super(DeepseekConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -60,6 +64,7 @@ public class SimpleOpenAIDeepseek extends OpenAIProvider implements
                     .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.DEEPSEEK_BASE_URL))
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                     .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .objectMapper(objectMapper)
                     .build();
         }
