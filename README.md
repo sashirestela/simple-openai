@@ -785,14 +785,13 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
 * Run examples:
   ```
-  ./rundemo.sh <demo> [debug]
+  ./rundemo.sh <demo>
   ```
   Where:
 
   * ```<demo>``` Is mandatory and must be one of the Java files in the folder demo without the suffix `Demo`, for example: _Audio, Chat, ChatMistral, Realtime, AssistantV2, Conversation, ConversationV2, etc._
   
-  * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
-  * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
+  * For example, to run the chat demo with a log file: ```./rundemo.sh Chat```
 
 * Indications for Azure OpenAI demo
 
