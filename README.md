@@ -662,11 +662,6 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
-    packagingOptions {
-        resources {
-            exclude 'simplelogger.properties'
-        }
-    }
 }
 
 dependencies {
