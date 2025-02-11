@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
@@ -61,13 +62,15 @@ public class SimpleOpenAI extends OpenAIProvider implements
      *                       default if not provided. Optional. Deprecated in favor of clientAdapter.
      * @param clientAdapter  Component to make http services. If none is passed the
      *                       JavaHttpClientAdapter will be used. Optional.
+     * @param retryConfig    Configuration for request retrying. If not provided, default values will be
+     *                       used. Optional.
      * @param objectMapper   Provides Json conversions either to and from objects. Optional.
      * @param realtimeConfig Configuration for websocket Realtime API. Optional.
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
-            HttpClient httpClient, HttpClientAdapter clientAdapter, ObjectMapper objectMapper,
-            RealtimeConfig realtimeConfig) {
+            HttpClient httpClient, HttpClientAdapter clientAdapter, RetryConfig retryConfig,
+            ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
         super(StandardConfigurator.builder()
                 .apiKey(apiKey)
                 .organizationId(organizationId)
@@ -75,6 +78,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
                 .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .realtimeConfig(realtimeConfig)
                 .build());
@@ -199,6 +203,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
                     .headers(makeHeaders())
                     .httpClient(httpClient)
                     .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .objectMapper(objectMapper)
                     .realtimeConfig(makeRealtimeConfig())
                     .build();

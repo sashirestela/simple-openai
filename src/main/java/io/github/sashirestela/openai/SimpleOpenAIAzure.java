@@ -3,6 +3,7 @@ package io.github.sashirestela.openai;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
@@ -38,17 +39,21 @@ public class SimpleOpenAIAzure extends OpenAIProvider implements
      *                      default if not provided. Optional. Deprecated in favor of clientAdapter.
      * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
      *                      will be used. Optional.
+     * @param retryConfig   Configuration for request retrying. If not provided, default values will be
+     *                      used. Optional.
      * @param objectMapper  Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAIAzure(@NonNull String apiKey, @NonNull String baseUrl, @NonNull String apiVersion,
-            HttpClient httpClient, HttpClientAdapter clientAdapter, ObjectMapper objectMapper) {
+            HttpClient httpClient, HttpClientAdapter clientAdapter, RetryConfig retryConfig,
+            ObjectMapper objectMapper) {
         super(AzureConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .apiVersion(apiVersion)
                 .httpClient(httpClient)
                 .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -75,6 +80,7 @@ public class SimpleOpenAIAzure extends OpenAIProvider implements
                     .headers(Map.of(Constant.AZURE_APIKEY_HEADER, apiKey))
                     .httpClient(httpClient)
                     .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .requestInterceptor(makeRequestInterceptor())
                     .objectMapper(objectMapper)
                     .build();

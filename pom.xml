@@ -54,7 +54,7 @@
     <maven.compiler.proc>full</maven.compiler.proc>
 
     <!-- Library Versions -->
-    <cleverclient.version>2.1.2</cleverclient.version>
+    <cleverclient.version>2.2.0</cleverclient.version>
     <okhttp.version>4.12.0</okhttp.version>
     <slimvalidator.version>1.2.3</slimvalidator.version>
     <lombok.version>1.18.36</lombok.version>

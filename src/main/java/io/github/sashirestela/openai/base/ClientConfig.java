@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.http.HttpResponseData;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -21,6 +22,7 @@ public class ClientConfig {
     private final Map<String, String> headers;
     private final UnaryOperator<HttpRequestData> requestInterceptor;
     private final UnaryOperator<HttpResponseData> responseInterceptor;
+    private final RetryConfig retryConfig;
     private final HttpClientAdapter clientAdapter;
     private final ObjectMapper objectMapper;
     private final RealtimeConfig realtimeConfig;
