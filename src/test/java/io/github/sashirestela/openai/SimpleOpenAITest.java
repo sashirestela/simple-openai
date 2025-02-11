@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.base.RealtimeConfig;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
@@ -43,6 +44,7 @@ class SimpleOpenAITest {
                 .projectId("prjId")
                 .baseUrl("https://example.org")
                 .httpClient(HttpClient.newHttpClient())
+                .retryConfig(RetryConfig.builder().maxAttempts(4).build())
                 .objectMapper(new ObjectMapper())
                 .realtimeConfig(RealtimeConfig.of("theModel"))
                 .build()
@@ -54,6 +56,7 @@ class SimpleOpenAITest {
         assertEquals("orgId", clientConfig.getHeaders().get(Constant.OPENAI_ORG_HEADER));
         assertEquals("prjId", clientConfig.getHeaders().get(Constant.OPENAI_PRJ_HEADER));
         assertNotNull(clientConfig.getHttpClient());
+        assertNotNull(clientConfig.getRetryConfig());
         assertNotNull(clientConfig.getObjectMapper());
         assertNotNull(clientConfig.getRealtimeConfig());
         assertNull(clientConfig.getRequestInterceptor());
@@ -72,6 +75,7 @@ class SimpleOpenAITest {
         assertEquals(Constant.BEARER_AUTHORIZATION + "apiKey",
                 clientConfig.getHeaders().get(Constant.AUTHORIZATION_HEADER));
         assertNull(clientConfig.getHttpClient());
+        assertNull(clientConfig.getRetryConfig());
         assertNull(clientConfig.getObjectMapper());
         assertNull(clientConfig.getRealtimeConfig());
         assertNull(clientConfig.getRequestInterceptor());

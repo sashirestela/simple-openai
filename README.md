@@ -28,10 +28,11 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
-- [Instructions for Android](#-instructions-for-android) **NEW**
+- [Retrying Requests](#-retrying-requests) **NEW**
+- [Instructions for Android](#-instructions-for-android)
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
-  - [Gemini Google API](#gemini-google-api) **NEW**
-  - [Deepseek API](#deepseek-api) **UPDATED**
+  - [Gemini Google API](#gemini-google-api)
+  - [Deepseek API](#deepseek-api)
   - [Mistral API](#mistral-api)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
@@ -77,7 +78,7 @@ NOTES:
 1. Exceptions for the above point are the methods whose names end with the suffix `AndPoll()`. These methods are synchronous and block until a Predicate function that you provide returns false.
 
 
-## ⚙ Installation
+## 📝 Installation
 You can install Simple-OpenAI by adding the following dependencies to your Maven project:
 
 ```xml
@@ -605,6 +606,42 @@ Each exception provides access to `OpenAIResponseInfo`, which contains detailed 
 
 This exception handling mechanism allows you to handle API errors and provide feedback in your applications.
 
+## 🔁 Retrying Requests
+
+Simple-OpenAI provides automatic request retries using exponential backoff with optional jitter. You can configure retries using the `RetryConfig` class.
+
+### Retry Configuration Options
+
+| Attribute            | Description                                           | Default Value |
+|----------------------|-------------------------------------------------------|---------------|
+| maxAttempts          | Maximum number of retry attempts                      | 3             |
+| initialDelayMs       | Initial delay before retrying (in milliseconds)       | 1000          |
+| maxDelayMs           | Maximum delay between retries (in milliseconds)       | 10000         |
+| backoffMultiplier    | Multiplier for exponential backoff                    | 2.0           |
+| jitterFactor         | Percentage of jitter to apply to delay values         | 0.2           |
+| retryableExceptions  | List of exception types that should trigger a retry   | IOException, ConnectException, SocketTimeoutException |
+| retryableStatusCodes | List of HTTP status codes that should trigger a retry | 408, 409, 429, 500-599 |
+
+#### Example Usage
+
+```java
+var retryConfig = RetryConfig.builder()
+    .maxAttempts(4)
+    .initialDelayMs(500)
+    .maxDelayMs(8000)
+    .backoffMultiplier(1.5)
+    .jitterFactor(0.1)
+    .build();
+
+var openAI = SimpleOpenAI.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .retryConfig(retryConfig)
+    .build();
+```
+
+With this configuration, failed requests matching the criteria will be retried automatically with increasing delays based on exponential backoff. If you not set the `retryConfig` attribute, the default values will be used for retrying.
+
+
 ## 🤖 Instructions for Android
 Follow the next instructions to run Simple-OpenAI in Android devices:
 
@@ -655,7 +692,7 @@ val openAI = SimpleOpenAI.builder()
     .build()
 ```
 
-## ✴ Support for OpenAI-compatible API Providers
+## 👥 Support for OpenAI-compatible API Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
 ### Gemini Google API
@@ -727,7 +764,7 @@ var openai = SimpleOpenAIAnyscale.builder()
 Currently we are supporting the `chatCompletionService` service only. It was tested with the _Mistral_ model.
 
 
-## ✳ Run Examples
+## 🎬 Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
 * Clone this repository:
   ```
@@ -799,7 +836,7 @@ List of the main users of our library:
 - [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
 
 
-## ❤ Show Us Your Love
+## 😍 Show Us Your Love
 Thanks for using **simple-openai**. If you find this project valuable there are a few ways you can show us your love, preferably all of them 🙂:
 
 * Letting your friends know about this project 🗣📢.

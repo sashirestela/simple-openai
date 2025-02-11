@@ -3,6 +3,7 @@ package io.github.sashirestela.openai.base;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
 import io.github.sashirestela.cleverclient.client.JavaHttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.OpenAIRealtime;
 import io.github.sashirestela.slimvalidator.Validator;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
@@ -49,9 +50,10 @@ public abstract class OpenAIProvider {
                                 .orElse(HttpClient.newHttpClient()))))
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
+                .bodyInspector(bodyInspector())
                 .requestInterceptor(clientConfig.getRequestInterceptor())
                 .responseInterceptor(clientConfig.getResponseInterceptor())
-                .bodyInspector(bodyInspector())
+                .retryConfig(Optional.ofNullable(clientConfig.getRetryConfig()).orElse(RetryConfig.defaultValues()))
                 .endOfStream(END_OF_STREAM)
                 .objectMapper(Optional.ofNullable(clientConfig.getObjectMapper()).orElse(new ObjectMapper()))
                 .build();

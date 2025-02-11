@@ -2,6 +2,7 @@ package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
@@ -30,16 +31,19 @@ public class SimpleOpenAIAnyscale extends OpenAIProvider implements
      *                      default if not provided. Optional. Deprecated in favor of clientAdapter.
      * @param clientAdapter Component to make http services. If none is passed the JavaHttpClientAdapter
      *                      will be used. Optional.
+     * @param retryConfig   Configuration for request retrying. If not provided, default values will be
+     *                      used. Optional.
      * @param objectMapper  Provides Json conversions either to and from objects. Optional.
      */
     @Builder
     public SimpleOpenAIAnyscale(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
-            HttpClientAdapter clientAdapter, ObjectMapper objectMapper) {
+            HttpClientAdapter clientAdapter, RetryConfig retryConfig, ObjectMapper objectMapper) {
         super(AnyscaleConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
                 .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -59,6 +63,7 @@ public class SimpleOpenAIAnyscale extends OpenAIProvider implements
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                     .httpClient(httpClient)
                     .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .objectMapper(objectMapper)
                     .build();
         }
