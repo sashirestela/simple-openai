@@ -33,10 +33,11 @@ public class RealtimeDemo {
 
         var session = RealtimeSession.builder()
                 .modality(Modality.AUDIO)
+                .modality(Modality.TEXT)
                 .instructions("Respond with short, direct sentences.")
                 .voice(RealtimeSession.VoiceRealtime.ECHO)
                 .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
-                .inputAudioTranscription(null)
+                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("whisper-1"))
                 .turnDetection(null)
                 .temperature(0.9)
                 .build();
@@ -59,12 +60,18 @@ public class RealtimeDemo {
             askForSpeaking();
         });
 
-        // Connect synchronously and wait for the connection to complete
-        realtime.connect().thenRun(() -> {
-            System.out.println("Connection established!");
-            System.out.println("(Press any key and Return to terminate)");
-            realtime.send(ClientEvent.SessionUpdate.of(session)).join();
-        }).join();
+        realtime.onEvent(ServerEvent.ConversationItemAudioTransCompleted.class, event -> {
+            System.out.print("Your question was: ");
+            System.out.println(event.getTranscript());
+        });
+
+        realtime.connect()
+                .thenCompose(v -> {
+                    System.out.println("Connection established!");
+                    System.out.println("(Press any key and Return to terminate)");
+                    return realtime.send(ClientEvent.SessionUpdate.of(session));
+                })
+                .join();
 
         Scanner scanner = new Scanner(System.in);
         askForSpeaking();
@@ -73,20 +80,13 @@ public class RealtimeDemo {
             AtomicBoolean isRecording = new AtomicBoolean(true);
             CompletableFuture<Void> recordingFuture = CompletableFuture.runAsync(() -> {
                 byte[] data = new byte[BUFFER_SIZE];
-                try {
-                    while (isRecording.get()) {
-                        int bytesRead = sound.microphone.read(data, 0, data.length);
-                        if (bytesRead > 0) {
-                            var dataBase64 = Base64.getEncoder().encodeToString(data);
-                            // Use runAsync to prevent blocking and add a small delay
-                            CompletableFuture.runAsync(() -> {
-                                delay(10); // Small delay to prevent rapid sending
-                                realtime.send(ClientEvent.InputAudioBufferAppend.of(dataBase64)).join();
-                            });
-                        }
+                while (isRecording.get()) {
+                    int bytesRead = sound.microphone.read(data, 0, data.length);
+                    if (bytesRead > 0) {
+                        var dataBase64 = Base64.getEncoder().encodeToString(data);
+                        realtime.send(ClientEvent.InputAudioBufferAppend.of(dataBase64));
+                        delay(10); // Small delay to prevent rapid sending
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             });
 
@@ -95,22 +95,21 @@ public class RealtimeDemo {
                 isRecording.set(false);
                 sound.microphone.stop();
                 sound.microphone.drain();
-
-                // Wait for recording to finish
                 recordingFuture.join();
-
-                // Send ResponseCreate and wait for it to complete
-                realtime.send(ClientEvent.ResponseCreate.of(null)).join();
-
+                realtime.send(ClientEvent.ResponseCreate.of(null));
                 System.out.println("Waiting for AI response...\n");
                 sound.speaker.start();
             } else {
+                isRecording.set(false);
+                recordingFuture.join();
                 break;
             }
         }
+
         scanner.close();
         sound.cleanup();
         realtime.disconnect();
+        openAI.shutDown();
     }
 
     private static void askForSpeaking() {

@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.sashirestela.cleverclient.CleverClient;
+import io.github.sashirestela.cleverclient.client.JavaHttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.OpenAIRealtime;
 import io.github.sashirestela.slimvalidator.Validator;
 import io.github.sashirestela.slimvalidator.exception.ConstraintViolationException;
@@ -26,9 +28,8 @@ public abstract class OpenAIProvider {
 
     protected OpenAIProvider(@NonNull OpenAIConfigurator configurator) {
         var clientConfig = configurator.buildConfig();
-        var httpClient = Optional.ofNullable(clientConfig.getHttpClient()).orElse(HttpClient.newHttpClient());
-        this.cleverClient = buildClient(clientConfig, httpClient);
-        this.realtime = buildRealtime(clientConfig, httpClient);
+        this.cleverClient = buildClient(clientConfig);
+        this.realtime = buildRealtime(clientConfig);
     }
 
     @SuppressWarnings("unchecked")
@@ -36,26 +37,32 @@ public abstract class OpenAIProvider {
         return (T) serviceCache.computeIfAbsent(serviceClass, key -> cleverClient.create(serviceClass));
     }
 
-    private CleverClient buildClient(ClientConfig clientConfig, HttpClient httpClient) {
+    public void shutDown() {
+        this.cleverClient.getClientAdapter().shutdown();
+    }
+
+    private CleverClient buildClient(ClientConfig clientConfig) {
         final String END_OF_STREAM = "[DONE]";
         return CleverClient.builder()
-                .httpClient(httpClient)
+                .clientAdapter(Optional.ofNullable(clientConfig.getClientAdapter())
+                        // Lazy evaluation to not fail on devices without support for HttpClient
+                        .orElseGet(() -> new JavaHttpClientAdapter(Optional.ofNullable(clientConfig.getHttpClient())
+                                .orElse(HttpClient.newHttpClient()))))
                 .baseUrl(clientConfig.getBaseUrl())
                 .headers(clientConfig.getHeaders())
-                .requestInterceptor(clientConfig.getRequestInterceptor())
                 .bodyInspector(bodyInspector())
+                .requestInterceptor(clientConfig.getRequestInterceptor())
+                .responseInterceptor(clientConfig.getResponseInterceptor())
+                .retryConfig(Optional.ofNullable(clientConfig.getRetryConfig()).orElse(RetryConfig.defaultValues()))
                 .endOfStream(END_OF_STREAM)
                 .objectMapper(Optional.ofNullable(clientConfig.getObjectMapper()).orElse(new ObjectMapper()))
                 .build();
     }
 
-    private OpenAIRealtime buildRealtime(ClientConfig clientConfig, HttpClient httpClient) {
+    private OpenAIRealtime buildRealtime(ClientConfig clientConfig) {
         var realtimeConfig = clientConfig.getRealtimeConfig();
         if (realtimeConfig != null) {
-            return OpenAIRealtime.builder()
-                    .httpClient(httpClient)
-                    .realtimeConfig(realtimeConfig)
-                    .build();
+            return new OpenAIRealtime(realtimeConfig);
         }
         return null;
     }

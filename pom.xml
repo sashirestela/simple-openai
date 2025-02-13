@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.13.0</version>
+  <version>3.18.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -47,19 +47,25 @@
   </distributionManagement>
 
   <properties>
-    <!-- General -->
+    <!-- Build Properties -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.version>3.6.3</maven.version>
     <maven.compiler.release>11</maven.compiler.release>
     <maven.compiler.proc>full</maven.compiler.proc>
-    <!-- Dependencies Versions -->
-    <slf4j.version>2.0.16</slf4j.version>
-    <cleverclient.version>1.6.2</cleverclient.version>
-    <slimvalidator.version>1.2.2</slimvalidator.version>
+
+    <!-- Library Versions -->
+    <cleverclient.version>2.2.0</cleverclient.version>
+    <okhttp.version>4.12.0</okhttp.version>
+    <slimvalidator.version>1.2.3</slimvalidator.version>
     <lombok.version>1.18.36</lombok.version>
     <jackson.version>2.18.2</jackson.version>
     <json.schema.version>4.37.0</json.schema.version>
-    <junit.version>5.11.4</junit.version>
-    <mockito.version>5.14.2</mockito.version>
+    <slf4j.version>2.0.16</slf4j.version>
+
+    <!-- Test Library Versions-->
+    <junit.version>[5.11.0,6.0.0)</junit.version>
+    <mockito.version>[5.14.0,6.0.0)</mockito.version>
+
     <!-- Plugins Versions -->
     <compiler.version>3.13.0</compiler.version>
     <enforcer.version>3.5.0</enforcer.version>
@@ -72,7 +78,8 @@
     <javadoc.version>3.11.2</javadoc.version>
     <gpg.version>3.2.7</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
-    <spotless.version>2.43.0</spotless.version>
+    <spotless.version>2.44.2</spotless.version>
+    <dependency.version>3.8.1</dependency.version>
   </properties>
 
   <profiles>
@@ -81,6 +88,13 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>${slf4j.version}</version>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -110,7 +124,6 @@
                   <resources>
                     <resource>
                       <directory>src/demo/resources</directory>
-                      <targetPath>resources</targetPath>
                     </resource>
                   </resources>
                 </configuration>
@@ -189,133 +202,85 @@
       </build>
     </profile>
   </profiles>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.github.sashirestela</groupId>
-        <artifactId>cleverclient</artifactId>
-        <version>${cleverclient.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.sashirestela</groupId>
-        <artifactId>slimvalidator</artifactId>
-        <version>${slimvalidator.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-simple</artifactId>
-        <version>${slf4j.version}</version>
-        <optional>true</optional>
-      </dependency>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>${lombok.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.victools</groupId>
-        <artifactId>jsonschema-generator</artifactId>
-        <version>${json.schema.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.github.victools</groupId>
-        <artifactId>jsonschema-module-jackson</artifactId>
-        <version>${json.schema.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-junit-jupiter</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.google.auth</groupId>
-        <artifactId>google-auth-library-oauth2-http</artifactId>
-        <version>1.15.0</version> <!-- Use the latest version -->
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
+    <!-- Core Dependencies -->
     <dependency>
       <groupId>io.github.sashirestela</groupId>
       <artifactId>cleverclient</artifactId>
+      <version>${cleverclient.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>${okhttp.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>io.github.sashirestela</groupId>
       <artifactId>slimvalidator</artifactId>
+      <version>${slimvalidator.version}</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
+
+    <!-- Json Schema Dependencies -->
     <dependency>
       <groupId>com.github.victools</groupId>
       <artifactId>jsonschema-generator</artifactId>
+      <version>${json.schema.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.github.victools</groupId>
       <artifactId>jsonschema-module-jackson</artifactId>
+      <version>${json.schema.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-junit-jupiter</artifactId>
-    </dependency>
+
+    <!-- Logging Dependencies -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.auth</groupId>
@@ -329,6 +294,19 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${dependency.version}</version>
+        <executions>
+          <execution>
+            <id>analyze</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

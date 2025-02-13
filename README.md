@@ -5,15 +5,17 @@ A Java library to use the OpenAI Api in the simplest possible way.
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
-[![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai)
+[![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai/latest/index.html)
 
 
 ### Table of Contents
 - [Description](#-description)
 - [Supported Services](#-supported-services)
 - [Installation](#-installation)
-- [Usage](#-usage)
+- [How to Use](#-how-to-use)
   - [Creating a SimpleOpenAI Object](#creating-a-simpleopenai-object)
+  - [Using HttpClient or OkHttp](#using-httpclient-or-okhttp)
+  - [Using Realtime Feature](#using-realtime-feature)
   - [Audio Example](#audio-example)
   - [Image Example](#image-example)
   - [Chat Completion Example](#chat-completion-example)
@@ -24,9 +26,14 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
-  - [Realtime Conversation Example](#realtime-conversation-example) **UPDATED**
+  - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
-- [Support for Additional OpenAI Providers](#-support-for-additional-openai-providers)
+- [Retrying Requests](#-retrying-requests) **NEW**
+- [Instructions for Android](#-instructions-for-android)
+- [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
+  - [Gemini Google API](#gemini-google-api)
+  - [Deepseek API](#deepseek-api)
+  - [Mistral API](#mistral-api)
   - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
@@ -57,8 +64,8 @@ Full support for most of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling) **UPDATED**
-* Session Token (Create Ephemeral Tokens) **NEW**
+* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
+* Session Token (Create Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
@@ -71,14 +78,20 @@ NOTES:
 1. Exceptions for the above point are the methods whose names end with the suffix `AndPoll()`. These methods are synchronous and block until a Predicate function that you provide returns false.
 
 
-## ⚙ Installation
-You can install Simple-OpenAI by adding the following dependency to your Maven project:
+## 📝 Installation
+You can install Simple-OpenAI by adding the following dependencies to your Maven project:
 
 ```xml
 <dependency>
     <groupId>io.github.sashirestela</groupId>
     <artifactId>simple-openai</artifactId>
-    <version>[latest version]</version>
+    <version>[simple-openai_latest_version]</version>
+</dependency>
+<!-- OkHttp dependency is optional if you decide to use it with simple-openai -->
+<dependency>
+    <groupId>com.squareup.okhttp3</groupId>
+    <artifactId>okhttp</artifactId>
+    <version>[okhttp_latest_version]</version>
 </dependency>
 ```
 
@@ -86,12 +99,15 @@ Or alternatively using Gradle:
 
 ```groovy
 dependencies {
-    implementation 'io.github.sashirestela:simple-openai:[latest version]'
+    implementation 'io.github.sashirestela:simple-openai:[simple-openai_latest_version]'
+    /* OkHttp dependency is optional if you decide to use it with simple-openai */
+    implementation 'com.squareup.okhttp3:okhttp:[okhttp_latest_version]'
 }
 ```
+Take in account that you need to use Java 11 or greater.
 
 
-## 📘 Usage
+## 📘 How to Use
 
 ### Creating a SimpleOpenAI Object
 This is the first step you need to do before to use the services. You must provide at least your _OpenAI Api Key_ ([See here](https://platform.openai.com/docs/api-reference/authentication) for more details). In the following example we are getting the Api Key from an environment variable called ```OPENAI_API_KEY``` which we have created to keep it:
@@ -108,7 +124,10 @@ var openAI = SimpleOpenAI.builder()
     .projectId(System.getenv("OPENAI_PROJECT_ID"))
     .build();
 ```
-Optionally, as well, you could provide a custom Java HttpClient object if you want to have more options for the http connection, such as executors, proxy, timeout, cookies, etc. ([See here](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.Builder.html) for more details). In the following example we are providing a custom HttpClient:
+After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API.
+
+### Using HttpClient or OkHttp
+Simple-OpenAI uses one of the following available http client components: [Java's HttpClient](https://docs.oracle.com/en/java/javase/11/docs/api/java.net.http/java/net/http/HttpClient.html) (by default) or [Square's OkHttp](https://square.github.io/okhttp/) (adding a dependency).You can use the ```clientAdapter``` attribute to indicate which to use. In the following example we are providing a custom Java HttpClient:
 ```java
 var httpClient = HttpClient.newBuilder()
     .version(Version.HTTP_1_1)
@@ -120,11 +139,30 @@ var httpClient = HttpClient.newBuilder()
 
 var openAI = SimpleOpenAI.builder()
     .apiKey(System.getenv("OPENAI_API_KEY"))
-    .httpClient(httpClient)
+    .clientAdapter(new JavaHttpClientAdpter(httpClient))    // To use a custom Java HttpClient
+    //.clientAdapter(new JavaHttpClientAdpter())            // To use a default Java HttpClient
+    //.clientAdapter(new OkHttpClientAdpter(okHttpClient))  // To use a custom OkHttpClient
+    //.clientAdapter(new OkHttpClientAdpter())              // To use a default OkHttpClient
     .build();
 ```
 
-After you have created a SimpleOpenAI object, you are ready to call its services in order to communicate to OpenAI API. Let's see some examples.
+### Using Realtime Feature
+If you want to use the Realtime feature, you need to set the ```realtimeConfig``` attribute. For this feature you will set another http client (similar to ```clientAdapter```) for WebSocket communication: Java's HttpClient (by default) or Square's OkHttp
+```java
+var openAI = SimpleOpenAI.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    // -- To use a default Java HttpClient for WebSocket
+    .realtimeConfig(RealtimeConfig.of("model")
+    // -- To use a default Java HttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter())
+    // -- To use a custom Java HttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new JavaHttpWebSocketAdpter(httpClient))
+    // -- To use a default OkHttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter())
+    // -- To use a custom OkHttpClient for WebSocket
+    //.realtimeConfig(RealtimeConfig.of("model", new OkHttpWebSocketAdpter(okHttpClient))
+    .build();
+```
 
 ### Audio Example
 Example to call the Audio service to transform text to audio. We are requesting to receive the audio in binary format (InputStream):
@@ -413,189 +451,7 @@ This example simulates a conversation chat by the command console and demonstrat
 
 You can see the full demo code as well as the results from running the demo code:
 
-<details>
-
-<summary><b>Demo Code</b></summary>
-
-```java
-package io.github.sashirestela.openai.demo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.common.function.FunctionDef;
-import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.common.function.Functional;
-import io.github.sashirestela.openai.common.tool.ToolCall;
-import io.github.sashirestela.openai.domain.chat.Chat;
-import io.github.sashirestela.openai.domain.chat.Chat.Choice;
-import io.github.sashirestela.openai.domain.chat.ChatMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
-import io.github.sashirestela.openai.domain.chat.ChatRequest;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-public class ConversationDemo {
-
-    private SimpleOpenAI openAI;
-    private FunctionExecutor functionExecutor;
-
-    private int indexTool;
-    private StringBuilder content;
-    private StringBuilder functionArgs;
-
-    public ConversationDemo() {
-        openAI = SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
-    }
-
-    public void prepareConversation() {
-        List<FunctionDef> functionList = new ArrayList<>();
-        functionList.add(FunctionDef.builder()
-                .name("getCurrentTemperature")
-                .description("Get the current temperature for a specific location")
-                .functionalClass(CurrentTemperature.class)
-                .strict(Boolean.TRUE)
-                .build());
-        functionList.add(FunctionDef.builder()
-                .name("getRainProbability")
-                .description("Get the probability of rain for a specific location")
-                .functionalClass(RainProbability.class)
-                .strict(Boolean.TRUE)
-                .build());
-        functionExecutor = new FunctionExecutor(functionList);
-    }
-
-    public void runConversation() {
-        List<ChatMessage> messages = new ArrayList<>();
-        var myMessage = System.console().readLine("\nWelcome! Write any message: ");
-        messages.add(UserMessage.of(myMessage));
-        while (!myMessage.toLowerCase().equals("exit")) {
-            var chatStream = openAI.chatCompletions()
-                    .createStream(ChatRequest.builder()
-                            .model("gpt-4o-mini")
-                            .messages(messages)
-                            .tools(functionExecutor.getToolFunctions())
-                            .temperature(0.2)
-                            .stream(true)
-                            .build())
-                    .join();
-
-            indexTool = -1;
-            content = new StringBuilder();
-            functionArgs = new StringBuilder();
-
-            var response = getResponse(chatStream);
-
-            if (response.getMessage().getContent() != null) {
-                messages.add(AssistantMessage.of(response.getMessage().getContent()));
-            }
-            if (response.getFinishReason().equals("tool_calls")) {
-                messages.add(response.getMessage());
-                var toolCalls = response.getMessage().getToolCalls();
-                var toolMessages = functionExecutor.executeAll(toolCalls,
-                        (toolCallId, result) -> ToolMessage.of(result, toolCallId));
-                messages.addAll(toolMessages);
-            } else {
-                myMessage = System.console().readLine("\n\nWrite any message (or write 'exit' to finish): ");
-                messages.add(UserMessage.of(myMessage));
-            }
-        }
-    }
-
-    private Choice getResponse(Stream<Chat> chatStream) {
-        var choice = new Choice();
-        choice.setIndex(0);
-        var chatMsgResponse = new ResponseMessage();
-        List<ToolCall> toolCalls = new ArrayList<>();
-
-        chatStream.forEach(responseChunk -> {
-            var choices = responseChunk.getChoices();
-            if (choices.size() > 0) {
-                var innerChoice = choices.get(0);
-                var delta = innerChoice.getMessage();
-                if (delta.getRole() != null) {
-                    chatMsgResponse.setRole(delta.getRole());
-                }
-                if (delta.getContent() != null && !delta.getContent().isEmpty()) {
-                    content.append(delta.getContent());
-                    System.out.print(delta.getContent());
-                }
-                if (delta.getToolCalls() != null) {
-                    var toolCall = delta.getToolCalls().get(0);
-                    if (toolCall.getIndex() != indexTool) {
-                        if (toolCalls.size() > 0) {
-                            toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
-                            functionArgs = new StringBuilder();
-                        }
-                        toolCalls.add(toolCall);
-                        indexTool++;
-                    } else {
-                        functionArgs.append(toolCall.getFunction().getArguments());
-                    }
-                }
-                if (innerChoice.getFinishReason() != null) {
-                    if (content.length() > 0) {
-                        chatMsgResponse.setContent(content.toString());
-                    }
-                    if (toolCalls.size() > 0) {
-                        toolCalls.get(toolCalls.size() - 1).getFunction().setArguments(functionArgs.toString());
-                        chatMsgResponse.setToolCalls(toolCalls);
-                    }
-                    choice.setMessage(chatMsgResponse);
-                    choice.setFinishReason(innerChoice.getFinishReason());
-                }
-            }
-        });
-        return choice;
-    }
-
-    public static void main(String[] args) {
-        var demo = new ConversationDemo();
-        demo.prepareConversation();
-        demo.runConversation();
-    }
-
-    public static class CurrentTemperature implements Functional {
-
-        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
-        @JsonProperty(required = true)
-        public String location;
-
-        @JsonPropertyDescription("The temperature unit to use. Infer this from the user's location.")
-        @JsonProperty(required = true)
-        public String unit;
-
-        @Override
-        public Object execute() {
-            double centigrades = Math.random() * (40.0 - 10.0) + 10.0;
-            double fahrenheit = centigrades * 9.0 / 5.0 + 32.0;
-            String shortUnit = unit.substring(0, 1).toUpperCase();
-            return shortUnit.equals("C") ? centigrades : (shortUnit.equals("F") ? fahrenheit : 0.0);
-        }
-
-    }
-
-    public static class RainProbability implements Functional {
-
-        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
-        @JsonProperty(required = true)
-        public String location;
-
-        @Override
-        public Object execute() {
-            return Math.random() * 100;
-        }
-
-    }
-
-}
-```
-</details>
+[ConversationDemo.java](src/demo/java/io/github/sashirestela/openai/demo/ConversationDemo.java)
 
 <details>
 
@@ -639,229 +495,7 @@ This example simulates a conversation chat by the command console and demonstrat
 
 You can see the full demo code as well as the results from running the demo code:
 
-<details>
-
-<summary><b>Demo Code</b></summary>
-
-```java
-package io.github.sashirestela.openai.demo;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import io.github.sashirestela.cleverclient.Event;
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.common.content.ContentPart.ContentPartTextAnnotation;
-import io.github.sashirestela.openai.common.function.FunctionDef;
-import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.common.function.Functional;
-import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
-import io.github.sashirestela.openai.domain.assistant.AssistantTool;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
-import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
-import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
-import io.github.sashirestela.openai.domain.assistant.ThreadRun;
-import io.github.sashirestela.openai.domain.assistant.ThreadRun.RunStatus;
-import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
-import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest;
-import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest.ToolOutput;
-import io.github.sashirestela.openai.domain.assistant.ToolResourceFull;
-import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearch;
-import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
-import io.github.sashirestela.openai.domain.assistant.events.EventName;
-import io.github.sashirestela.openai.domain.file.FileRequest;
-import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
-
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-public class ConversationV2Demo {
-
-    private SimpleOpenAI openAI;
-    private String fileId;
-    private String vectorStoreId;
-    private FunctionExecutor functionExecutor;
-    private String assistantId;
-    private String threadId;
-
-    public ConversationV2Demo() {
-        openAI = SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
-    }
-
-    public void prepareConversation() {
-        List<FunctionDef> functionList = new ArrayList<>();
-        functionList.add(FunctionDef.builder()
-                .name("getCurrentTemperature")
-                .description("Get the current temperature for a specific location")
-                .functionalClass(CurrentTemperature.class)
-                .strict(Boolean.TRUE)
-                .build());
-        functionList.add(FunctionDef.builder()
-                .name("getRainProbability")
-                .description("Get the probability of rain for a specific location")
-                .functionalClass(RainProbability.class)
-                .strict(Boolean.TRUE)
-                .build());
-        functionExecutor = new FunctionExecutor(functionList);
-
-        var file = openAI.files()
-                .create(FileRequest.builder()
-                        .file(Paths.get("src/demo/resources/mistral-ai.txt"))
-                        .purpose(PurposeType.ASSISTANTS)
-                        .build())
-                .join();
-        fileId = file.getId();
-        System.out.println("File was created with id: " + fileId);
-
-        var vectorStore = openAI.vectorStores()
-                .createAndPoll(VectorStoreRequest.builder()
-                        .fileId(fileId)
-                        .build());
-        vectorStoreId = vectorStore.getId();
-        System.out.println("Vector Store was created with id: " + vectorStoreId);
-
-        var assistant = openAI.assistants()
-                .create(AssistantRequest.builder()
-                        .name("World Assistant")
-                        .model("gpt-4o")
-                        .instructions("You are a skilled tutor on geo-politic topics.")
-                        .tools(functionExecutor.getToolFunctions())
-                        .tool(AssistantTool.fileSearch())
-                        .toolResources(ToolResourceFull.builder()
-                                .fileSearch(FileSearch.builder()
-                                        .vectorStoreId(vectorStoreId)
-                                        .build())
-                                .build())
-                        .temperature(0.2)
-                        .build())
-                .join();
-        assistantId = assistant.getId();
-        System.out.println("Assistant was created with id: " + assistantId);
-
-        var thread = openAI.threads().create(ThreadRequest.builder().build()).join();
-        threadId = thread.getId();
-        System.out.println("Thread was created with id: " + threadId);
-        System.out.println();
-    }
-
-    public void runConversation() {
-        var myMessage = System.console().readLine("\nWelcome! Write any message: ");
-        while (!myMessage.toLowerCase().equals("exit")) {
-            openAI.threadMessages()
-                    .create(threadId, ThreadMessageRequest.builder()
-                            .role(ThreadMessageRole.USER)
-                            .content(myMessage)
-                            .build())
-                    .join();
-            var runStream = openAI.threadRuns()
-                    .createStream(threadId, ThreadRunRequest.builder()
-                            .assistantId(assistantId)
-                            .parallelToolCalls(Boolean.FALSE)
-                            .build())
-                    .join();
-            handleRunEvents(runStream);
-            myMessage = System.console().readLine("\nWrite any message (or write 'exit' to finish): ");
-        }
-    }
-
-    private void handleRunEvents(Stream<Event> runStream) {
-        runStream.forEach(event -> {
-            switch (event.getName()) {
-                case EventName.THREAD_RUN_CREATED:
-                case EventName.THREAD_RUN_COMPLETED:
-                case EventName.THREAD_RUN_REQUIRES_ACTION:
-                    var run = (ThreadRun) event.getData();
-                    System.out.println("=====>> Thread Run: id=" + run.getId() + ", status=" + run.getStatus());
-                    if (run.getStatus().equals(RunStatus.REQUIRES_ACTION)) {
-                        var toolCalls = run.getRequiredAction().getSubmitToolOutputs().getToolCalls();
-                        var toolOutputs = functionExecutor.executeAll(toolCalls,
-                                (toolCallId, result) -> ToolOutput.builder()
-                                        .toolCallId(toolCallId)
-                                        .output(result)
-                                        .build());
-                        var runSubmitToolStream = openAI.threadRuns()
-                                .submitToolOutputStream(threadId, run.getId(), ThreadRunSubmitOutputRequest.builder()
-                                        .toolOutputs(toolOutputs)
-                                        .stream(true)
-                                        .build())
-                                .join();
-                        handleRunEvents(runSubmitToolStream);
-                    }
-                    break;
-                case EventName.THREAD_MESSAGE_DELTA:
-                    var msgDelta = (ThreadMessageDelta) event.getData();
-                    var content = msgDelta.getDelta().getContent().get(0);
-                    if (content instanceof ContentPartTextAnnotation) {
-                        var textContent = (ContentPartTextAnnotation) content;
-                        System.out.print(textContent.getText().getValue());
-                    }
-                    break;
-                case EventName.THREAD_MESSAGE_COMPLETED:
-                    System.out.println();
-                    break;
-                default:
-                    break;
-            }
-        });
-    }
-
-    public void cleanConversation() {
-        var deletedFile = openAI.files().delete(fileId).join();
-        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
-        var deletedAssistant = openAI.assistants().delete(assistantId).join();
-        var deletedThread = openAI.threads().delete(threadId).join();
-
-        System.out.println("File was deleted: " + deletedFile.getDeleted());
-        System.out.println("Vector Store was deleted: " + deletedVectorStore.getDeleted());
-        System.out.println("Assistant was deleted: " + deletedAssistant.getDeleted());
-        System.out.println("Thread was deleted: " + deletedThread.getDeleted());
-    }
-
-    public static void main(String[] args) {
-        var demo = new ConversationV2Demo();
-        demo.prepareConversation();
-        demo.runConversation();
-        demo.cleanConversation();
-    }
-
-    public static class CurrentTemperature implements Functional {
-
-        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
-        @JsonProperty(required = true)
-        public String location;
-
-        @JsonPropertyDescription("The temperature unit to use. Infer this from the user's location.")
-        @JsonProperty(required = true)
-        public String unit;
-
-        @Override
-        public Object execute() {
-            double centigrades = Math.random() * (40.0 - 10.0) + 10.0;
-            double fahrenheit = centigrades * 9.0 / 5.0 + 32.0;
-            String shortUnit = unit.substring(0, 1).toUpperCase();
-            return shortUnit.equals("C") ? centigrades : (shortUnit.equals("F") ? fahrenheit : 0.0);
-        }
-
-    }
-
-    public static class RainProbability implements Functional {
-
-        @JsonPropertyDescription("The city and state, e.g., San Francisco, CA")
-        @JsonProperty(required = true)
-        public String location;
-
-        @Override
-        public Object execute() {
-            return Math.random() * 100;
-        }
-
-    }
-
-}
-```
-</details>
+[ConversationV2Demo.java](src/demo/java/io/github/sashirestela/openai/demo/ConversationV2Demo.java)
 
 <details>
 
@@ -916,7 +550,16 @@ Thread was deleted: true
 </details>
 
 ### Realtime Conversation Example
-In this example you can see the code to establish a speech-to-speech conversation between you and the model using your microphone and your speaker. See the full code on:
+In this example you can see the code to establish a speech-to-speech conversation between you and the model using your microphone and your speaker. Here you can see in action the following events:
+- ClientEvent.SessionUpdate
+- ClientEvent.InputAudioBufferAppend
+- ClientEvent.ResponseCreate
+- ServerEvent.ResponseAudioDelta
+- ServerEvent.ResponseAudioDone
+- ServerEvent.ResponseAudioTranscriptDone
+- ServerEvent.ConversationItemAudioTransCompleted
+
+You can see the full code on:
 
 [RealtimeDemo.java](src/demo/java/io/github/sashirestela/openai/demo/RealtimeDemo.java)
 
@@ -963,8 +606,129 @@ Each exception provides access to `OpenAIResponseInfo`, which contains detailed 
 
 This exception handling mechanism allows you to handle API errors and provide feedback in your applications.
 
-## ✴ Support for Additional OpenAI Providers
+## 🔁 Retrying Requests
+
+Simple-OpenAI provides automatic request retries using exponential backoff with optional jitter. You can configure retries using the `RetryConfig` class.
+
+### Retry Configuration Options
+
+| Attribute            | Description                                           | Default Value |
+|----------------------|-------------------------------------------------------|---------------|
+| maxAttempts          | Maximum number of retry attempts                      | 3             |
+| initialDelayMs       | Initial delay before retrying (in milliseconds)       | 1000          |
+| maxDelayMs           | Maximum delay between retries (in milliseconds)       | 10000         |
+| backoffMultiplier    | Multiplier for exponential backoff                    | 2.0           |
+| jitterFactor         | Percentage of jitter to apply to delay values         | 0.2           |
+| retryableExceptions  | List of exception types that should trigger a retry   | IOException, ConnectException, SocketTimeoutException |
+| retryableStatusCodes | List of HTTP status codes that should trigger a retry | 408, 409, 429, 500-599 |
+
+#### Example Usage
+
+```java
+var retryConfig = RetryConfig.builder()
+    .maxAttempts(4)
+    .initialDelayMs(500)
+    .maxDelayMs(8000)
+    .backoffMultiplier(1.5)
+    .jitterFactor(0.1)
+    .build();
+
+var openAI = SimpleOpenAI.builder()
+    .apiKey(System.getenv("OPENAI_API_KEY"))
+    .retryConfig(retryConfig)
+    .build();
+```
+
+With this configuration, failed requests matching the criteria will be retried automatically with increasing delays based on exponential backoff. If you not set the `retryConfig` attribute, the default values will be used for retrying.
+
+
+## 🤖 Instructions for Android
+Follow the next instructions to run Simple-OpenAI in Android devices:
+
+### Configuration (build.gradle)
+```groovy
+android {
+    //...
+    defaultConfig {
+        //...
+        minSdk 24
+        //...
+    }
+    //...
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    //...
+    implementation 'io.github.sashirestela:simple-openai:[simple-openai_version]'
+    implementation 'com.squareup.okhttp3:okhttp:[okhttp_version]'
+}
+```
+
+### Create a SimpleOpenAI object
+In Java:
+```java
+SimpleOpenAI openAI = SimpleOpenAI.builder()
+    .apiKey(API_KEY)
+    .clientAdapter(new OkHttpClientAdapter())  // Optionally you could add a custom OkHttpClient
+    .build();
+```
+In Kotlin:
+```kotlin
+val openAI = SimpleOpenAI.builder()
+    .apiKey(API_KEY)
+    .clientAdapter(OkHttpClientAdapter())  // Optionally you could add a custom OkHttpClient
+    .build()
+```
+
+## 👥 Support for OpenAI-compatible API Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
+
+### Gemini Google API
+[Gemini Google API](https://ai.google.dev/gemini-api/docs/openai) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIGeminiGoogle` to start using this provider.
+```java
+var openai = SimpleOpenAIGeminiGoogle.builder()
+    .apiKey(System.getenv("GEMINIGOOGLE_API_KEY"))
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
+- `embeddingService` (float format)
+
+### Deepseek API
+[Deepseek API](https://api-docs.deepseek.com/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIDeepseek` to start using this provider.
+```java
+var openai = SimpleOpenAIDeepseek.builder()
+    .apiKey(System.getenv("DEEPSEEK_API_KEY"))
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming, thinking, function calling)
+- `modelService` (list)
+
+### Mistral API
+[Mistral API](https://docs.mistral.ai/getting-started/quickstart/) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIMistral` to start using this provider.
+```java
+var openai = SimpleOpenAIMistral.builder()
+    .apiKey(System.getenv("MISTRAL_API_KEY"))
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
+    .build();
+```
+Currently we are supporting the following services:
+- `chatCompletionService` (text generation, streaming, function calling, vision)
+- `embeddingService` (float format)
+- `modelService` (list, detail, delete)
 
 ### Azure OpenAI
 [Azure OpenIA](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIAzure` to start using this provider. 
@@ -973,7 +737,7 @@ var openai = SimpleOpenAIAzure.builder()
     .apiKey(System.getenv("AZURE_OPENAI_API_KEY"))
     .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))   // Including resourceName and deploymentId
     .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Azure OpenAI is powered by a diverse set of models with different capabilities and it requires a separate deployment for each model.
@@ -988,14 +752,14 @@ Currently we are supporting the following services only:
 ```java
 var openai = SimpleOpenAIAnyscale.builder()
     .apiKey(System.getenv("ANYSCALE_API_KEY"))
-    //.baseUrl(customUrl)             Optionally you could pass a custom baseUrl
-    //.httpClient(customHttpClient)   Optionally you could pass a custom HttpClient
+    //.baseUrl(customUrl)   Optionally you could pass a custom baseUrl
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 Currently we are supporting the `chatCompletionService` service only. It was tested with the _Mistral_ model.
 
 
-## ✳ Run Examples
+## 🎬 Run Examples
 Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
 * Clone this repository:
   ```
@@ -1006,7 +770,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   mvn clean install
   ```
-* Create an environment variable for your OpenAI Api Key:
+* Create an environment variable for your OpenAI Api Key (the variable varies according to the OpenAI provider that we want to run):
   ```
   export OPENAI_API_KEY=<here goes your api key>
   ```
@@ -1016,41 +780,13 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
 * Run examples:
   ```
-  ./rundemo.sh <demo> [debug]
+  ./rundemo.sh <demo>
   ```
   Where:
 
-  * ```<demo>``` Is mandatory and must be one of the values:
-    * Audio
-    * Batch
-    * Chat
-    * Completion
-    * Embedding
-    * Exception
-    * File
-    * Finetuning
-    * Image
-    * Model
-    * Moderation
-    * Realtime
-    * SessionToken
-    * Upload
-    * Conversation
-    * AssistantV2
-    * ThreadV2
-    * ThreadMessageV2
-    * ThreadRunV2
-    * ThreadRunStepV2
-    * VectorStoreV2
-    * VectorStoreFileV2
-    * VectorStoreFileBatchV2
-    * ConversationV2
-    * ChatAnyscale
-    * ChatAzure
-    * ChatGemini
+  * ```<demo>``` Is mandatory and must be one of the Java files in the folder demo without the suffix `Demo`, for example: _Audio, Chat, ChatMistral, Realtime, AssistantV2, Conversation, ConversationV2, etc._
   
-  * ```[debug]``` Is optional and creates the ```demo.log``` file where you can see log details for each execution.
-  * For example, to run the chat demo with a log file: ```./rundemo.sh Chat debug```
+  * For example, to run the chat demo with a log file: ```./rundemo.sh Chat```
 
 * Indications for Azure OpenAI demo
 
@@ -1091,9 +827,10 @@ List of the main users of our library:
 - [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 - [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
+- [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
 
 
-## ❤ Show Us Your Love
+## 😍 Show Us Your Love
 Thanks for using **simple-openai**. If you find this project valuable there are a few ways you can show us your love, preferably all of them 🙂:
 
 * Letting your friends know about this project 🗣📢.

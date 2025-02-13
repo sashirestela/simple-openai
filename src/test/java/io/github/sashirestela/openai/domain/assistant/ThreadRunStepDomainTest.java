@@ -41,4 +41,13 @@ class ThreadRunStepDomainTest {
         assertNotNull(threadRunStep);
     }
 
+    @Test
+    void testListThreadRunStepsWithUnknownTool() throws IOException {
+        DomainTestingHelper.get()
+                .mockForObject(httpClient, "src/test/resources/threads_runssteps_getunknown_tool.json");
+        var threadRunSteps = openAI.threadRunSteps().getList("threadId", "threadRunId").join();
+        threadRunSteps.forEach(System.out::println);
+        assertNotNull(threadRunSteps);
+    }
+
 }

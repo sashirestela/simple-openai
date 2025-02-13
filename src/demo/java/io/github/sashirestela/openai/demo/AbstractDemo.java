@@ -1,26 +1,34 @@
 package io.github.sashirestela.openai.demo;
 
+import io.github.sashirestela.cleverclient.client.OkHttpClientAdapter;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
+import io.github.sashirestela.openai.SimpleOpenAIDeepseek;
+import io.github.sashirestela.openai.SimpleOpenAIGeminiVertex;
+import io.github.sashirestela.openai.SimpleOpenAIGeminiGoogle;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
-import io.github.sashirestela.openai.SimpleOpenAIGemini;
+import io.github.sashirestela.openai.base.OpenAIProvider;
 import io.github.sashirestela.openai.service.ChatCompletionServices;
-
 import lombok.NonNull;
+import okhttp3.OkHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractDemo {
 
+    private OpenAIProvider currentOpenAI;
     protected SimpleOpenAI openAI;
     protected SimpleOpenAIAzure openAIAzure;
     protected SimpleOpenAIAnyscale openAIAnyscale;
     protected SimpleOpenAIMistral openAIMistral;
-    protected SimpleOpenAIGemini openAIGemini;
-
     protected ChatCompletionServices chatProvider;
+    protected SimpleOpenAIDeepseek openAIDeepseek;
+    protected SimpleOpenAIGeminiGoogle openAIGeminiGoogle;
+    protected SimpleOpenAIGeminiVertex openAIGeminiVertex;
+
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private static final int TIMES = 80;
@@ -36,6 +44,7 @@ public abstract class AbstractDemo {
                         .apiKey(System.getenv("OPENAI_API_KEY"))
                         .organizationId(System.getenv("OPENAI_ORGANIZATION_ID"))
                         .build();
+                currentOpenAI = openAI;
                 break;
             case "azure":
                 openAIAzure = SimpleOpenAIAzure.builder()
@@ -43,23 +52,41 @@ public abstract class AbstractDemo {
                         .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
                         .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))
                         .build();
+
+                currentOpenAI = openAIAzure;
                 break;
             case "anyscale":
                 openAIAnyscale = SimpleOpenAIAnyscale.builder()
                         .apiKey(System.getenv("ANYSCALE_API_KEY"))
+                        .clientAdapter(new OkHttpClientAdapter(new OkHttpClient(
+                                new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS))))
                         .build();
+                currentOpenAI = openAIAnyscale;
                 break;
             case "mistral":
                 openAIMistral = SimpleOpenAIMistral.builder()
                         .apiKey(System.getenv("MISTRAL_API_KEY"))
                         .build();
+                currentOpenAI = openAIMistral;
                 break;
-            case "gemini":
-                openAIGemini = SimpleOpenAIGemini.builder()
-                        .baseUrl(System.getenv("GEMINI_OPENAI_BASE_URL"))
-                        .apiKeyProvider(ChatGeminiDemo::getApiKey)
+            case "deepseek":
+                openAIDeepseek = SimpleOpenAIDeepseek.builder()
+                        .apiKey(System.getenv("DEEPSEEK_API_KEY"))
                         .build();
-                chatProvider = openAIGemini;
+                currentOpenAI = openAIDeepseek;
+                break;
+            case "gemini_google":
+                openAIGeminiGoogle = SimpleOpenAIGeminiGoogle.builder()
+                        .apiKey(System.getenv("GEMINIGOOGLE_API_KEY"))
+                        .build();
+                currentOpenAI = openAIGeminiGoogle;
+                break;
+            case "gemini_vertex":
+                openAIGeminiVertex = SimpleOpenAIGeminiVertex.builder()
+                    .baseUrl(System.getenv("GEMINI_OPENAI_BASE_URL"))
+                    .apiKeyProvider(ChatGeminiDemo::getApiKey)
+                    .build();
+                currentOpenAI = openAIGeminiVertex;
                 break;
             default:
                 break;
@@ -87,6 +114,7 @@ public abstract class AbstractDemo {
             System.out.println("Duration in milliseconds: " + duration);
             System.out.println();
         });
+        currentOpenAI.shutDown();
     }
 
     @FunctionalInterface

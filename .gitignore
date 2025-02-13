@@ -2,7 +2,7 @@
 target/
 .cache/
 .upm/
-.vscode/
+.vscode/*
 .idea/
 
 .project
@@ -17,3 +17,5 @@ dependency-reduced-pom.xml
 src/demo/resources/response.mp3
 .replit
 replit.nix
+
+!.vscode/extensions.json

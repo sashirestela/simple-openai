@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.openai.common.ResponseFormat;
 import io.github.sashirestela.openai.common.ResponseFormat.JsonSchema;
 import io.github.sashirestela.openai.common.audio.AudioFormat;
@@ -77,6 +78,8 @@ public class ChatDemo extends AbstractDemo {
     }
 
     public void demoCallChatWithFunctions() {
+        var question = "What is the product of 123 and 456?";
+        System.out.println(question);
         var functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunction(
                 FunctionDef.builder()
@@ -100,7 +103,7 @@ public class ChatDemo extends AbstractDemo {
                         .strict(Boolean.TRUE)
                         .build());
         var messages = new ArrayList<ChatMessage>();
-        messages.add(UserMessage.of("What is the product of 123 and 456?"));
+        messages.add(UserMessage.of(question));
         chatRequest = ChatRequest.builder()
                 .model(model)
                 .messages(messages)
@@ -112,6 +115,10 @@ public class ChatDemo extends AbstractDemo {
         var chatToolCall = chatMessage.getToolCalls().get(0);
         var result = functionExecutor.execute(chatToolCall.getFunction());
         messages.add(chatMessage);
+        if (CommonUtil.isNullOrEmpty(chatToolCall.getId())) {  // For GeminiGoogle
+            System.out.println("The result is: " + result.toString());
+            return;
+        }
         messages.add(ToolMessage.of(result.toString(), chatToolCall.getId()));
         chatRequest = ChatRequest.builder()
                 .model(model)
@@ -121,6 +128,10 @@ public class ChatDemo extends AbstractDemo {
         sleep();
         futureChat = chatProvider.chatCompletions().create(chatRequest);
         chatResponse = futureChat.join();
+        if (CommonUtil.isNullOrEmpty(chatResponse.firstContent())) {  // For DeepSeek
+            System.out.println("The result is: " + result.toString());
+            return;
+        }
         System.out.println(chatResponse.firstContent());
     }
 
@@ -230,16 +241,19 @@ public class ChatDemo extends AbstractDemo {
         System.out.println("Answer 2: " + audio.getTranscript());
     }
 
-    private void processResponseChunk(Chat responseChunk) {
+    protected void processResponseChunk(Chat responseChunk) {
         var choices = responseChunk.getChoices();
         if (!choices.isEmpty()) {
             var delta = choices.get(0).getMessage();
             if (delta.getContent() != null) {
                 System.out.print(delta.getContent());
             }
+            if (delta.getReasoningContent() != null) {  // For DeepSeek
+                System.out.print(delta.getReasoningContent());
+            }
         }
         var usage = responseChunk.getUsage();
-        if (usage != null) {
+        if (usage != null && usage.getCompletionTokens() != 0) {  // completionTokens condition for GeminiGoogle
             System.out.println("\n");
             System.out.println(usage);
         }

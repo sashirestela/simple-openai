@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+		"vscjava.vscode-java-pack",
+		"redhat.vscode-xml",
+		"redhat.vscode-yaml",
+		"eamodio.gitlens",
+		"ryanluker.vscode-coverage-gutters",
+		"SonarSource.sonarlint-vscode"
+	]
+}

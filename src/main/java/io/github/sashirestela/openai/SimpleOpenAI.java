@@ -1,10 +1,13 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
+import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
 import io.github.sashirestela.openai.base.RealtimeConfig;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import io.github.sashirestela.openai.service.AssistantServices;
 import io.github.sashirestela.openai.service.AudioServices;
 import io.github.sashirestela.openai.service.BatchServices;
@@ -56,19 +59,26 @@ public class SimpleOpenAI extends OpenAIProvider implements
      * @param projectId      Project's id to provide access to a single project. Optional.
      * @param baseUrl        Host's url, If not provided, it'll be 'https://api.openai.com'. Optional.
      * @param httpClient     A {@link java.net.http.HttpClient HttpClient} object. One is created by
-     *                       default if not provided. Optional.
+     *                       default if not provided. Optional. Deprecated in favor of clientAdapter.
+     * @param clientAdapter  Component to make http services. If none is passed the
+     *                       JavaHttpClientAdapter will be used. Optional.
+     * @param retryConfig    Configuration for request retrying. If not provided, default values will be
+     *                       used. Optional.
      * @param objectMapper   Provides Json conversions either to and from objects. Optional.
      * @param realtimeConfig Configuration for websocket Realtime API. Optional.
      */
     @Builder
     public SimpleOpenAI(@NonNull String apiKey, String organizationId, String projectId, String baseUrl,
-            HttpClient httpClient, ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
+            HttpClient httpClient, HttpClientAdapter clientAdapter, RetryConfig retryConfig,
+            ObjectMapper objectMapper, RealtimeConfig realtimeConfig) {
         super(StandardConfigurator.builder()
                 .apiKey(apiKey)
                 .organizationId(organizationId)
                 .projectId(projectId)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
+                .clientAdapter(clientAdapter)
+                .retryConfig(retryConfig)
                 .objectMapper(objectMapper)
                 .realtimeConfig(realtimeConfig)
                 .build());
@@ -192,6 +202,8 @@ public class SimpleOpenAI extends OpenAIProvider implements
                     .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.OPENAI_BASE_URL))
                     .headers(makeHeaders())
                     .httpClient(httpClient)
+                    .clientAdapter(clientAdapter)
+                    .retryConfig(retryConfig)
                     .objectMapper(objectMapper)
                     .realtimeConfig(makeRealtimeConfig())
                     .build();
@@ -204,6 +216,9 @@ public class SimpleOpenAI extends OpenAIProvider implements
                 headers.put(Constant.OPENAI_ORG_HEADER, organizationId);
             }
             if (projectId != null) {
+                if (organizationId == null) {
+                    throw new SimpleOpenAIException("OrganizationId should be provided if ProjectId is provided.");
+                }
                 headers.put(Constant.OPENAI_PRJ_HEADER, projectId);
             }
             return headers;
@@ -224,6 +239,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
                                     .orElse(Constant.OPENAI_WS_ENDPOINT_URL))
                     .headers(headers)
                     .queryParams(queryParams)
+                    .webSocketAdapter(realtimeConfig.getWebSocketAdapter())
                     .build();
         }
 

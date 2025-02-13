@@ -5,20 +5,7 @@ import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
-import io.github.sashirestela.openai.service.AssistantServices;
-import io.github.sashirestela.openai.service.AudioServices;
-import io.github.sashirestela.openai.service.BatchServices;
 import io.github.sashirestela.openai.service.ChatCompletionServices;
-import io.github.sashirestela.openai.service.CompletionServices;
-import io.github.sashirestela.openai.service.EmbeddingServices;
-import io.github.sashirestela.openai.service.FileServices;
-import io.github.sashirestela.openai.service.FineTunningServices;
-import io.github.sashirestela.openai.service.ImageServices;
-import io.github.sashirestela.openai.service.ModelServices;
-import io.github.sashirestela.openai.service.ModerationServices;
-import io.github.sashirestela.openai.service.RealtimeServices;
-import io.github.sashirestela.openai.service.SessionServices;
-import io.github.sashirestela.openai.service.UploadServices;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -30,7 +17,7 @@ import java.util.function.UnaryOperator;
 /**
  * The Gemini implementation which implements a subset of the standard services.
  */
-public class SimpleOpenAIGemini extends OpenAIProvider implements ChatCompletionServices
+public class SimpleOpenAIGeminiVertex extends OpenAIProvider implements ChatCompletionServices
  {
 
     /**
@@ -43,8 +30,8 @@ public class SimpleOpenAIGemini extends OpenAIProvider implements ChatCompletion
      * @param objectMapper   Provides Json conversions either to and from objects. Optional.
      */
     @Builder
-    public SimpleOpenAIGemini(@NonNull String baseUrl, @NonNull Supplier<String> apiKeyProvider,
-            HttpClient httpClient, ObjectMapper objectMapper) {
+    public SimpleOpenAIGeminiVertex(@NonNull String baseUrl, @NonNull Supplier<String> apiKeyProvider,
+                                    HttpClient httpClient, ObjectMapper objectMapper) {
         super(new GeminiConfigurator(baseUrl, httpClient, objectMapper, apiKeyProvider));
     }
 
