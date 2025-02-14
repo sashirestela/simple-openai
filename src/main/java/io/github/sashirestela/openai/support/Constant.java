@@ -24,11 +24,8 @@ public final class Constant {
 
     public static final String MISTRAL_BASE_URL = "https://api.mistral.ai";
 
-<<<<<<< HEAD
-=======
     public static final String DEEPSEEK_BASE_URL = "https://api.deepseek.com";
 
     public static final String GEMINIGOOGLE_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai";
 
->>>>>>> upstream/main
 }

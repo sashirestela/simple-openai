@@ -1,13 +1,9 @@
 package io.github.sashirestela.openai;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-<<<<<<< HEAD
-import io.github.sashirestela.cleverclient.http.HttpRequestData;
-=======
 import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.retry.RetryConfig;
->>>>>>> upstream/main
 import io.github.sashirestela.cleverclient.support.ContentType;
 import io.github.sashirestela.openai.OpenAI.ChatCompletions;
 import io.github.sashirestela.openai.OpenAI.Embeddings;
@@ -40,17 +36,6 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
     /**
      * Constructor used to generate a builder.
      *
-<<<<<<< HEAD
-     * @param apiKey       Identifier to be used for authentication. Mandatory.
-     * @param baseUrl      Host's url. Optional.
-     * @param httpClient   A {@link java.net.http.HttpClient HttpClient} object. One is created by
-     *                     default if not provided. Optional.
-     * @param objectMapper Provides Json conversions either to and from objects. Optional.
-     */
-    @Builder
-    public SimpleOpenAIMistral(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
-            ObjectMapper objectMapper) {
-=======
      * @param apiKey        Identifier to be used for authentication. Mandatory.
      * @param baseUrl       Host's url. Optional.
      * @param httpClient    A {@link java.net.http.HttpClient HttpClient} object. One is created by
@@ -64,16 +49,14 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
     @Builder
     public SimpleOpenAIMistral(@NonNull String apiKey, String baseUrl, HttpClient httpClient,
             HttpClientAdapter clientAdapter, RetryConfig retryConfig, ObjectMapper objectMapper) {
->>>>>>> upstream/main
         super(MistralConfigurator.builder()
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
-<<<<<<< HEAD
-=======
+
                 .clientAdapter(clientAdapter)
                 .retryConfig(retryConfig)
->>>>>>> upstream/main
+
                 .objectMapper(objectMapper)
                 .build());
     }
@@ -102,11 +85,8 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
                     .baseUrl(Optional.ofNullable(baseUrl).orElse(Constant.MISTRAL_BASE_URL))
                     .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKey))
                     .httpClient(httpClient)
-<<<<<<< HEAD
-=======
                     .clientAdapter(clientAdapter)
                     .retryConfig(retryConfig)
->>>>>>> upstream/main
                     .requestInterceptor(makeRequestInterceptor())
                     .objectMapper(objectMapper)
                     .build();

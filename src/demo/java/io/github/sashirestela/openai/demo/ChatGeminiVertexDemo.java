@@ -2,15 +2,15 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.support.GeminiAccessToken;
 
-public class ChatGeminiDemo extends ChatDemo {
+public class ChatGeminiVertexDemo extends ChatDemo {
 
     static String MODEL = "google/gemini-1.5-flash";
 
     static GeminiAccessToken geminiAccessToken = new GeminiAccessToken(System.getenv("GEMINI_SA_CREDS_PATH"));
 
-    public ChatGeminiDemo(String provider, String model) {
+    public ChatGeminiVertexDemo(String provider, String model) {
         super(provider, model, null);
-        this.chatProvider = this.openAIGemini;
+        this.chatProvider = this.openAIGeminiVertex;
     }
 
     static String getApiKey() {
@@ -18,7 +18,7 @@ public class ChatGeminiDemo extends ChatDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatGeminiDemo("gemini", MODEL);
+        var demo = new ChatGeminiVertexDemo("gemini_vertex", MODEL);
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
