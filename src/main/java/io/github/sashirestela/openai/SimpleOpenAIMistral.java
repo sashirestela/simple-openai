@@ -53,10 +53,8 @@ public class SimpleOpenAIMistral extends OpenAIProvider implements
                 .apiKey(apiKey)
                 .baseUrl(baseUrl)
                 .httpClient(httpClient)
-
                 .clientAdapter(clientAdapter)
                 .retryConfig(retryConfig)
-
                 .objectMapper(objectMapper)
                 .build());
     }
