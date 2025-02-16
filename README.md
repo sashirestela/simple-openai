@@ -788,7 +788,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat```
 
-* Indications for Azure OpenAI demo
+* Instructions for Azure OpenAI demo
 
     The recommended models to run this demo are:
 
@@ -807,6 +807,20 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     multiple models in the same region they will share the same API key (actually there are two keys
     per region to support alternate key rotation).
 
+* Instructions for Gemini Vertex Demo
+
+You need a GCP project with the Vertex AI API enabled and a GCP service account with the necessary permissions to access the API.
+
+For details see https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
+
+Note the target region for the endpoint, the GCP project ID and the service account credentials JSON file.
+
+Before you run the demo define the following environment variables:
+
+```
+export GEMINI_VERTEX_BASE_URL=https://<location>-aiplatform.googleapis.com/v1beta1/projects/<gcp project>/locations/<location>>/endpoints/openapi
+export GEMINI_VERTEX_SA_CREDS_PATH=<path to GCP service account credentials JSON file>
+```
 
 ## 💼 Contributing
 Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contribute to this project.

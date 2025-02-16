@@ -6,6 +6,7 @@ import io.github.sashirestela.openai.SimpleOpenAIAnyscale;
 import io.github.sashirestela.openai.SimpleOpenAIAzure;
 import io.github.sashirestela.openai.SimpleOpenAIDeepseek;
 import io.github.sashirestela.openai.SimpleOpenAIGeminiGoogle;
+import io.github.sashirestela.openai.SimpleOpenAIGeminiVertex;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
 import io.github.sashirestela.openai.base.OpenAIProvider;
 import lombok.NonNull;
@@ -24,6 +25,7 @@ public abstract class AbstractDemo {
     protected SimpleOpenAIMistral openAIMistral;
     protected SimpleOpenAIDeepseek openAIDeepseek;
     protected SimpleOpenAIGeminiGoogle openAIGeminiGoogle;
+    protected SimpleOpenAIGeminiVertex openAIGeminiVertex;
 
     private static List<TitleAction> titleActions = new ArrayList<>();
     private static final int TIMES = 80;
@@ -47,6 +49,7 @@ public abstract class AbstractDemo {
                         .apiVersion(System.getenv("AZURE_OPENAI_API_VERSION"))
                         .baseUrl(System.getenv("AZURE_OPENAI_BASE_URL"))
                         .build();
+
                 currentOpenAI = openAIAzure;
                 break;
             case "anyscale":
@@ -74,6 +77,13 @@ public abstract class AbstractDemo {
                         .apiKey(System.getenv("GEMINIGOOGLE_API_KEY"))
                         .build();
                 currentOpenAI = openAIGeminiGoogle;
+                break;
+            case "gemini_vertex":
+                openAIGeminiVertex = SimpleOpenAIGeminiVertex.builder()
+                        .baseUrl(System.getenv("GEMINI_VERTEX_BASE_URL"))
+                        .apiKeyProvider(ChatGeminiVertexDemo::getApiKey)
+                        .build();
+                currentOpenAI = openAIGeminiVertex;
                 break;
             default:
                 break;
