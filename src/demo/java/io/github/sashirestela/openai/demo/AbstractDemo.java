@@ -9,7 +9,6 @@ import io.github.sashirestela.openai.SimpleOpenAIGeminiGoogle;
 import io.github.sashirestela.openai.SimpleOpenAIGeminiVertex;
 import io.github.sashirestela.openai.SimpleOpenAIMistral;
 import io.github.sashirestela.openai.base.OpenAIProvider;
-import io.github.sashirestela.openai.service.ChatCompletionServices;
 import lombok.NonNull;
 import okhttp3.OkHttpClient;
 
@@ -24,7 +23,6 @@ public abstract class AbstractDemo {
     protected SimpleOpenAIAzure openAIAzure;
     protected SimpleOpenAIAnyscale openAIAnyscale;
     protected SimpleOpenAIMistral openAIMistral;
-    protected ChatCompletionServices chatProvider;
     protected SimpleOpenAIDeepseek openAIDeepseek;
     protected SimpleOpenAIGeminiGoogle openAIGeminiGoogle;
     protected SimpleOpenAIGeminiVertex openAIGeminiVertex;
@@ -82,7 +80,7 @@ public abstract class AbstractDemo {
                 break;
             case "gemini_vertex":
                 openAIGeminiVertex = SimpleOpenAIGeminiVertex.builder()
-                        .baseUrl(System.getenv("GEMINI_OPENAI_BASE_URL"))
+                        .baseUrl(System.getenv("GEMINI_VERTEX_BASE_URL"))
                         .apiKeyProvider(ChatGeminiVertexDemo::getApiKey)
                         .build();
                 currentOpenAI = openAIGeminiVertex;

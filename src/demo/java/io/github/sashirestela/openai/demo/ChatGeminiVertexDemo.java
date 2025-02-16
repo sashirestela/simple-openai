@@ -6,10 +6,11 @@ public class ChatGeminiVertexDemo extends ChatDemo {
 
     static String MODEL = "google/gemini-1.5-flash";
 
-    static GeminiAccessToken geminiAccessToken = new GeminiAccessToken(System.getenv("GEMINI_SA_CREDS_PATH"));
+    // GEMINI_SA_CREDS_PATH is the path to the Google service account credentials file in JSON format. See
+    static GeminiAccessToken geminiAccessToken = new GeminiAccessToken(System.getenv("GEMINI_VERTEX_SA_CREDS_PATH"));
 
-    public ChatGeminiVertexDemo(String provider, String model) {
-        super(provider, model, null);
+    public ChatGeminiVertexDemo(String model) {
+        super("gemini_vertex", model, null);
         this.chatProvider = this.openAIGeminiVertex;
     }
 
@@ -18,7 +19,7 @@ public class ChatGeminiVertexDemo extends ChatDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatGeminiVertexDemo("gemini_vertex", MODEL);
+        var demo = new ChatGeminiVertexDemo(MODEL);
 
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);

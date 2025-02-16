@@ -11,6 +11,7 @@ import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
 
 public class GeminiAccessToken {
 
+    private static final String GOOGLE_SERVICE_ACCOUNT_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
     private GoogleCredentials credentials;
 
     public GeminiAccessToken(String credentialsFilePath) {
@@ -20,7 +21,7 @@ public class GeminiAccessToken {
         try {
             credentials = ServiceAccountCredentials.fromStream(new FileInputStream(credentialsFilePath))
                     .createScoped(
-                            Collections.singletonList("https://www.googleapis.com/auth/cloud-platform"));
+                            Collections.singletonList(GOOGLE_SERVICE_ACCOUNT_SCOPE));
         } catch (IOException e) {
             credentials = null;
         }
