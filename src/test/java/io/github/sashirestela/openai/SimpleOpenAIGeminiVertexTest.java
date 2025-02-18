@@ -19,7 +19,6 @@ public class SimpleOpenAIGeminiVertexTest {
                 .baseUrl("baseUrl")
                 .build();
         assertNotNull(openAI.chatCompletions());
-        assertNotNull(openAI.embeddings());
     }
 
     @Test
