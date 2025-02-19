@@ -1,24 +1,10 @@
 package io.github.sashirestela.openai.demo;
 
-import com.google.auth.oauth2.GoogleCredentials;
 import io.github.sashirestela.openai.support.GeminiAccessToken;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public class ChatGeminiVertexDemo extends ChatDemo {
-    static GeminiAccessToken geminiAccessToken;
-    static {
-        try {
-            String credentialsPath = System.getenv("GEMINI_VERTEX_SA_CREDS_PATH");
-            GoogleCredentials credentials = GoogleCredentials
-                .fromStream(new FileInputStream(credentialsPath))
-                .createScoped("https://www.googleapis.com/auth/cloud-platform");
 
-            geminiAccessToken = new GeminiAccessToken(credentials);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load Google credentials", e);
-        }
-    }
+    static GeminiAccessToken geminiAccessToken = new GeminiAccessToken(System.getenv("GEMINI_VERTEX_SA_CREDS_PATH"));
 
     public ChatGeminiVertexDemo(String model) {
         super("gemini_vertex", model, null);

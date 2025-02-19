@@ -41,9 +41,15 @@ class GeminiAccessTokenTest {
     }
 
     @Test
+    void testGetAccessToken_WhenCredentialsAreInvalid() {
+        var invalidToken = new GeminiAccessToken("no-such-file");
+        assertEquals("", invalidToken.get());
+    }
+
+    @Test
     void testGetAccessToken_WhenCredentialsAreNull() {
-        GeminiAccessToken nullTokenProvider = new GeminiAccessToken(null);
-        assertEquals("", nullTokenProvider.get());
+        var invalidToken = new GeminiAccessToken((GoogleCredentials) null);
+        assertEquals("", invalidToken.get());
     }
 
     @Test
@@ -59,4 +65,5 @@ class GeminiAccessTokenTest {
 
         assertEquals("", geminiAccessToken.get());
     }
+
 }
