@@ -693,12 +693,27 @@ Simple-OpenAI can be used with additional providers that are compatible with the
 
 ### Gemini Vertex API
 [Gemini Vertex API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIGeminiVertex` to start using this provider.
+
+Note that `SimpleOpenAIGeminiVertex` depends on the following library that you must add your project:
+
+```
+   <googleauth.version>1.15.0</googleauth.version>
+   ...
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+      <version>${googleauth.version}</version>
+      <optional>true</optional>
+    </dependency>
+```
+
 ```java
 var openai = SimpleOpenAIGeminiVertex.builder()
     .baseUrl(System.getenv("GEMINI_VERTEX_BASE_URL"))
     .apiKeyProvider(<a function that returns a valid API key that refreshes every hour>)
     .build();
 ```
+
 Currently we are supporting the following service:
 - `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
 
