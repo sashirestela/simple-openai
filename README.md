@@ -697,13 +697,10 @@ Simple-OpenAI can be used with additional providers that are compatible with the
 Note that `SimpleOpenAIGeminiVertex` depends on the following library that you must add your project:
 
 ```
-   <googleauth.version>1.15.0</googleauth.version>
-   ...
     <dependency>
       <groupId>com.google.auth</groupId>
       <artifactId>google-auth-library-oauth2-http</artifactId>
-      <version>${googleauth.version}</version>
-      <optional>true</optional>
+      <version>1.15.0</version>
     </dependency>
 ```
 
@@ -711,6 +708,7 @@ Note that `SimpleOpenAIGeminiVertex` depends on the following library that you m
 var openai = SimpleOpenAIGeminiVertex.builder()
     .baseUrl(System.getenv("GEMINI_VERTEX_BASE_URL"))
     .apiKeyProvider(<a function that returns a valid API key that refreshes every hour>)
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
     .build();
 ```
 
