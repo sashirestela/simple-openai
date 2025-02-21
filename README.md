@@ -31,6 +31,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 - [Retrying Requests](#-retrying-requests) **NEW**
 - [Instructions for Android](#-instructions-for-android)
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
+  - [Gemini Vertex API](#gemini-vertex-api)
   - [Gemini Google API](#gemini-google-api)
   - [Deepseek API](#deepseek-api)
   - [Mistral API](#mistral-api)
@@ -690,6 +691,30 @@ val openAI = SimpleOpenAI.builder()
 ## 👥 Support for OpenAI-compatible API Providers
 Simple-OpenAI can be used with additional providers that are compatible with the OpenAI API. At this moment, there is support for the following additional providers:
 
+### Gemini Vertex API
+[Gemini Vertex API](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIGeminiVertex` to start using this provider.
+
+Note that `SimpleOpenAIGeminiVertex` depends on the following library that you must add your project:
+
+```
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+      <version>1.15.0</version>
+    </dependency>
+```
+
+```java
+var openai = SimpleOpenAIGeminiVertex.builder()
+    .baseUrl(System.getenv("GEMINI_VERTEX_BASE_URL"))
+    .apiKeyProvider(<a function that returns a valid API key that refreshes every hour>)
+    //.clientAdapter(...)   Optionally you could pass a custom clientAdapter
+    .build();
+```
+
+Currently we are supporting the following service:
+- `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
+
 ### Gemini Google API
 [Gemini Google API](https://ai.google.dev/gemini-api/docs/openai) is supported by Simple-OpenAI. We can use the class `SimpleOpenAIGeminiGoogle` to start using this provider.
 ```java
@@ -788,7 +813,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat```
 
-* Indications for Azure OpenAI demo
+* Instructions for Azure OpenAI demo
 
     The recommended models to run this demo are:
 
@@ -807,6 +832,18 @@ Examples for each OpenAI service have been created in the folder [demo](https://
     multiple models in the same region they will share the same API key (actually there are two keys
     per region to support alternate key rotation).
 
+* Instructions for Gemini Vertex Demo
+
+    You need a GCP project with the Vertex AI API enabled and a GCP service account with the necessary permissions to access the API.
+  
+    For details see https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference 
+    Note the target region for the endpoint, the GCP project ID and the service account credentials JSON file.
+    Before you run the demo define the following environment variables:
+  
+    ```
+    export GEMINI_VERTEX_BASE_URL=https://<location>-aiplatform.googleapis.com/v1beta1/projects/<gcp project>/locations/<location>>/endpoints/openapi
+    export GEMINI_VERTEX_SA_CREDS_PATH=<path to GCP service account credentials JSON file>
+    ```
 
 ## 💼 Contributing
 Kindly read our [Contributing guide](CONTRIBUTING.md) to learn and understand how to contribute to this project.
