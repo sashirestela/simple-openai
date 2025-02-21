@@ -26,25 +26,25 @@ import static org.mockito.Mockito.*;
 class GeminiAccessTokenTest {
 
     @Mock
-    private GoogleCredentials mockCredentials;
+    private GoogleCredentials mockGoogleCredentials;
 
     @InjectMocks
     private GeminiAccessToken geminiAccessToken;
 
     @BeforeEach
     void setUp() {
-        geminiAccessToken = new GeminiAccessToken(mockCredentials);
+        geminiAccessToken = new GeminiAccessToken(mockGoogleCredentials);
     }
 
     @Test
     void testGetAccessToken_Success() throws IOException {
         AccessToken mockAccessToken = new AccessToken("mock-token", new Date());
-        when(mockCredentials.getAccessToken()).thenReturn(mockAccessToken);
+        when(mockGoogleCredentials.getAccessToken()).thenReturn(mockAccessToken);
 
         String token = geminiAccessToken.get();
 
         assertEquals("mock-token", token);
-        verify(mockCredentials, times(1)).refresh();
+        verify(mockGoogleCredentials, times(1)).refresh();
     }
 
     @Test
@@ -61,14 +61,14 @@ class GeminiAccessTokenTest {
 
     @Test
     void testGetAccessToken_WhenRefreshFails() throws IOException {
-        doThrow(new IOException("Refresh failed")).when(mockCredentials).refresh();
+        doThrow(new IOException("Refresh failed")).when(mockGoogleCredentials).refresh();
 
         assertEquals("", geminiAccessToken.get());
     }
 
     @Test
     void testGetAccessToken_WhenAccessTokenIsNull() {
-        when(mockCredentials.getAccessToken()).thenReturn(null);
+        when(mockGoogleCredentials.getAccessToken()).thenReturn(null);
 
         assertEquals("", geminiAccessToken.get());
     }
