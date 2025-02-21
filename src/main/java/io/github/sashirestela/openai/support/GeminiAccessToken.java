@@ -2,6 +2,7 @@ package io.github.sashirestela.openai.support;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+import lombok.Getter;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import static io.github.sashirestela.cleverclient.util.CommonUtil.isNullOrEmpty;
 public class GeminiAccessToken {
 
     private static final String GOOGLE_SERVICE_ACCOUNT_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
+    @Getter
     private final GoogleCredentials credentials;
 
     public GeminiAccessToken(String credentialsFilePath) {
