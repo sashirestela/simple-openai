@@ -5,9 +5,18 @@ import io.github.sashirestela.cleverclient.client.HttpClientAdapter;
 import io.github.sashirestela.cleverclient.http.HttpRequestData;
 import io.github.sashirestela.cleverclient.retry.RetryConfig;
 import io.github.sashirestela.cleverclient.support.ContentType;
+import io.github.sashirestela.openai.OpenAIBeta2.Assistants;
+import io.github.sashirestela.openai.OpenAIBeta2.ThreadMessages;
+import io.github.sashirestela.openai.OpenAIBeta2.ThreadRunSteps;
+import io.github.sashirestela.openai.OpenAIBeta2.ThreadRuns;
+import io.github.sashirestela.openai.OpenAIBeta2.Threads;
+import io.github.sashirestela.openai.OpenAIBeta2.VectorStoreFileBatches;
+import io.github.sashirestela.openai.OpenAIBeta2.VectorStoreFiles;
+import io.github.sashirestela.openai.OpenAIBeta2.VectorStores;
 import io.github.sashirestela.openai.base.ClientConfig;
 import io.github.sashirestela.openai.base.OpenAIConfigurator;
 import io.github.sashirestela.openai.base.OpenAIProvider;
+import io.github.sashirestela.openai.service.AssistantServices;
 import io.github.sashirestela.openai.service.ChatCompletionServices;
 import io.github.sashirestela.openai.service.FileServices;
 import io.github.sashirestela.openai.support.Constant;
@@ -25,7 +34,8 @@ import java.util.regex.Pattern;
  */
 public class SimpleOpenAIAzure extends OpenAIProvider implements
         ChatCompletionServices,
-        FileServices {
+        FileServices,
+        AssistantServices {
 
     /**
      * Constructor used to generate a builder.
@@ -66,6 +76,46 @@ public class SimpleOpenAIAzure extends OpenAIProvider implements
     @Override
     public OpenAI.Files files() {
         return getOrCreateService(OpenAI.Files.class);
+    }
+
+    @Override
+    public Assistants assistants() {
+        return getOrCreateService(OpenAIBeta2.Assistants.class);
+    }
+
+    @Override
+    public ThreadMessages threadMessages() {
+        return getOrCreateService(OpenAIBeta2.ThreadMessages.class);
+    }
+
+    @Override
+    public ThreadRunSteps threadRunSteps() {
+        return getOrCreateService(OpenAIBeta2.ThreadRunSteps.class);
+    }
+
+    @Override
+    public ThreadRuns threadRuns() {
+        return getOrCreateService(OpenAIBeta2.ThreadRuns.class);
+    }
+
+    @Override
+    public Threads threads() {
+        return getOrCreateService(OpenAIBeta2.Threads.class);
+    }
+
+    @Override
+    public VectorStoreFileBatches vectorStoreFileBatches() {
+        return getOrCreateService(OpenAIBeta2.VectorStoreFileBatches.class);
+    }
+
+    @Override
+    public VectorStoreFiles vectorStoreFiles() {
+        return getOrCreateService(OpenAIBeta2.VectorStoreFiles.class);
+    }
+
+    @Override
+    public VectorStores vectorStores() {
+        return getOrCreateService(OpenAIBeta2.VectorStores.class);
     }
 
     @SuperBuilder

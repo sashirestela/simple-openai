@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ChatAzureDemo extends ChatDemo {
 
-    public ChatAzureDemo() {
-        super("azure", "N/A", null);
+    public ChatAzureDemo(String model) {
+        super("azure", model, null);
         this.chatProvider = this.openAIAzure;
     }
 
@@ -52,8 +52,7 @@ public class ChatAzureDemo extends ChatDemo {
     }
 
     public static void main(String[] args) {
-        var demo = new ChatAzureDemo();
-
+        var demo = new ChatAzureDemo("N/A");
         demo.addTitleAction("Call Chat (Streaming Approach)", demo::demoCallChatStreaming);
         demo.addTitleAction("Call Chat (Blocking Approach)", demo::demoCallChatBlocking);
         demo.addTitleAction("Call Chat with Functions", demo::demoCallChatWithFunctions);
@@ -61,7 +60,6 @@ public class ChatAzureDemo extends ChatDemo {
         demo.addTitleAction("Call Chat with Vision (Local image)", demo::demoCallChatWithVisionLocalImage);
         demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
         demo.addTitleAction("Call Chat with Structured Outputs 2", demo::demoCallChatWithStructuredOutputs2);
-
         demo.run();
     }
 

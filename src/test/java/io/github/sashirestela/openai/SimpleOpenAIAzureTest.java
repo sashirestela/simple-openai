@@ -152,6 +152,14 @@ class SimpleOpenAIAzureTest {
                 .build();
         assertNotNull(openAI.chatCompletions());
         assertNotNull(openAI.files());
+        assertNotNull(openAI.assistants());
+        assertNotNull(openAI.threadMessages());
+        assertNotNull(openAI.threadRunSteps());
+        assertNotNull(openAI.threadRuns());
+        assertNotNull(openAI.threads());
+        assertNotNull(openAI.vectorStoreFileBatches());
+        assertNotNull(openAI.vectorStoreFiles());
+        assertNotNull(openAI.vectorStores());
     }
 
 }
