@@ -30,6 +30,7 @@ public class Base64Util {
         }
     }
 
+    @SuppressWarnings("java:S6300")
     public static void decode(String base64String, String filePath) {
         try {
             byte[] bytes = Base64.getDecoder().decode(base64String);
