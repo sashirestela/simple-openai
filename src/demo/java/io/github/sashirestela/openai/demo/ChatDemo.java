@@ -46,7 +46,7 @@ public class ChatDemo extends AbstractDemo {
     protected long sleepSeconds;
     protected ChatCompletionServices chatProvider;
 
-    public ChatDemo(String model, String modelAudio) {
+    protected ChatDemo(String model, String modelAudio) {
         this("standard", model, modelAudio);
     }
 

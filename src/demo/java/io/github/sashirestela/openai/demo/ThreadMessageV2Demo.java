@@ -17,23 +17,37 @@ import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
 import io.github.sashirestela.openai.domain.assistant.events.EventName;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
+import io.github.sashirestela.openai.service.AssistantServices;
 
 import java.util.List;
 import java.util.Map;
 
 public class ThreadMessageV2Demo extends AbstractDemo {
 
-    private FileDemo fileDemo;
-    private String fileId;
-    private String threadId;
-    private String threadMessageId;
+    protected FileDemo fileDemo;
+    protected String fileId;
+    protected String threadId;
+    protected String threadMessageId;
 
-    public ThreadMessageV2Demo() {
-        fileDemo = new FileDemo();
+    protected String model;
+    protected AssistantServices assistantProvider;
+
+    protected ThreadMessageV2Demo(String model) {
+        this("standard", model, new FileDemo());
+    }
+
+    protected ThreadMessageV2Demo(String provider, String model, FileDemo fileDemo) {
+        super(provider);
+        this.model = model;
+        this.assistantProvider = this.openAI;
+        this.fileDemo = fileDemo;
+    }
+
+    public void prepareDemo() {
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
-        var thread = openAI.threads().create().join();
+        var thread = assistantProvider.threads().create().join();
         threadId = thread.getId();
     }
 
@@ -47,7 +61,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
                         .build())
                 .metadata(Map.of("item", "first"))
                 .build();
-        var threadMessage = openAI.threadMessages().create(threadId, threadMessageRequest).join();
+        var threadMessage = assistantProvider.threadMessages().create(threadId, threadMessageRequest).join();
         System.out.println(threadMessage);
         threadMessageId = threadMessage.getId();
     }
@@ -56,19 +70,19 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         var threadMessageModifyRequest = ThreadMessageModifyRequest.builder()
                 .metadata(Map.of("item", "firstly", "user", "dummy"))
                 .build();
-        var threadMessage = openAI.threadMessages()
+        var threadMessage = assistantProvider.threadMessages()
                 .modify(threadId, threadMessageId, threadMessageModifyRequest)
                 .join();
         System.out.println(threadMessage);
     }
 
     public void retrieveThreadMessage() {
-        var threadMessage = openAI.threadMessages().getOne(threadId, threadMessageId).join();
+        var threadMessage = assistantProvider.threadMessages().getOne(threadId, threadMessageId).join();
         System.out.println(threadMessage);
     }
 
     public void listThreadMessages() {
-        var threadMessages = openAI.threadMessages().getList(threadId).join();
+        var threadMessages = assistantProvider.threadMessages().getList(threadId).join();
         threadMessages.forEach(System.out::println);
     }
 
@@ -76,14 +90,14 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         var question = "Do you see any similarity or difference between the attached images?";
         System.out.println("Question: " + question);
         var file = fileDemo.createFile("src/demo/resources/machupicchu.jpg", PurposeType.VISION);
-        var assistant = openAI.assistants()
+        var assistant = assistantProvider.assistants()
                 .create(AssistantRequest.builder()
-                        .model("gpt-4o")
+                        .model(this.model)
                         .instructions("You are a tutor on geography.")
                         .build())
                 .join();
-        var newThread = openAI.threads().create().join();
-        openAI.threadMessages()
+        var newThread = assistantProvider.threads().create().join();
+        assistantProvider.threadMessages()
                 .create(newThread.getId(), ThreadMessageRequest.builder()
                         .role(ThreadMessageRole.USER)
                         .content(List.of(
@@ -94,7 +108,7 @@ public class ThreadMessageV2Demo extends AbstractDemo {
                                         ImageDetail.LOW))))
                         .build())
                 .join();
-        var responseStream = openAI.threadRuns()
+        var responseStream = assistantProvider.threadRuns()
                 .createStream(newThread.getId(), ThreadRunRequest.builder()
                         .assistantId(assistant.getId())
                         .build())
@@ -114,30 +128,31 @@ public class ThreadMessageV2Demo extends AbstractDemo {
         });
         System.out.println();
         fileDemo.deleteFile(file.getId());
-        openAI.assistants().delete(assistant.getId()).join();
-        openAI.threads().delete(newThread.getId()).join();
+        assistantProvider.assistants().delete(assistant.getId()).join();
+        assistantProvider.threads().delete(newThread.getId()).join();
     }
 
     public void deleteThreadMessage() {
-        var thread = openAI.threads().getOne(threadId).join();
+        var thread = assistantProvider.threads().getOne(threadId).join();
         var vectorStoreId = thread.getToolResources().getFileSearch().getVectorStoreIds().get(0);
 
         var deletedFile = fileDemo.deleteFile(fileId);
         System.out.println(deletedFile);
 
-        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
+        var deletedVectorStore = assistantProvider.vectorStores().delete(vectorStoreId).join();
         System.out.println(deletedVectorStore);
 
-        var deletedThreadMessage = openAI.threadMessages().delete(threadId, threadMessageId).join();
+        var deletedThreadMessage = assistantProvider.threadMessages().delete(threadId, threadMessageId).join();
         System.out.println(deletedThreadMessage);
 
-        var deletedThread = openAI.threads().delete(threadId).join();
+        var deletedThread = assistantProvider.threads().delete(threadId).join();
         System.out.println(deletedThread);
 
     }
 
     public static void main(String[] args) {
-        var demo = new ThreadMessageV2Demo();
+        var demo = new ThreadMessageV2Demo("gpt-4o-mini");
+        demo.prepareDemo();
         demo.addTitleAction("Demo Thread Message v2 Create", demo::createThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 Modify", demo::modifyThreadMessage);
         demo.addTitleAction("Demo Thread Message v2 Retrieve", demo::retrieveThreadMessage);

@@ -9,6 +9,7 @@ import io.github.sashirestela.openai.domain.assistant.AssistantRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunRequest;
+import io.github.sashirestela.openai.service.AssistantServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,20 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
     private String threadRunId;
     private String threadRunStepId;
 
-    private void prepareDemo() {
+    protected String model;
+    protected AssistantServices assistantProvider;
+
+    protected ThreadRunStepV2Demo(String model) {
+        this("standard", model);
+    }
+
+    protected ThreadRunStepV2Demo(String provider, String model) {
+        super(provider);
+        this.model = model;
+        this.assistantProvider = this.openAI;
+    }
+
+    public void prepareDemo() {
         FunctionExecutor functionExecutor;
         List<FunctionDef> functionList = new ArrayList<>();
         functionList.add(FunctionDef.builder()
@@ -37,9 +51,9 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunctions(functionList);
 
-        var assistant = openAI.assistants()
+        var assistant = assistantProvider.assistants()
                 .create(AssistantRequest.builder()
-                        .model("gpt-4o")
+                        .model(this.model)
                         .name("Demo Assistant")
                         .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                                 + "questions, you have to refer to the attached files or use the functions provided. "
@@ -51,12 +65,8 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
         assistantId = assistant.getId();
     }
 
-    public ThreadRunStepV2Demo() {
-        prepareDemo();
-    }
-
     public void createThreadRun() {
-        var thread = openAI.threads().create().join();
+        var thread = assistantProvider.threads().create().join();
         threadId = thread.getId();
 
         var question = "Tell me something brief about Lima Peru, then tell me how's "
@@ -69,41 +79,42 @@ public class ThreadRunStepV2Demo extends AbstractDemo {
                         .content(question)
                         .build())
                 .build();
-        var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
-        var threadMessages = openAI.threadMessages().getList(threadId).join();
+        var threadRun = assistantProvider.threadRuns().createAndPoll(threadId, threadRunRequest);
+        var threadMessages = assistantProvider.threadMessages().getList(threadId).join();
         var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
         System.out.println("Answer: " + answer);
         threadRunId = threadRun.getId();
     }
 
     public void listThreadRunSteps() {
-        var threadRunSteps = openAI.threadRunSteps().getList(threadId, threadRunId).join();
+        var threadRunSteps = assistantProvider.threadRunSteps().getList(threadId, threadRunId).join();
         threadRunSteps.forEach(System.out::println);
         threadRunStepId = threadRunSteps.first().getId();
     }
 
     public void retrieveThreadRunStep() {
-        var threadRunStep = openAI.threadRunSteps().getOne(threadId, threadRunId, threadRunStepId).join();
+        var threadRunStep = assistantProvider.threadRunSteps().getOne(threadId, threadRunId, threadRunStepId).join();
         System.out.println(threadRunStep);
     }
 
     public void retrieveThreadRunStepWithFilters() {
-        var threadRunStep = openAI.threadRunSteps()
+        var threadRunStep = assistantProvider.threadRunSteps()
                 .getOneWithFileSearchResult(threadId, threadRunId, threadRunStepId)
                 .join();
         System.out.println(threadRunStep);
     }
 
     public void deleteDemo() {
-        var deletedThread = openAI.threads().delete(threadId).join();
+        var deletedThread = assistantProvider.threads().delete(threadId).join();
         System.out.println(deletedThread);
 
-        var deletedAssistant = openAI.assistants().delete(assistantId).join();
+        var deletedAssistant = assistantProvider.assistants().delete(assistantId).join();
         System.out.println(deletedAssistant);
     }
 
     public static void main(String[] args) {
-        var demo = new ThreadRunStepV2Demo();
+        var demo = new ThreadRunStepV2Demo("gpt-4o-mini");
+        demo.prepareDemo();
         demo.addTitleAction("Demo ThreadRun v2 Create", demo::createThreadRun);
         demo.addTitleAction("Demo ThreadRunStep v2 List", demo::listThreadRunSteps);
         demo.addTitleAction("Demo ThreadRunStep v2 Retrieve", demo::retrieveThreadRunStep);

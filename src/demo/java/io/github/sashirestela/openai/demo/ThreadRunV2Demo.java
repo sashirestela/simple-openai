@@ -25,6 +25,7 @@ import io.github.sashirestela.openai.domain.assistant.ToolResourceFull.FileSearc
 import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
 import io.github.sashirestela.openai.domain.assistant.events.EventName;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
+import io.github.sashirestela.openai.service.AssistantServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +42,26 @@ public class ThreadRunV2Demo extends AbstractDemo {
     private String newThreadId;
     private String threadRunId;
 
-    private void prepareDemo() {
-        fileDemo = new FileDemo();
+    protected String model;
+    protected AssistantServices assistantProvider;
+
+    protected ThreadRunV2Demo(String model) {
+        this("standard", model, new FileDemo());
+    }
+
+    protected ThreadRunV2Demo(String provider, String model, FileDemo fileDemo) {
+        super(provider);
+        this.model = model;
+        this.assistantProvider = this.openAI;
+        this.fileDemo = fileDemo;
+    }
+
+    public void prepareDemo() {
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
 
-        var vectorStore = openAI.vectorStores().createAndPoll(VectorStoreRequest.builder().fileId(fileId).build());
+        var vectorStore = assistantProvider.vectorStores()
+                .createAndPoll(VectorStoreRequest.builder().fileId(fileId).build());
         vectorStoreId = vectorStore.getId();
 
         List<FunctionDef> functionList = new ArrayList<>();
@@ -64,9 +79,9 @@ public class ThreadRunV2Demo extends AbstractDemo {
         functionExecutor = new FunctionExecutor();
         functionExecutor.enrollFunctions(functionList);
 
-        var assistant = openAI.assistants()
+        var assistant = assistantProvider.assistants()
                 .create(AssistantRequest.builder()
-                        .model("gpt-4o")
+                        .model(this.model)
                         .name("Demo Assistant")
                         .instructions("You are a very kind assistant. If you cannot find correct facts to answer the "
                                 + "questions, you have to refer to the attached files or use the functions provided. "
@@ -117,12 +132,8 @@ public class ThreadRunV2Demo extends AbstractDemo {
 
     }
 
-    public ThreadRunV2Demo() {
-        prepareDemo();
-    }
-
     public void createThreadRun() {
-        var thread = openAI.threads().create().join();
+        var thread = assistantProvider.threads().create().join();
         threadId = thread.getId();
 
         var question = "Tell me something brief about Lima, Peru.";
@@ -135,8 +146,8 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .build())
                 .parallelToolCalls(Boolean.FALSE)
                 .build();
-        var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
-        var threadMessages = openAI.threadMessages().getList(threadId).join();
+        var threadRun = assistantProvider.threadRuns().createAndPoll(threadId, threadRunRequest);
+        var threadMessages = assistantProvider.threadMessages().getList(threadId).join();
         var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
         System.out.println("Answer: " + answer);
         threadRunId = threadRun.getId();
@@ -152,7 +163,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .content(question)
                         .build())
                 .build();
-        var response = openAI.threadRuns().createStream(threadId, threadRunRequest).join();
+        var response = assistantProvider.threadRuns().createStream(threadId, threadRunRequest).join();
         System.out.print("Answer: ");
         response.forEach(e -> {
             switch (e.getName()) {
@@ -179,16 +190,16 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .content(question)
                         .build())
                 .build();
-        var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
+        var threadRun = assistantProvider.threadRuns().createAndPoll(threadId, threadRunRequest);
         if (threadRun.getStatus().equals(RunStatus.REQUIRES_ACTION)) {
             var toolCalls = threadRun.getRequiredAction().getSubmitToolOutputs().getToolCalls();
             var toolOutputs = functionExecutor.executeAll(toolCalls,
                     (toolCallId, result) -> ToolOutput.builder().toolCallId(toolCallId).output(result).build());
-            openAI.threadRuns()
+            assistantProvider.threadRuns()
                     .submitToolOutputAndPoll(threadId, threadRun.getId(), ThreadRunSubmitOutputRequest.builder()
                             .toolOutputs(toolOutputs)
                             .build());
-            var threadMessages = openAI.threadMessages().getList(threadId).join();
+            var threadMessages = assistantProvider.threadMessages().getList(threadId).join();
             var answer = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText().getValue();
             System.out.println("Answer: " + answer);
         }
@@ -204,12 +215,12 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .content(question)
                         .build())
                 .build();
-        var threadRun = openAI.threadRuns().createAndPoll(threadId, threadRunRequest);
+        var threadRun = assistantProvider.threadRuns().createAndPoll(threadId, threadRunRequest);
         if (threadRun.getStatus().equals(RunStatus.REQUIRES_ACTION)) {
             var toolCalls = threadRun.getRequiredAction().getSubmitToolOutputs().getToolCalls();
             var toolOutputs = functionExecutor.executeAll(toolCalls,
                     (toolCallId, result) -> ToolOutput.builder().toolCallId(toolCallId).output(result).build());
-            var response = openAI.threadRuns()
+            var response = assistantProvider.threadRuns()
                     .submitToolOutputStream(threadId, threadRun.getId(),
                             ThreadRunSubmitOutputRequest.builder().toolOutputs(toolOutputs).build())
                     .join();
@@ -246,9 +257,9 @@ public class ThreadRunV2Demo extends AbstractDemo {
                                         .build())
                         .build())
                 .build();
-        var threadRun = openAI.threadRuns().createThreadAndRunAndPoll(threadCreateAndRunRequest);
+        var threadRun = assistantProvider.threadRuns().createThreadAndRunAndPoll(threadCreateAndRunRequest);
         newThreadId = threadRun.getThreadId();
-        var threadMessages = openAI.threadMessages().getList(newThreadId).join();
+        var threadMessages = assistantProvider.threadMessages().getList(newThreadId).join();
         var textAnnotation = ((ContentPartTextAnnotation) threadMessages.first().getContent().get(0)).getText();
         var answer = textAnnotation.getValue();
         var refNumber = 1;
@@ -259,7 +270,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
             }
         }
         System.out.println("Answer: " + answer);
-        openAI.threads().delete(newThreadId).join();
+        assistantProvider.threads().delete(newThreadId).join();
     }
 
     public void createThreadAndThreadRunStream() {
@@ -275,7 +286,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
                                         .build())
                         .build())
                 .build();
-        var response = openAI.threadRuns().createThreadAndRunStream(threadCreateAndRunRequest).join();
+        var response = assistantProvider.threadRuns().createThreadAndRunStream(threadCreateAndRunRequest).join();
         System.out.print("Answer: ");
         response.forEach(e -> {
             switch (e.getName()) {
@@ -294,7 +305,7 @@ public class ThreadRunV2Demo extends AbstractDemo {
             }
         });
         System.out.println();
-        openAI.threads().delete(newThreadId).join();
+        assistantProvider.threads().delete(newThreadId).join();
     }
 
     public void cancelThreadRun() {
@@ -307,8 +318,8 @@ public class ThreadRunV2Demo extends AbstractDemo {
                         .content(question)
                         .build())
                 .build();
-        var threadRun = openAI.threadRuns().create(threadId, threadRunRequest).join();
-        var cancelledThreadRun = openAI.threadRuns().cancel(threadId, threadRun.getId()).join();
+        var threadRun = assistantProvider.threadRuns().create(threadId, threadRunRequest).join();
+        var cancelledThreadRun = assistantProvider.threadRuns().cancel(threadId, threadRun.getId()).join();
         if (cancelledThreadRun.getStatus().equals(RunStatus.CANCELLING)) {
             System.out.println("The answer was cancelled.");
         }
@@ -318,36 +329,37 @@ public class ThreadRunV2Demo extends AbstractDemo {
         var threadRunModifyRequest = ThreadRunModifyRequest.builder()
                 .metadata(Map.of("env", "test", "user", "tom"))
                 .build();
-        var threadRun = openAI.threadRuns().modify(threadId, threadRunId, threadRunModifyRequest).join();
+        var threadRun = assistantProvider.threadRuns().modify(threadId, threadRunId, threadRunModifyRequest).join();
         System.out.println(threadRun);
     }
 
     public void retrieveThreadRun() {
-        var threadRun = openAI.threadRuns().getOne(threadId, threadRunId).join();
+        var threadRun = assistantProvider.threadRuns().getOne(threadId, threadRunId).join();
         System.out.println(threadRun);
     }
 
     public void listThreadRuns() {
-        var threadRuns = openAI.threadRuns().getList(threadId).join();
+        var threadRuns = assistantProvider.threadRuns().getList(threadId).join();
         threadRuns.forEach(System.out::println);
     }
 
     public void deleteDemo() {
-        var deletedThread = openAI.threads().delete(threadId).join();
+        var deletedThread = assistantProvider.threads().delete(threadId).join();
         System.out.println(deletedThread);
 
-        var deletedAssistant = openAI.assistants().delete(assistantId).join();
+        var deletedAssistant = assistantProvider.assistants().delete(assistantId).join();
         System.out.println(deletedAssistant);
 
         var deletedFile = fileDemo.deleteFile(fileId);
         System.out.println(deletedFile);
 
-        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
+        var deletedVectorStore = assistantProvider.vectorStores().delete(vectorStoreId).join();
         System.out.println(deletedVectorStore);
     }
 
     public static void main(String[] args) {
-        var demo = new ThreadRunV2Demo();
+        var demo = new ThreadRunV2Demo("gpt-4o-mini");
+        demo.prepareDemo();
         demo.addTitleAction("Demo ThreadRun v2 Create", demo::createThreadRun);
         demo.addTitleAction("Demo ThreadRun v2 Create Stream", demo::createThreadRunStream);
         demo.addTitleAction("Demo ThreadRun v2 Submit Tool Output", demo::submitToolOutputToThreadRun);
