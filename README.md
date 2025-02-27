@@ -28,14 +28,14 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
-- [Retrying Requests](#-retrying-requests) **NEW**
+- [Retrying Requests](#-retrying-requests)
 - [Instructions for Android](#-instructions-for-android)
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
-  - [Gemini Vertex API](#gemini-vertex-api)
+  - [Gemini Vertex API](#gemini-vertex-api) **NEW**
   - [Gemini Google API](#gemini-google-api)
   - [Deepseek API](#deepseek-api)
   - [Mistral API](#mistral-api)
-  - [Azure OpenAI](#azure-openai)
+  - [Azure OpenAI](#azure-openai) **UPDATED**
   - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
 - [Contributing](#-contributing)
