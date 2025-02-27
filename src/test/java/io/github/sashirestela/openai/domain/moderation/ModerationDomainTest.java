@@ -2,6 +2,8 @@ package io.github.sashirestela.openai.domain.moderation;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
+import io.github.sashirestela.openai.domain.moderation.ModerationRequest.MultiModalInput.ImageUrlInput;
+import io.github.sashirestela.openai.domain.moderation.ModerationRequest.MultiModalInput.TextInput;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,9 +33,10 @@ class ModerationDomainTest {
         DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/moderations_create.json");
         var moderationRequest = ModerationRequest.builder()
                 .input(Arrays.asList(
-                        "I want to kill them.",
-                        "I am not sure what to think about them."))
-                .model("text-moderation-latest")
+                        TextInput.of("I want to kill them."),
+                        ImageUrlInput.of("https://upload.wikimedia.org/wikipedia/commons/e/e3/BWHammerSickle.jpg"),
+                        TextInput.of("I am not sure what to think about them.")))
+                .model("omni-moderation-latest")
                 .build();
         var moderationResponse = openAI.moderations().create(moderationRequest).join();
         System.out.println(moderationResponse);
