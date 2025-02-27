@@ -7,6 +7,7 @@ import io.github.sashirestela.openai.domain.assistant.ThreadMessageRole;
 import io.github.sashirestela.openai.domain.assistant.ThreadModifyRequest;
 import io.github.sashirestela.openai.domain.assistant.ThreadRequest;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
+import io.github.sashirestela.openai.service.AssistantServices;
 
 import java.util.Map;
 
@@ -16,8 +17,21 @@ public class ThreadV2Demo extends AbstractDemo {
     private String fileId;
     private String threadId;
 
-    public ThreadV2Demo() {
-        fileDemo = new FileDemo();
+    protected String model;
+    protected AssistantServices assistantProvider;
+
+    protected ThreadV2Demo(String model) {
+        this("standard", model, new FileDemo());
+    }
+
+    protected ThreadV2Demo(String provider, String model, FileDemo fileDemo) {
+        super(provider);
+        this.model = model;
+        this.assistantProvider = this.openAI;
+        this.fileDemo = fileDemo;
+    }
+
+    public void prepareDemo() {
         var file = fileDemo.createFile("src/demo/resources/mistral-ai.txt", PurposeType.ASSISTANTS);
         fileId = file.getId();
     }
@@ -39,7 +53,7 @@ public class ThreadV2Demo extends AbstractDemo {
                         .build())
                 .metadata(Map.of("env", "test"))
                 .build();
-        var thread = openAI.threads().create(threadRequest).join();
+        var thread = assistantProvider.threads().create(threadRequest).join();
         System.out.println(thread);
         threadId = thread.getId();
     }
@@ -49,31 +63,32 @@ public class ThreadV2Demo extends AbstractDemo {
                 .metadata(Map.of("env", "testing"))
                 .metadata(Map.of("user", "thomas"))
                 .build();
-        var thread = openAI.threads().modify(threadId, threadModifyRequest).join();
+        var thread = assistantProvider.threads().modify(threadId, threadModifyRequest).join();
         System.out.println(thread);
     }
 
     public void retrieveThread() {
-        var thread = openAI.threads().getOne(threadId).join();
+        var thread = assistantProvider.threads().getOne(threadId).join();
         System.out.println(thread);
     }
 
     public void deleteThread() {
-        var thread = openAI.threads().getOne(threadId).join();
+        var thread = assistantProvider.threads().getOne(threadId).join();
         var vectorStoreId = thread.getToolResources().getFileSearch().getVectorStoreIds().get(0);
 
         var deletedFile = fileDemo.deleteFile(fileId);
         System.out.println(deletedFile);
 
-        var deletedVectorStore = openAI.vectorStores().delete(vectorStoreId).join();
+        var deletedVectorStore = assistantProvider.vectorStores().delete(vectorStoreId).join();
         System.out.println(deletedVectorStore);
 
-        var deletedThread = openAI.threads().delete(threadId).join();
+        var deletedThread = assistantProvider.threads().delete(threadId).join();
         System.out.println(deletedThread);
     }
 
     public static void main(String[] args) {
-        var demo = new ThreadV2Demo();
+        var demo = new ThreadV2Demo("gpt-4o-mini");
+        demo.prepareDemo();
         demo.addTitleAction("Demo Thread v2 Create", demo::createThread);
         demo.addTitleAction("Demo Thread v2 Modify", demo::modifyThread);
         demo.addTitleAction("Demo Thread v2 Retrieve", demo::retrieveThread);

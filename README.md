@@ -771,6 +771,7 @@ Model availability varies by region and cloud. See more details about [Azure Ope
 Currently we are supporting the following services only:
 - `chatCompletionService` (text generation, streaming, function calling, vision, structured outputs)
 - `fileService` (upload files)
+- `assistantService beta V2` (assistants, threads, messages, runs, steps, vector stores, streaming, function calling, vision, structured outputs)
 
 ### Anyscale
 [Anyscale](https://www.anyscale.com/endpoints) is suported by Simple-OpenAI. We can use the class `SimpleOpenAIAnyscale` to start using this provider.
@@ -817,15 +818,15 @@ Examples for each OpenAI service have been created in the folder [demo](https://
 
     The recommended models to run this demo are:
 
-    1. gpt-4o (2024-08-06)
-    1. gpt-4o-mini (2024-07-18) 
+    1. gpt-4o
+    1. gpt-4o-mini
     
     See the Azure OpenAI docs for more details: [Azure OpenAI documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/).
     Once you have the deployment URL and the API key, set the following environment variables:
     ```
     export AZURE_OPENAI_BASE_URL=<https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME>
     export AZURE_OPENAI_API_KEY=<here goes your regional API key>
-    export AZURE_OPENAI_API_VERSION=<for example: 2024-08-01-preview>
+    export AZURE_OPENAI_API_VERSION=<for example: 2025-01-01-preview>
     ```
     Note that some models may not be available in all regions. If you have trouble finding a model, 
     try a different region. The API keys are regional (per cognitive account). If you provision 
