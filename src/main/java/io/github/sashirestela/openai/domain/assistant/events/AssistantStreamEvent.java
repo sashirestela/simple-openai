@@ -7,6 +7,7 @@ import io.github.sashirestela.openai.domain.assistant.ThreadMessageDelta;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunStep;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunStepDelta;
+import io.github.sashirestela.openai.exception.OpenAIResponseInfo.OpenAIErrorResponse;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,7 +49,7 @@ import static io.github.sashirestela.openai.domain.assistant.events.EventName.TH
 @StreamType(type = ThreadMessage.class, events = { THREAD_MESSAGE_CREATED, THREAD_MESSAGE_IN_PROGRESS,
         THREAD_MESSAGE_COMPLETED, THREAD_MESSAGE_INCOMPLETE })
 @StreamType(type = ThreadMessageDelta.class, events = { THREAD_MESSAGE_DELTA })
-@StreamType(type = String.class, events = { ERROR })
+@StreamType(type = OpenAIErrorResponse.class, events = { ERROR })
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AssistantStreamEvent {

@@ -1,0 +1,188 @@
+event: thread.run.created
+data: {"id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","object":"thread.run","created_at":1714853353,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"queued","started_at":null,"expires_at":1714853953,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.queued
+data: {"id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","object":"thread.run","created_at":1714853353,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"queued","started_at":null,"expires_at":1714853953,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.in_progress
+data: {"id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","object":"thread.run","created_at":1714853353,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","status":"in_progress","started_at":1714853353,"expires_at":1714853953,"cancelled_at":null,"failed_at":null,"completed_at":null,"required_action":null,"last_error":null,"model":"gpt-4-turbo","instructions":"You are a very kind assistant. If you cannot find correct facts to answer the questions, you have to refer to the attached files or use the functions provided. Finally, if you receive math questions, you must write and run code to answer them.","tools":[{"type":"function","function":{"name":"CurrentTemperature","description":"Get the current temperature for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"},"unit":{"type":"string","description":"The temperature unit to use. Infer this from the user's location."}},"required":["location","unit"]}}},{"type":"function","function":{"name":"RainProbability","description":"Get the probability of rain for a specific location","parameters":{"type":"object","properties":{"location":{"type":"string","description":"The city and state, e.g., San Francisco, CA"}},"required":["location"]}}},{"type":"file_search"}],"tool_resources":{"code_interpreter":{"file_ids":[]}},"metadata":{},"temperature":1.0,"top_p":1.0,"max_completion_tokens":null,"max_prompt_tokens":null,"truncation_strategy":{"type":"auto","last_messages":null},"incomplete_details":null,"usage":null,"response_format":"auto","tool_choice":"auto"}
+
+event: thread.run.step.created
+data: {"id":"step_lmDenBFdg4FoEBmRRWE1s8DZ","object":"thread.run.step","created_at":1714853354,"run_id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853953,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO"}},"usage":null}
+
+event: thread.run.step.in_progress
+data: {"id":"step_lmDenBFdg4FoEBmRRWE1s8DZ","object":"thread.run.step","created_at":1714853354,"run_id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","type":"message_creation","status":"in_progress","cancelled_at":null,"completed_at":null,"expires_at":1714853953,"failed_at":null,"last_error":null,"step_details":{"type":"message_creation","message_creation":{"message_id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO"}},"usage":null}
+
+event: thread.message.created
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message","created_at":1714853354,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","run_id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.in_progress
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message","created_at":1714853354,"assistant_id":"asst_eC1BeXfmDfbyiSB79WewXLw9","thread_id":"thread_DWFcoAFxKqpNR8MKplqFREzl","run_id":"run_uNQ87yXUBgR3bf8AKnzO0p1b","status":"in_progress","incomplete_details":null,"incomplete_at":null,"completed_at":null,"role":"assistant","content":[],"attachments":[],"metadata":{}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"The","annotations":[]}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" people"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Lima"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" known"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" as"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Lime"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ños"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" are"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" culturally"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" diverse"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" consisting"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" a"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" mix"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" indigenous"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Spanish"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" African"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Asian"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" other"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" ancest"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"ries"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" This"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" blend"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" of"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" cultures"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" has"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" shaped"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" the"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" city"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"'s"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" identity"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" is"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" reflected"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" in"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" its"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" traditions"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" cuisine"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":","}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" and"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" arts"}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":"."}}]}}
+
+event: thread.message.delta
+data: {"id":"msg_HdHuRcbxQRyO6ttCZt2PeSLO","object":"thread.message.delta","delta":{"content":[{"index":0,"type":"text","text":{"value":" Lime"}}]}}
+
+event: error
+data: {"error":{"message":"The server had an error processing your request. Sorry about that! You can retry your request, or contact us through our help center at help.openai.com if you keep seeing this error. (Please include the request ID req_82e33d912a13528ed9a4d31bf8b83617 in your email.)","type":"server_error","param":null,"code":null}}
