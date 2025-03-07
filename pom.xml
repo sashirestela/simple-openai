@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.19.0</version>
+  <version>3.19.1</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
