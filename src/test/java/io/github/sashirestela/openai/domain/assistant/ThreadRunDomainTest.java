@@ -13,6 +13,8 @@ import io.github.sashirestela.openai.domain.DomainTestingHelper.MockForType;
 import io.github.sashirestela.openai.domain.assistant.ThreadRun.RunStatus;
 import io.github.sashirestela.openai.domain.assistant.ThreadRunSubmitOutputRequest.ToolOutput;
 import io.github.sashirestela.openai.domain.assistant.events.EventName;
+import io.github.sashirestela.openai.exception.OpenAIResponseInfo.OpenAIErrorResponse;
+import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 class ThreadRunDomainTest {
@@ -341,6 +344,50 @@ class ThreadRunDomainTest {
         var threadRuns = openAI.threadRuns().getList("threadId").join();
         threadRuns.forEach(System.out::println);
         assertNotNull(threadRuns);
+    }
+
+    @Test
+    void testCreateThreadRunStreamWithError() throws IOException {
+        DomainTestingHelper.get()
+                .mockFor(httpClient, Map.of(
+                        MockForType.STREAM, List.of("src/test/resources/threads_runs_create_stream_error_1.txt")));
+        var question = "Tell me something pretty brief about its people.";
+        System.out.println("Question: " + question);
+        var threadRunRequest = ThreadRunRequest.builder()
+                .assistantId("assistantId")
+                .additionalMessage(ThreadMessageRequest.builder()
+                        .role(ThreadMessageRole.USER)
+                        .content(question)
+                        .build())
+                .parallelToolCalls(Boolean.TRUE)
+                .build();
+
+        var response = openAI.threadRuns().createStream("threadId", threadRunRequest).join();
+        System.out.print("Answer: ");
+        SimpleOpenAIException exception = assertThrows(SimpleOpenAIException.class, () -> {
+            response.forEach(e -> {
+                switch (e.getName()) {
+                    case EventName.THREAD_MESSAGE_DELTA:
+                        var messageDeltaFirstContent = ((ThreadMessageDelta) e.getData()).getDelta()
+                                .getContent()
+                                .get(0);
+                        if (messageDeltaFirstContent instanceof ContentPartTextAnnotation) {
+                            System.out
+                                    .print(((ContentPartTextAnnotation) messageDeltaFirstContent).getText().getValue());
+                        }
+                        break;
+                    case EventName.ERROR:
+                        var errorResponse = (OpenAIErrorResponse) e.getData();
+                        assertNotNull(errorResponse);
+                        System.out.println(
+                                "...\n\n>>> Sorry, we couldn't complete the answer. Wait for a moment and try again, please.");
+                        throw new SimpleOpenAIException(errorResponse.getError().getMessage());
+                    default:
+                        break;
+                }
+            });
+        });
+        assertNotNull(exception.getMessage());
     }
 
     public static class CurrentTemperature implements Functional {
