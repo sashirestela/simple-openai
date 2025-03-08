@@ -48,16 +48,13 @@ public class ExceptionDemo {
             } catch (Exception e) {
                 try {
                     OpenAIExceptionConverter.rethrow(e);
-                } catch (AuthenticationException ae) {
-                    var info = ae.getResponseInfo();
-                    System.out.println("Http Response Status: " + info.getStatus());
-                    System.out.println("OpenAI Error Message: " + info.getErrorResponse().getError().getMessage());
-                } catch (NotFoundException ne) {
-                    var info = ne.getResponseInfo();
-                    System.out.println("Http Response Status: " + info.getStatus());
-                    System.out.println("OpenAI Error Message: " + info.getErrorResponse().getError().getMessage());
+                } catch (AuthenticationException | NotFoundException oe) {
+                    System.out.println("Exception Class: " + oe.getClass().getSimpleName());
+                    System.out.println("Http Response Status: " + oe.getResponseInfo().getStatus());
+                    System.out.println("OpenAI Error Message: " + oe.getMessage());
                 } catch (RuntimeException re) {
-                    System.out.println("Error Message: " + re.getMessage());
+                    System.out.println("Exception Class: " + re.getClass().getSimpleName());
+                    System.out.println("Runtime Error Message: " + re.getMessage());
                 }
             }
         }
