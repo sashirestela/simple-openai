@@ -5,6 +5,7 @@ public class OpenAIException extends RuntimeException {
     protected final transient OpenAIResponseInfo responseInfo;
 
     public OpenAIException(OpenAIResponseInfo responseInfo) {
+        super(responseInfo.getErrorResponse().getError().getMessage());
         this.responseInfo = responseInfo;
     }
 
