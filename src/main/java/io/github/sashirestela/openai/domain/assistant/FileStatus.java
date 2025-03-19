@@ -14,6 +14,9 @@ public enum FileStatus {
     CANCELLED,
 
     @JsonProperty("failed")
-    FAILED;
+    FAILED,
+
+    @JsonProperty("frozen")
+    FROZEN;
 
 }
