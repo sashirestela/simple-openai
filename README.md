@@ -866,6 +866,7 @@ List of the main users of our library:
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 - [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
 - [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
+- [QuitNow](https://quitnow.app): A quit smoking app.
 
 
 ## 😍 Show Us Your Love
