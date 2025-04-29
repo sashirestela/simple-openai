@@ -123,6 +123,9 @@ public class ChatRequest {
         @JsonProperty("auto")
         AUTO,
 
+        @JsonProperty("flex")
+        FLEX,
+
         @JsonProperty("default")
         DEFAULT;
 

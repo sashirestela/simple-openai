@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -37,7 +38,7 @@ public class ResponseRequest {
 
     private String instructions;
 
-    private Integer maxOutputTokens;
+    private Long maxOutputTokens;
 
     @Size(max = 16)
     private Map<String, String> metadata;
@@ -47,6 +48,8 @@ public class ResponseRequest {
     private String previousResponseId;
 
     private Reasoning reasoning;
+
+    private ServiceTier serviceTier;
 
     private Boolean store;
 

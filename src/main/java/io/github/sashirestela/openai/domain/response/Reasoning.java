@@ -21,17 +21,20 @@ import lombok.ToString;
 public class Reasoning {
 
     private ReasoningEffort effort;
-    private GenerateSummary generateSummary;
+    private Summary summary;
 
     public static Reasoning of(ReasoningEffort effort) {
         return new Reasoning(effort, null);
     }
 
-    public static Reasoning of(ReasoningEffort effort, GenerateSummary generateSummary) {
-        return new Reasoning(effort, generateSummary);
+    public static Reasoning of(ReasoningEffort effort, Summary summary) {
+        return new Reasoning(effort, summary);
     }
 
-    public enum GenerateSummary {
+    public enum Summary {
+        @JsonProperty("auto")
+        AUTO,
+
         @JsonProperty("concise")
         CONCISE,
 
