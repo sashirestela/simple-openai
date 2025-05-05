@@ -1,0 +1,2 @@
+{"id":"resp_abc123","model":"gpt-4o","object":"response","created":1234567890,"instructions":"You are a helpful assistant.","items":[{"id":"item_abc123","type":"text","text":{"value":"Paris is the capital of France.","annotations":[]}}],"metadata":{},"usage":{"prompt_tokens":10,"completion_tokens":7,"total_tokens":17}}
+

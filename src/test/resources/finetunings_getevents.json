@@ -1,1 +1,2 @@
 { "object": "list", "data": [ { "object": "fine_tuning.job.event", "id": "ftevent-M73FMilTLFOs7CDqE1MW3q1m", "created_at": 1700533366, "level": "info", "message": "The job has successfully completed", "data": {}, "type": "message" }, { "object": "fine_tuning.job.event", "id": "ftevent-jxsfCQ77FixXGkmoooLA4UdE", "created_at": 1700533364, "level": "info", "message": "New fine-tuned model created: ft:gpt-3.5-turbo-1106:personal::8NAhPVlK", "data": {}, "type": "message" } ], "has_more": true }
+

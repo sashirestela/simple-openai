@@ -20,6 +20,7 @@ import io.github.sashirestela.openai.service.ImageServices;
 import io.github.sashirestela.openai.service.ModelServices;
 import io.github.sashirestela.openai.service.ModerationServices;
 import io.github.sashirestela.openai.service.RealtimeServices;
+import io.github.sashirestela.openai.service.ResponseServices;
 import io.github.sashirestela.openai.service.SessionServices;
 import io.github.sashirestela.openai.service.UploadServices;
 import io.github.sashirestela.openai.support.Constant;
@@ -48,6 +49,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
         ModelServices,
         ModerationServices,
         RealtimeServices,
+        ResponseServices,
         SessionServices,
         UploadServices {
 
@@ -132,6 +134,11 @@ public class SimpleOpenAI extends OpenAIProvider implements
     @Override
     public OpenAI.Moderations moderations() {
         return getOrCreateService(OpenAI.Moderations.class);
+    }
+
+    @Override
+    public OpenAI.Responses responses() {
+        return getOrCreateService(OpenAI.Responses.class);
     }
 
     @Override

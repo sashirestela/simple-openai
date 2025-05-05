@@ -25,6 +25,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Audio Example](#chat-completion-with-audio-example)
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
+  - [Response API Example](#response-api-example) **NEW**
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
@@ -66,6 +67,7 @@ Full support for most of the OpenAI services:
 * Models (List)
 * Moderation (Check Harmful Text)
 * Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
+* Response (Text Generation, Streaming, Function Calling, JSON Output, Web Search, File Search, Reasoning)
 * Session Token (Create Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
@@ -75,7 +77,7 @@ Full support for most of the OpenAI services:
 ![OpenAI Beta Services](media/openai_beta_services.png)
 
 NOTES:
-1. The methods's responses are `CompletableFuture<ResponseObject>`, which means they are asynchronous, but you can call the join() method to return the result value when complete.
+1. The methods' responses are `CompletableFuture<ResponseObject>`, which means they are asynchronous, but you can call the join() method to return the result value when complete.
 1. Exceptions for the above point are the methods whose names end with the suffix `AndPoll()`. These methods are synchronous and block until a Predicate function that you provide returns false.
 
 
@@ -563,6 +565,85 @@ In this example you can see the code to establish a speech-to-speech conversatio
 You can see the full code on:
 
 [RealtimeDemo.java](src/demo/java/io/github/sashirestela/openai/demo/RealtimeDemo.java)
+
+### Response API Example
+Example to call the Response API service to ask a question and receive a streamed response. This is OpenAI's newest API for generating text content:
+
+```java
+// Basic example of using the Response API with streaming
+var responseRequest = ResponseRequest.builder()
+        .input("Write a short technical description of how large language models work, in no more than 100 words.")
+        .model("gpt-4o")
+        .temperature(0.0)
+        .maxOutputTokens(300)
+        .build();
+
+System.out.println("Sending request to the OpenAI Response API (streaming)...");
+var futureResponse = openAI.responses().createStreamEvent(responseRequest);
+var eventStream = futureResponse.join();
+
+System.out.println("Response:");
+eventStream.forEach(event -> {
+    String eventType = event.getName();
+
+    switch (eventType) {
+        case RESPONSE_OUTPUT_TEXT_DELTA:
+            // For incremental text updates, print the delta
+            ResponseDelta deltaEvent = (ResponseDelta) event.getData();
+            System.out.print(deltaEvent.getDelta());
+            break;
+
+        case RESPONSE_COMPLETED:
+            // When response is complete, print usage info
+            Response response = (Response) event.getData();
+            var usage = response.getUsage();
+            if (usage != null) {
+                System.out.println("\n");
+                System.out.println(usage);
+            }
+            break;
+    }
+});
+```
+
+Example to call the Response API with web search capability, allowing the model to search the Internet for current information:
+
+```java
+// Create the request with web search tool
+var request = ResponseRequest.builder()
+        .input("What are the latest developments in quantum computing as of 2025?")
+        .model("gpt-4o")
+        .tool(ResponseTool.webSearchTool())
+        .build();
+
+System.out.println("Sending request with web search capability...");
+var futureResponse = openAI.responses().createStreamEvent(request);
+var eventStream = futureResponse.join();
+
+eventStream.forEach(event -> {
+    String eventType = event.getName();
+
+    switch (eventType) {
+        case RESPONSE_OUTPUT_TEXT_DELTA:
+            // For incremental text updates
+            ResponseDelta deltaEvent = (ResponseDelta) event.getData();
+            System.out.print(deltaEvent.getDelta());
+            break;
+
+        case "response.web_search_call.in_progress":
+            System.out.println("Web search in progress...");
+            break;
+
+        case "response.web_search_call.completed":
+            System.out.println("Web search completed.");
+            break;
+    }
+});
+```
+
+For more examples of the Response API, including function calling, file search, structured output, and conversation state management, see:
+
+[ResponseDemo.java](src/demo/java/io/github/sashirestela/openai/demo/ResponseDemo.java)
 
 ## 🔱 Exception Handling
 Simple-OpenAI provides an exception handling mechanism through the `OpenAIExceptionConverter` class. This converter maps HTTP errors to specific OpenAI exceptions, making it easier to handle different types of API errors:

@@ -1,0 +1,36 @@
+{
+  "id": "resp_abc123",
+  "model": "gpt-4o",
+  "object": "response",
+  "created": 1234567890,
+  "instructions": "You are a helpful assistant.",
+  "items": [
+    {
+      "id": "item_abc123",
+      "type": "tool_use",
+      "tool_use": {
+        "id": "call_abc123",
+        "type": "function",
+        "function": {
+          "name": "get_weather",
+          "arguments": "{\"location\":\"San Francisco\",\"unit\":\"celsius\"}"
+        }
+      }
+    },
+    {
+      "id": "item_def456",
+      "type": "text",
+      "text": {
+        "value": "The weather in San Francisco is 18°C.",
+        "annotations": []
+      }
+    }
+  ],
+  "metadata": {},
+  "usage": {
+    "prompt_tokens": 15,
+    "completion_tokens": 12,
+    "total_tokens": 27
+  }
+}
+

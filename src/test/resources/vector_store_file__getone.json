@@ -1,1 +1,2 @@
 {"id":"file-odcbXdF4ZO6s1q2YvpYXRYT1","object":"vector_store.file","usage_bytes":1615,"created_at":1718845704,"vector_store_id":"vs_T05KbzT4HmfHwgFSnjHAQmJ3","status":"completed","last_error":null,"chunking_strategy":{"type":"static","static":{"max_chunk_size_tokens":800,"chunk_overlap_tokens":400}}}
+

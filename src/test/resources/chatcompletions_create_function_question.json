@@ -1,1 +1,2 @@
 { "id": "chatcmpl-8LkOfjXy71qSvozfZ7KjTRVCDaubG", "object": "chat.completion", "created": 1700193929, "model": "gpt-4-1106-preview", "choices": [ { "index": 0, "message": { "role": "assistant", "content": null, "tool_calls": [ { "id": "call_NkbBCeM6f6ONgCGIdCNEnjfL", "type": "function", "function": { "name": "product", "arguments": "{\"multiplicand\":123,\"multiplier\":456}" } } ] }, "finish_reason": "tool_calls" } ], "usage": { "prompt_tokens": 91, "completion_tokens": 20, "total_tokens": 111 }, "system_fingerprint": "fp_a24b4d720c" }
+
