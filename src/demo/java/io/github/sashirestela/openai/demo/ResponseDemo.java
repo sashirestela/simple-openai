@@ -944,9 +944,9 @@ public class ResponseDemo extends AbstractDemo {
     }
 
     /**
-     * Demonstrates an interactive conversation with the OpenAI Response API
-     * using the built-in conversation state management with previous_response_id.
-     * This approach lets OpenAI handle the conversation history automatically.
+     * Demonstrates an interactive conversation with the OpenAI Response API using the built-in
+     * conversation state management with previous_response_id. This approach lets OpenAI handle the
+     * conversation history automatically.
      */
     public void demoInteractiveConversation() {
         System.out.println("Starting an interactive conversation with the OpenAI Response API...");
@@ -1050,8 +1050,12 @@ public class ResponseDemo extends AbstractDemo {
             });
 
             // Get the complete response to extract the ID for the next turn
-            finalResponse = responseProvider.responses().retrieve(responseProvider.responses()
-                .create(request).join().getId()).join();
+            finalResponse = responseProvider.responses()
+                    .retrieve(responseProvider.responses()
+                            .create(request)
+                            .join()
+                            .getId())
+                    .join();
 
             // Save the response ID for the next turn
             previousResponseId = finalResponse.getId();
@@ -1067,11 +1071,13 @@ public class ResponseDemo extends AbstractDemo {
     }
 
     /**
-     * Demonstrates an interactive conversation with the OpenAI Response API with function calling capabilities.
-     * This method uses previous_response_id for state management and supports function execution.
+     * Demonstrates an interactive conversation with the OpenAI Response API with function calling
+     * capabilities. This method uses previous_response_id for state management and supports function
+     * execution.
      */
     public void demoInteractiveConversationWithFunctions() {
-        System.out.println("Starting an interactive conversation with the OpenAI Response API with function capabilities...");
+        System.out.println(
+                "Starting an interactive conversation with the OpenAI Response API with function capabilities...");
         System.out.println("Using built-in conversation state management with previous_response_id");
         System.out.println("You can ask about weather conditions for any location.");
         System.out.println("Type 'exit' to end the conversation");
@@ -1083,8 +1089,10 @@ public class ResponseDemo extends AbstractDemo {
         var weatherSchema = "{" +
                 "\"type\": \"object\"," +
                 "\"properties\": {" +
-                "  \"location\": {\"type\": \"string\", \"description\": \"The city and state, e.g., San Francisco, CA\"}," +
-                "  \"unit\": {\"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"], \"description\": \"The temperature unit to use\"}" +
+                "  \"location\": {\"type\": \"string\", \"description\": \"The city and state, e.g., San Francisco, CA\"},"
+                +
+                "  \"unit\": {\"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"], \"description\": \"The temperature unit to use\"}"
+                +
                 "}," +
                 "\"required\": [\"location\", \"unit\"]" +
                 "}";
@@ -1092,7 +1100,8 @@ public class ResponseDemo extends AbstractDemo {
         var rainSchema = "{" +
                 "\"type\": \"object\"," +
                 "\"properties\": {" +
-                "  \"location\": {\"type\": \"string\", \"description\": \"The city and state, e.g., San Francisco, CA\"}" +
+                "  \"location\": {\"type\": \"string\", \"description\": \"The city and state, e.g., San Francisco, CA\"}"
+                +
                 "}," +
                 "\"required\": [\"location\"]" +
                 "}";
@@ -1302,7 +1311,9 @@ public class ResponseDemo extends AbstractDemo {
                                 System.out.println("\nAssistant (after function call): ");
 
                                 // Use streaming for better user experience
-                                var functionResultStream = responseProvider.responses().createStreamEvent(functionResultRequest).join();
+                                var functionResultStream = responseProvider.responses()
+                                        .createStreamEvent(functionResultRequest)
+                                        .join();
                                 functionResultStream.forEach(event -> {
                                     if (RESPONSE_OUTPUT_TEXT_DELTA.equals(event.getName())) {
                                         ResponseDelta deltaEvent = (ResponseDelta) event.getData();
@@ -1312,7 +1323,8 @@ public class ResponseDemo extends AbstractDemo {
 
                                 // Get the complete response to extract the ID for the next turn
                                 var completeFunctionResponse = responseProvider.responses()
-                                        .create(functionResultRequest).join();
+                                        .create(functionResultRequest)
+                                        .join();
                                 previousResponseId = completeFunctionResponse.getId();
 
                                 break;
@@ -1343,12 +1355,16 @@ public class ResponseDemo extends AbstractDemo {
 
     // Helper classes for function calling
     private static class WeatherInfo {
+
         public String location;
         public String unit;
+
     }
 
     private static class RainInfo {
+
         public String location;
+
     }
 
     // Weather function implementations
@@ -1366,7 +1382,6 @@ public class ResponseDemo extends AbstractDemo {
         // Simulate getting rain probability - in a real app, you would call a weather API
         return Math.random() * 100;
     }
-
 
     /**
      * Demonstrates using previous_response_id for conversation state management.
@@ -1424,7 +1439,8 @@ public class ResponseDemo extends AbstractDemo {
         demo.addTitleAction("Call Response API with External Image", demo::demoCallResponseWithExternalImage);
         demo.addTitleAction("Call Response API with Local Image", demo::demoCallResponseWithLocalImage);
         demo.addTitleAction("Call Response API with File Search", demo::demoCallResponseWithFileSearch);
-        demo.addTitleAction("Call Response API with Structured JSON Output", demo::demoCallResponseWithStructuredOutput);
+        demo.addTitleAction("Call Response API with Structured JSON Output",
+                demo::demoCallResponseWithStructuredOutput);
         demo.addTitleAction("Call Response API with JSON Object Format", demo::demoCallResponseWithJsonObject);
         demo.addTitleAction("Call Response API with Instructions", demo::demoCallResponseWithInstructions);
         demo.addTitleAction("Call Response API with Conversation Management", demo::demoConversationStateManagement);

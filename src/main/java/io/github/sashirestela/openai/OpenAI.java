@@ -760,8 +760,8 @@ public interface OpenAI {
         /**
          * Creates a model response for the given input without streaming.
          *
-         * @param responseRequest Includes the input and model to use. Its 'stream'
-         *                       attribute is set to false automatically.
+         * @param responseRequest Includes the input and model to use. Its 'stream' attribute is set to
+         *                        false automatically.
          * @return The response object.
          */
         default CompletableFuture<io.github.sashirestela.openai.domain.response.Response> create(
@@ -773,8 +773,8 @@ public interface OpenAI {
         /**
          * Creates a model response for the given input with streaming events.
          *
-         * @param responseRequest Includes the input and model to use. Its 'stream'
-         *                       attribute is set to true automatically.
+         * @param responseRequest Includes the input and model to use. Its 'stream' attribute is set to true
+         *                        automatically.
          * @return Response is delivered as a stream of events with different event types.
          */
         default CompletableFuture<Stream<Event>> createStreamEvent(
@@ -806,19 +806,19 @@ public interface OpenAI {
          * List input items for a specific response.
          *
          * @param responseId The ID of the response to retrieve input items for.
-         * @param after An item ID to list items after, used in pagination.
-         * @param before An item ID to list items before, used in pagination.
-         * @param include Additional fields to include in the response.
-         * @param limit A limit on the number of objects to be returned (1-100, default is 20).
+         * @param after      An item ID to list items after, used in pagination.
+         * @param before     An item ID to list items before, used in pagination.
+         * @param include    Additional fields to include in the response.
+         * @param limit      A limit on the number of objects to be returned (1-100, default is 20).
          * @return A list of input items.
          */
         @GET("/{responseId}/input_items")
         CompletableFuture<Page<Object>> listInputItems(
-            @Path("responseId") String responseId,
-            @Query("after") String after,
-            @Query("before") String before,
-            @Query("include") List<String> include,
-            @Query("limit") Integer limit);
+                @Path("responseId") String responseId,
+                @Query("after") String after,
+                @Query("before") String before,
+                @Query("include") List<String> include,
+                @Query("limit") Integer limit);
 
     }
 

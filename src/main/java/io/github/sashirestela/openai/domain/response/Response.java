@@ -26,23 +26,23 @@ public class Response {
     private String id;
     private String model;
     private String object;
-    
+
     @JsonProperty("created_at")
     private Long created;
-    
+
     private String instructions;
     private List<Object> items;
     private Map<String, Object> metadata;
-    
+
     private List<Object> output;
-    
+
     @JsonProperty("previous_response_id")
     private String previousResponseId;
-    
+
     private String user;
     private Usage usage;
     private Error error;
-    
+
     @JsonProperty("incomplete_details")
     private IncompleteDetails incompleteDetails;
 

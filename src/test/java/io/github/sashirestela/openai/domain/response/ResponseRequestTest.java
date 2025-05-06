@@ -40,4 +40,5 @@ class ResponseRequestTest {
         assertEquals(true, deserializedRequest.getStream());
         assertEquals(0.7, deserializedRequest.getTemperature());
     }
+
 }

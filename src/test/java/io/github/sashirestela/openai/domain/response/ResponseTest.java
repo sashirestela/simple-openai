@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -17,18 +15,18 @@ class ResponseTest {
     @Test
     void testResponseSerialization() throws JsonProcessingException {
         // Create a Response object with all fields
-        var items = new ArrayList<Object>();
+        var items = new ArrayList<>();
         var textItem = new HashMap<String, Object>();
         textItem.put("id", "item_abc123");
         textItem.put("type", "text");
-        
+
         var textContent = new HashMap<String, Object>();
         textContent.put("value", "Paris is the capital of France.");
         textContent.put("annotations", new ArrayList<>());
-        
+
         textItem.put("text", textContent);
         items.add(textItem);
-        
+
         var response = Response.builder()
                 .id("resp_abc123")
                 .model("gpt-4o")
@@ -63,7 +61,7 @@ class ResponseTest {
         assertEquals(7, deserializedResponse.getUsage().getCompletionTokens());
         assertEquals(17, deserializedResponse.getUsage().getTotalTokens());
     }
-    
+
     @Test
     void testResponseWithErrorSerialization() throws JsonProcessingException {
         // Create a Response object with error
@@ -95,4 +93,5 @@ class ResponseTest {
         assertEquals("model", deserializedResponse.getError().getParam());
         assertEquals("invalid_request_error", deserializedResponse.getError().getType());
     }
+
 }

@@ -21,48 +21,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Request class for the OpenAI Response API.
- * 
- * The Response API is OpenAI's latest API for creating text-only outputs from models
- * with optional tools. It offers these advantages over the older Chat Completions API:
- * - Output array instead of choices array
- * - Different structure for function calls
- * - More comprehensive reasoning support
- * - Built-in conversation state management through previous_response_id
- * - Structured JSON outputs via the text.format parameter
- * 
- * Example usage:
- * ```java
- * // Simple text completion
- * ResponseRequest request = ResponseRequest.builder()
- *     .input("What is the capital of France?")
- *     .model("gpt-4o")
- *     .build();
- * 
- * // Using the web search tool (available in the Response API)
- * ResponseRequest webSearchRequest = ResponseRequest.builder()
- *     .input("What was a positive news story from today?")
- *     .model("gpt-4o")
- *     .tool(ResponseTool.webSearchTool())
- *     .build();
- * 
- * // Using a custom function tool
- * ResponseRequest functionRequest = ResponseRequest.builder()
- *     .input("What is the weather in New York?")
- *     .model("gpt-4o")
- *     .tool(ResponseTool.functionTool(
- *         "get_weather",
- *         "Get current weather in a location",
- *         weatherParameters
- *     ))
- *     .build();
- * ```
- * 
- * Note: Not all tools from the Chat Completions API are available in the Response API.
- * The currently supported tools are:
- * - Function tools (custom developer-defined functions)
- * - Web search (web_search_preview)
- * - File search (file_search)
+ * Request class for the OpenAI Response API. The Response API is OpenAI's latest API for creating
+ * text-only outputs from models with optional tools. It offers these advantages over the older Chat
+ * Completions API: - Output array instead of choices array - Different structure for function calls
+ * - More comprehensive reasoning support - Built-in conversation state management through
+ * previous_response_id - Structured JSON outputs via the text.format parameter Example usage:
+ * ```java // Simple text completion ResponseRequest request = ResponseRequest.builder()
+ * .input("What is the capital of France?") .model("gpt-4o") .build(); // Using the web search tool
+ * (available in the Response API) ResponseRequest webSearchRequest = ResponseRequest.builder()
+ * .input("What was a positive news story from today?") .model("gpt-4o")
+ * .tool(ResponseTool.webSearchTool()) .build(); // Using a custom function tool ResponseRequest
+ * functionRequest = ResponseRequest.builder() .input("What is the weather in New York?")
+ * .model("gpt-4o") .tool(ResponseTool.functionTool( "get_weather", "Get current weather in a
+ * location", weatherParameters )) .build(); ``` Note: Not all tools from the Chat Completions API
+ * are available in the Response API. The currently supported tools are: - Function tools (custom
+ * developer-defined functions) - Web search (web_search_preview) - File search (file_search)
  */
 @Getter
 @Builder

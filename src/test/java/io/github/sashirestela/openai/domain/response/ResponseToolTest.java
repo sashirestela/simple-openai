@@ -1,19 +1,16 @@
 package io.github.sashirestela.openai.domain.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ResponseToolType;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 class ResponseToolTest {
 
@@ -36,27 +33,25 @@ class ResponseToolTest {
 
         // Create tool using the direct builder approach
         var toolWithBuilder = ResponseTool.builder()
-            .type(ResponseToolType.FUNCTION)
-            .name("get_weather")
-            .description("Get the current weather in a given location")
-            .parameters(parameters)
-            .strict(true)
-            .build();
+                .type(ResponseToolType.FUNCTION)
+                .name("get_weather")
+                .description("Get the current weather in a given location")
+                .parameters(parameters)
+                .strict(true)
+                .build();
 
         // Create tool using the convenience method
         var toolWithMethod = ResponseTool.functionTool(
-            "get_weather",
-            "Get the current weather in a given location",
-            parameters
-        );
+                "get_weather",
+                "Get the current weather in a given location",
+                parameters);
 
         // Create tool with strict parameter
         var toolWithStrict = ResponseTool.functionTool(
-            "get_weather",
-            "Get the current weather in a given location",
-            parameters,
-            true
-        );
+                "get_weather",
+                "Get the current weather in a given location",
+                parameters,
+                true);
 
         // Verify builder created correctly
         assertEquals(ResponseToolType.FUNCTION, toolWithBuilder.getType());
@@ -82,11 +77,10 @@ class ResponseToolTest {
         var parameters = mapper.readTree("{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\"}}}");
 
         var tool = ResponseTool.functionTool(
-            "search",
-            "Search for information",
-            parameters,
-            true
-        );
+                "search",
+                "Search for information",
+                parameters,
+                true);
 
         // Serialize to JSON
         var json = mapper.writeValueAsString(tool);
@@ -138,10 +132,10 @@ class ResponseToolTest {
     void testBuiltInToolRequest() throws JsonProcessingException {
         // Create a request with the web search tool
         var request = ResponseRequest.builder()
-            .input("What was a positive news story from today?")
-            .model("gpt-4o")
-            .tool(ResponseTool.webSearchTool())
-            .build();
+                .input("What was a positive news story from today?")
+                .model("gpt-4o")
+                .tool(ResponseTool.webSearchTool())
+                .build();
 
         // Serialize to JSON
         var json = mapper.writeValueAsString(request);
@@ -149,4 +143,5 @@ class ResponseToolTest {
         // Verify it contains the web search tool
         assertTrue(json.contains("\"type\":\"web_search_preview\""));
     }
+
 }
