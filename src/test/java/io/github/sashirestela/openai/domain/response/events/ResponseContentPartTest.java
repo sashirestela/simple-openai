@@ -18,15 +18,15 @@ class ResponseContentPartTest {
     void testResponseContentPartDeserialization() {
         // Create a JSON for ResponseContentPart
         String json = "{\n" +
-            "  \"type\": \"response.content_part.added\",\n" +
-            "  \"itemId\": \"item_abc123\",\n" +
-            "  \"outputIndex\": \"0\",\n" +
-            "  \"contentIndex\": \"0\",\n" +
-            "  \"part\": {\n" +
-            "    \"type\": \"text\",\n" +
-            "    \"text\": \"This is a text content part.\"\n" +
-            "  }\n" +
-            "}";
+                "  \"type\": \"response.content_part.added\",\n" +
+                "  \"itemId\": \"item_abc123\",\n" +
+                "  \"outputIndex\": \"0\",\n" +
+                "  \"contentIndex\": \"0\",\n" +
+                "  \"part\": {\n" +
+                "    \"type\": \"text\",\n" +
+                "    \"text\": \"This is a text content part.\"\n" +
+                "  }\n" +
+                "}";
 
         try {
             // Deserialize
@@ -50,18 +50,18 @@ class ResponseContentPartTest {
     void testResponseContentPartWithImagePart() {
         // Create a JSON for ResponseContentPart with an image part
         String json = "{\n" +
-            "  \"type\": \"response.content_part.added\",\n" +
-            "  \"itemId\": \"item_image123\",\n" +
-            "  \"outputIndex\": \"0\",\n" +
-            "  \"contentIndex\": \"1\",\n" +
-            "  \"part\": {\n" +
-            "    \"type\": \"image\",\n" +
-            "    \"image\": {\n" +
-            "      \"url\": \"https://example.com/image.jpg\",\n" +
-            "      \"detail\": \"high\"\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+                "  \"type\": \"response.content_part.added\",\n" +
+                "  \"itemId\": \"item_image123\",\n" +
+                "  \"outputIndex\": \"0\",\n" +
+                "  \"contentIndex\": \"1\",\n" +
+                "  \"part\": {\n" +
+                "    \"type\": \"image\",\n" +
+                "    \"image\": {\n" +
+                "      \"url\": \"https://example.com/image.jpg\",\n" +
+                "      \"detail\": \"high\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
 
         try {
             // Deserialize
@@ -75,7 +75,7 @@ class ResponseContentPartTest {
             assertEquals("1", contentPart.getContentIndex());
             assertNotNull(contentPart.getPart());
             assertEquals("image", contentPart.getPart().get("type"));
-            
+
             @SuppressWarnings("unchecked")
             Map<String, Object> image = (Map<String, Object>) contentPart.getPart().get("image");
             assertNotNull(image);
@@ -90,22 +90,22 @@ class ResponseContentPartTest {
     void testResponseContentPartWithToolCallPart() {
         // Create a JSON for ResponseContentPart with a tool call part
         String json = "{\n" +
-            "  \"type\": \"response.content_part.added\",\n" +
-            "  \"itemId\": \"item_tool123\",\n" +
-            "  \"outputIndex\": \"0\",\n" +
-            "  \"contentIndex\": \"2\",\n" +
-            "  \"part\": {\n" +
-            "    \"type\": \"tool_call\",\n" +
-            "    \"tool_call\": {\n" +
-            "      \"id\": \"call_abc123\",\n" +
-            "      \"type\": \"function\",\n" +
-            "      \"function\": {\n" +
-            "        \"name\": \"get_weather\",\n" +
-            "        \"arguments\": \"{\\\"location\\\":\\\"New York\\\"}\"\n" +
-            "      }\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+                "  \"type\": \"response.content_part.added\",\n" +
+                "  \"itemId\": \"item_tool123\",\n" +
+                "  \"outputIndex\": \"0\",\n" +
+                "  \"contentIndex\": \"2\",\n" +
+                "  \"part\": {\n" +
+                "    \"type\": \"tool_call\",\n" +
+                "    \"tool_call\": {\n" +
+                "      \"id\": \"call_abc123\",\n" +
+                "      \"type\": \"function\",\n" +
+                "      \"function\": {\n" +
+                "        \"name\": \"get_weather\",\n" +
+                "        \"arguments\": \"{\\\"location\\\":\\\"New York\\\"}\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
 
         try {
             // Deserialize
@@ -119,13 +119,13 @@ class ResponseContentPartTest {
             assertEquals("2", contentPart.getContentIndex());
             assertNotNull(contentPart.getPart());
             assertEquals("tool_call", contentPart.getPart().get("type"));
-            
+
             @SuppressWarnings("unchecked")
             Map<String, Object> toolCall = (Map<String, Object>) contentPart.getPart().get("tool_call");
             assertNotNull(toolCall);
             assertEquals("call_abc123", toolCall.get("id"));
             assertEquals("function", toolCall.get("type"));
-            
+
             @SuppressWarnings("unchecked")
             Map<String, Object> function = (Map<String, Object>) toolCall.get("function");
             assertNotNull(function);
@@ -229,4 +229,5 @@ class ResponseContentPartTest {
         assertEquals("text", deserializedPart.getPart().get("type"));
         assertEquals("Test content for serialization.", deserializedPart.getPart().get("text"));
     }
+
 }

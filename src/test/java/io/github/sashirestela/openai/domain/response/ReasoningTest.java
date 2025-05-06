@@ -90,4 +90,5 @@ class ReasoningTest {
         assertEquals("\"detailed\"", detailedJson);
         assertEquals(Summary.DETAILED, mapper.readValue(detailedJson, Summary.class));
     }
+
 }

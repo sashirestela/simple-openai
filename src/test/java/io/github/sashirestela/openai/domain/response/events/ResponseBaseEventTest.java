@@ -19,15 +19,15 @@ class ResponseBaseEventTest {
     void testResponseBaseEventCreation() {
         // Create a ResponseBaseEvent by deserialization
         String json = "{\n" +
-            "  \"type\": \"response.created\",\n" +
-            "  \"response\": {\n" +
-            "    \"id\": \"resp_abc123\",\n" +
-            "    \"model\": \"gpt-4o\",\n" +
-            "    \"object\": \"response\",\n" +
-            "    \"created_at\": 1234567890,\n" +
-            "    \"items\": []\n" +
-            "  }\n" +
-            "}";
+                "  \"type\": \"response.created\",\n" +
+                "  \"response\": {\n" +
+                "    \"id\": \"resp_abc123\",\n" +
+                "    \"model\": \"gpt-4o\",\n" +
+                "    \"object\": \"response\",\n" +
+                "    \"created_at\": 1234567890,\n" +
+                "    \"items\": []\n" +
+                "  }\n" +
+                "}";
 
         try {
             // Deserialize
@@ -167,4 +167,5 @@ class ResponseBaseEventTest {
         assertEquals("model", event.getResponse().getError().getParam());
         assertEquals("invalid_request_error", event.getResponse().getError().getType());
     }
+
 }
