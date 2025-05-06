@@ -1,2 +1,1 @@
 {"object":"fine_tuning.job","id":"ftjob-35j8EBrZVsuyFFe2OD8Tkmvd","model":"gpt-3.5-turbo-1106","created_at":1700533111,"finished_at":1700533362,"fine_tuned_model":"ft:gpt-3.5-turbo-1106:personal::8NAhPVlK","organization_id":"org-4WdgDKZ75eLPEH6zqX5hFd5e","result_files":["file-brNpFdh47xDizivX8ZMsOPo7"],"status":"succeeded","validation_file":null,"training_file":"file-0e5BDWQYA1KsguTJRCCXqAa2","hyperparameters":{"n_epochs":10,"batch_size":1,"learning_rate_multiplier":2},"trained_tokens":4790,"error":{"code":"a1b2c3","message":"sample error","param":"training_file"}}
-

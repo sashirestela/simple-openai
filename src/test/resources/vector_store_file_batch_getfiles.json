@@ -1,2 +1,1 @@
 {"object":"list","data":[{"id":"file-Fwaz7Bur3ZBVdgjbFpFcseJE","object":"vector_store.file","created_at":1714598088,"vector_store_id":"vs_zlZstoxCwDwdebrkRYw495e0","status":"completed","last_error":null},{"id":"file-KETtd9OsHv4in03XIQprV2tt","object":"vector_store.file","created_at":1714598088,"vector_store_id":"vs_zlZstoxCwDwdebrkRYw495e0","status":"completed","last_error":null}],"first_id":"file-Fwaz7Bur3ZBVdgjbFpFcseJE","last_id":"file-KETtd9OsHv4in03XIQprV2tt","has_more":false}
-

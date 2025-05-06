@@ -1,2 +1,1 @@
 {"id":"msg_kspC53sGug90y3a7sLmdjqGx","object":"thread.message","created_at":1715406241,"assistant_id":null,"thread_id":"thread_ury8vAUDoxfjmUDwRoaa5yPV","run_id":null,"role":"user","content":[{"type":"text","text":{"value":"Do you see any similarity or difference between the attached images?","annotations":[]}},{"type":"image_file","image_file":{"file_id":"file-TBaGv9GEvJ9DOhHf7AuDqvKf","detail":"low"}},{"type":"image_url","image_url":{"url":"https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg","detail":"low"}}],"attachments":[],"metadata":{}}
-

@@ -1,2 +1,1 @@
 {"id":"vs_MBLs9nJ2o98DounBJ5PzCTQ7","object":"vector_store","name":"Demonstration Vector Store","status":"completed","usage_bytes":1615,"created_at":1714527686,"file_counts":{"in_progress":0,"completed":1,"failed":0,"cancelled":0,"total":1},"metadata":{"env":"test","user":"mary"},"expires_after":{"anchor":"last_active_at","days":1},"expires_at":1714614089,"last_active_at":1714527689}
-

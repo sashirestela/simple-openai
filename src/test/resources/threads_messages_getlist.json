@@ -1,2 +1,1 @@
 {"object":"list","data":[{"id":"msg_w7i1RK9p3ooxMSvltWGXMia5","object":"thread.message","created_at":1714864442,"assistant_id":null,"thread_id":"thread_B44c9yFcrj0gnTZDO0axS1Qy","run_id":null,"role":"user","content":[{"type":"text","text":{"value":"Please, tell me what an LLM is?","annotations":[]}}],"attachments":[{"file_id":"file-23bwLoBgZkxIx6n5GYJNgWQe","tools":[{"type":"file_search"}]}],"metadata":{"item":"firstly","user":"dummy"}}],"first_id":"msg_w7i1RK9p3ooxMSvltWGXMia5","last_id":"msg_w7i1RK9p3ooxMSvltWGXMia5","has_more":false}
-
