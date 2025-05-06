@@ -155,7 +155,8 @@ class SimpleOpenAITest {
                 new TestData(OpenAIBeta2.ThreadRunSteps.class, openAI::threadRunSteps),
                 new TestData(OpenAIBeta2.VectorStores.class, openAI::vectorStores),
                 new TestData(OpenAIBeta2.VectorStoreFiles.class, openAI::vectorStoreFiles),
-                new TestData(OpenAIBeta2.VectorStoreFileBatches.class, openAI::vectorStoreFileBatches)
+                new TestData(OpenAIBeta2.VectorStoreFileBatches.class, openAI::vectorStoreFileBatches),
+                new TestData(OpenAI.Responses.class, openAI::responses)
         };
         for (TestData testData : data) {
             when(cleverClient.create(any()))
