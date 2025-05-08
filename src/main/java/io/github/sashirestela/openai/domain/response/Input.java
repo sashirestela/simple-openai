@@ -61,7 +61,6 @@ public abstract class Input {
         @Required
         private String id;
 
-        @Required
         private InputType type;
 
         private ItemReference(String id) {
@@ -135,23 +134,18 @@ public abstract class Input {
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class FileInputContent extends Content {
 
-            @Required
+            private String fileData;
+
             private String fileId;
 
             private String filename;
 
-            private FileInputContent(String fileId, String filename) {
+            @Builder
+            public FileInputContent(String fileData, String fileId, String filename) {
+                this.fileData = fileData;
                 this.fileId = fileId;
                 this.filename = filename;
                 this.type = ContentType.INPUT_FILE;
-            }
-
-            public static FileInputContent of(String fileId) {
-                return new FileInputContent(fileId, null);
-            }
-
-            public static FileInputContent of(String fileId, String filename) {
-                return new FileInputContent(fileId, filename);
             }
 
         }
@@ -419,12 +413,15 @@ public abstract class Input {
             @Required
             private List<ReasoningContent> summary;
 
+            private String encryptedContent;
+
             private ItemStatus status;
 
             @Builder
-            public ReasoningItem(String id, List<ReasoningContent> summary, ItemStatus status) {
+            public ReasoningItem(String id, List<ReasoningContent> summary, String encryptedContent, ItemStatus status) {
                 this.id = id;
                 this.summary = summary;
+                this.encryptedContent = encryptedContent;
                 this.status = status;
                 this.type = ItemType.REASONING;
             }
@@ -548,6 +545,31 @@ public abstract class Input {
 
         }
 
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class FilePath extends Citation {
+
+            @Required
+            private String fileId;
+
+            @Required
+            private Integer index;
+
+            private FilePath(String fileId, Integer index) {
+                this.fileId = fileId;
+                this.index = index;
+                this.type = CitationType.FILE_PATH;
+            }
+
+            public static FilePath of(String fileId, Integer index) {
+                return new FilePath(fileId, index);
+            }
+
+        }
+
     }
 
     @NoArgsConstructor
@@ -601,14 +623,12 @@ public abstract class Input {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ScreenshootImage {
 
-        private String detail;
         private String fileId;
         private String imageUrl;
         private String type;
 
         @Builder
-        public ScreenshootImage(String detail, String fileId, String imageUrl) {
-            this.detail = detail;
+        public ScreenshootImage(String fileId, String imageUrl) {
             this.fileId = fileId;
             this.imageUrl = imageUrl;
             this.type = "computer_screenshot";
@@ -754,7 +774,10 @@ public abstract class Input {
         FILE_CITATION,
 
         @JsonProperty("url_citation")
-        URL_CITATION;
+        URL_CITATION,
+
+        @JsonProperty("file_path")
+        FILE_PATH;
 
     }
 
