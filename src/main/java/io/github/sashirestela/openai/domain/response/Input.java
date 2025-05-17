@@ -3,6 +3,8 @@ package io.github.sashirestela.openai.domain.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.content.ImageDetail;
@@ -74,6 +76,12 @@ public abstract class Input {
 
     }
 
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = Content.TextInputContent.class, name = "input_text"),
+            @JsonSubTypes.Type(value = Content.ImageInputContent.class, name = "input_image"),
+            @JsonSubTypes.Type(value = Content.FileInputContent.class, name = "input_file"),
+    })
     @Getter
     @Setter
     public abstract static class Content {
@@ -111,7 +119,6 @@ public abstract class Input {
             @Required
             private ImageDetail detail;
 
-            @Required
             private String fileId;
 
             @Required
@@ -123,6 +130,10 @@ public abstract class Input {
                 this.fileId = fileId;
                 this.imageUrl = imageUrl;
                 this.type = ContentType.INPUT_IMAGE;
+            }
+
+            public static ImageInputContent of(String imageUrl) {
+                return ImageInputContent.builder().imageUrl(imageUrl).detail(ImageDetail.AUTO).build();
             }
 
         }
@@ -157,6 +168,7 @@ public abstract class Input {
     public abstract static class Item extends Input {
 
         protected ItemType type;
+        protected String id;
 
         @NoArgsConstructor
         @Getter
@@ -166,12 +178,12 @@ public abstract class Input {
         public static class InputMessageItem extends Item {
 
             @Required
-            private List<Content> content;
+            protected MessageRole role;
+
+            protected ItemStatus status;
 
             @Required
-            private MessageRole role;
-
-            private ItemStatus status;
+            private List<Content> content;
 
             @Builder
             public InputMessageItem(List<Content> content, MessageRole role, ItemStatus status) {
@@ -191,16 +203,12 @@ public abstract class Input {
         public static class OutputMessageItem extends Item {
 
             @Required
+            protected MessageRole role;
+
+            protected ItemStatus status;
+
+            @Required
             private List<OutputContent> content;
-
-            @Required
-            private String id;
-
-            @Required
-            private MessageRole role;
-
-            @Required
-            private ItemStatus status;
 
             @Builder
             public OutputMessageItem(List<OutputContent> content, String id, ItemStatus status) {
@@ -219,9 +227,6 @@ public abstract class Input {
         @JsonInclude(Include.NON_EMPTY)
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class FileSearchCallItem extends Item {
-
-            @Required
-            private String id;
 
             @Required
             @Singular
@@ -257,9 +262,6 @@ public abstract class Input {
 
             @Required
             private String callId;
-
-            @Required
-            private String id;
 
             @Required
             @Singular
@@ -298,9 +300,6 @@ public abstract class Input {
             private List<SafetyCheck> acknowledgedSafetyChecks;
 
             @Required
-            private String id;
-
-            @Required
             private ItemStatus status;
 
             @Builder
@@ -322,9 +321,6 @@ public abstract class Input {
         @JsonInclude(Include.NON_EMPTY)
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class WebSearchCallItem extends Item {
-
-            @Required
-            private String id;
 
             @Required
             private SearchStatus status;
@@ -355,9 +351,6 @@ public abstract class Input {
             private String name;
 
             @Required
-            private String id;
-
-            @Required
             private ItemStatus status;
 
             @Builder
@@ -385,8 +378,6 @@ public abstract class Input {
             @Required
             private String output;
 
-            private String id;
-
             private ItemStatus status;
 
             @Builder
@@ -408,9 +399,6 @@ public abstract class Input {
         public static class ReasoningItem extends Item {
 
             @Required
-            private String id;
-
-            @Required
             private List<ReasoningContent> summary;
 
             private String encryptedContent;
@@ -418,7 +406,8 @@ public abstract class Input {
             private ItemStatus status;
 
             @Builder
-            public ReasoningItem(String id, List<ReasoningContent> summary, String encryptedContent, ItemStatus status) {
+            public ReasoningItem(String id, List<ReasoningContent> summary, String encryptedContent,
+                    ItemStatus status) {
                 this.id = id;
                 this.summary = summary;
                 this.encryptedContent = encryptedContent;
@@ -430,6 +419,11 @@ public abstract class Input {
 
     }
 
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = OutputContent.TextOutputContent.class, name = "output_text"),
+            @JsonSubTypes.Type(value = OutputContent.RefusalOutputContent.class, name = "refusal"),
+    })
     @Getter
     @Setter
     public abstract static class OutputContent {
@@ -484,6 +478,12 @@ public abstract class Input {
 
     }
 
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = Citation.FileCitation.class, name = "file_citation"),
+            @JsonSubTypes.Type(value = Citation.UrlCitation.class, name = "url_citation"),
+            @JsonSubTypes.Type(value = Citation.FilePath.class, name = "file_path"),
+    })
     @Getter
     @Setter
     public abstract static class Citation {
@@ -503,14 +503,15 @@ public abstract class Input {
             @Required
             private Integer index;
 
-            private FileCitation(String fileId, Integer index) {
+            @Required
+            private String filename;
+
+            @Builder
+            public FileCitation(String fileId, Integer index, String filename) {
                 this.fileId = fileId;
                 this.index = index;
+                this.filename = filename;
                 this.type = CitationType.FILE_CITATION;
-            }
-
-            public static FileCitation of(String fileId, Integer index) {
-                return new FileCitation(fileId, index);
             }
 
         }

@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai;
 
+import io.github.sashirestela.cleverclient.Event;
 import io.github.sashirestela.cleverclient.annotation.Body;
 import io.github.sashirestela.cleverclient.annotation.DELETE;
 import io.github.sashirestela.cleverclient.annotation.GET;
@@ -11,6 +12,7 @@ import io.github.sashirestela.cleverclient.annotation.Resource;
 import io.github.sashirestela.openai.common.DeletedObject;
 import io.github.sashirestela.openai.common.Generic;
 import io.github.sashirestela.openai.common.Page;
+import io.github.sashirestela.openai.common.PageRequest;
 import io.github.sashirestela.openai.common.StreamOptions;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.openai.domain.audio.AudioResponseFormat;
@@ -45,6 +47,11 @@ import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
 import io.github.sashirestela.openai.domain.realtime.RealtimeSession;
 import io.github.sashirestela.openai.domain.realtime.RealtimeSessionToken;
+import io.github.sashirestela.openai.domain.response.InputItems;
+import io.github.sashirestela.openai.domain.response.Response;
+import io.github.sashirestela.openai.domain.response.ResponseRequest;
+import io.github.sashirestela.openai.domain.response.ResponseRequest.ResponseInclude;
+import io.github.sashirestela.openai.domain.response.stream.ResponseStreamEvent;
 import io.github.sashirestela.openai.domain.upload.Upload;
 import io.github.sashirestela.openai.domain.upload.UploadCompleteRequest;
 import io.github.sashirestela.openai.domain.upload.UploadPart;
@@ -795,6 +802,113 @@ public interface OpenAI {
          */
         @POST("/{uploadId}/cancel")
         CompletableFuture<Upload> cancel(@Path("uploadId") String uploadId);
+
+    }
+
+    /**
+     * OpenAI's most advanced interface for generating model responses. Supports text and image inputs,
+     * and text outputs. Create stateful interactions with the model, using the output of previous
+     * responses as input. Extend the model's capabilities with built-in tools for file search, web
+     * search, computer use, and more. Allow the model access to external systems and data using
+     * function calling.
+     * 
+     * @see <a href= "https://platform.openai.com/docs/api-reference/responses">OpenAI Responses</a>
+     */
+    @Resource("/v1/responses")
+    interface Responses {
+
+        /**
+         * Creates a model response (don't call it directly).
+         * 
+         * @param responseRequest The creation request.
+         * @return A response object.
+         */
+        @POST
+        CompletableFuture<Response> createPrimitive(@Body ResponseRequest responseRequest);
+
+        /**
+         * Creates a model response with streaming (don't call it directly).
+         * 
+         * @param responseRequest The creation request.
+         * @return Stream of server-sent events emitted as the Response is generated.
+         */
+        @POST
+        @ResponseStreamEvent
+        CompletableFuture<Stream<Event>> createStreamPrimitive(@Body ResponseRequest responseRequest);
+
+        /**
+         * Creates a model response without streaming.
+         * 
+         * @param responseRequest The creation request.
+         * @return A response object.
+         */
+        default CompletableFuture<Response> create(@Body ResponseRequest responseRequest) {
+            var newResponseRequest = responseRequest.withStream(Boolean.FALSE);
+            return createPrimitive(newResponseRequest);
+        }
+
+        /**
+         * Creates a model response by making sure to use streaming mode.
+         * 
+         * @param responseRequest The creation request.
+         * @return Stream of server-sent events emitted as the Response is generated.
+         */
+        default CompletableFuture<Stream<Event>> createStream(@Body ResponseRequest responseRequest) {
+            var newResponseRequest = responseRequest.withStream(Boolean.TRUE);
+            return createStreamPrimitive(newResponseRequest);
+        }
+
+        /**
+         * Retrieves a model response with the given ID.
+         * 
+         * @param responseId The ID of the response to retrieve.
+         * @param include    Additional fields to include in the response.
+         * @return The Response object matching the specified ID.
+         */
+        @GET("/{responseId}")
+        CompletableFuture<Response> getOne(@Path("responseId") String responseId,
+                @Query("include") List<ResponseInclude> include);
+
+        /**
+         * Retrieves a model response with the given ID without any include.
+         * 
+         * @param responseId The ID of the response to retrieve.
+         * @return The Response object matching the specified ID.
+         */
+        default CompletableFuture<Response> getOne(@Path("responseId") String responseId) {
+            return getOne(responseId, null);
+        }
+
+        /**
+         * Deletes a model response with the given ID.
+         * 
+         * @param responseId The ID of the response to delete.
+         * @return The deleted response.
+         */
+        @DELETE("/{responseId}")
+        CompletableFuture<DeletedObject> delete(@Path("responseId") String responseId);
+
+        /**
+         * Returns a list of input items for a given response.
+         * 
+         * @param responseId The ID of the response to retrieve input items for.
+         * @param include    Additional fields to include in the response.
+         * @param page       The page filter to narrow the list.
+         * @return A list of input item objects.
+         */
+        @GET("/{responseId}/input_items")
+        CompletableFuture<InputItems> getListInputItem(@Path("responseId") String responseId,
+                @Query("include") List<ResponseInclude> include, @Query PageRequest page);
+
+        /**
+         * Returns a list of input items for a given response (first page).
+         * 
+         * @param responseId The ID of the response to retrieve input items for.
+         * @return A list of input item objects.
+         */
+        default CompletableFuture<InputItems> getListInputItem(@Path("responseId") String responseId) {
+            return getListInputItem(responseId, null, PageRequest.builder().build());
+        }
 
     }
 

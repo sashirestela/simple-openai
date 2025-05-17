@@ -3,11 +3,14 @@ package io.github.sashirestela.openai.domain.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
-import io.github.sashirestela.openai.support.DefaultSchemaConverter;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -20,7 +23,15 @@ import lombok.Singular;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = ResponseTool.FileSearchResponseTool.class, name = "file_search"),
+        @JsonSubTypes.Type(value = ResponseTool.FunctionResponseTool.class, name = "function"),
+        @JsonSubTypes.Type(value = ResponseTool.ComputerResponseTool.class, name = "computer_use_preview"),
+        @JsonSubTypes.Type(value = ResponseTool.WebSearchResponseTool.class, name = "web_search_preview"),
+})
 @Getter
 @Setter
 public abstract class ResponseTool {
@@ -35,7 +46,6 @@ public abstract class ResponseTool {
     public static class FileSearchResponseTool extends ResponseTool {
 
         @Required
-        @Singular
         private List<String> vectorStoreIds;
 
         private Filter filters;
@@ -55,8 +65,13 @@ public abstract class ResponseTool {
             this.type = ResponseToolType.FILE_SEARCH;
         }
 
+        public static FileSearchResponseTool of(List<String> vectorStoreIds) {
+            return FileSearchResponseTool.builder().vectorStoreIds(vectorStoreIds).build();
+        }
+
     }
 
+    @AllArgsConstructor
     @NoArgsConstructor
     @Getter
     @ToString
@@ -75,20 +90,20 @@ public abstract class ResponseTool {
 
         private String description;
 
-        @Builder
-        public FunctionResponseTool(String name, JsonNode parameters, Boolean strict, String description,
-                Class<?> schemaClass) {
-            this.name = name;
-            if (parameters != null) {
-                this.parameters = parameters;
-            } else {
-                this.parameters = schemaClass != null
-                        ? new DefaultSchemaConverter(Boolean.TRUE).convert(schemaClass)
-                        : null;
-            }
-            this.strict = strict;
-            this.description = description;
-            this.type = ResponseToolType.FUNCTION;
+        public static FunctionResponseTool function(FunctionDef funcDef) {
+            var funcTool = new FunctionResponseTool(
+                    funcDef.getName(),
+                    funcDef.getSchemaConverter().convert(funcDef.getFunctionalClass()),
+                    funcDef.getStrict(),
+                    funcDef.getDescription());
+            funcTool.setType(ResponseToolType.FUNCTION);
+            return funcTool;
+        }
+
+        public static List<FunctionResponseTool> functions(List<FunctionDef> funcDefList) {
+            return funcDefList.stream()
+                    .map(FunctionResponseTool::function)
+                    .collect(Collectors.toList());
         }
 
     }
@@ -135,6 +150,10 @@ public abstract class ResponseTool {
             this.searchContextSize = searchContextSize;
             this.userLocation = userLocation;
             this.type = ResponseToolType.WEB_SEARCH_PREVIEW;
+        }
+
+        public static WebSearchResponseTool of() {
+            return WebSearchResponseTool.builder().build();
         }
 
     }

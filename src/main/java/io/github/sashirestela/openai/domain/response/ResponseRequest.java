@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
+import lombok.With;
 
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class ResponseRequest {
 
     private Boolean store;
 
+    @With
     private Boolean stream;
 
     @Range(min = 0.0, max = 2.0)
@@ -84,7 +86,10 @@ public class ResponseRequest {
         MESSAGE_INPUT_IMAGE_URL,
 
         @JsonProperty("computer_call_output.output.image_url")
-        COMPUTER_CALL_OUTPUT_IMAGE_URL;
+        COMPUTER_CALL_OUTPUT_IMAGE_URL,
+
+        @JsonProperty("reasoning.encrypted_content")
+        REASONING_ENCRYPTED_CONTENT;
 
     }
 
