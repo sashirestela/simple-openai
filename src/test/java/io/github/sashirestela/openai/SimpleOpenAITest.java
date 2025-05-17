@@ -148,6 +148,7 @@ class SimpleOpenAITest {
                 new TestData(OpenAI.Moderations.class, openAI::moderations),
                 new TestData(OpenAI.SessionTokens.class, openAI::sessionTokens),
                 new TestData(OpenAI.Uploads.class, openAI::uploads),
+                new TestData(OpenAI.Responses.class, openAI::responses),
                 new TestData(OpenAIBeta2.Assistants.class, openAI::assistants),
                 new TestData(OpenAIBeta2.Threads.class, openAI::threads),
                 new TestData(OpenAIBeta2.ThreadMessages.class, openAI::threadMessages),

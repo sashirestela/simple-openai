@@ -66,6 +66,11 @@ public class FunctionExecutor {
         functions.forEach(this::enrollFunction);
     }
 
+    public <T> T execute(String name, String arguments) {
+        var functionCall = new FunctionCall(name, arguments);
+        return execute(functionCall);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T execute(FunctionCall functionCall) {
         if (functionCall == null || CommonUtil.isNullOrEmpty(functionCall.getName())) {

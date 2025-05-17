@@ -1,8 +1,202 @@
-Mistral AI
+# What Is Mistral AI?
 
-Mistral AI is a French company selling artificial intelligence (AI) products. It was founded in April 2023 by previous employees of Meta Platforms and Google DeepMind.
-The company raised €385 million in October 2023, and in December 2023, it was valued at more than $2 billion.
+Mistral AI is an artificial intelligence startup that makes open source large language models (LLMs). Based in Paris, France, and founded by former researchers at Google DeepMind and Meta, Mistral is known for its open, portable, customizable and cost-effective models that require fewer computational resources than other popular LLMs.
 
-It produces open source large language models, citing the foundational importance of open-source software, and as a response to proprietary models.
+Mistral AI is a French artificial intelligence startup that launched in 2023. It builds open source and commercial AI models, some of which have achieved state-of-the-art performance on several industry benchmarks.
 
-As of March 2024, two models have been published and are available as weights. Three more models, Small, Medium and Large, are available via API only.
+With substantial backing from prominent investors like Microsoft and Andreessen Horowitz — and a reported valuation of $6 billion after its latest funding round — Mistral came on the scene as a formidable player in the crowded generative AI market. The company’s top commercial LLM traded blows with incumbents like Google and Anthropic across several industry benchmarks at the time of its 2024 release and even gave OpenAI’s GPT-4 — considered the gold standard in AI model performance at the time — a run for its money. And the company’s mobile AI assistant app, Le Chat, racked up 1 million app downloads in its first 14 days.
+
+The company also makes a suite of open source models that are freely available for anyone to use and modify. In contrast to some of the most powerful AI companies, Mistral has made its LLMs more accessible, arguing that, “by training our own models, releasing them openly, and fostering community contributions, we can build a credible alternative to the emerging AI oligopoly.”
+
+How Do Mistral AI’s Models Work?
+--------------------------------
+
+Like other LLMs, Mistral AI’s models are trained on a massive corpus of text data scraped from the internet, which they can then use for all kinds of natural language processing (NLP) tasks. But several of Mistral’s models have key features, including a mixed transformer architecture, an open-source nature, function calling and fluency in multiple languages. 
+
+### Mixture of Experts Architecture
+
+Mistral’s models are based on a transformer architecture, a type of neural network that generates text by predicting the next-most-likely word or phrase. But a couple of them (Mixtral 8x7B and 8x22B) take it a step further and use a mixture of experts architecture, meaning it uses multiple smaller models (called “experts”) that are only active at certain times, thus improving performance and reducing computational costs.
+
+While they tend to be smaller and cheaper than transformer-based models, LLMs that use MoE architectures perform equally well or even better, making them an attractive alternative, according to Baris Gultekin, head of AI at Snowflake, which partners with Mistral. “When an LLM is faster and smaller to run, it’s also more cost-effective,” he told Built In. “And that’s appealing.”  
+
+### Open Source
+
+Many of Mistral AI’s models are open source, meaning their code and data — as well as their weights, or parameters learned during training — are freely available for anyone to access, use and modify. With open source models, users can see how they work and adapt them for their own purposes, said Atul Deo, the general manager of Amazon Bedrock, which also partners with Mistral. 
+
+“You can add your own inference optimizations on top of the open model, you can do certain types of fine-tuning that you can’t do with a proprietary model, because a lot of the details are transparent,” Deo told Built In. “Open source models, in theory, give \[you\] a lot more flexibility to tinker with the model.”
+
+The fact that some of Mistral AI’s models are open source is especially useful for companies in highly regulated industries like banks and hospitals, where data privacy and governance are crucial, said Erika Bahr, founder and CEO of AI company Daxe. With open source LLMs, these companies can fine-tune them and run them locally in a secure environment without the threat of information leaking. 
+
+“To get the highest level of security standards, you have to be able to see where the data goes,” Bahr told Built In. “If you are able to see all of the code, then you can actually verify where your data is going when it goes through the model.” 
+
+### Function Calling Capabilities
+
+Mistral says its Large 2, Large, Small, 8x22B and NeMo have native function calling capabilities, meaning they can integrate with other platforms and perform tasks beyond their original capabilities. It helps make the models more accurate, efficient and versatile.
+
+“It allows you to do fine-tuning underneath another system’s platform,” Bahr said. “So you can actually leverage what they’ve done and then you can fine-tune it even deeper.” For example, Bahr said she went to a hackathon event where the winner integrated a Mistral LLM into a Pac Man game, and then fine-tuned it to do certain moves so that it won the game.
+
+In general, function calling is also useful for tasks like retrieving data in real-time, performing calculations and accessing databases. 
+
+### Multilingual
+
+While many LLMs are only proficient in a single language, most of Mistral’s models are natively fluent in English, French, Spanish, German and Italian — meaning they have a more “nuanced understanding” of both grammar and cultural context, according to the company. So they can be used for complex multilingual reasoning tasks, including text understanding and translation. 
+
+What Are Mistral AI’s Models Used For?
+--------------------------------------
+
+All of Mistral AI’s LLMs are foundation models, which means they can be fine-tuned and used in a wide-range of natural language processing tasks:
+
+*   **Chatbots:** Enabling chatbots to understand natural language queries from users and respond in a more accurate and human-like way. 
+*   **Text Summarization:** Extracting the essence of articles and documents, summarizing their key points in a concise overview.
+*   **Content Creation:** Generating natural language text, including emails, social media copy, short stories, cover letters and much more.
+*   **Text Classification:** Classifying text into different categories, such as flagging emails as spam or non-spam based on their content.
+*   **Code Completion:** Generating code snippets, optimizing existing code and suggesting bug fixes to speed up the development process.
+
+What Does Mistral AI Offer?
+---------------------------
+
+Mistral AI offers a suite of LLMs, both commercial and open source. Each has its own unique set of strengths and abilities.  
+
+### Commercial Models
+
+All of Mistral’s commercial models are closed-source and only available through its API and select third-party platforms.
+
+#### Mistral Medium 3
+
+*   Outperforms similarly sized models across areas like coding, math, multimodal reasoning and instruction-following — but at a lower cost per token.
+*   Performs competitively across languages like English, French, Spanish and Arabic compared to other similar models.
+*   Supports hybrid and on-premise deployment, and can be easily integrated into enterprise tools and systems.
+
+#### Mistral Large 2
+
+*   The most advanced of Mistral AI’s models. 
+*   Has an extensive context window of up to 128k tokens. 
+*   Proficient in over 80 programming languages. 
+*   Fluent in European languages, as well as Korean, Chinese, Japanese, Arabic and Hindi. 
+
+#### Mistral Large
+
+*   Ideal for complex tasks like synthetic text generation and code generation.
+*   Ranks second to GPT-4 in several industry benchmarks.
+*   Has a maximum context window of 32k tokens.
+*   Natively fluent in English, French, Spanish, German and Italian, as well as code.
+
+#### Mistral Small
+
+*   Focused on efficient reasoning for low latency workloads.
+*   Ideal for simple tasks that can be done in bulk, like text generation and text classification.
+*   Has a maximum context window of 32k tokens.
+*   Natively fluent in English, French, Spanish, German and Italian, as well as code.
+
+#### Mistral Embed
+
+*   Converts text into numerical representations (aka “embeddings”) so it can process and analyze words in a way that is understandable to a computer.
+*   Ideal for tasks like sentiment analysis and text classification.
+*   Currently available in English only. 
+
+### Open Source Models
+
+All of Mistral’s open source models are available for free under Apache 2.0, a fully permissive license that allows anyone to use them anywhere, with no restrictions.
+
+#### Mistral 7B
+
+*   Designed for easy customization and fast deployment.
+*   Can handle high volumes of data faster and with minimal computational cost.
+*   Trained on a dataset of about 7 billion parameters, but it outperforms Llama 2 (13 billion parameters) and matches models with up to 30 billion parameters.
+*   Has a maximum context window of 32k tokens.
+*   Can be used in English and code.
+
+#### Mixtral 8x7B
+
+*   Designed to perform well with minimal computational effort.
+*   Uses a mixture of experts architecture; only uses about 12 billion of its potential 45 billion parameters for inference.
+*   Outperforms both Llama 2 (70 billion parameters) and GPT-3.5 (175 billion parameters) on most benchmarks.
+*   Has a maximum context window of 32k tokens.
+*   Natively fluent in English, French, Spanish, German and Italian, as well as code.
+
+#### Mixtral 8x22B
+
+*   The most advanced of Mistral AI’s open source models.
+*   Ideal for tasks like summarizing large documents or generating lots of text.
+*   A bigger version of Mixtral 8x7B; only uses about 39 billion of its potential 141 billion parameters for inference.
+*   Outperforms Llama 2 70B and Cohere’s Command R and R+ in cost-performance ratio.
+*   Has a maximum context window of 64k tokens.
+*   Natively fluent in English, French, Spanish, German and Italian, as well as code.
+
+#### Codestral Mamba
+
+*   Has a context window of 256k tokens.
+*   Outperforms two of Meta’s coding-specific models in accuracy for a range of programming languages.
+*   Can handle inputs of any length, allowing it to deliver fast answers to difficult coding questions.
+*   Able to equal the performance of state-of-the-art transformer-based models, thanks to in-depth reasoning.
+
+#### Mathstral
+
+*   Ideal for solving complex mathematical problems and is a variant of Mistral 7B.
+*   Possesses a context window of up to 32k tokens.
+*   Equipped with advanced logical reasoning to excel in different subjects.
+*   Balances speed and accuracy to deliver high-quality answers.
+
+#### Mistral NeMo
+
+*   Contains a context window of up to 128k tokens.
+*   Possesses high levels of world knowledge, reasoning and coding accuracy for a small model.
+*   Outperforms competitors in various categories.
+*   Fluent in English, Spanish, German, French, Italian, Portuguese, Chinese, Japanese, Korean, Hindi and Arabic. 
+
+### Le Chat 
+
+In addition to its LLMs, Mistral AI offers Le Chat, an AI assistant that can generate content, analyze data, write code and even search the web — similar to platforms like ChatGPT, Gemini and Claude. Available for free on Mistral’s website and mobile app, Le Chat also comes in a paid enterprise version tailored for business use. Called Le Chat Enterprise, it is designed for organizations working across multiple tools and data sources, consolidating all of its capabilities onto one, data privacy\-focused platform. Some of its key features include:
+
+*   Search across multiple private data sources (Google Drive, Gmail, SharePoint etc.)
+*   Document summarizations with citations
+*   Custom AI agent builders for no-code task and workflow automations
+*   Personalized model integrations and domain-adaptive continuous pre-training
+*   Flexible deployment options (public and private clouds, on-prem hosting etc.)
+
+Le Chat Enterprise’s privacy architecture includes strict access controls and supports full audit logging, ensuring data governance and compliance for even highly regulated industries like finance and healthcare. Organizations also have full control over their AI stack — from the infrastructure to the user interface.
+
+How to Use Mistral AI’s Models
+------------------------------
+
+All of Mistral AI’s models can be found on its website. They are also available on platforms like Amazon Bedrock, Databricks, Snowflake Cortex and Azure AI.
+
+To use the models directly on Mistral AI’s website, go to La Plateforme, its AI development and deployments platform. There, you can set up guardrails and fine-tune the models to your specifications, then integrate them into your own applications and projects. Pricing ranges depending on the model you use. You can also interact with Mistral’s Large, Small, Next and Large 2 models via Le Chat, the company’s free AI chatbot.
+
+Is Mistral AI Better Than GPT-4o?
+---------------------------------
+
+Mistral AI’s most advanced LLM, Mistral Large 2, is the most comparable to GPT-4o. Still, GPT-4o scored higher than Mistral Large across all code generation benchmarks, indicating that it is superior in a range of computing tasks. That said, Mistral Large 2 did slightly outperform GPT-4o in function calling and continues to close the gap between Mistral AI and OpenAI. 
+
+Mistral Large is also cheaper to use than GPT-4o. GPT-4o costs $5 per 1 million input tokens and $15 per 1 million output tokens, while Large 2 costs $3 per 1 million input tokens and $9 per 1 million output tokens. Given that Large 2 lost to GPT-4o on those code generation benchmarks by only a few percentage points, it could be a suitable choice for organizations looking for a high-performing LLM at a lower cost.
+
+Looking ahead, this cost-performance ratio will likely get even better as more models enter the market and continue to reshape the AI model landscape.
+
+“Competition is always good for users. There’s a lot of innovation coming every day,” Gultekin said. “That pushes down the costs for customers, as well as improves the performance. And I expect that to continue.”
+
+Frequently Asked Questions
+--------------------------
+
+### What is Mistral AI?
+
+Mistral AI is a French artificial intelligence startup that makes commercial and open source large language models (LLMs). The company was launched in 2023 by former researchers at Meta and DeepMind. It is known for its transparent, portable, customizable and cost-effective foundation models that require fewer computational resources than those of other AI vendors.
+
+### How to use Mistral AI’s models?
+
+To use Mistral AI’s models, you can go to its website, or to La Plateforme, the company’s platform for AI development and deployment. You can set up guardrails and fine-tune the models to your specifications, then integrate them into your own applications and projects. You can also interact with Mistral’s Large and Small models via Le Chat, an AI chatbot that can generate text and carry on conversations.
+
+### Is Mistral Large better than GPT-4?
+
+According to Mistral AI, GPT-4 scored higher than Mistral Large across all performance benchmarks, indicating that is the superior model. But Large is cheaper to run than GPT-4. Given Large lost to GPT-4 on those performance benchmarks by only a few percentage points, it could be a suitable choice for organizations looking for a high-performing LLM at a lower cost.
+
+### Who created Mistral AI?
+
+Mistral AI was created by former DeepMind employee Arthur Mensch and former Meta researchers Guillaume Lample and Timothée Lacroix. The company was launched in April 2023.
+
+### Is Mistral AI free to use?
+
+Some of Mistral AI’s models are open source, meaning anyone can access them and make changes to them for free. Mistral AI also operates a free chatbot called Le Chat, where users can interact with some of its commercial models for free.
+
+### What is Le Chat?
+
+Le Chat is Mistral’s AI assistant. It is available for iOS on the App Store and for Android through Google Play.

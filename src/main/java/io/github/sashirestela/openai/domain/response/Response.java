@@ -2,6 +2,7 @@ package io.github.sashirestela.openai.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import io.github.sashirestela.openai.domain.response.ResponseRequest.Truncation;
@@ -11,6 +12,7 @@ import lombok.ToString;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -27,6 +29,7 @@ public class Response {
     private Map<String, String> metadata;
     private String model;
     private String object;
+    @JsonDeserialize(contentUsing = ItemDeserializer.class)
     private List<Input.Item> output;
     private Boolean parallelToolCalls;
     private String previousResponseId;
@@ -41,6 +44,16 @@ public class Response {
     private Truncation truncation;
     private ResponseUsage usage;
     private String user;
+
+    public String outputText() {
+        return output.stream()
+                .filter(item -> (item instanceof Input.Item.OutputMessageItem))
+                .filter(item -> ((Input.Item.OutputMessageItem) item).getContent() != null)
+                .flatMap(item -> ((Input.Item.OutputMessageItem) item).getContent().stream())
+                .filter(content -> (content instanceof Input.OutputContent.TextOutputContent))
+                .map(content -> ((Input.OutputContent.TextOutputContent) content).getText())
+                .collect(Collectors.joining());
+    }
 
     @NoArgsConstructor
     @Getter
