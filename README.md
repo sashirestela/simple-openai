@@ -26,16 +26,17 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
+  - [Response Conversation Example](#response-conversation-example) **NEW***
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
 - [Retrying Requests](#-retrying-requests)
 - [Instructions for Android](#-instructions-for-android)
 - [Support for OpenAI-compatible API Providers](#-support-for-openai-compatible-api-providers)
-  - [Gemini Vertex API](#gemini-vertex-api) **NEW**
+  - [Gemini Vertex API](#gemini-vertex-api)
   - [Gemini Google API](#gemini-google-api)
   - [Deepseek API](#deepseek-api)
   - [Mistral API](#mistral-api)
-  - [Azure OpenAI](#azure-openai) **UPDATED**
+  - [Azure OpenAI](#azure-openai)
   - [Anyscale](#anyscale)
 - [Run Examples](#-run-examples)
 - [Contributing](#-contributing)
@@ -66,6 +67,7 @@ Full support for most of the OpenAI services:
 * Models (List)
 * Moderation (Check Harmful Text)
 * Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
+* Response (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Reasoning, ComputerUse,, FileSearch, WebSearch) **NEW**
 * Session Token (Create Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
@@ -547,6 +549,81 @@ File was deleted: true
 Vector Store was deleted: true
 Assistant was deleted: true
 Thread was deleted: true
+```
+</details>
+
+### Response Conversation Example
+This example simulates a conversation chat by the command console and demonstrates the usage of the  Response API features:
+- Text Generation
+- Streaming
+- Function Calling
+- Vision
+- FileSearch
+- WebSearch
+
+You can see the full demo code as well as the results from running the demo code:
+
+[ConversationV3Demo.java](src/demo/java/io/github/sashirestela/openai/demo/ConversationVD3emo.java)
+
+<details>
+
+<summary><b>Demo Results</b></summary>
+
+```txt
+Ask anything ('x' to finish): Where is Lima located?
+====> FileSearch ...
+====> Message ...
+Lima is the capital city of Peru, located on the country's central coast along the Pacific Ocean.
+
+Ask anything ('x' to finish): What is the temperature there?
+====> Function: CurrentTemperature. Arguments: {"location":"Lima, Peru","unit":"C"}
+====> Message ...
+The current temperature in Lima, Peru is approximately 13.4°C.
+
+Ask anything ('x' to finish): What are the main news there right now?
+====> FileSearch ...
+====> WebSearch ...
+====> Message ...
+As of May 18, 2025, several significant events have been reported in Lima, Peru:
+
+**State of Emergency Declared Amid Rising Crime**
+
+Peru has declared a state of emergency in Lima due to escalating violence and criminal activities. The government has deployed troops to the streets, granting police and military forces the authority to detain individuals with minimal restrictions. This measure follows a series of violent incidents, including the death of a popular singer in a criminal attack. Authorities have reported 459 killings from January 1 to March 16, and 1,909 extortion cases in January alone. ([aljazeera.com](https://www.aljazeera.com/news/2025/3/18/peru-declares-state-of-emergency-as-violent-crimewave-engulfs-lima?utm_source=openai))
+
+**Former President Sentenced for Money Laundering**
+
+Former President Ollanta Humala and his wife, Nadine Heredia, have been sentenced to 15 years in prison for money laundering. The National Superior Court in Lima found them guilty of receiving over $3 million in illegal campaign financing from Venezuela and the Brazilian construction company Odebrecht. This conviction marks the third former president in two decades to be jailed for corruption, following Alejandro Toledo and Alberto Fujimori. ([ft.com](https://www.ft.com/content/7bb306c4-c6a6-4369-96f8-a43a170f2077?utm_source=openai))
+
+**Death of Nobel Laureate Mario Vargas Llosa**
+
+Peruvian Nobel laureate Mario Vargas Llosa, a prominent figure in Latin America's literary "Boom generation," has died at the age of 89 in Lima. Vargas Llosa gained worldwide recognition with his second novel, "The Green House," and was known for his contributions to literature and his political activism. ([axios.com](https://www.axios.com/2025/04/14/nobel-peruvian-novelist-mario-vargas-llosa-dies?utm_source=openai))
+
+**Pope Leo XIV's Election Celebrated**
+
+Peruvians are celebrating the election of Pope Leo XIV, previously Cardinal Robert Prevost, who has strong ties to Peru. Born in Chicago in 1955, Prevost became a Peruvian citizen in 2015 and led the diocese of Chiclayo until 2023. His deep connection with Chiclayo, a key hub in northern Peru, has made him a beloved figure. President Dina Boluarte praised his commitment to the Peruvian people, calling his election historic. ([apnews.com](https://apnews.com/article/7d26905df2dfd253f3fd87f047c764e6?utm_source=openai))
+
+
+## Recent News in Lima, Peru:
+- [Rejoicing Peruvians see Pope Leo XIV as one of their own after his many years in Peru](https://apnews.com/article/7d26905df2dfd253f3fd87f047c764e6?utm_source=openai)
+- [Death threats by WhatsApp: extortion drains Peruvians' cash](https://www.ft.com/content/a8de251c-3137-4da4-8a00-6d709600e729?utm_source=openai)
+- [13 workers kidnapped from a Peruvian gold mine are found dead](https://apnews.com/article/659b25d54a63be62f95f8769667231d3?utm_source=openai) 
+
+Ask anything ('x' to finish): What is the most important point of the Mistral AI architecture?
+====> FileSearch ...
+====> Message ...
+The most important points of the Mistral AI architecture include:
+
+1. **Function Calling Capabilities**: Mistral models can integrate with other platforms and perform tasks beyond their original capabilities, enhancing accuracy and versatility.
+
+2. **Multilingual Proficiency**: Most Mistral models are natively fluent in multiple languages, allowing for nuanced understanding and complex multilingual reasoning tasks.
+
+3. **Wide Range of Applications**: Mistral's models are designed for various natural language processing tasks, including chatbots, text summarization, content creation, text classification, and code completion.
+
+4. **Open Source and Commercial Models**: Mistral offers both open-source and commercial models, with unique strengths tailored for different applications.
+
+5. **Advanced Context Windows**: Some models, like Mistral Large 2, support extensive context windows (up to 128k tokens), which is beneficial for handling large datasets and complex tasks.
+
+Ask anything ('x' to finish): x
 ```
 </details>
 
