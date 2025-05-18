@@ -3,7 +3,6 @@ package io.github.sashirestela.openai.demo.util;
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-
 import io.github.sashirestela.openai.common.function.Functional;
 
 public class UtilFunctions {

@@ -1,16 +1,11 @@
 package io.github.sashirestela.openai.demo;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.demo.util.UtilFunctions;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
-import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
 import io.github.sashirestela.openai.domain.assistant.RankingOption.RankerType;
+import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
 import io.github.sashirestela.openai.domain.file.FileRequest;
 import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 import io.github.sashirestela.openai.domain.response.Input.Content.ImageInputContent;
@@ -29,6 +24,11 @@ import io.github.sashirestela.openai.domain.response.stream.EventName;
 import io.github.sashirestela.openai.domain.response.stream.ResponseEvent;
 import io.github.sashirestela.openai.domain.response.stream.ResponseOutputTextEvent;
 import io.github.sashirestela.openai.service.ResponseServices;
+
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResponseDemo extends AbstractDemo {
 
@@ -178,13 +178,16 @@ public class ResponseDemo extends AbstractDemo {
 
     public void createResponseFileSearch() {
         var aiProvider = this.openAI;
-        var file = aiProvider.files().create(FileRequest.builder()
-                .file(Paths.get("src/demo/resources/mistral-ai.txt"))
-                .purpose(PurposeType.ASSISTANTS)
-                .build()).join();
-        var vectorStore = aiProvider.vectorStores().createAndPoll(VectorStoreRequest.builder()
-                .fileId(file.getId())
-                .build());
+        var file = aiProvider.files()
+                .create(FileRequest.builder()
+                        .file(Paths.get("src/demo/resources/mistral-ai.txt"))
+                        .purpose(PurposeType.ASSISTANTS)
+                        .build())
+                .join();
+        var vectorStore = aiProvider.vectorStores()
+                .createAndPoll(VectorStoreRequest.builder()
+                        .fileId(file.getId())
+                        .build());
 
         var question = "What is the architecture of Mistral AI?";
         System.out.println("Question:\n" + question);

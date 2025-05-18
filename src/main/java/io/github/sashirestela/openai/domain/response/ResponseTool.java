@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
