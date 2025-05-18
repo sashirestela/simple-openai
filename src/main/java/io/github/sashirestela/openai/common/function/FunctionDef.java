@@ -1,7 +1,6 @@
 package io.github.sashirestela.openai.common.function;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
-
 import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import lombok.Builder;
 import lombok.Getter;
