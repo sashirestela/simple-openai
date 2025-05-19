@@ -1,7 +1,19 @@
 package io.github.sashirestela.openai.domain.response;
 
 import io.github.sashirestela.cleverclient.util.JsonUtil;
+import io.github.sashirestela.openai.common.function.FunctionDef;
+import io.github.sashirestela.openai.domain.assistant.RankingOption;
+import io.github.sashirestela.openai.domain.response.Action.ClickAction;
+import io.github.sashirestela.openai.domain.response.Action.Coord;
+import io.github.sashirestela.openai.domain.response.Action.DoubleClickAction;
+import io.github.sashirestela.openai.domain.response.Action.DragAction;
+import io.github.sashirestela.openai.domain.response.Action.KeyPressAction;
+import io.github.sashirestela.openai.domain.response.Action.MouseButton;
+import io.github.sashirestela.openai.domain.response.Action.MoveAction;
 import io.github.sashirestela.openai.domain.response.Action.ScreenshotAction;
+import io.github.sashirestela.openai.domain.response.Action.ScrollAction;
+import io.github.sashirestela.openai.domain.response.Action.TypeAction;
+import io.github.sashirestela.openai.domain.response.Action.WaitAction;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FileCitation;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FilePath;
 import io.github.sashirestela.openai.domain.response.Input.Citation.UrlCitation;
@@ -28,6 +40,18 @@ import io.github.sashirestela.openai.domain.response.Input.ReasoningContent;
 import io.github.sashirestela.openai.domain.response.Input.SafetyCheck;
 import io.github.sashirestela.openai.domain.response.Input.ScreenshotImage;
 import io.github.sashirestela.openai.domain.response.Input.SearchStatus;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ComparisonOperator;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ComputerResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.Environment;
+import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.Filter.ComparisonFilter;
+import io.github.sashirestela.openai.domain.response.ResponseTool.Filter.CompoundFilter;
+import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.LogicalOperator;
+import io.github.sashirestela.openai.domain.response.ResponseTool.WebSearchResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseToolChoice.FunctionTool;
+import io.github.sashirestela.openai.domain.response.ResponseToolChoice.HostedTool;
+import io.github.sashirestela.openai.test.utils.UtilSpecs;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -35,7 +59,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class InputTest {
+class ResponseDomainSerDeserTest {
 
     @Test
     void testSerDeserInputClasses() {
@@ -219,6 +243,144 @@ class InputTest {
         var newFilePath = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFilePath),
                 FilePath.class);
         assertEquals(oneFilePath.toString(), newFilePath.toString());
+    }
+
+    @Test
+    void testSerDeserActionClasses() {
+        var oneClickAction = ClickAction.of(MouseButton.LEFT, 100, 200);
+        var newClickAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneClickAction),
+                ClickAction.class);
+        assertEquals(oneClickAction.toString(), newClickAction.toString());
+
+        var oneDoubleClickAction = DoubleClickAction.of(100, 200);
+        var newDoubleClickAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneDoubleClickAction),
+                DoubleClickAction.class);
+        assertEquals(oneDoubleClickAction.toString(), newDoubleClickAction.toString());
+
+        var oneDragAction = DragAction.of(List.of(Coord.of(0, 100), Coord.of(10, 90)));
+        var newDragAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneDragAction),
+                DragAction.class);
+        assertEquals(oneDragAction.toString(), newDragAction.toString());
+
+        var oneKeyPressAction = KeyPressAction.of(List.of("k", "e", "y"));
+        var newKeyPressAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneKeyPressAction),
+                KeyPressAction.class);
+        assertEquals(oneKeyPressAction.toString(), newKeyPressAction.toString());
+
+        var oneMoveAction = MoveAction.of(100, 200);
+        var newMoveAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMoveAction),
+                MoveAction.class);
+        assertEquals(oneMoveAction.toString(), newMoveAction.toString());
+
+        var oneScreenshotAction = ScreenshotAction.of();
+        var newScreenshotAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneScreenshotAction),
+                ScreenshotAction.class);
+        assertEquals(oneScreenshotAction.toString(), newScreenshotAction.toString());
+
+        var oneScrollAction = ScrollAction.of(1, 1, 2, 2);
+        var newScrollAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneScrollAction),
+                ScrollAction.class);
+        assertEquals(oneScrollAction.toString(), newScrollAction.toString());
+
+        var oneTypeAction = TypeAction.of("text");
+        var newTypeAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneTypeAction),
+                TypeAction.class);
+        assertEquals(oneTypeAction.toString(), newTypeAction.toString());
+
+        var oneWaitAction = WaitAction.of();
+        var newWaitAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneWaitAction),
+                WaitAction.class);
+        assertEquals(oneWaitAction.toString(), newWaitAction.toString());
+    }
+
+    @Test
+    void testSerDeserResponseToolClasses() {
+        var oneFileSearchResponseTool = FileSearchResponseTool.of(List.of("vectoreStoreId"));
+        var newFileSearchResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFileSearchResponseTool),
+                FileSearchResponseTool.class);
+        assertEquals(oneFileSearchResponseTool.toString(), newFileSearchResponseTool.toString());
+
+        oneFileSearchResponseTool = FileSearchResponseTool.builder()
+                .vectorStoreIds(List.of("vectoreStoreId"))
+                .filters(CompoundFilter.builder()
+                        .filters(List.of(
+                                ComparisonFilter.builder()
+                                        .key("key")
+                                        .type(ComparisonOperator.GT)
+                                        .value(100)
+                                        .build(),
+                                ComparisonFilter.builder()
+                                        .key("key")
+                                        .type(ComparisonOperator.LT)
+                                        .value(200)
+                                        .build()))
+                        .type(LogicalOperator.AND)
+                        .build())
+                .maxNumResults(10)
+                .rankingOptions(RankingOption.builder()
+                        .scoreThreshold(0.85)
+                        .ranker("auto")
+                        .build())
+                .build();
+        newFileSearchResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFileSearchResponseTool),
+                FileSearchResponseTool.class);
+        assertEquals(oneFileSearchResponseTool.toString(), newFileSearchResponseTool.toString());
+
+        var oneFunctionResponseTool = FunctionResponseTool
+                .function(FunctionDef.of(UtilSpecs.CurrentTemperature.class));
+        var newFunctionResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFunctionResponseTool),
+                FunctionResponseTool.class);
+        assertEquals(oneFunctionResponseTool.toString(), newFunctionResponseTool.toString());
+
+        var oneComputerResponseTool = ComputerResponseTool.builder()
+                .displayHeight(100.0)
+                .displayWidth(200.0)
+                .environment(Environment.BROWSER)
+                .build();
+        var newComputerResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneComputerResponseTool),
+                ComputerResponseTool.class);
+        assertEquals(oneComputerResponseTool.toString(), newComputerResponseTool.toString());
+
+        var oneWebSearchResponseTool = WebSearchResponseTool.of();
+        var newWebSearchResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneWebSearchResponseTool),
+                WebSearchResponseTool.class);
+        assertEquals(oneWebSearchResponseTool.toString(), newWebSearchResponseTool.toString());
+    }
+
+    @Test
+    void testSerDeserResponseTextClasses() {
+        var oneResponseText = ResponseText.text();
+        var newResponseText = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneResponseText),
+                ResponseText.class);
+        assertEquals(oneResponseText.toString(), newResponseText.toString());
+
+        oneResponseText = ResponseText.jsonObject();
+        newResponseText = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneResponseText),
+                ResponseText.class);
+        assertEquals(oneResponseText.toString(), newResponseText.toString());
+    }
+
+    @Test
+    void testSerDeserResponseToolChoiceClasses() {
+        var oneHostedTool = HostedTool.FILE_SEARCH;
+        var newHostedTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneHostedTool),
+                HostedTool.class);
+        assertEquals(oneHostedTool.toString(), newHostedTool.toString());
+
+        oneHostedTool = HostedTool.WEB_SEARCH_PREVIEW;
+        newHostedTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneHostedTool),
+                HostedTool.class);
+        assertEquals(oneHostedTool.toString(), newHostedTool.toString());
+
+        oneHostedTool = HostedTool.COMPUTER_USE_PREVIEW;
+        newHostedTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneHostedTool),
+                HostedTool.class);
+        assertEquals(oneHostedTool.toString(), newHostedTool.toString());
+
+        var oneFunctionTool = FunctionTool.of("name");
+        var newFunctionTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFunctionTool),
+                FunctionTool.class);
+        assertEquals(oneFunctionTool.toString(), newFunctionTool.toString());
     }
 
 }

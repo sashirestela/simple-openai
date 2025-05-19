@@ -2,7 +2,7 @@ package io.github.sashirestela.openai.demo;
 
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.demo.util.UtilFunctions;
+import io.github.sashirestela.openai.demo.util.UtilSpecs;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
 import io.github.sashirestela.openai.domain.assistant.RankingOption.RankerType;
 import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
@@ -15,6 +15,8 @@ import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallItem
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallOutputItem;
 import io.github.sashirestela.openai.domain.response.Input.MessageRole;
 import io.github.sashirestela.openai.domain.response.ResponseRequest;
+import io.github.sashirestela.openai.domain.response.ResponseText;
+import io.github.sashirestela.openai.domain.response.ResponseText.ResponseTextFormat.ResponseTextFormatJsonSchema;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
@@ -95,11 +97,30 @@ public class ResponseDemo extends AbstractDemo {
         });
     }
 
+    public void createResponseWithStructuredOutputs() {
+        var question = "Explain me how can I solve 8x + 7 = -23";
+        System.out.println("Question:\n" + question);
+        var responseRequest = ResponseRequest.builder()
+                .input(List.of(
+                        InputMessage.of(
+                                "You are a helpful math tutor. Guide the user through the solution step by step.",
+                                MessageRole.SYSTEM),
+                        InputMessage.of(question, MessageRole.USER)))
+                .text(ResponseText.jsonSchema(ResponseTextFormatJsonSchema.of(UtilSpecs.MathReasoning.class)))
+                .model(this.model)
+                .temperature(0.1)
+                .build();
+        var responseResponse = responseProvider.responses().create(responseRequest).join();
+        this.responseIdList.add(responseResponse.getId());
+        System.out.println("Answer:");
+        System.out.println(responseResponse.outputText());
+    }
+
     public void createResponseWithFunctions() {
         List<Object> inputs = new ArrayList<>();
         var funcDefList = Arrays.asList(
-                FunctionDef.of(UtilFunctions.CurrentTemperature.class),
-                FunctionDef.of(UtilFunctions.RainProbability.class));
+                FunctionDef.of(UtilSpecs.CurrentTemperature.class),
+                FunctionDef.of(UtilSpecs.RainProbability.class));
         var functionExecutor = new FunctionExecutor(funcDefList);
 
         var question = "How's the temperature in Lima, Peru right now?";
@@ -235,6 +256,7 @@ public class ResponseDemo extends AbstractDemo {
         var demo = new ResponseDemo("gpt-4o-mini");
         demo.addTitleAction("Demo Response Create (Blocking)", demo::createResponseBlocking);
         demo.addTitleAction("Demo Response Create (Streaming)", demo::createResponseStreaming);
+        demo.addTitleAction("Demo Response Create with StructuredOutputs", demo::createResponseWithStructuredOutputs);
         demo.addTitleAction("Demo Response Create with Functions", demo::createResponseWithFunctions);
         demo.addTitleAction("Demo Response Create with Vision", demo::createResponseWithVision);
         demo.addTitleAction("Demo Response Create with WebSearch", demo::createResponseWebSearch);

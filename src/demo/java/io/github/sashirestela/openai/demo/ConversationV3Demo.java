@@ -4,7 +4,7 @@ import io.github.sashirestela.cleverclient.Event;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.demo.util.UtilFunctions;
+import io.github.sashirestela.openai.demo.util.UtilSpecs;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
 import io.github.sashirestela.openai.domain.assistant.RankingOption.RankerType;
 import io.github.sashirestela.openai.domain.assistant.VectorStoreRequest;
@@ -53,8 +53,8 @@ public class ConversationV3Demo {
 
     public void prepareConversation() {
         var funcDefList = Arrays.asList(
-                FunctionDef.of(UtilFunctions.CurrentTemperature.class),
-                FunctionDef.of(UtilFunctions.RainProbability.class));
+                FunctionDef.of(UtilSpecs.CurrentTemperature.class),
+                FunctionDef.of(UtilSpecs.RainProbability.class));
         this.functionExecutor = new FunctionExecutor(funcDefList);
         var file = this.openAI.files()
                 .create(FileRequest.builder()
