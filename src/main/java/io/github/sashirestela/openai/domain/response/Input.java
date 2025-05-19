@@ -12,6 +12,7 @@ import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -294,7 +295,7 @@ public abstract class Input {
             private String callId;
 
             @Required
-            private ScreenshootImage output;
+            private ScreenshotImage output;
 
             @Singular
             private List<SafetyCheck> acknowledgedSafetyChecks;
@@ -303,7 +304,7 @@ public abstract class Input {
             private ItemStatus status;
 
             @Builder
-            public ComputerCallOutputItem(String callId, ScreenshootImage output,
+            public ComputerCallOutputItem(String callId, ScreenshotImage output,
                     List<SafetyCheck> acknowledgedSafetyChecks, String id, ItemStatus status) {
                 this.callId = callId;
                 this.output = output;
@@ -574,6 +575,8 @@ public abstract class Input {
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @Getter
     @ToString
     @JsonInclude(Include.NON_EMPTY)
@@ -595,6 +598,8 @@ public abstract class Input {
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     @Getter
     @ToString
     @JsonInclude(Include.NON_EMPTY)
@@ -608,13 +613,6 @@ public abstract class Input {
 
         private String message;
 
-        @Builder
-        public SafetyCheck(String id, String code, String message) {
-            this.id = id;
-            this.code = code;
-            this.message = message;
-        }
-
     }
 
     @NoArgsConstructor
@@ -622,14 +620,14 @@ public abstract class Input {
     @ToString
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ScreenshootImage {
+    public static class ScreenshotImage {
 
         private String fileId;
         private String imageUrl;
         private String type;
 
         @Builder
-        public ScreenshootImage(String fileId, String imageUrl) {
+        public ScreenshotImage(String fileId, String imageUrl) {
             this.fileId = fileId;
             this.imageUrl = imageUrl;
             this.type = "computer_screenshot";

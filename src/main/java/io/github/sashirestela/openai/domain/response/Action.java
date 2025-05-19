@@ -3,6 +3,8 @@ package io.github.sashirestela.openai.domain.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -13,6 +15,18 @@ import lombok.ToString;
 
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Action.ClickAction.class, name = "click"),
+        @JsonSubTypes.Type(value = Action.DoubleClickAction.class, name = "double_click"),
+        @JsonSubTypes.Type(value = Action.DragAction.class, name = "drag"),
+        @JsonSubTypes.Type(value = Action.KeyPressAction.class, name = "keypress"),
+        @JsonSubTypes.Type(value = Action.MoveAction.class, name = "move"),
+        @JsonSubTypes.Type(value = Action.ScreenshotAction.class, name = "screenshot"),
+        @JsonSubTypes.Type(value = Action.ScrollAction.class, name = "scroll"),
+        @JsonSubTypes.Type(value = Action.TypeAction.class, name = "type"),
+        @JsonSubTypes.Type(value = Action.WaitAction.class, name = "wait"),
+})
 @Getter
 @Setter
 public abstract class Action {
@@ -144,14 +158,14 @@ public abstract class Action {
     @ToString
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ScreenshootAction extends Action {
+    public static class ScreenshotAction extends Action {
 
-        private ScreenshootAction() {
-            this.type = ActionType.SCREENSHOOT;
+        private ScreenshotAction() {
+            this.type = ActionType.SCREENSHOT;
         }
 
-        public static ScreenshootAction of() {
-            return new ScreenshootAction();
+        public static ScreenshotAction of() {
+            return new ScreenshotAction();
         }
 
     }
@@ -268,7 +282,7 @@ public abstract class Action {
         MOVE,
 
         @JsonProperty("screenshot")
-        SCREENSHOOT,
+        SCREENSHOT,
 
         @JsonProperty("scroll")
         SCROLL,
