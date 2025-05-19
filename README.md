@@ -563,7 +563,7 @@ This example simulates a conversation chat by the command console and demonstrat
 
 You can see the full demo code as well as the results from running the demo code:
 
-[ConversationV3Demo.java](src/demo/java/io/github/sashirestela/openai/demo/ConversationVD3emo.java)
+[ConversationV3Demo.java](src/demo/java/io/github/sashirestela/openai/demo/ConversationV3Demo.java)
 
 <details>
 
