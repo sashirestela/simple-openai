@@ -1,13 +1,15 @@
-package io.github.sashirestela.openai.demo.util;
+package io.github.sashirestela.openai.test.utils;
 
 import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import io.github.sashirestela.openai.common.function.Functional;
 
-public class UtilFunctions {
+import java.util.List;
 
-    private UtilFunctions() {
+public class UtilSpecs {
+
+    private UtilSpecs() {
     }
 
     @JsonClassDescription("Get the current temperature for a specific location")
@@ -47,6 +49,20 @@ public class UtilFunctions {
         @Override
         public Object execute() {
             return Math.random() * 100;
+        }
+
+    }
+
+    public static class MathReasoning {
+
+        public List<Step> steps;
+        public String finalAnswer;
+
+        public static class Step {
+
+            public String explanation;
+            public String output;
+
         }
 
     }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
@@ -47,6 +48,7 @@ public abstract class ResponseTool {
         @Required
         private List<String> vectorStoreIds;
 
+        @JsonDeserialize(using = FilterDeserializer.class)
         private Filter filters;
 
         @Range(min = 1, max = 50)
@@ -193,6 +195,7 @@ public abstract class ResponseTool {
 
             @Required
             @Singular
+            @JsonDeserialize(contentUsing = FilterDeserializer.class)
             private List<Filter> filters;
 
             @Required
@@ -245,22 +248,22 @@ public abstract class ResponseTool {
     public enum ComparisonOperator {
 
         @JsonProperty("eq")
-        EQUAL,
+        EQ,
 
         @JsonProperty("ne")
-        NOT_EQUAL,
+        NE,
 
         @JsonProperty("gt")
-        GREATER_THAN,
+        GT,
 
         @JsonProperty("gte")
-        GREATER_THAN_OR_EQUAL,
+        GTE,
 
         @JsonProperty("lt")
-        LESS_THAN,
+        LT,
 
         @JsonProperty("lte")
-        LESS_THAN_OR_EQUAL;
+        LTE;
 
     }
 

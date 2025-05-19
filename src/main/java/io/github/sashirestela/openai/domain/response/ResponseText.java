@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.domain.response;
 
+import com.fasterxml.jackson.annotation.JsonClassDescription;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -80,6 +81,20 @@ public class ResponseText {
                             ? new DefaultSchemaConverter(Boolean.TRUE).convert(schemaClass)
                             : null;
                 }
+            }
+
+            public static ResponseTextFormatJsonSchema of(Class<?> schemaClass) {
+                var name = schemaClass.getSimpleName();
+                var description = schemaClass.isAnnotationPresent(JsonClassDescription.class)
+                        ? schemaClass.getAnnotation(JsonClassDescription.class).value()
+                        : "";
+                var strict = Boolean.TRUE;
+                return ResponseTextFormatJsonSchema.builder()
+                        .name(name)
+                        .description(description)
+                        .strict(strict)
+                        .schemaClass(schemaClass)
+                        .build();
             }
 
         }
