@@ -14,6 +14,7 @@ import io.github.sashirestela.openai.domain.response.Action.ScreenshotAction;
 import io.github.sashirestela.openai.domain.response.Action.ScrollAction;
 import io.github.sashirestela.openai.domain.response.Action.TypeAction;
 import io.github.sashirestela.openai.domain.response.Action.WaitAction;
+import io.github.sashirestela.openai.domain.response.Input.BasicLogProb;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FileCitation;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FilePath;
 import io.github.sashirestela.openai.domain.response.Input.Citation.UrlCitation;
@@ -33,6 +34,7 @@ import io.github.sashirestela.openai.domain.response.Input.Item.ReasoningItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.WebSearchCallItem;
 import io.github.sashirestela.openai.domain.response.Input.ItemReference;
 import io.github.sashirestela.openai.domain.response.Input.ItemStatus;
+import io.github.sashirestela.openai.domain.response.Input.LogProb;
 import io.github.sashirestela.openai.domain.response.Input.MessageRole;
 import io.github.sashirestela.openai.domain.response.Input.OutputContent.RefusalOutputContent;
 import io.github.sashirestela.openai.domain.response.Input.OutputContent.TextOutputContent;
@@ -108,7 +110,10 @@ class ResponseDomainSerDeserTest {
         assertEquals(oneInputMessageItem.toString(), newInputMessageItem.toString());
 
         var oneOutputMessageItem = OutputMessageItem.builder()
-                .content(List.of(TextOutputContent.of(List.of(FilePath.of("fileId", 0)), "text")))
+                .content(List.of(TextOutputContent.builder()
+                        .annotations(List.of(FilePath.of("fileId", 0)))
+                        .text("text")
+                        .build()))
                 .id("id")
                 .status(ItemStatus.IN_PROGRESS)
                 .build();
@@ -207,7 +212,20 @@ class ResponseDomainSerDeserTest {
 
     @Test
     void testSerDeserOutputContentClasses() {
-        var oneTextOutputContent = TextOutputContent.of(List.of(FilePath.of("fileId", 0)), "text");
+        var oneTextOutputContent = TextOutputContent.builder()
+                .annotations(List.of(FilePath.of("fileId", 0)))
+                .text("text")
+                .logprobs(List.of(LogProb.builder()
+                        .bytes(List.of(1))
+                        .logprob(10.45)
+                        .token("token")
+                        .topLogprobs(List.of(BasicLogProb.builder()
+                                .bytes(List.of(1))
+                                .logprob(10.45)
+                                .token("token")
+                                .build()))
+                        .build()))
+                .build();
         var newTextOutputContent = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneTextOutputContent),
                 TextOutputContent.class);
         assertEquals(oneTextOutputContent.toString(), newTextOutputContent.toString());

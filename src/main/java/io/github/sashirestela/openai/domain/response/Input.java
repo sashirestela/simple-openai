@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -418,6 +419,221 @@ public abstract class Input {
 
         }
 
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class ImageGenerationCallItem extends Item {
+
+            @Required
+            private String result;
+
+            @Required
+            private ItemStatus status;
+
+            @Builder
+            public ImageGenerationCallItem(String id, String result, ItemStatus status) {
+                this.id = id;
+                this.result = result;
+                this.status = status;
+                this.type = ItemType.IMAGE_GENERATION_CALL;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class CodeInterpreterCallItem extends Item {
+
+            @Required
+            private String code;
+
+            @Required
+            private List<CodeInterpreterOutput> results;
+
+            @Required
+            private ItemStatus status;
+
+            private String containerId;
+
+            @Builder
+            public CodeInterpreterCallItem(String id, String code, List<CodeInterpreterOutput> results,
+                    ItemStatus status, String containerId) {
+                this.id = id;
+                this.code = code;
+                this.results = results;
+                this.status = status;
+                this.containerId = containerId;
+                this.type = ItemType.CODE_INTERPRETER_CALL;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class LocalShellCallItem extends Item {
+
+            @Required
+            private ShellAction action;
+
+            @Required
+            private String callId;
+
+            @Required
+            private ItemStatus status;
+
+            @Builder
+            public LocalShellCallItem(String id, ShellAction action, String callId, ItemStatus status) {
+                this.id = id;
+                this.action = action;
+                this.callId = callId;
+                this.status = status;
+                this.type = ItemType.LOCAL_SHELL_CALL;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class LocalShellCallOutputItem extends Item {
+
+            @Required
+            private String output;
+
+            private ItemStatus status;
+
+            @Builder
+            public LocalShellCallOutputItem(String id, String output, ItemStatus status) {
+                this.id = id;
+                this.output = output;
+                this.status = status;
+                this.type = ItemType.LOCAL_SHELL_CALL_OUTPUT;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class McpListToolsItem extends Item {
+
+            @Required
+            private String serverLabel;
+
+            @Required
+            private List<McpTool> tools;
+
+            private String error;
+
+            @Builder
+            public McpListToolsItem(String id, String serverLabel, List<McpTool> tools, String error) {
+                this.id = id;
+                this.serverLabel = serverLabel;
+                this.tools = tools;
+                this.error = error;
+                this.type = ItemType.MCP_LIST_TOOLS;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class McpApprovalRequestItem extends Item {
+
+            @Required
+            private String arguments;
+
+            @Required
+            private String name;
+
+            @Required
+            private String serverLabel;
+
+            @Builder
+            public McpApprovalRequestItem(String id, String arguments, String name, String serverLabel) {
+                this.id = id;
+                this.arguments = arguments;
+                this.name = name;
+                this.serverLabel = serverLabel;
+                this.type = ItemType.MCP_APPROVAL_REQUEST;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class McpApprovalResponseItem extends Item {
+
+            @Required
+            private String approvalRequestId;
+
+            @Required
+            private Boolean approve;
+
+            private String reason;
+
+            @Builder
+            public McpApprovalResponseItem(String id, String approvalRequestId, Boolean approve, String reason) {
+                this.id = id;
+                this.approvalRequestId = approvalRequestId;
+                this.approve = approve;
+                this.reason = reason;
+                this.type = ItemType.MCP_APPROVAL_RESPONSE;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class McpCallItem extends Item {
+
+            @Required
+            private String arguments;
+
+            @Required
+            private String name;
+
+            @Required
+            private String serverLabel;
+
+            private String error;
+            private String output;
+
+            @Builder
+            public McpCallItem(String id, String arguments, String name, String serverLabel, String error,
+                    String output) {
+                this.id = id;
+                this.arguments = arguments;
+                this.name = name;
+                this.serverLabel = serverLabel;
+                this.error = error;
+                this.output = output;
+                this.type = ItemType.MCP_CALL;
+            }
+
+        }
+
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
@@ -445,14 +661,14 @@ public abstract class Input {
             @Required
             private String text;
 
-            private TextOutputContent(List<Citation> annotations, String text) {
+            private List<LogProb> logprobs;
+
+            @Builder
+            public TextOutputContent(List<Citation> annotations, String text, List<LogProb> logprobs) {
                 this.annotations = annotations;
                 this.text = text;
+                this.logprobs = logprobs;
                 this.type = OutputContentType.OUTPUT_TEXT;
-            }
-
-            public static TextOutputContent of(List<Citation> annotations, String text) {
-                return new TextOutputContent(annotations, text);
             }
 
         }
@@ -483,6 +699,7 @@ public abstract class Input {
     @JsonSubTypes({
             @JsonSubTypes.Type(value = Citation.FileCitation.class, name = "file_citation"),
             @JsonSubTypes.Type(value = Citation.UrlCitation.class, name = "url_citation"),
+            @JsonSubTypes.Type(value = Citation.ContainerFileCitation.class, name = "container_file_citation"),
             @JsonSubTypes.Type(value = Citation.FilePath.class, name = "file_path"),
     })
     @Getter
@@ -552,6 +769,36 @@ public abstract class Input {
         @ToString
         @JsonInclude(Include.NON_EMPTY)
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class ContainerFileCitation extends Citation {
+
+            @Required
+            private String containerId;
+
+            @Required
+            private Integer endIndex;
+
+            @Required
+            private Integer startIndex;
+
+            @Required
+            private String fileId;
+
+            @Builder
+            public ContainerFileCitation(String containerId, Integer endIndex, Integer startIndex, String fileId) {
+                this.containerId = containerId;
+                this.endIndex = endIndex;
+                this.startIndex = startIndex;
+                this.fileId = fileId;
+                this.type = CitationType.CONTAINER_FILE_CITATION;
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class FilePath extends Citation {
 
             @Required
@@ -568,6 +815,61 @@ public abstract class Input {
 
             public static FilePath of(String fileId, Integer index) {
                 return new FilePath(fileId, index);
+            }
+
+        }
+
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = CodeInterpreterOutput.TextOutput.class, name = "logs"),
+            @JsonSubTypes.Type(value = CodeInterpreterOutput.FileOutput.class, name = "files"),
+    })
+    @Getter
+    @Setter
+    public abstract static class CodeInterpreterOutput {
+
+        protected CodeInterpreterOutputType type;
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class TextOutput extends CodeInterpreterOutput {
+
+            @Required
+            private String logs;
+
+            private TextOutput(String logs) {
+                this.logs = logs;
+                this.type = CodeInterpreterOutputType.LOGS;
+            }
+
+            public static TextOutput of(String logs) {
+                return new TextOutput(logs);
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class FileOutput extends CodeInterpreterOutput {
+
+            @Required
+            private List<CodeInterpreterFile> files;
+
+            private FileOutput(List<CodeInterpreterFile> files) {
+                this.files = files;
+                this.type = CodeInterpreterOutputType.FILES;
+            }
+
+            public static FileOutput of(List<CodeInterpreterFile> files) {
+                return new FileOutput(files);
             }
 
         }
@@ -658,6 +960,121 @@ public abstract class Input {
 
     }
 
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class CodeInterpreterFile {
+
+        @Required
+        private String fileId;
+
+        @Required
+        private String mimeType;
+
+        private CodeInterpreterFile(String fileId, String mimeType) {
+            this.fileId = fileId;
+            this.mimeType = mimeType;
+        }
+
+        public static CodeInterpreterFile of(String fileId, String mimeType) {
+            return new CodeInterpreterFile(fileId, mimeType);
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ShellAction {
+
+        @Required
+        private List<String> command;
+
+        @Required
+        private Object env;
+
+        @Required
+        private String type;
+
+        private Integer timeoutMs;
+        private String user;
+        private String workingDirectory;
+
+        @Builder
+        public ShellAction(List<String> command, Object env, Integer timeoutMs, String user, String workingDirectory) {
+            this.command = command;
+            this.env = env;
+            this.timeoutMs = timeoutMs;
+            this.user = user;
+            this.workingDirectory = workingDirectory;
+            this.type = "exec";
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class McpTool {
+
+        @Required
+        private Object inputSchema;
+
+        @Required
+        private String name;
+
+        private Object annotations;
+
+        private String description;
+
+        @Builder
+        public McpTool(Object inputSchema, String name, Object annotations, String description) {
+            this.inputSchema = inputSchema;
+            this.name = name;
+            this.annotations = annotations;
+            this.description = description;
+        }
+
+    }
+
+    @NoArgsConstructor
+    @SuperBuilder
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class BasicLogProb {
+
+        @Required
+        protected List<Integer> bytes;
+
+        @Required
+        protected Double logprob;
+
+        @Required
+        protected String token;
+
+    }
+
+    @NoArgsConstructor
+    @SuperBuilder
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class LogProb extends BasicLogProb {
+
+        @Required
+        private List<BasicLogProb> topLogprobs;
+
+    }
+
     public enum InputType {
 
         @JsonProperty("message")
@@ -708,7 +1125,31 @@ public abstract class Input {
         FUNCTION_CALL_OUTPUT,
 
         @JsonProperty("reasoning")
-        REASONING;
+        REASONING,
+
+        @JsonProperty("image_generation_call")
+        IMAGE_GENERATION_CALL,
+
+        @JsonProperty("code_interpreter_call")
+        CODE_INTERPRETER_CALL,
+
+        @JsonProperty("local_shell_call")
+        LOCAL_SHELL_CALL,
+
+        @JsonProperty("local_shell_call_output")
+        LOCAL_SHELL_CALL_OUTPUT,
+
+        @JsonProperty("mcp_list_tools")
+        MCP_LIST_TOOLS,
+
+        @JsonProperty("mcp_approval_request")
+        MCP_APPROVAL_REQUEST,
+
+        @JsonProperty("mcp_approval_response")
+        MCP_APPROVAL_RESPONSE,
+
+        @JsonProperty("mcp_call")
+        MCP_CALL;
 
     }
 
@@ -775,8 +1216,21 @@ public abstract class Input {
         @JsonProperty("url_citation")
         URL_CITATION,
 
+        @JsonProperty("container_file_citation")
+        CONTAINER_FILE_CITATION,
+
         @JsonProperty("file_path")
         FILE_PATH;
+
+    }
+
+    public enum CodeInterpreterOutputType {
+
+        @JsonProperty("logs")
+        LOGS,
+
+        @JsonProperty("files")
+        FILES;
 
     }
 
