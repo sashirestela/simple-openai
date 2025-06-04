@@ -19,5 +19,6 @@ public class ResponseOutputTextAnnotEvent {
     private Integer contentIndex;
     private Integer annotationIndex;
     private Input.Citation annotation;
+    private Integer sequenceNumber;
 
 }

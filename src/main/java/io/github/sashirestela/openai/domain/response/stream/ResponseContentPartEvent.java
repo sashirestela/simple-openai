@@ -18,5 +18,6 @@ public class ResponseContentPartEvent {
     private Integer outputIndex;
     private Integer contentIndex;
     private Input.OutputContent part;
+    private Integer sequenceNumber;
 
 }

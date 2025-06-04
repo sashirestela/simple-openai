@@ -19,5 +19,6 @@ public class ResponseReasonSummTextEvent {
     private Integer summaryIndex;
     @JsonAlias({ "delta" })
     private String text;
+    private Integer sequenceNumber;
 
 }

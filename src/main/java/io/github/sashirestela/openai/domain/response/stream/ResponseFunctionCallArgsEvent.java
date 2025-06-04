@@ -18,5 +18,6 @@ public class ResponseFunctionCallArgsEvent {
     private Integer outputIndex;
     @JsonAlias({ "delta" })
     private String arguments;
+    private Integer sequenceNumber;
 
 }
