@@ -23,6 +23,7 @@ import lombok.Singular;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
@@ -180,14 +181,14 @@ public abstract class ResponseTool {
         @ObjectType(baseClass = McpListTools.class)
         private Object allowedTools;
 
-        private Object headers;
+        private Map<String, String> headers;
 
         @ObjectType(baseClass = McpToolApprovalSetting.class)
         @ObjectType(baseClass = McpToolApprovalFilter.class)
         private Object requireApproval;
 
         @Builder
-        public McpResponseTool(String serverLabel, String serverUrl, Object allowedTools, Object headers,
+        public McpResponseTool(String serverLabel, String serverUrl, Object allowedTools, Map<String, String> headers,
                 Object requireApproval) {
             this.serverLabel = serverLabel;
             this.serverUrl = serverUrl;

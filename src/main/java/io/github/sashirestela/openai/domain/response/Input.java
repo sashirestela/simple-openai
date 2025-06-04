@@ -9,6 +9,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.content.ImageDetail;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageBackground;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageMask;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
@@ -432,6 +436,16 @@ public abstract class Input {
 
             @Required
             private ItemStatus status;
+            
+            private ImageBackground background;
+            private ImageMask inputImageMask;
+            private String model;
+            private String moderation;
+            private Integer outputCompression;
+            private ImageFormat outputFormat;
+            private Integer partialImages;
+            private ImageQuality quality;
+            private String size;
 
             @Builder
             public ImageGenerationCallItem(String id, String result, ItemStatus status) {
@@ -620,16 +634,18 @@ public abstract class Input {
 
             private String error;
             private String output;
+            private String approvalRequestId;
 
             @Builder
             public McpCallItem(String id, String arguments, String name, String serverLabel, String error,
-                    String output) {
+                    String output, String approvalRequestId) {
                 this.id = id;
                 this.arguments = arguments;
                 this.name = name;
                 this.serverLabel = serverLabel;
                 this.error = error;
                 this.output = output;
+                this.approvalRequestId = approvalRequestId;
                 this.type = ItemType.MCP_CALL;
             }
 
