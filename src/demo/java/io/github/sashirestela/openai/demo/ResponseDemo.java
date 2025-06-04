@@ -11,6 +11,7 @@ import io.github.sashirestela.openai.domain.file.FileRequest.PurposeType;
 import io.github.sashirestela.openai.domain.response.Input.Content.ImageInputContent;
 import io.github.sashirestela.openai.domain.response.Input.Content.TextInputContent;
 import io.github.sashirestela.openai.domain.response.Input.InputMessage;
+import io.github.sashirestela.openai.domain.response.Input.Item;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallOutputItem;
 import io.github.sashirestela.openai.domain.response.Input.MessageRole;
@@ -20,17 +21,26 @@ import io.github.sashirestela.openai.domain.response.ResponseText.ResponseTextFo
 import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageGenerationResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
 import io.github.sashirestela.openai.domain.response.ResponseTool.Location;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpToolApprovalSetting;
 import io.github.sashirestela.openai.domain.response.ResponseTool.WebSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.stream.EventName;
 import io.github.sashirestela.openai.domain.response.stream.ResponseEvent;
 import io.github.sashirestela.openai.domain.response.stream.ResponseOutputTextEvent;
 import io.github.sashirestela.openai.service.ResponseServices;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResponseDemo extends AbstractDemo {
 
@@ -235,6 +245,57 @@ public class ResponseDemo extends AbstractDemo {
         aiProvider.files().delete(file.getId()).join();
     }
 
+    public void createResponseRemoteMcp() {
+        var question = "What is the design philosophy of the sashirestela/cleverclient library?";
+        System.out.println("Question:\n" + question);
+        var responseRequest = ResponseRequest.builder()
+                .instructions("Answer questions using tools as needed")
+                .input(question)
+                .tool(McpResponseTool.builder()
+                        .serverLabel("deepwiki")
+                        .serverUrl("https://mcp.deepwiki.com/mcp")
+                        .requireApproval(McpToolApprovalSetting.NEVER)
+                        .allowedTools(List.of("ask_question"))
+                        .build())
+                .model(this.model)
+                .temperature(0.1)
+                .build();
+        var responseResponse = responseProvider.responses().create(responseRequest).join();
+        this.responseIdList.add(responseResponse.getId());
+        System.out.println("Answer:");
+        System.out.println(responseResponse.outputText());
+    }
+
+    public void createResponseImageGenearation() {
+        var question = "Generate an image of orange cat hugging other white cat with a light blue scarf.";
+        System.out.println("Question:\n" + question);
+        var responseRequest = ResponseRequest.builder()
+                .instructions("You are a helpful image generator")
+                .input(question)
+                .tool(ImageGenerationResponseTool.builder()
+                        //.model("gpt-image-1")
+                        .outputFormat(ImageFormat.JPEG)
+                        .quality(ImageQuality.MEDIUM)
+                        .size("1024x1024")
+                        .build())
+                .model(this.model)
+                .temperature(0.1)
+                .build();
+        var responseResponse = responseProvider.responses().create(responseRequest).join();
+        this.responseIdList.add(responseResponse.getId());
+        System.out.println("Image generated in:");
+        var imageData = responseResponse.getOutput().stream()
+                .filter(item -> (item instanceof Item.ImageGenerationCallItem))
+                .map(item -> ((Item.ImageGenerationCallItem) item).getResult())
+                .collect(Collectors.joining());
+        var imageBytes = Base64.getDecoder().decode(imageData);
+        try {
+            Files.write(Paths.get("src/demo/resources/cats.jpeg"), imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void getResponse() {
         var responseResponse = responseProvider.responses().getOne(responseIdList.get(0)).join();
         System.out.println(responseResponse);
@@ -254,13 +315,15 @@ public class ResponseDemo extends AbstractDemo {
 
     public static void main(String[] args) {
         var demo = new ResponseDemo("gpt-4o-mini");
-        demo.addTitleAction("Demo Response Create (Blocking)", demo::createResponseBlocking);
+        /*demo.addTitleAction("Demo Response Create (Blocking)", demo::createResponseBlocking);
         demo.addTitleAction("Demo Response Create (Streaming)", demo::createResponseStreaming);
         demo.addTitleAction("Demo Response Create with StructuredOutputs", demo::createResponseWithStructuredOutputs);
         demo.addTitleAction("Demo Response Create with Functions", demo::createResponseWithFunctions);
         demo.addTitleAction("Demo Response Create with Vision", demo::createResponseWithVision);
         demo.addTitleAction("Demo Response Create with WebSearch", demo::createResponseWebSearch);
         demo.addTitleAction("Demo Response Create with FileSearch", demo::createResponseFileSearch);
+        demo.addTitleAction("Demo Response Create with RemoteMcp", demo::createResponseRemoteMcp);*/
+        demo.addTitleAction("Demo Response Create with ImageGeneration", demo::createResponseImageGenearation);
         demo.addTitleAction("Demo Response GetOne ", demo::getResponse);
         demo.addTitleAction("Demo Response List InputItems", demo::listInputItems);
         demo.addTitleAction("Demo Response Delete", demo::deleteResponse);
