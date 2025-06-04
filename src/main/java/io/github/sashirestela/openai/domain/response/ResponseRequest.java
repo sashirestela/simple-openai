@@ -35,6 +35,8 @@ public class ResponseRequest {
     @Required
     private String model;
 
+    private Boolean background;
+
     private List<ResponseInclude> include;
 
     private String instructions;
@@ -89,7 +91,10 @@ public class ResponseRequest {
         COMPUTER_CALL_OUTPUT_IMAGE_URL,
 
         @JsonProperty("reasoning.encrypted_content")
-        REASONING_ENCRYPTED_CONTENT;
+        REASONING_ENCRYPTED_CONTENT,
+
+        @JsonProperty("code_interpreter_call.outputs")
+        CODE_INTERPRETER_CALL_OUTPUTS;
 
     }
 

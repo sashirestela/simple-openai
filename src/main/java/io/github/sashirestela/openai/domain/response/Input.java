@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.content.ImageDetail;
@@ -1024,7 +1025,7 @@ public abstract class Input {
     public static class McpTool {
 
         @Required
-        private Object inputSchema;
+        private JsonNode inputSchema;
 
         @Required
         private String name;
@@ -1034,7 +1035,7 @@ public abstract class Input {
         private String description;
 
         @Builder
-        public McpTool(Object inputSchema, String name, Object annotations, String description) {
+        public McpTool(JsonNode inputSchema, String name, Object annotations, String description) {
             this.inputSchema = inputSchema;
             this.name = name;
             this.annotations = annotations;

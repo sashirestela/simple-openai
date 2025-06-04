@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
 
+    private Boolean background;
     private Long createdAt;
     private ResponseError error;
     private String id;
@@ -120,6 +121,12 @@ public class Response {
 
         @JsonProperty("in_progress")
         IN_PROGRESS,
+
+        @JsonProperty("cancelled")
+        CANCELLED,
+
+        @JsonProperty("queued")
+        QUEUED,
 
         @JsonProperty("incomplete")
         INCOMPLETE;

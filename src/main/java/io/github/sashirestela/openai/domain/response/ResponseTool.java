@@ -31,6 +31,10 @@ import java.util.stream.Collectors;
         @JsonSubTypes.Type(value = ResponseTool.FunctionResponseTool.class, name = "function"),
         @JsonSubTypes.Type(value = ResponseTool.ComputerResponseTool.class, name = "computer_use_preview"),
         @JsonSubTypes.Type(value = ResponseTool.WebSearchResponseTool.class, name = "web_search_preview"),
+        @JsonSubTypes.Type(value = ResponseTool.McpResponseTool.class, name = "mcp"),
+        @JsonSubTypes.Type(value = ResponseTool.CodeInterpreterResponseTool.class, name = "code_interpreter"),
+        @JsonSubTypes.Type(value = ResponseTool.ImageGenerationResponseTool.class, name = "image_generation"),
+        @JsonSubTypes.Type(value = ResponseTool.LocalShellResponseTool.class, name = "local_shell"),
 })
 @Getter
 @Setter
@@ -117,16 +121,16 @@ public abstract class ResponseTool {
     public static class ComputerResponseTool extends ResponseTool {
 
         @Required
-        private Double displayHeight;
+        private Integer displayHeight;
 
         @Required
-        private Double displayWidth;
+        private Integer displayWidth;
 
         @Required
         private Environment environment;
 
         @Builder
-        public ComputerResponseTool(Double displayHeight, Double displayWidth, Environment environment) {
+        public ComputerResponseTool(Integer displayHeight, Integer displayWidth, Environment environment) {
             this.displayHeight = displayHeight;
             this.displayWidth = displayWidth;
             this.environment = environment;
@@ -155,6 +159,115 @@ public abstract class ResponseTool {
 
         public static WebSearchResponseTool of() {
             return WebSearchResponseTool.builder().build();
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class McpResponseTool extends ResponseTool {
+
+        @Required
+        private String serverLabel;
+
+        @Required
+        private String serverUrl;
+
+        @ObjectType(baseClass = String.class, firstGroup = true)
+        @ObjectType(baseClass = McpListTools.class)
+        private Object allowedTools;
+
+        private Object headers;
+
+        @ObjectType(baseClass = McpToolApprovalSetting.class)
+        @ObjectType(baseClass = McpToolApprovalFilter.class)
+        private Object requireApproval;
+
+        @Builder
+        public McpResponseTool(String serverLabel, String serverUrl, Object allowedTools, Object headers,
+                Object requireApproval) {
+            this.serverLabel = serverLabel;
+            this.serverUrl = serverUrl;
+            this.allowedTools = allowedTools;
+            this.headers = headers;
+            this.requireApproval = requireApproval;
+            this.type = ResponseToolType.MCP;
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class CodeInterpreterResponseTool extends ResponseTool {
+
+        @Required
+        @ObjectType(baseClass = String.class)
+        @ObjectType(baseClass = ContainerAuto.class)
+        private Object container;
+
+        private CodeInterpreterResponseTool(Object container) {
+            this.container = container;
+            this.type = ResponseToolType.CODE_INTERPRETER;
+        }
+
+        public static CodeInterpreterResponseTool of(Object container) {
+            return new CodeInterpreterResponseTool(container);
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ImageGenerationResponseTool extends ResponseTool {
+
+        private ImageBackground background;
+        private ImageMask inputImageMask;
+        private String model;
+        private String moderation;
+        private Integer outputCompression;
+        private ImageFormat outputFormat;
+        private Integer partialImages;
+        private ImageQuality quality;
+        private String size;
+
+        @Builder
+        public ImageGenerationResponseTool(ImageBackground background, ImageMask inputImageMask, String model,
+                String moderation, Integer outputCompression, ImageFormat outputFormat, Integer partialImages,
+                ImageQuality quality, String size) {
+            this.background = background;
+            this.inputImageMask = inputImageMask;
+            this.model = model;
+            this.moderation = moderation;
+            this.outputCompression = outputCompression;
+            this.outputFormat = outputFormat;
+            this.partialImages = partialImages;
+            this.quality = quality;
+            this.size = size;
+            this.type = ResponseToolType.IMAGE_GENERATION;
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class LocalShellResponseTool extends ResponseTool {
+
+        public static LocalShellResponseTool of() {
+            var localShellTool = new LocalShellResponseTool();
+            localShellTool.setType(ResponseToolType.LOCAL_SHELL);
+            return localShellTool;
         }
 
     }
@@ -229,6 +342,78 @@ public abstract class ResponseTool {
 
     }
 
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class McpListTools {
+
+        private List<String> toolNames;
+
+        private McpListTools(List<String> toolNames) {
+            this.toolNames = toolNames;
+        }
+
+        public static McpListTools of(List<String> toolNames) {
+            return new McpListTools(toolNames);
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class McpToolApprovalFilter {
+
+        private McpListTools always;
+        private McpListTools never;
+
+        @Builder
+        public McpToolApprovalFilter(McpListTools always, McpListTools never) {
+            this.always = always;
+            this.never = never;
+        }
+
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ContainerAuto {
+
+        private String type;
+        private List<String> fileIds;
+
+        private ContainerAuto(List<String> fileIds) {
+            this.type = "auto";
+            this.fileIds = fileIds;
+        }
+
+        public static ContainerAuto of(List<String> fileIds) {
+            return new ContainerAuto(fileIds);
+        }
+
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ImageMask {
+
+        private String fileId;
+        private String imageUrl;
+
+    }
+
     public enum ResponseToolType {
 
         @JsonProperty("file_search")
@@ -241,7 +426,19 @@ public abstract class ResponseTool {
         COMPUTER_USE_PREVIEW,
 
         @JsonProperty("web_search_preview")
-        WEB_SEARCH_PREVIEW;
+        WEB_SEARCH_PREVIEW,
+
+        @JsonProperty("mcp")
+        MCP,
+
+        @JsonProperty("code_interpreter")
+        CODE_INTERPRETER,
+
+        @JsonProperty("image_generation")
+        IMAGE_GENERATION,
+
+        @JsonProperty("local_shell")
+        LOCAL_SHELL;
 
     }
 
@@ -303,6 +500,58 @@ public abstract class ResponseTool {
 
         @JsonProperty("high")
         HIGH;
+
+    }
+
+    public enum McpToolApprovalSetting {
+
+        @JsonProperty("always")
+        ALWAYS,
+
+        @JsonProperty("never")
+        NEVER;
+
+    }
+
+    public enum ImageBackground {
+
+        @JsonProperty("transparent")
+        TRANSPARENT,
+
+        @JsonProperty("opaque")
+        OPAQUE,
+
+        @JsonProperty("auto")
+        AUTO;
+
+    }
+
+    public enum ImageFormat {
+
+        @JsonProperty("png")
+        PNG,
+
+        @JsonProperty("webp")
+        WEBP,
+
+        @JsonProperty("jpeg")
+        JPEG;
+
+    }
+
+    public enum ImageQuality {
+
+        @JsonProperty("low")
+        LOW,
+
+        @JsonProperty("medium")
+        MEDIUM,
+
+        @JsonProperty("high")
+        HIGH,
+
+        @JsonProperty("auto")
+        AUTO;
 
     }
 
