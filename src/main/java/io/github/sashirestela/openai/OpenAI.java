@@ -842,7 +842,7 @@ public interface OpenAI {
          * @param responseRequest The creation request.
          * @return A response object.
          */
-        default CompletableFuture<Response> create(@Body ResponseRequest responseRequest) {
+        default CompletableFuture<Response> create(ResponseRequest responseRequest) {
             var newResponseRequest = responseRequest.withStream(Boolean.FALSE);
             return createPrimitive(newResponseRequest);
         }
@@ -853,30 +853,84 @@ public interface OpenAI {
          * @param responseRequest The creation request.
          * @return Stream of server-sent events emitted as the Response is generated.
          */
-        default CompletableFuture<Stream<Event>> createStream(@Body ResponseRequest responseRequest) {
+        default CompletableFuture<Stream<Event>> createStream(ResponseRequest responseRequest) {
             var newResponseRequest = responseRequest.withStream(Boolean.TRUE);
             return createStreamPrimitive(newResponseRequest);
         }
 
         /**
-         * Retrieves a model response with the given ID.
+         * Retrieves a model response with the given ID (don't call it directly).
          * 
-         * @param responseId The ID of the response to retrieve.
-         * @param include    Additional fields to include in the response.
+         * @param responseId    The ID of the response to retrieve.
+         * @param include       Additional fields to include in the response.
+         * @param startingAfter The sequence number of the event after which to start streaming.
+         * @param stream        If set to true, the model response data will be streamed to the client.
          * @return The Response object matching the specified ID.
          */
         @GET("/{responseId}")
-        CompletableFuture<Response> getOne(@Path("responseId") String responseId,
-                @Query("include") List<ResponseInclude> include);
+        CompletableFuture<Response> getOnePrimitive(@Path("responseId") String responseId,
+                @Query("include") List<ResponseInclude> include, @Query("starting_after") Integer startingAfter,
+                @Query("stream") Boolean stream);
 
         /**
-         * Retrieves a model response with the given ID without any include.
+         * Retrieves a model response with the given ID in streaming (don't call it directly).
+         * 
+         * @param responseId    The ID of the response to retrieve.
+         * @param include       Additional fields to include in the response.
+         * @param startingAfter The sequence number of the event after which to start streaming.
+         * @param stream        If set to true, the model response data will be streamed to the client.
+         * @return Stream of server-sent events emitted as the Response is queried.
+         */
+        @GET("/{responseId}")
+        @ResponseStreamEvent
+        CompletableFuture<Stream<Event>> getOneStreamPrimitive(@Path("responseId") String responseId,
+                @Query("include") List<ResponseInclude> include, @Query("starting_after") Integer startingAfter,
+                @Query("stream") Boolean stream);
+
+        /**
+         * Retrieves a model response with the given ID without streaming.
+         * 
+         * @param responseId    The ID of the response to retrieve.
+         * @param include       Additional fields to include in the response.
+         * @param startingAfter The sequence number of the event after which to start streaming.
+         * @return The Response object matching the specified ID.
+         */
+        default CompletableFuture<Response> getOne(String responseId, List<ResponseInclude> include,
+                Integer startingAfter) {
+            return getOnePrimitive(responseId, include, startingAfter, Boolean.FALSE);
+        }
+
+        /**
+         * Retrieves a model response with the given ID without streaming.
          * 
          * @param responseId The ID of the response to retrieve.
          * @return The Response object matching the specified ID.
          */
-        default CompletableFuture<Response> getOne(@Path("responseId") String responseId) {
-            return getOne(responseId, null);
+        default CompletableFuture<Response> getOne(String responseId) {
+            return getOne(responseId, null, null);
+        }
+
+        /**
+         * Retrieves a model response with the given ID by making sure to use streaming mode.
+         * 
+         * @param responseId    The ID of the response to retrieve.
+         * @param include       Additional fields to include in the response.
+         * @param startingAfter The sequence number of the event after which to start streaming.
+         * @return Stream of server-sent events emitted as the Response is queried.
+         */
+        default CompletableFuture<Stream<Event>> getOneStream(String responseId, List<ResponseInclude> include,
+                Integer startingAfter) {
+            return getOneStreamPrimitive(responseId, include, startingAfter, Boolean.TRUE);
+        }
+
+        /**
+         * Retrieves a model response with the given ID by making sure to use streaming mode.
+         * 
+         * @param responseId The ID of the response to retrieve.
+         * @return Stream of server-sent events emitted as the Response is queried.
+         */
+        default CompletableFuture<Stream<Event>> getOneStream(String responseId) {
+            return getOneStream(responseId, null, null);
         }
 
         /**
@@ -887,6 +941,16 @@ public interface OpenAI {
          */
         @DELETE("/{responseId}")
         CompletableFuture<DeletedObject> delete(@Path("responseId") String responseId);
+
+        /**
+         * Cancels a model response with the given ID. Only responses created with the background parameter
+         * set to true can be cancelled.
+         * 
+         * @param responseId The ID of the response to cancel.
+         * @return The cancelled response.
+         */
+        @POST("/{responseId}/cancel")
+        CompletableFuture<Response> cancel(@Path("responseId") String responseId);
 
         /**
          * Returns a list of input items for a given response.
