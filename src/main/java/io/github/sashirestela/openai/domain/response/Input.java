@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.content.ImageDetail;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ImageBackground;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
-import io.github.sashirestela.openai.domain.response.ResponseTool.ImageMask;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
@@ -436,22 +435,24 @@ public abstract class Input {
 
             @Required
             private ItemStatus status;
-            
+
+            private String revisedPrompt;
             private ImageBackground background;
-            private ImageMask inputImageMask;
-            private String model;
-            private String moderation;
-            private Integer outputCompression;
             private ImageFormat outputFormat;
-            private Integer partialImages;
             private ImageQuality quality;
             private String size;
 
             @Builder
-            public ImageGenerationCallItem(String id, String result, ItemStatus status) {
+            public ImageGenerationCallItem(String id, String result, ItemStatus status, String revisedPrompt,
+                    ImageBackground background, ImageFormat outputFormat, ImageQuality quality, String size) {
                 this.id = id;
                 this.result = result;
                 this.status = status;
+                this.revisedPrompt = revisedPrompt;
+                this.background = background;
+                this.outputFormat = outputFormat;
+                this.quality = quality;
+                this.size = size;
                 this.type = ItemType.IMAGE_GENERATION_CALL;
             }
 

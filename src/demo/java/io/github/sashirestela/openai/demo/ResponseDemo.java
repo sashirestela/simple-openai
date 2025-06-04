@@ -32,13 +32,11 @@ import io.github.sashirestela.openai.domain.response.stream.EventName;
 import io.github.sashirestela.openai.domain.response.stream.ResponseEvent;
 import io.github.sashirestela.openai.domain.response.stream.ResponseOutputTextEvent;
 import io.github.sashirestela.openai.service.ResponseServices;
+import io.github.sashirestela.openai.support.Base64Util;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -273,7 +271,7 @@ public class ResponseDemo extends AbstractDemo {
                 .instructions("You are a helpful image generator")
                 .input(question)
                 .tool(ImageGenerationResponseTool.builder()
-                        //.model("gpt-image-1")
+                        .model("gpt-image-1")
                         .outputFormat(ImageFormat.JPEG)
                         .quality(ImageQuality.MEDIUM)
                         .size("1024x1024")
@@ -284,16 +282,14 @@ public class ResponseDemo extends AbstractDemo {
         var responseResponse = responseProvider.responses().create(responseRequest).join();
         this.responseIdList.add(responseResponse.getId());
         System.out.println("Image generated in:");
-        var imageData = responseResponse.getOutput().stream()
+        var imageData = responseResponse.getOutput()
+                .stream()
                 .filter(item -> (item instanceof Item.ImageGenerationCallItem))
                 .map(item -> ((Item.ImageGenerationCallItem) item).getResult())
                 .collect(Collectors.joining());
-        var imageBytes = Base64.getDecoder().decode(imageData);
-        try {
-            Files.write(Paths.get("src/demo/resources/cats.jpeg"), imageBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        var filePath = "src/demo/resources/cats.jpeg";
+        Base64Util.decode(imageData, filePath);
+        System.out.println(filePath);
     }
 
     public void getResponse() {
@@ -302,7 +298,7 @@ public class ResponseDemo extends AbstractDemo {
     }
 
     public void listInputItems() {
-        var inputItems = responseProvider.responses().getListInputItem(responseIdList.get(1)).join();
+        var inputItems = responseProvider.responses().getListInputItem(responseIdList.get(0)).join();
         inputItems.getData().forEach(System.out::println);
     }
 
@@ -315,14 +311,14 @@ public class ResponseDemo extends AbstractDemo {
 
     public static void main(String[] args) {
         var demo = new ResponseDemo("gpt-4o-mini");
-        /*demo.addTitleAction("Demo Response Create (Blocking)", demo::createResponseBlocking);
+        demo.addTitleAction("Demo Response Create (Blocking)", demo::createResponseBlocking);
         demo.addTitleAction("Demo Response Create (Streaming)", demo::createResponseStreaming);
         demo.addTitleAction("Demo Response Create with StructuredOutputs", demo::createResponseWithStructuredOutputs);
         demo.addTitleAction("Demo Response Create with Functions", demo::createResponseWithFunctions);
         demo.addTitleAction("Demo Response Create with Vision", demo::createResponseWithVision);
         demo.addTitleAction("Demo Response Create with WebSearch", demo::createResponseWebSearch);
         demo.addTitleAction("Demo Response Create with FileSearch", demo::createResponseFileSearch);
-        demo.addTitleAction("Demo Response Create with RemoteMcp", demo::createResponseRemoteMcp);*/
+        demo.addTitleAction("Demo Response Create with RemoteMcp", demo::createResponseRemoteMcp);
         demo.addTitleAction("Demo Response Create with ImageGeneration", demo::createResponseImageGenearation);
         demo.addTitleAction("Demo Response GetOne ", demo::getResponse);
         demo.addTitleAction("Demo Response List InputItems", demo::listInputItems);
