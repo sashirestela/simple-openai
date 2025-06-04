@@ -351,8 +351,8 @@ class ResponseDomainSerDeserTest {
         assertEquals(oneFunctionResponseTool.toString(), newFunctionResponseTool.toString());
 
         var oneComputerResponseTool = ComputerResponseTool.builder()
-                .displayHeight(100.0)
-                .displayWidth(200.0)
+                .displayHeight(100)
+                .displayWidth(200)
                 .environment(Environment.BROWSER)
                 .build();
         var newComputerResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneComputerResponseTool),
