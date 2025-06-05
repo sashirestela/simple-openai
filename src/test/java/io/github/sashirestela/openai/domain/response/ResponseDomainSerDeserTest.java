@@ -15,26 +15,39 @@ import io.github.sashirestela.openai.domain.response.Action.ScrollAction;
 import io.github.sashirestela.openai.domain.response.Action.TypeAction;
 import io.github.sashirestela.openai.domain.response.Action.WaitAction;
 import io.github.sashirestela.openai.domain.response.Input.BasicLogProb;
+import io.github.sashirestela.openai.domain.response.Input.Citation.ContainerFileCitation;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FileCitation;
 import io.github.sashirestela.openai.domain.response.Input.Citation.FilePath;
 import io.github.sashirestela.openai.domain.response.Input.Citation.UrlCitation;
+import io.github.sashirestela.openai.domain.response.Input.CodeInterpreterFile;
+import io.github.sashirestela.openai.domain.response.Input.CodeInterpreterOutput.FileOutput;
+import io.github.sashirestela.openai.domain.response.Input.CodeInterpreterOutput.TextOutput;
 import io.github.sashirestela.openai.domain.response.Input.Content.FileInputContent;
 import io.github.sashirestela.openai.domain.response.Input.Content.ImageInputContent;
 import io.github.sashirestela.openai.domain.response.Input.Content.TextInputContent;
 import io.github.sashirestela.openai.domain.response.Input.FileSearchResult;
 import io.github.sashirestela.openai.domain.response.Input.InputMessage;
+import io.github.sashirestela.openai.domain.response.Input.Item.CodeInterpreterCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.ComputerCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.ComputerCallOutputItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.FileSearchCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallOutputItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.ImageGenerationCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.InputMessageItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.LocalShellCallItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.LocalShellCallOutputItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.McpApprovalRequestItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.McpApprovalResponseItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.McpCallItem;
+import io.github.sashirestela.openai.domain.response.Input.Item.McpListToolsItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.OutputMessageItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.ReasoningItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.WebSearchCallItem;
 import io.github.sashirestela.openai.domain.response.Input.ItemReference;
 import io.github.sashirestela.openai.domain.response.Input.ItemStatus;
 import io.github.sashirestela.openai.domain.response.Input.LogProb;
+import io.github.sashirestela.openai.domain.response.Input.McpTool;
 import io.github.sashirestela.openai.domain.response.Input.MessageRole;
 import io.github.sashirestela.openai.domain.response.Input.OutputContent.RefusalOutputContent;
 import io.github.sashirestela.openai.domain.response.Input.OutputContent.TextOutputContent;
@@ -42,17 +55,28 @@ import io.github.sashirestela.openai.domain.response.Input.ReasoningContent;
 import io.github.sashirestela.openai.domain.response.Input.SafetyCheck;
 import io.github.sashirestela.openai.domain.response.Input.ScreenshotImage;
 import io.github.sashirestela.openai.domain.response.Input.SearchStatus;
+import io.github.sashirestela.openai.domain.response.Input.ShellAction;
+import io.github.sashirestela.openai.domain.response.ResponseTool.CodeInterpreterResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ComparisonOperator;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ComputerResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContainerAuto;
 import io.github.sashirestela.openai.domain.response.ResponseTool.Environment;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.Filter.ComparisonFilter;
 import io.github.sashirestela.openai.domain.response.ResponseTool.Filter.CompoundFilter;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageBackground;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
+import io.github.sashirestela.openai.domain.response.ResponseTool.LocalShellResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.LogicalOperator;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpListTools;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpToolApprovalFilter;
 import io.github.sashirestela.openai.domain.response.ResponseTool.WebSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseToolChoice.FunctionTool;
 import io.github.sashirestela.openai.domain.response.ResponseToolChoice.HostedTool;
+import io.github.sashirestela.openai.support.JsonSchemaUtil;
 import io.github.sashirestela.openai.test.utils.UtilSpecs;
 import org.junit.jupiter.api.Test;
 
@@ -208,6 +232,104 @@ class ResponseDomainSerDeserTest {
         var newReasoningItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneReasoningItem),
                 ReasoningItem.class);
         assertEquals(oneReasoningItem.toString(), newReasoningItem.toString());
+
+        var oneImageGenerationCallItem = ImageGenerationCallItem.builder()
+                .id("id")
+                .result("result")
+                .status(ItemStatus.INCOMPLETE)
+                .revisedPrompt("revisedPrompt")
+                .background(ImageBackground.TRANSPARENT)
+                .outputFormat(ImageFormat.PNG)
+                .quality(ImageQuality.MEDIUM)
+                .size("1024x1024")
+                .build();
+        var newImageGenerationCallItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneImageGenerationCallItem),
+                ImageGenerationCallItem.class);
+        assertEquals(oneImageGenerationCallItem.toString(), newImageGenerationCallItem.toString());
+
+        var oneCodeInterpreterCallItem = CodeInterpreterCallItem.builder()
+                .id("id")
+                .code("code")
+                .outputs(List.of(TextOutput.of("logs")))
+                .status(ItemStatus.COMPLETED)
+                .containerId("containerId")
+                .build();
+        var newCodeInterpreterCallItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneCodeInterpreterCallItem),
+                CodeInterpreterCallItem.class);
+        assertEquals(oneCodeInterpreterCallItem.toString(), newCodeInterpreterCallItem.toString());
+
+        var oneLocalShellCallItem = LocalShellCallItem.builder()
+                .id("id")
+                .action(ShellAction.builder()
+                        .command(List.of("cmd1", "cmd2"))
+                        .env("env")
+                        .timeoutMs(100)
+                        .user("user")
+                        .workingDirectory("workingDirectory")
+                        .build())
+                .callId("callId")
+                .status(ItemStatus.IN_PROGRESS)
+                .build();
+        var newLocalShellCallItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneLocalShellCallItem),
+                LocalShellCallItem.class);
+        assertEquals(oneLocalShellCallItem.toString(), newLocalShellCallItem.toString());
+
+        var oneLocalShellCallOutputItem = LocalShellCallOutputItem.builder()
+                .id("id")
+                .output("output")
+                .status(ItemStatus.COMPLETED)
+                .build();
+        var newLocalShellCallOutputItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneLocalShellCallOutputItem),
+                LocalShellCallOutputItem.class);
+        assertEquals(oneLocalShellCallOutputItem.toString(), newLocalShellCallOutputItem.toString());
+
+        var oneMcpListToolsItem = McpListToolsItem.builder()
+                .id("id")
+                .serverLabel("serverLabel")
+                .tools(List.of(McpTool.builder()
+                        .inputSchema(JsonSchemaUtil.classToJsonSchema(UtilSpecs.DemoSchema.class))
+                        .name("name")
+                        .annotations("annotations")
+                        .description("description")
+                        .build()))
+                .error("error")
+                .build();
+        var newMcpListToolsItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMcpListToolsItem),
+                McpListToolsItem.class);
+        assertEquals(oneMcpListToolsItem.toString(), newMcpListToolsItem.toString());
+
+        var oneMcpApprovalRequestItem = McpApprovalRequestItem.builder()
+                .id("id")
+                .arguments("arguments")
+                .name("name")
+                .serverLabel("serverLabel")
+                .build();
+        var newMcpApprovalRequestItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMcpApprovalRequestItem),
+                McpApprovalRequestItem.class);
+        assertEquals(oneMcpApprovalRequestItem.toString(), newMcpApprovalRequestItem.toString());
+
+        var oneMcpApprovalResponseItem = McpApprovalResponseItem.builder()
+                .id("id")
+                .approvalRequestId("approvalRequestId")
+                .approve(Boolean.TRUE)
+                .reason("reason")
+                .build();
+        var newMcpApprovalResponseItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMcpApprovalResponseItem),
+                McpApprovalResponseItem.class);
+        assertEquals(oneMcpApprovalResponseItem.toString(), newMcpApprovalResponseItem.toString());
+
+        var oneMcpCallItem = McpCallItem.builder()
+                .id("id")
+                .arguments("arguments")
+                .name("name")
+                .serverLabel("serverLabel")
+                .error("error")
+                .output("output")
+                .approvalRequestId("approvalRequestId")
+                .build();
+        var newMcpCallItem = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMcpCallItem),
+                McpCallItem.class);
+        assertEquals(oneMcpCallItem.toString(), newMcpCallItem.toString());
     }
 
     @Test
@@ -257,10 +379,33 @@ class ResponseDomainSerDeserTest {
                 UrlCitation.class);
         assertEquals(oneUrlCitation.toString(), newUrlCitation.toString());
 
+        var oneContainerFileCitation = ContainerFileCitation.builder()
+                .containerId("containerId")
+                .endIndex(20)
+                .startIndex(0)
+                .fileId("fileId")
+                .build();
+        var newContainerFileCitation = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneContainerFileCitation),
+                ContainerFileCitation.class);
+        assertEquals(oneContainerFileCitation.toString(), newContainerFileCitation.toString());
+
         var oneFilePath = FilePath.of("fileId", 3);
         var newFilePath = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFilePath),
                 FilePath.class);
         assertEquals(oneFilePath.toString(), newFilePath.toString());
+    }
+
+    @Test
+    void testSerDeserCodeInterpreterOutputClasses() {
+        var oneTextOutput = TextOutput.of("logs");
+        var newTextOutput = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneTextOutput),
+                TextOutput.class);
+        assertEquals(oneTextOutput.toString(), newTextOutput.toString());
+
+        var oneFileOutput = FileOutput.of(List.of(CodeInterpreterFile.of("fileId", "mimeType")));
+        var newFileOutput = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFileOutput),
+                FileOutput.class);
+        assertEquals(oneFileOutput.toString(), newFileOutput.toString());
     }
 
     @Test
@@ -363,6 +508,32 @@ class ResponseDomainSerDeserTest {
         var newWebSearchResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneWebSearchResponseTool),
                 WebSearchResponseTool.class);
         assertEquals(oneWebSearchResponseTool.toString(), newWebSearchResponseTool.toString());
+
+        var oneMcpResponseTool = McpResponseTool.builder()
+                .serverLabel("serverLabel")
+                .serverUrl("serverUrl")
+                .allowedTools(McpListTools.of(List.of("tool1", "tool2")))
+                .headers(Map.of("key1", "val1"))
+                .requireApproval(McpToolApprovalFilter.builder()
+                        .always(McpListTools.of(List.of("tool1", "tool2")))
+                        .never(McpListTools.of(List.of("tool1", "tool2")))
+                        .build())
+                .build();
+        var newMcpResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneMcpResponseTool),
+                McpResponseTool.class);
+        assertEquals(oneMcpResponseTool.toString(), newMcpResponseTool.toString());
+
+        var oneCodeInterpreterResponseTool = CodeInterpreterResponseTool.of(
+                ContainerAuto.of(List.of("file1", "file2")));
+        var newCodeInterpreterResponseTool = JsonUtil.jsonToObject(
+                JsonUtil.objectToJson(oneCodeInterpreterResponseTool),
+                CodeInterpreterResponseTool.class);
+        assertEquals(oneCodeInterpreterResponseTool.toString(), newCodeInterpreterResponseTool.toString());
+
+        var oneLocalShellResponseTool = LocalShellResponseTool.of();
+        var newLocalShellResponseTool = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneLocalShellResponseTool),
+                LocalShellResponseTool.class);
+        assertEquals(oneLocalShellResponseTool.toString(), newLocalShellResponseTool.toString());
     }
 
     @Test

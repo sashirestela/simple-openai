@@ -5,7 +5,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -22,6 +27,8 @@ import lombok.Setter;
 import lombok.Singular;
 import lombok.ToString;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -179,12 +186,14 @@ public abstract class ResponseTool {
 
         @ObjectType(baseClass = String.class, firstGroup = true)
         @ObjectType(baseClass = McpListTools.class)
+        @JsonDeserialize(using = AllowedToolsDeserializer.class)
         private Object allowedTools;
 
         private Map<String, String> headers;
 
         @ObjectType(baseClass = McpToolApprovalSetting.class)
         @ObjectType(baseClass = McpToolApprovalFilter.class)
+        @JsonDeserialize(using = RequireApprovalDeserializer.class)
         private Object requireApproval;
 
         @Builder
@@ -210,6 +219,7 @@ public abstract class ResponseTool {
         @Required
         @ObjectType(baseClass = String.class)
         @ObjectType(baseClass = ContainerAuto.class)
+        @JsonDeserialize(using = ContainerDeserializer.class)
         private Object container;
 
         private CodeInterpreterResponseTool(Object container) {
@@ -399,6 +409,10 @@ public abstract class ResponseTool {
             return new ContainerAuto(fileIds);
         }
 
+        public static ContainerAuto of() {
+            return new ContainerAuto(null);
+        }
+
     }
 
     @NoArgsConstructor
@@ -553,6 +567,80 @@ public abstract class ResponseTool {
 
         @JsonProperty("auto")
         AUTO;
+
+    }
+
+    public static class AllowedToolsDeserializer extends JsonDeserializer<Object> {
+
+        @Override
+        public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            JsonNode node = p.getCodec().readTree(p);
+            ObjectMapper mapper = (ObjectMapper) p.getCodec();
+
+            if (node.isArray()) {
+                List<String> toolNames = new ArrayList<>();
+                for (JsonNode element : node) {
+                    if (element.isTextual()) {
+                        toolNames.add(element.asText());
+                    }
+                }
+                return toolNames;
+            } else if (node.isObject() && node.has("tool_names")) {
+                return mapper.treeToValue(node, ResponseTool.McpListTools.class);
+            } else {
+                throw new IOException(
+                        "Unable to deserialize allowedTools: expected array of strings or McpListTools object");
+            }
+        }
+
+    }
+
+    public static class RequireApprovalDeserializer extends JsonDeserializer<Object> {
+
+        @Override
+        public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            JsonNode node = p.getCodec().readTree(p);
+            ObjectMapper mapper = (ObjectMapper) p.getCodec();
+
+            if (node.isTextual()) {
+                String value = node.asText();
+                try {
+                    return ResponseTool.McpToolApprovalSetting.valueOf(value.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new IOException("Invalid McpToolApprovalSetting value: " + value, e);
+                }
+            } else if (node.isObject() && (node.has("always") || node.has("never"))) {
+                return mapper.treeToValue(node, ResponseTool.McpToolApprovalFilter.class);
+            } else {
+                throw new IOException(
+                        "Unable to deserialize requireApproval: expected string (enum) or McpToolApprovalFilter object");
+            }
+        }
+
+    }
+
+    public static class ContainerDeserializer extends JsonDeserializer<Object> {
+
+        @Override
+        public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            JsonToken token = p.getCurrentToken();
+
+            if (token == JsonToken.VALUE_STRING) {
+                return p.getValueAsString();
+            } else if (token == JsonToken.START_OBJECT) {
+                JsonNode node = p.getCodec().readTree(p);
+                ObjectMapper mapper = (ObjectMapper) p.getCodec();
+
+                if (node.has("type") && "auto".equals(node.get("type").asText())) {
+                    return mapper.treeToValue(node, ResponseTool.ContainerAuto.class);
+                } else {
+                    throw new IOException(
+                            "Invalid object for container field: expected ContainerAuto with type 'auto'");
+                }
+            } else {
+                throw new IOException("Unable to deserialize container: expected string or ContainerAuto object");
+            }
+        }
 
     }
 

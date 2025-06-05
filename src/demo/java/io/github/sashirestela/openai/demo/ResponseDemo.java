@@ -18,6 +18,8 @@ import io.github.sashirestela.openai.domain.response.Input.MessageRole;
 import io.github.sashirestela.openai.domain.response.ResponseRequest;
 import io.github.sashirestela.openai.domain.response.ResponseText;
 import io.github.sashirestela.openai.domain.response.ResponseText.ResponseTextFormat.ResponseTextFormatJsonSchema;
+import io.github.sashirestela.openai.domain.response.ResponseTool.CodeInterpreterResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContainerAuto;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
@@ -264,7 +266,7 @@ public class ResponseDemo extends AbstractDemo {
         System.out.println(responseResponse.outputText());
     }
 
-    public void createResponseImageGenearation() {
+    public void createResponseImageGeneration() {
         var question = "Generate an image of orange cat hugging other white cat with a light blue scarf.";
         System.out.println("Question:\n" + question);
         var responseRequest = ResponseRequest.builder()
@@ -290,6 +292,23 @@ public class ResponseDemo extends AbstractDemo {
         var filePath = "src/demo/resources/cats.jpeg";
         Base64Util.decode(imageData, filePath);
         System.out.println(filePath);
+    }
+
+    public void createResponseCodeInterpreter() {
+        var question = "I need to solve the equation 6x² + 5x - 6. Can you help me?";
+        System.out.println("Question:\n" + question);
+        var responseRequest = ResponseRequest.builder()
+                .instructions(
+                        "You are a personal math tutor. When asked a math question, write and run code to answer the question.")
+                .input(question)
+                .tool(CodeInterpreterResponseTool.of(ContainerAuto.of()))
+                .model(this.model)
+                .temperature(0.1)
+                .build();
+        var responseResponse = responseProvider.responses().create(responseRequest).join();
+        this.responseIdList.add(responseResponse.getId());
+        System.out.println("Answer:");
+        System.out.println(responseResponse.outputText());
     }
 
     public void getResponse() {
@@ -319,7 +338,8 @@ public class ResponseDemo extends AbstractDemo {
         demo.addTitleAction("Demo Response Create with WebSearch", demo::createResponseWebSearch);
         demo.addTitleAction("Demo Response Create with FileSearch", demo::createResponseFileSearch);
         demo.addTitleAction("Demo Response Create with RemoteMcp", demo::createResponseRemoteMcp);
-        demo.addTitleAction("Demo Response Create with ImageGeneration", demo::createResponseImageGenearation);
+        demo.addTitleAction("Demo Response Create with ImageGeneration", demo::createResponseImageGeneration);
+        demo.addTitleAction("Demo Response Create with CodeInterpreter", demo::createResponseCodeInterpreter);
         demo.addTitleAction("Demo Response GetOne ", demo::getResponse);
         demo.addTitleAction("Demo Response List InputItems", demo::listInputItems);
         demo.addTitleAction("Demo Response Delete", demo::deleteResponse);

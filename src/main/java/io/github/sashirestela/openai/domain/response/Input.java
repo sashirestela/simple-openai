@@ -468,8 +468,7 @@ public abstract class Input {
             @Required
             private String code;
 
-            @Required
-            private List<CodeInterpreterOutput> results;
+            private List<CodeInterpreterOutput> outputs;
 
             @Required
             private ItemStatus status;
@@ -477,11 +476,11 @@ public abstract class Input {
             private String containerId;
 
             @Builder
-            public CodeInterpreterCallItem(String id, String code, List<CodeInterpreterOutput> results,
+            public CodeInterpreterCallItem(String id, String code, List<CodeInterpreterOutput> outputs,
                     ItemStatus status, String containerId) {
                 this.id = id;
                 this.code = code;
-                this.results = results;
+                this.outputs = outputs;
                 this.status = status;
                 this.containerId = containerId;
                 this.type = ItemType.CODE_INTERPRETER_CALL;
