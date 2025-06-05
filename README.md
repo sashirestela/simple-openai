@@ -8,6 +8,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.sashirestela/simple-openai)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/sashirestela/simple-openai/build_java_maven.yml)
 [![javadoc](https://javadoc.io/badge2/io.github.sashirestela/simple-openai/javadoc.svg)](https://javadoc.io/doc/io.github.sashirestela/simple-openai/latest/index.html)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sashirestela/simple-openai)
 
 
 ### Table of Contents
