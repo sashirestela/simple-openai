@@ -6,7 +6,7 @@
 
   <groupId>io.github.sashirestela</groupId>
   <artifactId>simple-openai</artifactId>
-  <version>3.20.0</version>
+  <version>3.21.0</version>
   <packaging>jar</packaging>
 
   <name>simple-openai</name>
@@ -61,7 +61,7 @@
     <jackson.version>2.19.0</jackson.version>
     <json.schema.version>4.38.0</json.schema.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <googleauth.version>1.35.0</googleauth.version>
+    <googleauth.version>1.37.0</googleauth.version>
 
     <!-- Test Library Versions-->
     <junit.version>[5.11.0,6.0.0)</junit.version>
@@ -71,15 +71,15 @@
     <compiler.version>3.14.0</compiler.version>
     <enforcer.version>3.5.0</enforcer.version>
     <surefire.version>3.5.3</surefire.version>
-    <exec.version>3.5.0</exec.version>
+    <exec.version>3.5.1</exec.version>
     <jacoco.version>0.8.13</jacoco.version>
-    <helper.version>3.6.0</helper.version>
+    <helper.version>3.6.1</helper.version>
     <versions.version>2.18.0</versions.version>
     <source.version>3.3.1</source.version>
     <javadoc.version>3.11.2</javadoc.version>
     <gpg.version>3.2.7</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
-    <spotless.version>2.44.4</spotless.version>
+    <spotless.version>2.44.5</spotless.version>
     <dependency.version>3.8.1</dependency.version>
   </properties>
 
