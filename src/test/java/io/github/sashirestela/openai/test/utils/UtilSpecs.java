@@ -67,4 +67,16 @@ public class UtilSpecs {
 
     }
 
+    public static class DemoSchema {
+
+        @JsonPropertyDescription("The first parameter.")
+        @JsonProperty(required = true)
+        public String firstField;
+
+        @JsonPropertyDescription("The second parameter.")
+        @JsonProperty(required = true)
+        public String secondField;
+
+    }
+
 }

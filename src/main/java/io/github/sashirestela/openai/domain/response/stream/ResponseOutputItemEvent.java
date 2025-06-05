@@ -19,5 +19,6 @@ public class ResponseOutputItemEvent {
     private Integer outputIndex;
     @JsonDeserialize(using = ItemDeserializer.class)
     private Input.Item item;
+    private Integer sequenceNumber;
 
 }

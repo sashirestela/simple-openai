@@ -18,5 +18,6 @@ public class ResponseReasonSummPartEvent {
     private Integer outputIndex;
     private Integer summaryIndex;
     private Input.ReasoningContent part;
+    private Integer sequenceNumber;
 
 }

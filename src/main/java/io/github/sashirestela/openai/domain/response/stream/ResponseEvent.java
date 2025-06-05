@@ -15,5 +15,6 @@ public class ResponseEvent {
 
     private String type;
     private Response response;
+    private Integer sequenceNumber;
 
 }

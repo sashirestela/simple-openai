@@ -7,18 +7,30 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ItemDeserializer extends JsonDeserializer<Input.Item> {
 
-    public static final Map<String, Class<? extends Input.Item>> mapTypeToClass = Map.of(
-            "file_search_call", Input.Item.FileSearchCallItem.class,
-            "computer_call", Input.Item.ComputerCallItem.class,
-            "computer_call_output", Input.Item.ComputerCallOutputItem.class,
-            "web_search_call", Input.Item.WebSearchCallItem.class,
-            "function_call", Input.Item.FunctionCallItem.class,
-            "function_call_output", Input.Item.FunctionCallOutputItem.class,
-            "reasoning", Input.Item.ReasoningItem.class);
+    private static final Map<String, Class<? extends Input.Item>> mapTypeToClass;
+    static {
+        mapTypeToClass = new HashMap<>();
+        mapTypeToClass.put("file_search_call", Input.Item.FileSearchCallItem.class);
+        mapTypeToClass.put("computer_call", Input.Item.ComputerCallItem.class);
+        mapTypeToClass.put("computer_call_output", Input.Item.ComputerCallOutputItem.class);
+        mapTypeToClass.put("web_search_call", Input.Item.WebSearchCallItem.class);
+        mapTypeToClass.put("function_call", Input.Item.FunctionCallItem.class);
+        mapTypeToClass.put("function_call_output", Input.Item.FunctionCallOutputItem.class);
+        mapTypeToClass.put("reasoning", Input.Item.ReasoningItem.class);
+        mapTypeToClass.put("image_generation_call", Input.Item.ImageGenerationCallItem.class);
+        mapTypeToClass.put("code_interpreter_call", Input.Item.CodeInterpreterCallItem.class);
+        mapTypeToClass.put("local_shell_call", Input.Item.LocalShellCallItem.class);
+        mapTypeToClass.put("local_shell_call_output", Input.Item.LocalShellCallOutputItem.class);
+        mapTypeToClass.put("mcp_list_tools", Input.Item.McpListToolsItem.class);
+        mapTypeToClass.put("mcp_approval_request", Input.Item.McpApprovalRequestItem.class);
+        mapTypeToClass.put("mcp_approval_response", Input.Item.McpApprovalResponseItem.class);
+        mapTypeToClass.put("mcp_call", Input.Item.McpCallItem.class);
+    }
 
     @Override
     public Input.Item deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {

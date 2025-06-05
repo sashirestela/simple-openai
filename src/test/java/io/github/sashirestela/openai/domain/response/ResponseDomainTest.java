@@ -11,14 +11,22 @@ import io.github.sashirestela.openai.domain.assistant.RankingOption.RankerType;
 import io.github.sashirestela.openai.domain.response.Input.Content.ImageInputContent;
 import io.github.sashirestela.openai.domain.response.Input.Content.TextInputContent;
 import io.github.sashirestela.openai.domain.response.Input.InputMessage;
+import io.github.sashirestela.openai.domain.response.Input.Item;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallItem;
 import io.github.sashirestela.openai.domain.response.Input.Item.FunctionCallOutputItem;
 import io.github.sashirestela.openai.domain.response.Input.MessageRole;
 import io.github.sashirestela.openai.domain.response.ResponseText.ResponseTextFormat.ResponseTextFormatJsonSchema;
+import io.github.sashirestela.openai.domain.response.ResponseTool.CodeInterpreterResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContainerAuto;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FileSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.FunctionResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageGenerationResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
 import io.github.sashirestela.openai.domain.response.ResponseTool.Location;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpResponseTool;
+import io.github.sashirestela.openai.domain.response.ResponseTool.McpToolApprovalSetting;
 import io.github.sashirestela.openai.domain.response.ResponseTool.WebSearchResponseTool;
 import io.github.sashirestela.openai.domain.response.stream.EventName;
 import io.github.sashirestela.openai.domain.response.stream.ResponseOutputTextEvent;
@@ -205,6 +213,62 @@ class ResponseDomainTest {
                                 .ranker(RankerType.AUTO)
                                 .build())
                         .build())
+                .model("gpt-4o-mini")
+                .temperature(0.1)
+                .build();
+        var responseResponse = openAI.responses().create(responseRequest).join();
+        System.out.println(responseResponse.outputText());
+        assertNotNull(responseResponse);
+    }
+
+    @Test
+    void testResponseCreateWithRemoteMcp() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/response_create_remote_mcp.json");
+        var responseRequest = ResponseRequest.builder()
+                .instructions("Answer questions using tools as needed")
+                .input("What is the design philosophy of the sashirestela/cleverclient library?")
+                .tool(McpResponseTool.builder()
+                        .serverLabel("deepwiki")
+                        .serverUrl("https://mcp.deepwiki.com/mcp")
+                        .requireApproval(McpToolApprovalSetting.NEVER)
+                        .allowedTools(List.of("ask_question"))
+                        .build())
+                .model("gpt-4o-mini")
+                .temperature(0.1)
+                .build();
+        var responseResponse = openAI.responses().create(responseRequest).join();
+        System.out.println(responseResponse.outputText());
+        assertNotNull(responseResponse);
+    }
+
+    @Test
+    void testResponseCreateWithImageGeneration() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/response_create_imagegeneration.json");
+        var responseRequest = ResponseRequest.builder()
+                .instructions("You are a helpful image generator")
+                .input("Generate an image of orange cat hugging other white cat with a light blue scarf.")
+                .tool(ImageGenerationResponseTool.builder()
+                        .model("gpt-image-1")
+                        .outputFormat(ImageFormat.JPEG)
+                        .quality(ImageQuality.MEDIUM)
+                        .size("1024x1024")
+                        .build())
+                .model("gpt-4o-mini")
+                .temperature(0.1)
+                .build();
+        var responseResponse = openAI.responses().create(responseRequest).join();
+        System.out.println(((Item.ImageGenerationCallItem) responseResponse.getOutput().get(0)).getResult());
+        assertNotNull(responseResponse);
+    }
+
+    @Test
+    void testResponseCreateWithCodeInterpreter() throws IOException {
+        DomainTestingHelper.get().mockForObject(httpClient, "src/test/resources/response_create_codeinterpreter.json");
+        var responseRequest = ResponseRequest.builder()
+                .instructions(
+                        "You are a personal math tutor. When asked a math question, write and run code to answer the question.")
+                .input("I need to solve the equation 6x² + 5x - 6. Can you help me?")
+                .tool(CodeInterpreterResponseTool.of(ContainerAuto.of()))
                 .model("gpt-4o-mini")
                 .temperature(0.1)
                 .build();

@@ -15,5 +15,6 @@ public class ResponseWebSearchCallEvent {
     private String type;
     private String itemId;
     private Integer outputIndex;
+    private Integer sequenceNumber;
 
 }

@@ -23,7 +23,16 @@ public interface ResponseToolChoice {
         WEB_SEARCH_PREVIEW,
 
         @JsonProperty("computer_use_preview")
-        COMPUTER_USE_PREVIEW;
+        COMPUTER_USE_PREVIEW,
+
+        @JsonProperty("code_interpreter")
+        CODE_INTERPRETER,
+
+        @JsonProperty("image_generation")
+        IMAGE_GENERATION,
+
+        @JsonProperty("mcp")
+        MCP;
 
     }
 
@@ -38,6 +47,9 @@ public interface ResponseToolChoice {
         public static final HostedTool FILE_SEARCH = new HostedTool(HostedToolType.FILE_SEARCH);
         public static final HostedTool WEB_SEARCH_PREVIEW = new HostedTool(HostedToolType.WEB_SEARCH_PREVIEW);
         public static final HostedTool COMPUTER_USE_PREVIEW = new HostedTool(HostedToolType.COMPUTER_USE_PREVIEW);
+        public static final HostedTool CODE_INTERPRETER = new HostedTool(HostedToolType.CODE_INTERPRETER);
+        public static final HostedTool IMAGE_GENERATION = new HostedTool(HostedToolType.IMAGE_GENERATION);
+        public static final HostedTool MCP = new HostedTool(HostedToolType.MCP);
 
         private HostedToolType type;
 

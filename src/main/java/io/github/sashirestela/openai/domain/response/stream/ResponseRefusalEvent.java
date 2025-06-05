@@ -19,5 +19,6 @@ public class ResponseRefusalEvent {
     private Integer contentIndex;
     @JsonAlias({ "delta" })
     private String refusal;
+    private Integer sequenceNumber;
 
 }

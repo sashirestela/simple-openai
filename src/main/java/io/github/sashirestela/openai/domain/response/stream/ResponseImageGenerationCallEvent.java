@@ -10,12 +10,11 @@ import lombok.ToString;
 @Getter
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ResponseErrorEvent {
+public class ResponseImageGenerationCallEvent {
 
     private String type;
-    private String code;
-    private String message;
-    private String param;
+    private String itemId;
+    private Integer outputIndex;
     private Integer sequenceNumber;
 
 }

@@ -19,5 +19,6 @@ public class ResponseOutputTextEvent {
     private Integer contentIndex;
     @JsonAlias({ "delta" })
     private String text;
+    private Integer sequenceNumber;
 
 }
