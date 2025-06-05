@@ -1,5 +1,7 @@
-# 📌 Simple-OpenAI
+# Simple-OpenAI
 A Java library to use the OpenAI Api in the simplest possible way.
+
+<img src="media/simple-openai.png" width="250">
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sashirestela_simple-openai&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sashirestela_simple-openai)
 [![codecov](https://codecov.io/gh/sashirestela/simple-openai/graph/badge.svg?token=TYLE5788R3)](https://codecov.io/gh/sashirestela/simple-openai)
@@ -26,7 +28,7 @@ A Java library to use the OpenAI Api in the simplest possible way.
   - [Chat Completion with Structured Outputs](#chat-completion-with-structured-outputs)
   - [Chat Completion Conversation Example](#chat-completion-conversation-example)
   - [Assistant v2 Conversation Example](#assistant-v2-conversation-example)
-  - [Response Conversation Example](#response-conversation-example) **NEW***
+  - [Response Conversation Example](#response-conversation-example)
   - [Realtime Conversation Example](#realtime-conversation-example)
 - [Exception Handling](#-exception-handling)
 - [Retrying Requests](#-retrying-requests)
@@ -67,18 +69,10 @@ Full support for most of the OpenAI services:
 * Models (List)
 * Moderation (Check Harmful Text)
 * Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
-* Response (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Reasoning, ComputerUse,, FileSearch, WebSearch) **NEW**
+* [_**UPDATED**_] Response (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Reasoning, Computer Use, File Search, Web Search, Remote MCP, Image Generation, Code Interpreter). See examples of this service in [ResponseDemo.java](src/demo/java/io/github/sashirestela/openai/demo/ResponseDemo.java)
 * Session Token (Create Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
-
-![OpenAI Services](media/openai_services.png)
-
-![OpenAI Beta Services](media/openai_beta_services.png)
-
-NOTES:
-1. The methods's responses are `CompletableFuture<ResponseObject>`, which means they are asynchronous, but you can call the join() method to return the result value when complete.
-1. Exceptions for the above point are the methods whose names end with the suffix `AndPoll()`. These methods are synchronous and block until a Predicate function that you provide returns false.
 
 
 ## 📝 Installation
@@ -863,7 +857,7 @@ Currently we are supporting the `chatCompletionService` service only. It was tes
 
 
 ## 🎬 Run Examples
-Examples for each OpenAI service have been created in the folder [demo](https://github.com/sashirestela/simple-openai/tree/main/src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
+Examples for each OpenAI service have been created in the folder [demo](src/demo/java/io/github/sashirestela/openai/demo) and you can follow the next steps to execute them:
 * Clone this repository:
   ```
   git clone https://github.com/sashirestela/simple-openai.git
@@ -887,7 +881,7 @@ Examples for each OpenAI service have been created in the folder [demo](https://
   ```
   Where:
 
-  * ```<demo>``` Is mandatory and must be one of the Java files in the folder demo without the suffix `Demo`, for example: _Audio, Chat, ChatMistral, Realtime, AssistantV2, Conversation, ConversationV2, etc._
+  * ```<demo>``` Is mandatory and must be one of the Java files in the folder demo without the suffix `Demo`, for example: _Audio, Chat, ChatMistral, Realtime, Response, AssistantV2, Conversation, ConversationV2, etc._
   
   * For example, to run the chat demo with a log file: ```./rundemo.sh Chat```
 
@@ -943,6 +937,8 @@ List of the main users of our library:
 - [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 - [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
 - [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
+- [Java for Programmers, 5/e](https://deitel.com/java-for-programmers-5e): A Java book with Generative AI.
+- [Sentinel AI](https://phonepe.github.io/sentinel-ai/): A framework to build and deploy AI Agents.
 
 
 ## 😍 Show Us Your Love
