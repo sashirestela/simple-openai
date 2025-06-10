@@ -2,7 +2,6 @@ package io.github.sashirestela.openai.domain.image;
 
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.domain.DomainTestingHelper;
-import io.github.sashirestela.openai.domain.image.ImageRequest.Quality;
 import io.github.sashirestela.openai.domain.image.ImageRequest.Style;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,7 +33,7 @@ class ImageDomainTest {
         var imageRequest = ImageRequest.builder()
                 .prompt("A cartoon of a hummingbird that is flying around a flower.")
                 .n(2)
-                .size(Size.X1024)
+                .size(Size.X_1024_1024)
                 .responseFormat(ImageResponseFormat.URL)
                 .model("dall-e-3")
                 .quality(Quality.STANDARD)
@@ -53,7 +52,7 @@ class ImageDomainTest {
                 .image(Paths.get("src/demo/resources/little_cat_rgba.png"))
                 .prompt("A cartoon of a little cute cat playing with a ball in the grass.")
                 .n(1)
-                .size(Size.X256)
+                .size(Size.X_256_256)
                 .responseFormat(ImageResponseFormat.B64JSON)
                 .model("dall-e-2")
                 .user("test")
@@ -69,7 +68,7 @@ class ImageDomainTest {
         var imageRequest = ImageVariationsRequest.builder()
                 .image(Paths.get("src/demo/resources/little_cat.png"))
                 .n(1)
-                .size(Size.X256)
+                .size(Size.X_256_256)
                 .responseFormat(ImageResponseFormat.B64JSON)
                 .model("dall-e-2")
                 .user("test")

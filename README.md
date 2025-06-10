@@ -202,15 +202,22 @@ System.out.println(audioResponse);
 Example to call the Image service to generate two images in response to our prompt. We are requesting to receive the images' urls and we are printing out them in the console:
 ```java
 var imageRequest = ImageRequest.builder()
-        .prompt("A cartoon of a hummingbird that is flying around a flower.")
+        .prompt("An image of orange cat hugging other white cat with a light blue scarf.")
+        .model("gpt-image-1")
+        .background(Background.TRANSPARENT)
+        .outputFormat(OutputFormat.PNG)
+        .quality(Quality.MEDIUM)
+        .size(Size.X_1024_1024)
+        .moderation(Moderation.LOW)
         .n(2)
-        .size(Size.X256)
-        .responseFormat(ImageResponseFormat.URL)
-        .model("dall-e-2")
         .build();
 var futureImage = openAI.images().create(imageRequest);
 var imageResponse = futureImage.join();
-imageResponse.stream().forEach(img -> System.out.println("\n" + img.getUrl()));
+IntStream.range(0, imageResponse.getData().size()).forEach(i -> {
+    var filePath = "src/demo/resources/image" + (i + 1) + ".png";
+    Base64Util.decode(imageResponse.getData().get(i).getB64Json(), filePath);
+    System.out.println(filePath);
+});
 ```
 ### Chat Completion Example
 Example to call the Chat Completion service to ask a question and wait for a full answer. We are printing out it in the console:

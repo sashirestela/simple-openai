@@ -601,68 +601,35 @@ public interface OpenAI {
     interface Images {
 
         /**
-         * Creates a Genric object of image given a prompt (don't call it directly).
-         * 
-         * @param imageRequest A text description of the desired image(s) and other parameters such as
-         *                     number, size or responseFormat.
-         * @return Returns a Generic of image objects (the url or the binary content).
-         */
-        @POST("/generations")
-        CompletableFuture<Generic<Image>> createPrimitive(@Body ImageRequest imageRequest);
-
-        /**
-         * Creates a Generic of edited or extended image given an original image and a prompt (don't call it
-         * directly).
-         * 
-         * @param imageRequest Includes the image file to edit and a text description of the desired
-         *                     image(s).
-         * @return Returns a Generic of image objects (the url or the binary content).
-         */
-        @Multipart
-        @POST("/edits")
-        CompletableFuture<Generic<Image>> createEditsPrimitive(@Body ImageEditsRequest imageRequest);
-
-        /**
-         * Creates a Generic of variation of a given image (don't call it directly).
-         * 
-         * @param imageRequest Includes the image file to use as the basis for the variation(s).
-         * @return Returns a Generic of image objects (the url or the binary content).
-         */
-        @Multipart
-        @POST("/variations")
-        CompletableFuture<Generic<Image>> createVariationsPrimitive(@Body ImageVariationsRequest imageRequest);
-
-        /**
          * Creates an image given a prompt.
          * 
          * @param imageRequest A text description of the desired image(s) and other parameters such as
          *                     number, size or responseFormat.
-         * @return Returns a list of image objects (the url or the binary content).
+         * @return Returns a list of image objects.
          */
-        default CompletableFuture<List<Image>> create(ImageRequest imageRequest) {
-            return createPrimitive(imageRequest).thenApply(Generic::getData);
-        }
+        @POST("/generations")
+        CompletableFuture<Image> create(@Body ImageRequest imageRequest);
 
         /**
          * Creates an edited or extended image given an original image and a prompt.
          * 
          * @param imageRequest Includes the image file to edit and a text description of the desired
          *                     image(s).
-         * @return Returns a list of image objects (the url or the binary content).
+         * @return Returns a list of image objects.
          */
-        default CompletableFuture<List<Image>> createEdits(ImageEditsRequest imageRequest) {
-            return createEditsPrimitive(imageRequest).thenApply(Generic::getData);
-        }
+        @Multipart
+        @POST("/edits")
+        CompletableFuture<Image> createEdits(@Body ImageEditsRequest imageRequest);
 
         /**
          * Creates a variation of a given image.
          * 
          * @param imageRequest Includes the image file to use as the basis for the variation(s).
-         * @return Returns a list of image objects (the url or the binary content).
+         * @return Returns a list of image objects.
          */
-        default CompletableFuture<List<Image>> createVariations(ImageVariationsRequest imageRequest) {
-            return createVariationsPrimitive(imageRequest).thenApply(Generic::getData);
-        }
+        @Multipart
+        @POST("/variations")
+        CompletableFuture<Image> createVariations(@Body ImageVariationsRequest imageRequest);
 
     }
 
