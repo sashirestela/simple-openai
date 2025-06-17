@@ -44,7 +44,7 @@ class GeminiAccessTokenTest {
         String token = geminiAccessToken.get();
 
         assertEquals("mock-token", token);
-        verify(mockGoogleCredentials, times(1)).refresh();
+        verify(mockGoogleCredentials, times(1)).refreshIfExpired();
     }
 
     @Test
@@ -61,7 +61,7 @@ class GeminiAccessTokenTest {
 
     @Test
     void testGetAccessToken_WhenRefreshFails() throws IOException {
-        doThrow(new IOException("Refresh failed")).when(mockGoogleCredentials).refresh();
+        doThrow(new IOException("Refresh failed")).when(mockGoogleCredentials).refreshIfExpired();
 
         assertEquals("", geminiAccessToken.get());
     }

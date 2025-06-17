@@ -42,7 +42,7 @@ public class GeminiAccessToken {
             return "";
         }
         try {
-            credentials.refresh();
+            credentials.refreshIfExpired();
         } catch (IOException e) {
             return "";
         }

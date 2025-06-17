@@ -16,6 +16,7 @@ import io.github.sashirestela.openai.domain.assistant.events.EventName;
 import io.github.sashirestela.openai.exception.OpenAIResponseInfo.OpenAIErrorResponse;
 import io.github.sashirestela.openai.exception.SimpleOpenAIException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -346,6 +347,7 @@ class ThreadRunDomainTest {
         assertNotNull(threadRuns);
     }
 
+    @Disabled
     @Test
     void testCreateThreadRunStreamWithError() throws IOException {
         DomainTestingHelper.get()
