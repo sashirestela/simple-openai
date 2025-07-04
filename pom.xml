@@ -37,12 +37,12 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     </snapshotRepository>
     <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      <id>central</id>
+      <url>https://central.sonatype.com/</url>
     </repository>
   </distributionManagement>
 
@@ -54,22 +54,22 @@
     <maven.compiler.proc>full</maven.compiler.proc>
 
     <!-- Library Versions -->
-    <cleverclient.version>2.2.2</cleverclient.version>
+    <cleverclient.version>2.2.3</cleverclient.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <slimvalidator.version>1.2.3</slimvalidator.version>
+    <slimvalidator.version>1.3.0</slimvalidator.version>
     <lombok.version>1.18.38</lombok.version>
-    <jackson.version>2.19.0</jackson.version>
+    <jackson.version>2.19.1</jackson.version>
     <json.schema.version>4.38.0</json.schema.version>
     <slf4j.version>2.0.17</slf4j.version>
-    <googleauth.version>1.37.0</googleauth.version>
+    <googleauth.version>1.37.1</googleauth.version>
 
     <!-- Test Library Versions-->
-    <junit.version>[5.11.0,6.0.0)</junit.version>
-    <mockito.version>[5.14.0,6.0.0)</mockito.version>
+    <junit.version>[5.11.0,5.99.99)</junit.version>
+    <mockito.version>[5.14.0,5.99.99)</mockito.version>
 
     <!-- Plugins Versions -->
     <compiler.version>3.14.0</compiler.version>
-    <enforcer.version>3.5.0</enforcer.version>
+    <enforcer.version>3.6.0</enforcer.version>
     <surefire.version>3.5.3</surefire.version>
     <exec.version>3.5.1</exec.version>
     <jacoco.version>0.8.13</jacoco.version>
@@ -77,7 +77,7 @@
     <versions.version>2.18.0</versions.version>
     <source.version>3.3.1</source.version>
     <javadoc.version>3.11.2</javadoc.version>
-    <gpg.version>3.2.7</gpg.version>
+    <gpg.version>3.2.8</gpg.version>
     <sonatype.version>1.7.0</sonatype.version>
     <spotless.version>2.44.5</spotless.version>
     <dependency.version>3.8.1</dependency.version>
@@ -189,14 +189,14 @@
             </executions>
           </plugin>
           <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>${sonatype.version}</version>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${central.version}</version>
             <extensions>true</extensions>
             <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
             </configuration>
           </plugin>
         </plugins>
@@ -378,7 +378,7 @@
             <ignoreVersions>
               <ignoreVersion>
                 <type>regex</type>
-                <version>.+-(alpha|beta).*</version>
+                <version>(?i).*-(alpha|beta|m|rc)([-.]?\d+)?</version>
               </ignoreVersion>
             </ignoreVersions>
           </ruleSet>
