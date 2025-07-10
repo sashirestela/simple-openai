@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.domain.assistant.RankingOption;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.AllArgsConstructor;
@@ -184,15 +185,14 @@ public abstract class ResponseTool {
         @Required
         private String serverUrl;
 
-        @ObjectType(baseClass = String.class, firstGroup = true)
+        @ObjectType(schema = Schema.COLL, baseClass = String.class)
         @ObjectType(baseClass = McpListTools.class)
         @JsonDeserialize(using = AllowedToolsDeserializer.class)
         private Object allowedTools;
 
         private Map<String, String> headers;
 
-        @ObjectType(baseClass = McpToolApprovalSetting.class)
-        @ObjectType(baseClass = McpToolApprovalFilter.class)
+        @ObjectType(baseClass = { McpToolApprovalSetting.class, McpToolApprovalFilter.class })
         @JsonDeserialize(using = RequireApprovalDeserializer.class)
         private Object requireApproval;
 
@@ -217,8 +217,7 @@ public abstract class ResponseTool {
     public static class CodeInterpreterResponseTool extends ResponseTool {
 
         @Required
-        @ObjectType(baseClass = String.class)
-        @ObjectType(baseClass = ContainerAuto.class)
+        @ObjectType(baseClass = { String.class, ContainerAuto.class })
         @JsonDeserialize(using = ContainerDeserializer.class)
         private Object container;
 
@@ -301,9 +300,7 @@ public abstract class ResponseTool {
             private ComparisonOperator type;
 
             @Required
-            @ObjectType(baseClass = String.class)
-            @ObjectType(baseClass = Double.class)
-            @ObjectType(baseClass = Boolean.class)
+            @ObjectType(baseClass = { String.class, Double.class, Boolean.class })
             private Object value;
 
         }

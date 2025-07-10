@@ -13,6 +13,7 @@ import io.github.sashirestela.openai.domain.response.ResponseTool.ImageBackgroun
 import io.github.sashirestela.openai.domain.response.ResponseTool.ImageFormat;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ImageQuality;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
@@ -39,7 +40,7 @@ public abstract class Input {
 
         @Required
         @ObjectType(baseClass = String.class)
-        @ObjectType(baseClass = Content.class, firstGroup = true)
+        @ObjectType(schema = Schema.COLL, baseClass = Content.class)
         private Object content;
 
         @Required

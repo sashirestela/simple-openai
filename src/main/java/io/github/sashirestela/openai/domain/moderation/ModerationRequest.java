@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +20,7 @@ public class ModerationRequest {
 
     @Required
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = String.class, firstGroup = true)
-    @ObjectType(baseClass = MultiModalInput.class, firstGroup = true)
+    @ObjectType(schema = Schema.COLL, baseClass = { String.class, MultiModalInput.class })
     private Object input;
 
     private String model;

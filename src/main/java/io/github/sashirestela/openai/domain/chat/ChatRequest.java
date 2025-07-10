@@ -13,6 +13,7 @@ import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.AllArgsConstructor;
@@ -81,7 +82,7 @@ public class ChatRequest {
     private ServiceTier serviceTier;
 
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = String.class, firstGroup = true, maxSize = 4)
+    @ObjectType(schema = Schema.COLL, baseClass = String.class, maxSize = 4)
     private Object stop;
 
     @With
@@ -100,8 +101,7 @@ public class ChatRequest {
     private List<Tool> tools;
 
     @With
-    @ObjectType(baseClass = ToolChoiceOption.class)
-    @ObjectType(baseClass = ToolChoice.class)
+    @ObjectType(baseClass = { ToolChoiceOption.class, ToolChoice.class })
     private Object toolChoice;
 
     private Boolean parallelToolCalls;

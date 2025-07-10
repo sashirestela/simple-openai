@@ -21,8 +21,7 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RankingOption {
 
-    @ObjectType(baseClass = RankerType.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { RankerType.class, String.class })
     private Object ranker;
 
     @Range(min = 0.0, max = 1.0)

@@ -56,7 +56,7 @@
     <!-- Library Versions -->
     <cleverclient.version>2.2.3</cleverclient.version>
     <okhttp.version>4.12.0</okhttp.version>
-    <slimvalidator.version>1.3.0</slimvalidator.version>
+    <slimvalidator.version>1.4.1</slimvalidator.version>
     <lombok.version>1.18.38</lombok.version>
     <jackson.version>2.19.1</jackson.version>
     <json.schema.version>4.38.0</json.schema.version>

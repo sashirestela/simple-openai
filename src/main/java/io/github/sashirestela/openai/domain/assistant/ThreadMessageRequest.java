@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.content.ContentPart;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class ThreadMessageRequest {
 
     @Required
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = ContentPart.class, firstGroup = true)
+    @ObjectType(schema = Schema.COLL, baseClass = ContentPart.class)
     private Object content;
 
     @Singular

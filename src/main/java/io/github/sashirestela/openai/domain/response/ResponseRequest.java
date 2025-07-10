@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import io.github.sashirestela.slimvalidator.constraints.Size;
@@ -29,7 +30,7 @@ public class ResponseRequest {
 
     @Required
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = Input.class, firstGroup = true)
+    @ObjectType(schema = Schema.COLL, baseClass = Input.class)
     private Object input;
 
     @Required
@@ -64,9 +65,8 @@ public class ResponseRequest {
 
     private ResponseText text;
 
-    @ObjectType(baseClass = ToolChoiceOption.class)
-    @ObjectType(baseClass = ResponseToolChoice.HostedTool.class)
-    @ObjectType(baseClass = ResponseToolChoice.FunctionTool.class)
+    @ObjectType(baseClass = { ToolChoiceOption.class, ResponseToolChoice.HostedTool.class,
+            ResponseToolChoice.FunctionTool.class })
     private Object toolChoice;
 
     @Singular
