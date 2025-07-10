@@ -75,4 +75,30 @@ public interface ResponseToolChoice {
 
     }
 
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    class MCPTool {
+
+        @Required
+        private String serverLabel;
+
+        private String name;
+
+        @Required
+        private HostedToolType type;
+
+        public static MCPTool of(String serverLabel) {
+            return new MCPTool(serverLabel, null, HostedToolType.MCP);
+        }
+
+        public static MCPTool of(String serverLabel, String name) {
+            return new MCPTool(serverLabel, name, HostedToolType.MCP);
+        }
+
+    }
+
 }

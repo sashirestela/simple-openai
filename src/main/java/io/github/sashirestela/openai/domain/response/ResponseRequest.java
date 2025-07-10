@@ -10,7 +10,7 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
-import io.github.sashirestela.slimvalidator.constraints.Required;
+import io.github.sashirestela.slimvalidator.constraints.RequiredIfNull;
 import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,14 +26,13 @@ import java.util.Map;
 @AllArgsConstructor
 @JsonInclude(Include.NON_EMPTY)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@RequiredIfNull(fields = { "input", "model" }, dependsOn = "prompt")
 public class ResponseRequest {
 
-    @Required
     @ObjectType(baseClass = String.class)
     @ObjectType(schema = Schema.COLL, baseClass = Input.class)
     private Object input;
 
-    @Required
     private String model;
 
     private Boolean background;
@@ -51,6 +50,8 @@ public class ResponseRequest {
 
     private String previousResponseId;
 
+    private Prompt prompt;
+
     private Reasoning reasoning;
 
     private ServiceTier serviceTier;
@@ -66,11 +67,14 @@ public class ResponseRequest {
     private ResponseText text;
 
     @ObjectType(baseClass = { ToolChoiceOption.class, ResponseToolChoice.HostedTool.class,
-            ResponseToolChoice.FunctionTool.class })
+            ResponseToolChoice.FunctionTool.class, ResponseToolChoice.MCPTool.class })
     private Object toolChoice;
 
     @Singular
     private List<ResponseTool> tools;
+
+    @Range(min = 0, max = 20)
+    private Integer topLogprobs;
 
     @Range(min = 0.0, max = 1.0)
     private Double topP;
@@ -81,20 +85,23 @@ public class ResponseRequest {
 
     public enum ResponseInclude {
 
+        @JsonProperty("code_interpreter_call.outputs")
+        CODE_INTERPRETER_CALL_OUTPUTS,
+
+        @JsonProperty("computer_call_output.output.image_url")
+        COMPUTER_CALL_OUTPUT_IMAGE_URL,
+
         @JsonProperty("file_search_call.results")
         FILE_SEARCH_CALL_RESULTS,
 
         @JsonProperty("message.input_image.image_url")
         MESSAGE_INPUT_IMAGE_URL,
 
-        @JsonProperty("computer_call_output.output.image_url")
-        COMPUTER_CALL_OUTPUT_IMAGE_URL,
+        @JsonProperty("message.output_text.logprobs")
+        MESSAGE_OUTPUT_TEXT_LOGPROBS,
 
         @JsonProperty("reasoning.encrypted_content")
-        REASONING_ENCRYPTED_CONTENT,
-
-        @JsonProperty("code_interpreter_call.outputs")
-        CODE_INTERPRETER_CALL_OUTPUTS;
+        REASONING_ENCRYPTED_CONTENT;
 
     }
 
