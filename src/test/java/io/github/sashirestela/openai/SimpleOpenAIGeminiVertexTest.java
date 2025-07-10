@@ -46,7 +46,7 @@ class SimpleOpenAIGeminiVertexTest {
         var request = HttpRequestData.builder()
                 .url(baseUrl + "/v1/chat/completions")
                 .contentType(ContentType.APPLICATION_JSON)
-                .headers(Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + "apiKey"))
+                .headers(Map.of())
                 .body("{\"messages\":[],\"model\":\"model1\",\"stream\":false}")
                 .build();
         var expectedRequest = HttpRequestData.builder()
@@ -62,6 +62,8 @@ class SimpleOpenAIGeminiVertexTest {
                 .buildConfig();
         var actualRequest = clientConfig.getRequestInterceptor().apply(request);
         assertEquals(expectedRequest.getUrl(), actualRequest.getUrl());
+        assertEquals(expectedRequest.getHeaders().get(Constant.AUTHORIZATION_HEADER),
+                actualRequest.getHeaders().get(Constant.AUTHORIZATION_HEADER));
     }
 
     @Test

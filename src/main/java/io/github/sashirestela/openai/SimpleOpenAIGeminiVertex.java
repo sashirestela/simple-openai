@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -64,8 +65,7 @@ public class SimpleOpenAIGeminiVertex extends OpenAIProvider implements
         public ClientConfig buildConfig() {
             return ClientConfig.builder()
                     .baseUrl(baseUrl)
-                    .headers(
-                            Map.of(Constant.AUTHORIZATION_HEADER, Constant.BEARER_AUTHORIZATION + apiKeyProvider.get()))
+                    .headers(Map.of())
                     .requestInterceptor(makeRequestInterceptor())
                     .responseInterceptor(makeResponseInterceptor())
                     .objectMapper(objectMapper)
@@ -77,6 +77,11 @@ public class SimpleOpenAIGeminiVertex extends OpenAIProvider implements
             return request -> {
                 var newUrl = request.getUrl().replaceFirst(VERSION_REGEX, "/");
                 request.setUrl(newUrl);
+                var headers = new HashMap<>(request.getHeaders());
+                headers.put(
+                        Constant.AUTHORIZATION_HEADER,
+                        Constant.BEARER_AUTHORIZATION + this.apiKeyProvider.get());
+                request.setHeaders(headers);
                 return request;
             };
         }
