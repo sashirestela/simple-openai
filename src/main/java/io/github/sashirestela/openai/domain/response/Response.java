@@ -25,8 +25,9 @@ public class Response {
     private ResponseError error;
     private String id;
     private IncompleteDetails incompleteDetails;
-    private String instructions;
+    private Object instructions;
     private Long maxOutputTokens;
+    private Long maxToolCalls;
     private Map<String, String> metadata;
     private String model;
     private String object;
@@ -34,6 +35,7 @@ public class Response {
     private List<Input.Item> output;
     private Boolean parallelToolCalls;
     private String previousResponseId;
+    private Prompt prompt;
     private Reasoning reasoning;
     private ServiceTier serviceTier;
     private ResponseStatus status;
@@ -41,6 +43,7 @@ public class Response {
     private ResponseText text;
     private Object toolChoice;
     private List<ResponseTool> tools;
+    private Integer topLogprobs;
     private Double topP;
     private Truncation truncation;
     private ResponseUsage usage;

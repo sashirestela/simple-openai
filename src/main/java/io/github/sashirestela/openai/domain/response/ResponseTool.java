@@ -196,14 +196,17 @@ public abstract class ResponseTool {
         @JsonDeserialize(using = RequireApprovalDeserializer.class)
         private Object requireApproval;
 
+        private String serverDescription;
+
         @Builder
         public McpResponseTool(String serverLabel, String serverUrl, Object allowedTools, Map<String, String> headers,
-                Object requireApproval) {
+                Object requireApproval, String serverDescription) {
             this.serverLabel = serverLabel;
             this.serverUrl = serverUrl;
             this.allowedTools = allowedTools;
             this.headers = headers;
             this.requireApproval = requireApproval;
+            this.serverDescription = serverDescription;
             this.type = ResponseToolType.MCP;
         }
 
