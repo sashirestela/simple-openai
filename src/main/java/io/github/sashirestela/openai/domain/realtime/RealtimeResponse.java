@@ -41,16 +41,14 @@ public class RealtimeResponse {
     @Singular
     private List<RealtimeSession.ToolRealtime> tools;
 
-    @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = ToolChoiceOption.class)
+    @ObjectType(baseClass = { String.class, ToolChoiceOption.class })
     private Object toolChoice;
 
     @Range(min = 0.6, max = 1.2)
     private Double temperature;
 
     @Range(min = 1, max = 4096)
-    @ObjectType(baseClass = Integer.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Integer.class, String.class })
     private Object maxResponseOutputTokens;
 
     private ConversationType conversation;

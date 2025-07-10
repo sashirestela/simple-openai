@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.common.StreamOptions;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
@@ -25,9 +26,8 @@ public class CompletionRequest {
 
     @Required
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = String.class, firstGroup = true)
-    @ObjectType(baseClass = Integer.class, firstGroup = true)
-    @ObjectType(baseClass = Integer.class, firstGroup = true, secondGroup = true)
+    @ObjectType(schema = Schema.COLL, baseClass = { String.class, Integer.class })
+    @ObjectType(schema = Schema.COLL_COLL, baseClass = Integer.class)
     private Object prompt;
 
     @Range(min = 0, max = 20)
@@ -54,7 +54,7 @@ public class CompletionRequest {
     private Integer seed;
 
     @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = String.class, firstGroup = true, maxSize = 4)
+    @ObjectType(schema = Schema.COLL, baseClass = String.class, maxSize = 4)
     private Object stop;
 
     @With

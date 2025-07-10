@@ -59,14 +59,12 @@ public class ThreadCreateAndRunRequest {
 
     private TruncationStrategy truncationStrategy;
 
-    @ObjectType(baseClass = ToolChoiceOption.class)
-    @ObjectType(baseClass = ToolChoice.class)
+    @ObjectType(baseClass = { ToolChoiceOption.class, ToolChoice.class })
     private Object toolChoice;
 
     private Boolean parallelToolCalls;
 
-    @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = ResponseFormat.class)
+    @ObjectType(baseClass = { String.class, ResponseFormat.class })
     private Object responseFormat;
 
 }

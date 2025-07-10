@@ -56,16 +56,14 @@ public class RealtimeSession {
     @Singular
     protected List<ToolRealtime> tools;
 
-    @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = ToolChoiceOption.class)
+    @ObjectType(baseClass = { String.class, ToolChoiceOption.class })
     protected Object toolChoice;
 
     @Range(min = 0.6, max = 1.2)
     protected Double temperature;
 
     @Range(min = 1, max = 4096)
-    @ObjectType(baseClass = Integer.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Integer.class, String.class })
     protected Object maxResponseOutputTokens;
 
     public enum VoiceRealtime {

@@ -9,6 +9,7 @@ import io.github.sashirestela.cleverclient.util.CommonUtil;
 import io.github.sashirestela.openai.common.content.ContentPart.ChatContentPart;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Builder;
 import lombok.Getter;
@@ -105,7 +106,7 @@ public abstract class ChatMessage {
 
         @Required
         @ObjectType(baseClass = String.class)
-        @ObjectType(baseClass = ChatContentPart.class, firstGroup = true)
+        @ObjectType(schema = Schema.COLL, baseClass = ChatContentPart.class)
         private Object content;
 
         private String name;
@@ -134,7 +135,7 @@ public abstract class ChatMessage {
 
         @JsonInclude
         @ObjectType(baseClass = String.class)
-        @ObjectType(baseClass = ChatContentPart.class, firstGroup = true)
+        @ObjectType(schema = Schema.COLL, baseClass = ChatContentPart.class)
         private Object content;
 
         private String refusal;

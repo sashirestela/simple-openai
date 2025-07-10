@@ -21,20 +21,16 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class HyperParams {
 
-    @ObjectType(baseClass = Integer.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Integer.class, String.class })
     private Object beta;
 
-    @ObjectType(baseClass = Integer.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Integer.class, String.class })
     private Object batchSize;
 
-    @ObjectType(baseClass = Double.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Double.class, String.class })
     private Object learningRateMultiplier;
 
-    @ObjectType(baseClass = Integer.class)
-    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = { Integer.class, String.class })
     private Object nEpochs;
 
     public Object getnEpochs() {

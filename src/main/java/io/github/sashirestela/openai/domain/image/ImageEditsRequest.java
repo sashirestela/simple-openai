@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import io.github.sashirestela.slimvalidator.constraints.Extension;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
+import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Required;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -17,7 +18,7 @@ public class ImageEditsRequest extends AbstractImageRequest {
 
     @Required
     @ObjectType(baseClass = Path.class)
-    @ObjectType(baseClass = Path.class, firstGroup = true)
+    @ObjectType(schema = Schema.COLL, baseClass = Path.class)
     private Object image;
 
     @Required

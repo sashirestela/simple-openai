@@ -48,8 +48,7 @@ public class AssistantModifyRequest {
     @Range(min = 0.0, max = 1.0)
     private Double topP;
 
-    @ObjectType(baseClass = String.class)
-    @ObjectType(baseClass = ResponseFormat.class)
+    @ObjectType(baseClass = { String.class, ResponseFormat.class })
     private Object responseFormat;
 
 }
