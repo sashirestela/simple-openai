@@ -47,6 +47,8 @@ import io.github.sashirestela.openai.domain.moderation.Moderation;
 import io.github.sashirestela.openai.domain.moderation.ModerationRequest;
 import io.github.sashirestela.openai.domain.realtime.RealtimeSession;
 import io.github.sashirestela.openai.domain.realtime.RealtimeSessionToken;
+import io.github.sashirestela.openai.domain.realtime.RealtimeTranscriptionSession;
+import io.github.sashirestela.openai.domain.realtime.RealtimeTranscriptionSessionToken;
 import io.github.sashirestela.openai.domain.response.InputItems;
 import io.github.sashirestela.openai.domain.response.Response;
 import io.github.sashirestela.openai.domain.response.ResponseRequest;
@@ -706,17 +708,27 @@ public interface OpenAI {
      * @see <a href= "https://platform.openai.com/docs/api-reference/realtime-sessions">OpenAI
      *      Session-Tokens</a>
      */
-    @Resource("/v1/realtime/sessions")
+    @Resource("/v1/realtime")
     interface SessionTokens {
 
         /**
          * Create an ephemeral API token for use in client-side applications with the Realtime API.
          * 
-         * @param sessionRequest A Realtime session configuration including the model.
+         * @param sessionRequest A Realtime session configuration.
          * @return A new Realtime session configuration, with an ephermeral token.
          */
-        @POST
+        @POST("/sessions")
         CompletableFuture<RealtimeSessionToken> create(@Body RealtimeSession sessionRequest);
+
+        /**
+         * Create an ephemeral API token for use in client-side applications with the Realtime API
+         * specifically for realtime transcriptions.
+         * 
+         * @param sessionRequest A Realtime transcription session configuration.
+         * @return A new Realtime transcription session configuration, with an ephermeral token.
+         */
+        @POST("/transcription_sessions")
+        CompletableFuture<RealtimeTranscriptionSessionToken> create(@Body RealtimeTranscriptionSession sessionRequest);
 
     }
 

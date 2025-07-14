@@ -10,17 +10,21 @@ public final class Realtime {
     public static final String INPUT_AUDIO_BUFFER_COMMIT = "input_audio_buffer.commit";
     public static final String INPUT_AUDIO_BUFFER_CLEAR = "input_audio_buffer.clear";
     public static final String CONVERSATION_ITEM_CREATE = "conversation.item.create";
+    public static final String CONVERSATION_ITEM_RETRIEVE = "conversation.item.retrieve";
     public static final String CONVERSATION_ITEM_TRUNCATE = "conversation.item.truncate";
     public static final String CONVERSATION_ITEM_DELETE = "conversation.item.delete";
     public static final String RESPONSE_CREATE = "response.create";
     public static final String RESPONSE_CANCEL = "response.cancel";
+    public static final String TRANSCRIPTION_SESSION_UPDATE = "transcription_session.update";
 
     public static final String ERROR = "error";
     public static final String SESSION_CREATED = "session.created";
     public static final String SESSION_UPDATED = "session.updated";
     public static final String CONVERSATION_CREATED = "conversation.created";
     public static final String CONVERSATION_ITEM_CREATED = "conversation.item.created";
+    public static final String CONVERSATION_ITEM_RETRIEVED = "conversation.item.retrieved";
     public static final String CONVERSATION_ITEM_AUDIO_TRANS_COMPLETED = "conversation.item.input_audio_transcription.completed";
+    public static final String CONVERSATION_ITEM_AUDIO_TRANS_DELTA = "conversation.item.input_audio_transcription.delta";
     public static final String CONVERSATION_ITEM_AUDIO_TRANS_FAILED = "conversation.item.input_audio_transcription.failed";
     public static final String CONVERSATION_ITEM_TRUNCATED = "conversation.item.truncated";
     public static final String CONVERSATION_ITEM_DELETED = "conversation.item.deleted";
@@ -42,6 +46,7 @@ public final class Realtime {
     public static final String RESPONSE_AUDIO_DONE = "response.audio.done";
     public static final String RESPONSE_FUNCTION_CALL_ARGS_DELTA = "response.function_call_arguments.delta";
     public static final String RESPONSE_FUNCTION_CALL_ARGS_DONE = "response.function_call_arguments.done";
+    public static final String TRANSCRIPTION_SESSION_UPDATED = "transcription_session.updated";
     public static final String RATE_LIMITS_UPDATED = "rate_limits.updated";
 
 }

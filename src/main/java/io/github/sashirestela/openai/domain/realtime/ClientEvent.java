@@ -143,6 +143,31 @@ public abstract class ClientEvent {
     @NoArgsConstructor
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ConversationItemRetrieve extends BaseEvent {
+
+        private String itemId;
+
+        private ConversationItemRetrieve(String eventId, String itemId) {
+            this.type = Realtime.CONVERSATION_ITEM_RETRIEVE;
+            this.eventId = eventId;
+            this.itemId = itemId;
+        }
+
+        public static ConversationItemRetrieve of(String itemId) {
+            return new ConversationItemRetrieve(null, itemId);
+        }
+
+        public static ConversationItemRetrieve of(String eventId, String itemId) {
+            return new ConversationItemRetrieve(eventId, itemId);
+        }
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemTruncate extends BaseEvent {
 
         private String itemId;
@@ -239,6 +264,31 @@ public abstract class ClientEvent {
 
         public static ResponseCancel of(String eventId, String responseId) {
             return new ResponseCancel(eventId, responseId);
+        }
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class TranscriptionSessionUpdate extends BaseEvent {
+
+        private RealtimeTranscriptionSession session;
+
+        private TranscriptionSessionUpdate(String eventId, RealtimeTranscriptionSession session) {
+            this.type = Realtime.TRANSCRIPTION_SESSION_UPDATE;
+            this.eventId = eventId;
+            this.session = session;
+        }
+
+        public static TranscriptionSessionUpdate of(RealtimeTranscriptionSession session) {
+            return new TranscriptionSessionUpdate(null, session);
+        }
+
+        public static TranscriptionSessionUpdate of(String eventId, RealtimeTranscriptionSession session) {
+            return new TranscriptionSessionUpdate(eventId, session);
         }
 
     }

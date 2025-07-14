@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSession.AudioFormatRealtime;
+import io.github.sashirestela.openai.domain.realtime.RealtimeSession.VoiceRealtime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,13 +25,19 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
 
+    private String conversationId;
     private String id;
+    private Object maxOutputToken;
+    private Map<String, String> metadata;
+    private List<Modality> modalities;
     private String object;
+    private List<Item> output;
+    private AudioFormatRealtime outputAudioFormat;
     private String status;
     private StatusDetails statusDetails;
-    private List<Item> output;
-    private Map<String, String> metadata;
+    private Double temperature;
     private UsageResponse usage;
+    private VoiceRealtime voice;
 
     @Getter
     @ToString
