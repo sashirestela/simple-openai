@@ -26,33 +26,40 @@ class BaseEventTest {
     static ServerEvent.Conversation conversation;
     static ServerEvent.Part part;
     static ServerEvent.RateLimit rateLimit;
+    static RealtimeTranscriptionSession realtimeTranscriptionSession;
+    static ServerEvent.RealtimeLogprob logprob;
+    static ServerEvent.TranscriptionUsage usage;
+    static RealtimeTranscriptionSessionToken realtimeTranscriptionSessionToken;
 
     @BeforeAll
     static void setup() {
         Configurator.builder().objectMapper(new ObjectMapper()).build();
 
         realtimeSession = RealtimeSession.builder()
+                .inputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
+                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("model"))
+                .instructions("instructions")
+                .maxResponseOutputTokens(2048)
                 .modality(Modality.TEXT)
                 .modality(Modality.AUDIO)
-                .instructions("instructions")
-                .voice(RealtimeSession.VoiceRealtime.BALLAD)
-                .inputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
+                .model("model")
                 .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
-                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("model"))
+                .speed(1.0)
+                .temperature(0.9)
+                .toolChoice("functionTest")
+                .tool(RealtimeSession.ToolRealtime.of(FunctionDef.builder()
+                        .name("DemoFunction")
+                        .description("A demo function")
+                        .functionalClass(DemoFunction.class)
+                        .build()))
+                .tracing("auto")
                 .turnDetection(RealtimeSession.TurnDetection.builder()
                         .threshold(0.5)
                         .prefixPaddingMs(100)
                         .silenceDurationMs(100)
                         .createReponse(Boolean.FALSE)
                         .build())
-                .tool(RealtimeSession.ToolRealtime.of(FunctionDef.builder()
-                        .name("DemoFunction")
-                        .description("A demo function")
-                        .functionalClass(DemoFunction.class)
-                        .build()))
-                .toolChoice(null)
-                .temperature(0.9)
-                .maxResponseOutputTokens(2048)
+                .voice(RealtimeSession.VoiceRealtime.BALLAD)
                 .build();
 
         realtimeResponse = RealtimeResponse.builder()
@@ -109,8 +116,14 @@ class BaseEventTest {
                 .build();
 
         response = Response.builder()
+                .conversationId("conversationId")
                 .id("id")
+                .maxOutputToken("inf")
+                .metadata(Map.of("key", "value"))
+                .modalities(List.of(Modality.AUDIO))
                 .object("object")
+                .output(List.of(item, item))
+                .outputAudioFormat(RealtimeSession.AudioFormatRealtime.PCM16)
                 .status("status")
                 .statusDetails(Response.StatusDetails.builder()
                         .type("type")
@@ -120,8 +133,7 @@ class BaseEventTest {
                                 .code("code")
                                 .build())
                         .build())
-                .output(List.of(item, item))
-                .metadata(Map.of("key", "value"))
+                .temperature(0.9)
                 .usage(Response.UsageResponse.builder()
                         .totalTokens(1000)
                         .inputTokens(1000)
@@ -136,6 +148,7 @@ class BaseEventTest {
                                 .audioTokens(1000)
                                 .build())
                         .build())
+                .voice(RealtimeSession.VoiceRealtime.BALLAD)
                 .build();
 
         errorDetail = ServerEvent.ErrorDetail.builder()
@@ -163,6 +176,56 @@ class BaseEventTest {
                 .limit(100)
                 .remaining(200)
                 .resetSeconds(127.5)
+                .build();
+
+        realtimeTranscriptionSession = RealtimeTranscriptionSession.builder()
+                .include(List.of(RealtimeTranscriptionSession.ItemsToInclude.LOGPROBS))
+                .inputAudioFormat(RealtimeSession.AudioFormatRealtime.G711_ALAW)
+                .inputAudioNoiseReduction(
+                        RealtimeSession.InputAudioNoiseReduction.of(RealtimeSession.NoiseReductionType.FAR_FIELD))
+                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("model"))
+                .modality(Modality.TEXT)
+                .turnDetection(RealtimeSession.TurnDetection.builder()
+                        .createReponse(Boolean.TRUE)
+                        .eagerness(RealtimeSession.EagernessType.MEDIUM)
+                        .interruptResponse(Boolean.FALSE)
+                        .prefixPaddingMs(10)
+                        .silenceDurationMs(10)
+                        .threshold(0.5)
+                        .type(RealtimeSession.TurnDetectionType.SEMANTIC_VAD)
+                        .build())
+                .build();
+
+        logprob = ServerEvent.RealtimeLogprob.builder()
+                .bytes(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
+                .logprob(17.65)
+                .token("token")
+                .build();
+
+        usage = ServerEvent.TranscriptionUsage.TokenUsage.builder()
+                .type(ServerEvent.TranscriptionUsageType.TOKENS)
+                .inputTokenDetails(Response.TokenDetails.builder()
+                        .audioTokens(100)
+                        .textTokens(100)
+                        .build())
+                .inputTokens(100)
+                .outputTokens(100)
+                .totalTokens(200)
+                .build();
+
+        realtimeTranscriptionSessionToken = RealtimeTranscriptionSessionToken.builder()
+                .inputAudioFormat(RealtimeSession.AudioFormatRealtime.G711_ALAW)
+                .inputAudioTranscription(RealtimeSession.InputAudioTranscription.of("model"))
+                .modality(Modality.TEXT)
+                .turnDetection(RealtimeSession.TurnDetection.builder()
+                        .createReponse(Boolean.TRUE)
+                        .eagerness(RealtimeSession.EagernessType.MEDIUM)
+                        .interruptResponse(Boolean.FALSE)
+                        .prefixPaddingMs(10)
+                        .silenceDurationMs(10)
+                        .threshold(0.5)
+                        .type(RealtimeSession.TurnDetectionType.SEMANTIC_VAD)
+                        .build())
                 .build();
     }
 
@@ -223,6 +286,16 @@ class BaseEventTest {
                 ClientEvent.ConversationItemCreate.class);
         assertEquals(conversationItemCreate.toString(), newConversationItemCreate.toString());
 
+        var conversationItemRetrieve = ClientEvent.ConversationItemRetrieve.of("eventId", "itemId");
+        var newConversationItemRetrieve = JsonUtil.jsonToObject(JsonUtil.objectToJson(conversationItemRetrieve),
+                ClientEvent.ConversationItemRetrieve.class);
+        assertEquals(conversationItemRetrieve.toString(), newConversationItemRetrieve.toString());
+
+        conversationItemRetrieve = ClientEvent.ConversationItemRetrieve.of("itemId");
+        newConversationItemRetrieve = JsonUtil.jsonToObject(JsonUtil.objectToJson(conversationItemRetrieve),
+                ClientEvent.ConversationItemRetrieve.class);
+        assertEquals(conversationItemRetrieve.toString(), newConversationItemRetrieve.toString());
+
         var conversationItemTruncate = ClientEvent.ConversationItemTruncate.of("eventId", "itemId", 0, 360);
         var newConversationItemTruncate = JsonUtil.jsonToObject(JsonUtil.objectToJson(conversationItemTruncate),
                 ClientEvent.ConversationItemTruncate.class);
@@ -262,6 +335,16 @@ class BaseEventTest {
         newResponseCancel = JsonUtil.jsonToObject(JsonUtil.objectToJson(responseCancel),
                 ClientEvent.ResponseCancel.class);
         assertEquals(responseCancel.toString(), newResponseCancel.toString());
+
+        var transcrSessionUpdate = ClientEvent.TranscriptionSessionUpdate.of("eventId", realtimeTranscriptionSession);
+        var newTranscrSessionUpdate = JsonUtil.jsonToObject(JsonUtil.objectToJson(transcrSessionUpdate),
+                ClientEvent.TranscriptionSessionUpdate.class);
+        assertEquals(transcrSessionUpdate.toString(), newTranscrSessionUpdate.toString());
+
+        transcrSessionUpdate = ClientEvent.TranscriptionSessionUpdate.of(realtimeTranscriptionSession);
+        newTranscrSessionUpdate = JsonUtil.jsonToObject(JsonUtil.objectToJson(transcrSessionUpdate),
+                ClientEvent.TranscriptionSessionUpdate.class);
+        assertEquals(transcrSessionUpdate.toString(), newTranscrSessionUpdate.toString());
     }
 
     @Test
@@ -306,16 +389,38 @@ class BaseEventTest {
                 ServerEvent.ConversationItemCreated.class);
         assertEquals(conversationItemCreated.toString(), newConversationItemCreated.toString());
 
+        var conversationItemRetrieved = ServerEvent.ConversationItemRetrieved.builder()
+                .type(Realtime.CONVERSATION_ITEM_RETRIEVED)
+                .item(item)
+                .build();
+        var newConversationItemRetrieved = JsonUtil.jsonToObject(JsonUtil.objectToJson(conversationItemRetrieved),
+                ServerEvent.ConversationItemRetrieved.class);
+        assertEquals(conversationItemRetrieved.toString(), newConversationItemRetrieved.toString());
+
         var conversationItemAudioTransCompleted = ServerEvent.ConversationItemAudioTransCompleted.builder()
                 .type(Realtime.CONVERSATION_ITEM_AUDIO_TRANS_COMPLETED)
                 .itemId("itemId")
                 .contentIndex(0)
                 .transcript("transcript")
+                .logprobs(List.of(logprob))
+                .usage(usage)
                 .build();
         var newConversationItemAudioTransCompleted = JsonUtil.jsonToObject(
                 JsonUtil.objectToJson(conversationItemAudioTransCompleted),
                 ServerEvent.ConversationItemAudioTransCompleted.class);
         assertEquals(conversationItemAudioTransCompleted.toString(), newConversationItemAudioTransCompleted.toString());
+
+        var conversationItemAudioTransDelta = ServerEvent.ConversationItemAudioTransDelta.builder()
+                .type(Realtime.CONVERSATION_ITEM_AUDIO_TRANS_DELTA)
+                .itemId("itemId")
+                .contentIndex(0)
+                .delta("delta")
+                .logprobs(List.of(logprob))
+                .build();
+        var newConversationItemAudioTransDelta = JsonUtil.jsonToObject(
+                JsonUtil.objectToJson(conversationItemAudioTransDelta),
+                ServerEvent.ConversationItemAudioTransDelta.class);
+        assertEquals(conversationItemAudioTransDelta.toString(), newConversationItemAudioTransDelta.toString());
 
         var conversationItemAudioTransFailed = ServerEvent.ConversationItemAudioTransFailed.builder()
                 .type(Realtime.CONVERSATION_ITEM_AUDIO_TRANS_FAILED)
@@ -381,6 +486,15 @@ class BaseEventTest {
                 JsonUtil.objectToJson(inputAudioBufferSpeechStopped),
                 ServerEvent.InputAudioBufferSpeechStopped.class);
         assertEquals(inputAudioBufferSpeechStopped.toString(), newInputAudioBufferSpeechStopped.toString());
+
+        var transcriptionSessionUpdated = ServerEvent.TranscriptionSessionUpdated.builder()
+                .type(Realtime.TRANSCRIPTION_SESSION_UPDATED)
+                .session(realtimeTranscriptionSessionToken)
+                .build();
+        var newTranscriptionSessionUpdated = JsonUtil.jsonToObject(
+                JsonUtil.objectToJson(transcriptionSessionUpdated),
+                ServerEvent.TranscriptionSessionUpdated.class);
+        assertEquals(transcriptionSessionUpdated.toString(), newTranscriptionSessionUpdated.toString());
 
         var rateLimitsUpdated = ServerEvent.RateLimitsUpdated.builder()
                 .type(Realtime.RATE_LIMITS_UPDATED)

@@ -2,8 +2,12 @@ package io.github.sashirestela.openai.domain.realtime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.domain.realtime.Response.TokenDetails;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,11 +95,42 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ConversationItemRetrieved extends BaseEvent {
+
+        private Item item;
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ConversationItemAudioTransCompleted extends BaseEvent {
 
         private String itemId;
         private Integer contentIndex;
         private String transcript;
+        private List<RealtimeLogprob> logprobs;
+        private TranscriptionUsage usage;
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ConversationItemAudioTransDelta extends BaseEvent {
+
+        private String itemId;
+        private Integer contentIndex;
+        private String delta;
+        private List<RealtimeLogprob> logprobs;
 
     }
 
@@ -404,6 +439,19 @@ public abstract class ServerEvent {
     @SuperBuilder
     @JsonInclude(Include.NON_EMPTY)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class TranscriptionSessionUpdated extends BaseEvent {
+
+        private RealtimeTranscriptionSessionToken session;
+
+    }
+
+    @Getter
+    @ToString(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class RateLimitsUpdated extends BaseEvent {
 
         private List<RateLimit> rateLimits;
@@ -470,6 +518,75 @@ public abstract class ServerEvent {
         private Integer limit;
         private Integer remaining;
         private Double resetSeconds;
+
+    }
+
+    @Getter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class RealtimeLogprob {
+
+        private List<Integer> bytes;
+        private Double logprob;
+        private String token;
+
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = TranscriptionUsage.TokenUsage.class, name = "tokens"),
+            @JsonSubTypes.Type(value = TranscriptionUsage.DurationUsage.class, name = "duration"),
+    })
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @SuperBuilder
+    public abstract static class TranscriptionUsage {
+
+        protected TranscriptionUsageType type;
+
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @SuperBuilder
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class TokenUsage extends TranscriptionUsage {
+
+            private Integer inputTokens;
+            private Integer outputTokens;
+            private Integer totalTokens;
+            private TokenDetails inputTokenDetails;
+
+        }
+
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class DurationUsage extends TranscriptionUsage {
+
+            private Integer seconds;
+
+        }
+
+    }
+
+    public enum TranscriptionUsageType {
+
+        @JsonProperty("tokens")
+        TOKENS,
+
+        @JsonProperty("duration")
+        DURATION;
 
     }
 

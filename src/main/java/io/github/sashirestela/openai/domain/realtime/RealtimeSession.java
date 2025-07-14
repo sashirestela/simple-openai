@@ -12,6 +12,7 @@ import io.github.sashirestela.openai.common.tool.ToolType;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.Range;
+import io.github.sashirestela.slimvalidator.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @ToString
@@ -32,41 +34,54 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RealtimeSession {
 
-    protected String id;
+    private String id;
 
-    protected String object;
+    private String object;
 
-    @Singular
-    protected List<Modality> modalities;
-
-    protected String model;
-
-    protected String instructions;
-
-    protected VoiceRealtime voice;
+    private SecretConfig clientSecret;
 
     protected AudioFormatRealtime inputAudioFormat;
 
-    protected AudioFormatRealtime outputAudioFormat;
+    private InputAudioNoiseReduction inputAudioNoiseReduction;
 
     protected InputAudioTranscription inputAudioTranscription;
 
-    protected TurnDetection turnDetection;
-
-    @Singular
-    protected List<ToolRealtime> tools;
-
-    @ObjectType(baseClass = { String.class, ToolChoiceOption.class })
-    protected Object toolChoice;
-
-    @Range(min = 0.6, max = 1.2)
-    protected Double temperature;
+    protected String instructions;
 
     @Range(min = 1, max = 4096)
     @ObjectType(baseClass = { Integer.class, String.class })
     protected Object maxResponseOutputTokens;
 
+    @Singular
+    protected List<Modality> modalities;
+
+    private String model;
+
+    protected AudioFormatRealtime outputAudioFormat;
+
+    @Range(min = 0.25, max = 1.5)
+    protected Double speed;
+
+    @Range(min = 0.6, max = 1.2)
+    protected Double temperature;
+
+    @ObjectType(baseClass = { String.class, ToolChoiceOption.class })
+    protected Object toolChoice;
+
+    @Singular
+    protected List<ToolRealtime> tools;
+
+    @ObjectType(baseClass = { String.class, TracingConfig.class })
+    protected Object tracing;
+
+    protected TurnDetection turnDetection;
+
+    protected VoiceRealtime voice;
+
     public enum VoiceRealtime {
+
+        @JsonProperty("alloy")
+        ALLOY,
 
         @JsonProperty("ash")
         ASH,
@@ -77,20 +92,26 @@ public class RealtimeSession {
         @JsonProperty("coral")
         CORAL,
 
-        @JsonProperty("sage")
-        SAGE,
-
-        @JsonProperty("verse")
-        VERSE,
-
-        @JsonProperty("alloy")
-        ALLOY,
-
         @JsonProperty("echo")
         ECHO,
 
+        @JsonProperty("fable")
+        FABLE,
+
+        @JsonProperty("onyx")
+        ONYX,
+
+        @JsonProperty("nova")
+        NOVA,
+
+        @JsonProperty("sage")
+        SAGE,
+
         @JsonProperty("shimmer")
-        SHIMMER;
+        SHIMMER,
+
+        @JsonProperty("verse")
+        VERSE;
 
     }
 
@@ -107,16 +128,60 @@ public class RealtimeSession {
 
     }
 
+    public enum NoiseReductionType {
+
+        @JsonProperty("near_field")
+        NEAR_FIELD,
+
+        @JsonProperty("far_field")
+        FAR_FIELD;
+
+    }
+
+    public enum TurnDetectionType {
+
+        @JsonProperty("server_vad")
+        SERVER_VAD,
+
+        @JsonProperty("semantic_vad")
+        SEMANTIC_VAD;
+
+    }
+
+    public enum EagernessType {
+
+        @JsonProperty("low")
+        LOW,
+
+        @JsonProperty("medium")
+        MEDIUM,
+
+        @JsonProperty("high")
+        HIGH,
+
+        @JsonProperty("auto")
+        AUTO;
+
+    }
+
     @Getter
     @ToString
     @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
+    @Builder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class InputAudioTranscription {
+
+        @Size(min = 2, max = 2)
+        private String language;
 
         private String model;
 
+        private String prompt;
+
         public static InputAudioTranscription of(String model) {
-            return new InputAudioTranscription(model);
+            return InputAudioTranscription.builder().model(model).build();
         }
 
     }
@@ -126,10 +191,13 @@ public class RealtimeSession {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class TurnDetection {
 
-        @Builder.Default
-        private String type = "server_vad";
+        private TurnDetectionType type;
+
+        private EagernessType eagerness;
 
         @Range(min = 0.0, max = 1.0)
         private Double threshold;
@@ -140,12 +208,16 @@ public class RealtimeSession {
 
         private Boolean createReponse;
 
+        private Boolean interruptResponse;
+
     }
 
     @Getter
     @ToString
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class ToolRealtime {
 
         private ToolType type;
@@ -160,6 +232,69 @@ public class RealtimeSession {
                     function.getDescription(),
                     function.getSchemaConverter().convert(function.getFunctionalClass()));
         }
+
+    }
+
+    @Getter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class InputAudioNoiseReduction {
+
+        private NoiseReductionType type;
+
+        public static InputAudioNoiseReduction of(NoiseReductionType type) {
+            return new InputAudioNoiseReduction(type);
+        }
+
+    }
+
+    @Getter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class SecretConfig {
+
+        private Expiration expiresAfter;
+
+        public static SecretConfig of(Integer seconds) {
+            return new SecretConfig(new Expiration(seconds));
+        }
+
+        @Getter
+        @ToString
+        public static class Expiration {
+
+            private String anchor;
+
+            @Range(min = 10, max = 7200)
+            private Integer seconds;
+
+            public Expiration(Integer seconds) {
+                this.anchor = "created_at";
+                this.seconds = seconds;
+            }
+
+        }
+
+    }
+
+    @Getter
+    @ToString
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class TracingConfig {
+
+        private String workflowName;
+
+        private String groupId;
+
+        private Map<String, Object> metadata;
 
     }
 

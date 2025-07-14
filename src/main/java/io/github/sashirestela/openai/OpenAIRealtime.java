@@ -35,10 +35,14 @@ public class OpenAIRealtime {
 
         webSocket.onMessage(message -> {
             logger.debug("Response Event : {}", message);
-            var event = JsonUtil.jsonToObject(message, BaseEvent.class);
-            Consumer<Object> handler = eventHandlers.get(event.getClass());
-            if (handler != null) {
-                handler.accept(event);
+            try {
+                var event = JsonUtil.jsonToObject(message, BaseEvent.class);
+                Consumer<Object> handler = eventHandlers.get(event.getClass());
+                if (handler != null) {
+                    handler.accept(event);
+                }
+            } catch (Exception e) {
+                logger.error("Cannot handle the Response Event: " + message, e);
             }
         });
     }
