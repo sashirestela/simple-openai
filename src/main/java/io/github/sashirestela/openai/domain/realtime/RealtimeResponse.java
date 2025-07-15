@@ -47,7 +47,7 @@ public class RealtimeResponse {
     @Range(min = 0.6, max = 1.2)
     private Double temperature;
 
-    @Range(min = 1, max = 4096)
+    @Range(min = 1, max = 4096, isVariableType = true)
     @ObjectType(baseClass = { Integer.class, String.class })
     private Object maxResponseOutputTokens;
 

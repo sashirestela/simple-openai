@@ -48,7 +48,7 @@ public class RealtimeSession {
 
     protected String instructions;
 
-    @Range(min = 1, max = 4096)
+    @Range(min = 1, max = 4096, isVariableType = true)
     @ObjectType(baseClass = { Integer.class, String.class })
     protected Object maxResponseOutputTokens;
 
