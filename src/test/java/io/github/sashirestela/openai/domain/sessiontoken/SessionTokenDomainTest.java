@@ -45,7 +45,7 @@ class SessionTokenDomainTest {
                 .model("gpt-4o-mini-realtime-preview")
                 .modality(Modality.TEXT)
                 .modality(Modality.AUDIO)
-                .maxResponseOutputTokens(300)
+                .maxResponseOutputTokens("inf")
                 .instructions("You are a friendly assistant.")
                 .voice(VoiceRealtime.CORAL)
                 .build();
