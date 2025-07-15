@@ -61,7 +61,7 @@ Full support for most of the OpenAI services:
 
 * Audio (Speech, Transcription, Translation)
 * Batch (Batches of Chat Completion)
-* Chat Completion (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Audio)
+* [📌 _**UPDATED**_] Chat Completion (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Audio, Web Search)
 * Completion (Legacy Text Generation)
 * Embedding  (Vectoring Text)
 * Files (Upload Files)
@@ -69,9 +69,9 @@ Full support for most of the OpenAI services:
 * Image (Generate, Edit, Variation)
 * Models (List)
 * Moderation (Check Harmful Text)
-* Realtime Beta (Speech-to-Speech Conversation, Multimodality, Function Calling)
-* [_**UPDATED**_] Response (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Reasoning, Computer Use, File Search, Web Search, Remote MCP, Image Generation, Code Interpreter). See examples of this service in [ResponseDemo.java](src/demo/java/io/github/sashirestela/openai/demo/ResponseDemo.java)
-* Session Token (Create Ephemeral Tokens)
+* [📌 _**UPDATED**_] Realtime (Speech-to-Speech Conversation, Multimodality, Function Calling)
+* [📌 _**UPDATED**_] Response (Text Generation, Streaming, Function Calling, Vision, Structured Outputs, Reasoning, Computer Use, File Search, Web Search, Remote MCP, Image Generation, Code Interpreter, Reusable Prompts). See examples of this service in [ResponseDemo.java](src/demo/java/io/github/sashirestela/openai/demo/ResponseDemo.java)
+* [📌 _**UPDATED**_] Session Token (Create Ephemeral Tokens, Create Transcription Ephemeral Tokens)
 * Upload (Upload Large Files in Parts)
 * Assistants Beta v2 (Assistants, Threads, Messages, Runs, Steps, Vector Stores, Streaming, Function Calling, Vision, Structured Outputs)
 
