@@ -27,6 +27,10 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions.ApproxLocation;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions.UserLocation;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.openai.service.ChatCompletionServices;
 import io.github.sashirestela.openai.support.Base64Util;
 import io.github.sashirestela.openai.support.Base64Util.MediaType;
@@ -241,6 +245,23 @@ public class ChatDemo extends AbstractDemo {
         System.out.println("Answer 2: " + audio.getTranscript());
     }
 
+    public void demoCallChatWithWebSearch() {
+        chatRequest = ChatRequest.builder()
+                .model("gpt-4o-mini-search-preview")
+                .message(UserMessage.of("What is the most important news in Peruvian politics today?"))
+                .webSearchOptions(WebSearchOptions.builder()
+                        .searchContextSize(ContextSize.MEDIUM)
+                        .userLocation(UserLocation.of(ApproxLocation.builder()
+                                .country("PE")
+                                .city("Lima")
+                                .build()))
+                        .build())
+                .build();
+        var chatResponse = chatProvider.chatCompletions().createStream(chatRequest).join();
+        chatResponse.forEach(this::processResponseChunk);
+        System.out.println();
+    }
+
     protected void processResponseChunk(Chat responseChunk) {
         var choices = responseChunk.getChoices();
         if (!choices.isEmpty()) {
@@ -337,6 +358,7 @@ public class ChatDemo extends AbstractDemo {
         demo.addTitleAction("Call Chat with Structured Outputs", demo::demoCallChatWithStructuredOutputs);
         demo.addTitleAction("Call Chat with Structured Outputs 2", demo::demoCallChatWithStructuredOutputs2);
         demo.addTitleAction("Call Chat with Audio Input/Output", demo::demoCallChatWithAudioInputOutput);
+        demo.addTitleAction("Call Chat with Web Search", demo::demoCallChatWithWebSearch);
 
         demo.run();
     }
