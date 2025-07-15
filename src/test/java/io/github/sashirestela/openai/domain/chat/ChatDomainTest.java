@@ -35,6 +35,10 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Audio;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.ReasoningEffort;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions.ApproxLocation;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.WebSearchOptions.UserLocation;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -294,6 +298,40 @@ class ChatDomainTest {
         chatResponse = openAI.chatCompletions().create(chatRequest).join();
         audio = chatResponse.firstMessage().getAudio();
         System.out.println("Answer 2: " + audio.getTranscript());
+        assertNotNull(chatResponse);
+    }
+
+    @Test
+    void testChatCompletionsCreateWithWebSearch() throws IOException {
+        DomainTestingHelper.get()
+                .mockForStream(httpClient,
+                        "src/test/resources/chatcompletions_create_websearch_stream.txt");
+        var chatRequest = ChatRequest.builder()
+                .model("gpt-4o-mini-search-preview")
+                .message(UserMessage.of("What is the most important news in Peruvian politics today?"))
+                .webSearchOptions(WebSearchOptions.builder()
+                        .searchContextSize(ContextSize.MEDIUM)
+                        .userLocation(UserLocation.of(ApproxLocation.builder()
+                                .country("PE")
+                                .city("Lima")
+                                .build()))
+                        .build())
+                .build();
+        var chatResponse = openAI.chatCompletions().createStream(chatRequest).join();
+        chatResponse.forEach(responseChunk -> {
+            var choices = responseChunk.getChoices();
+            if (choices.size() > 0) {
+                var delta = choices.get(0).getMessage();
+                if (delta.getContent() != null) {
+                    System.out.print(delta.getContent());
+                }
+            }
+            var usage = responseChunk.getUsage();
+            if (usage != null) {
+                System.out.println("\n");
+                System.out.println(usage);
+            }
+        });
         assertNotNull(chatResponse);
     }
 

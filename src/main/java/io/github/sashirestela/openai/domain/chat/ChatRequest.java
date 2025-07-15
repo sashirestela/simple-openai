@@ -12,6 +12,7 @@ import io.github.sashirestela.openai.common.audio.Voice;
 import io.github.sashirestela.openai.common.tool.Tool;
 import io.github.sashirestela.openai.common.tool.ToolChoice;
 import io.github.sashirestela.openai.common.tool.ToolChoiceOption;
+import io.github.sashirestela.openai.domain.response.ResponseTool.ContextSize;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType;
 import io.github.sashirestela.slimvalidator.constraints.ObjectType.Schema;
 import io.github.sashirestela.slimvalidator.constraints.Range;
@@ -108,6 +109,8 @@ public class ChatRequest {
 
     private String user;
 
+    private WebSearchOptions webSearchOptions;
+
     public enum Modality {
 
         @JsonProperty("text")
@@ -165,6 +168,68 @@ public class ChatRequest {
 
         @JsonProperty("high")
         HIGH;
+    }
+
+    @Getter
+    @ToString
+    @JsonInclude(Include.NON_EMPTY)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class WebSearchOptions {
+
+        private ContextSize searchContextSize;
+        private UserLocation userLocation;
+
+        @Builder
+        public WebSearchOptions(ContextSize searchContextSize, UserLocation userLocation) {
+            this.searchContextSize = searchContextSize;
+            this.userLocation = userLocation;
+        }
+
+        public static WebSearchOptions of() {
+            return WebSearchOptions.builder().build();
+        }
+
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class UserLocation {
+
+            private ApproxLocation approximate;
+            private String type;
+
+            private UserLocation(ApproxLocation approximate) {
+                this.approximate = approximate;
+                this.type = "approximate";
+            }
+
+            public static UserLocation of(ApproxLocation approximate) {
+                return new UserLocation(approximate);
+            }
+
+        }
+
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class ApproxLocation {
+
+            private String city;
+            private String country;
+            private String region;
+            private String timezone;
+
+            @Builder
+            public ApproxLocation(String city, String country, String region, String timezone) {
+                this.city = city;
+                this.country = country;
+                this.region = region;
+                this.timezone = timezone;
+            }
+
+        }
+
     }
 
 }

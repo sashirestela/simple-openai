@@ -214,6 +214,7 @@ public abstract class ChatMessage {
         private List<ToolCall> toolCalls;
         private String refusal;
         private AudioResponse audio;
+        private List<Annotation> annotations;
 
         @NoArgsConstructor
         @Getter
@@ -225,6 +226,30 @@ public abstract class ChatMessage {
             private Integer expiresAt;
             private String data;
             private String transcript;
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @Setter
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class Annotation {
+
+            private String type;
+            private UrlCitation urlCitation;
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @Setter
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class UrlCitation {
+
+            private Integer endIndex;
+            private Integer startIndex;
+            private String title;
+            private String url;
 
         }
 

@@ -330,11 +330,15 @@ public abstract class Input {
         public static class WebSearchCallItem extends Item {
 
             @Required
+            private WebSearchAction action;
+
+            @Required
             private SearchStatus status;
 
             @Builder
-            public WebSearchCallItem(String id, SearchStatus status) {
+            public WebSearchCallItem(String id, WebSearchAction action, SearchStatus status) {
                 this.id = id;
+                this.action = action;
                 this.status = status;
                 this.type = ItemType.WEB_SEARCH_CALL;
             }
@@ -894,6 +898,87 @@ public abstract class Input {
 
     }
 
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type")
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = WebSearchAction.SearchAction.class, name = "search"),
+            @JsonSubTypes.Type(value = WebSearchAction.OpenPageAction.class, name = "open_page"),
+            @JsonSubTypes.Type(value = WebSearchAction.FindAction.class, name = "find"),
+    })
+    @Getter
+    @Setter
+    public abstract static class WebSearchAction {
+
+        protected WebSearchActionType type;
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class SearchAction extends WebSearchAction {
+
+            @Required
+            private String query;
+
+            private SearchAction(String query) {
+                this.query = query;
+                this.type = WebSearchActionType.SEARCH;
+            }
+
+            public static SearchAction of(String query) {
+                return new SearchAction(query);
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class OpenPageAction extends WebSearchAction {
+
+            @Required
+            private String url;
+
+            private OpenPageAction(String url) {
+                this.url = url;
+                this.type = WebSearchActionType.OPEN_PAGE;
+            }
+
+            public static OpenPageAction of(String url) {
+                return new OpenPageAction(url);
+            }
+
+        }
+
+        @NoArgsConstructor
+        @Getter
+        @ToString
+        @JsonInclude(Include.NON_EMPTY)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class FindAction extends WebSearchAction {
+
+            @Required
+            private String pattern;
+
+            @Required
+            private String url;
+
+            private FindAction(String pattern, String url) {
+                this.pattern = pattern;
+                this.url = url;
+                this.type = WebSearchActionType.FIND;
+            }
+
+            public static FindAction of(String pattern, String url) {
+                return new FindAction(pattern, url);
+            }
+
+        }
+
+    }
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
@@ -1249,6 +1334,19 @@ public abstract class Input {
 
         @JsonProperty("files")
         FILES;
+
+    }
+
+    public enum WebSearchActionType {
+
+        @JsonProperty("search")
+        SEARCH,
+
+        @JsonProperty("open_page")
+        OPEN_PAGE,
+
+        @JsonProperty("find")
+        FIND;
 
     }
 

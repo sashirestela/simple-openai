@@ -56,6 +56,9 @@ import io.github.sashirestela.openai.domain.response.Input.SafetyCheck;
 import io.github.sashirestela.openai.domain.response.Input.ScreenshotImage;
 import io.github.sashirestela.openai.domain.response.Input.SearchStatus;
 import io.github.sashirestela.openai.domain.response.Input.ShellAction;
+import io.github.sashirestela.openai.domain.response.Input.WebSearchAction.FindAction;
+import io.github.sashirestela.openai.domain.response.Input.WebSearchAction.OpenPageAction;
+import io.github.sashirestela.openai.domain.response.Input.WebSearchAction.SearchAction;
 import io.github.sashirestela.openai.domain.response.ResponseTool.CodeInterpreterResponseTool;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ComparisonOperator;
 import io.github.sashirestela.openai.domain.response.ResponseTool.ComputerResponseTool;
@@ -406,6 +409,24 @@ class ResponseDomainSerDeserTest {
         var newFileOutput = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFileOutput),
                 FileOutput.class);
         assertEquals(oneFileOutput.toString(), newFileOutput.toString());
+    }
+
+    @Test
+    void testSerDeserWebSearchActionClasses() {
+        var oneSearchAction = SearchAction.of("query");
+        var newSearchAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneSearchAction),
+                SearchAction.class);
+        assertEquals(oneSearchAction.toString(), newSearchAction.toString());
+
+        var oneOpenPageAction = OpenPageAction.of("url");
+        var newOpenPageAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneOpenPageAction),
+                OpenPageAction.class);
+        assertEquals(oneOpenPageAction.toString(), newOpenPageAction.toString());
+
+        var oneFindAction = FindAction.of("pattern", "url");
+        var newFindAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneFindAction),
+                FindAction.class);
+        assertEquals(oneFindAction.toString(), newFindAction.toString());
     }
 
     @Test
