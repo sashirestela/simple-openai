@@ -939,14 +939,13 @@ for more information.
 List of the main users of our library:
 - [ChatMotor](https://www.chatmotor.ai/): A framework for OpenAI services. Thanks for [credits](https://docs.chatmotor.ai/rest/soft/1.0-BETA/user-guide/User-Guide.html#credits-and-acknowledgments)!
 - [OpenOLAT](https://github.com/OpenOLAT/OpenOLAT): A learning managment system.
-- [Willy](https://github.com/laravieira/Willy): A multi-channel assistant.
 - [SuperTurtyBot](https://github.com/DaRealTurtyWurty/SuperTurtyBot): A multi-purpose discord bot.
 - [Woolly](https://github.com/da-z/woolly): A code generation IntelliJ plugin.
-- [Vinopener](https://github.com/thevinopener/vinopener): A wine recommender app.
 - [ScalerX.ai](https://scalerX.ai): A Telegram chatbot factory.
 - [Katie Backend](https://github.com/wyona/katie-backend): A question-answering platform.
 - [Java for Programmers, 5/e](https://deitel.com/java-for-programmers-5e): A Java book with Generative AI.
 - [Sentinel AI](https://phonepe.github.io/sentinel-ai/): A framework to build and deploy AI Agents.
+- [Furhat Robotics](https://www.furhatrobotics.com/): A social robot platform with conversational skills.
 
 
 ## 😍 Show Us Your Love
