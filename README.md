@@ -946,6 +946,7 @@ List of the main users of our library:
 - [Java for Programmers, 5/e](https://deitel.com/java-for-programmers-5e): A Java book with Generative AI.
 - [Sentinel AI](https://phonepe.github.io/sentinel-ai/): A framework to build and deploy AI Agents.
 - [Furhat Robotics](https://www.furhatrobotics.com/): A social robot platform with conversational skills.
+- [Invisible Platforms](https://getinvisible.com/): A multi-agent platform for industry-agnostic.
 
 
 ## 😍 Show Us Your Love
