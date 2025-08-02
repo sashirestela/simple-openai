@@ -29,6 +29,9 @@ public class FileRequest {
         BATCH,
 
         @JsonProperty("vision")
+        USER_DATA,
+
+        @JsonProperty("user_data")
         VISION;
 
     }
