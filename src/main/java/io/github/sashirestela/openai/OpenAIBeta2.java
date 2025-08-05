@@ -42,9 +42,9 @@ import io.github.sashirestela.openai.domain.assistant.events.AssistantStreamEven
 import io.github.sashirestela.openai.support.Constant;
 import io.github.sashirestela.openai.support.Poller;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 /**
@@ -305,10 +305,9 @@ public interface OpenAIBeta2 {
         default ThreadRun createAndPoll(String threadId, ThreadRunRequest request) {
             var threadRun = create(threadId, request).join();
             return Poller.<ThreadRun>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(tr -> getOne(tr.getThreadId(), tr.getId()).join())
-                    .whileMethod(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(tr -> getOne(tr.getThreadId(), tr.getId()).join())
+                    .continueIf(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
                     .build()
                     .execute(threadRun);
         }
@@ -367,10 +366,9 @@ public interface OpenAIBeta2 {
         default ThreadRun createThreadAndRunAndPoll(ThreadCreateAndRunRequest request) {
             var threadRun = createThreadAndRun(request).join();
             return Poller.<ThreadRun>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(tr -> getOne(tr.getThreadId(), tr.getId()).join())
-                    .whileMethod(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(tr -> getOne(tr.getThreadId(), tr.getId()).join())
+                    .continueIf(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
                     .build()
                     .execute(threadRun);
         }
@@ -486,10 +484,9 @@ public interface OpenAIBeta2 {
                 ThreadRunSubmitOutputRequest request) {
             var threadRun = submitToolOutput(threadId, runId, request).join();
             return Poller.<ThreadRun>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(tr -> getOne(tr.getThreadId(), tr.getId()).join())
-                    .whileMethod(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(tr -> getOne(tr.getThreadId(), tr.getId()).join())
+                    .continueIf(tr -> tr.getStatus().equals(RunStatus.IN_PROGRESS))
                     .build()
                     .execute(threadRun);
         }
@@ -634,10 +631,9 @@ public interface OpenAIBeta2 {
         default VectorStore createAndPoll(VectorStoreRequest request) {
             var vectorStore = create(request).join();
             return Poller.<VectorStore>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(vs -> getOne(vs.getId()).join())
-                    .whileMethod(vs -> !vs.getStatus().equals(VectorStoreStatus.COMPLETED)
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(vs -> getOne(vs.getId()).join())
+                    .continueIf(vs -> !vs.getStatus().equals(VectorStoreStatus.COMPLETED)
                             || !vs.getFileCounts().getCompleted().equals(vs.getFileCounts().getTotal()))
                     .build()
                     .execute(vectorStore);
@@ -730,10 +726,10 @@ public interface OpenAIBeta2 {
         default VectorStoreFile createAndPoll(String vectorStoreId, String fileId) {
             var vectorStoreFile = create(vectorStoreId, fileId).join();
             return Poller.<VectorStoreFile>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(vsf -> getOne(vsf.getVectorStoreId(), vsf.getId()).join())
-                    .whileMethod(vsf -> !vsf.getStatus().equals(FileStatus.COMPLETED))
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(vsf -> getOne(vsf.getVectorStoreId(), vsf.getId()).join())
+                    .continueIf(vsf -> vsf.getStatus().equals(FileStatus.IN_PROGRESS))
+                    .abortIf(vsf -> vsf.getStatus().equals(FileStatus.FAILED))
                     .build()
                     .execute(vectorStoreFile);
         }
@@ -826,10 +822,10 @@ public interface OpenAIBeta2 {
         default VectorStoreFileBatch createAndPoll(String vectorStoreId, List<String> fileIds) {
             var vectorStoreFileBatch = create(vectorStoreId, fileIds).join();
             return Poller.<VectorStoreFileBatch>builder()
-                    .timeUnit(TimeUnit.SECONDS)
-                    .timeValue(1)
-                    .queryMethod(vsfb -> getOne(vsfb.getVectorStoreId(), vsfb.getId()).join())
-                    .whileMethod(vsfb -> !vsfb.getStatus().equals(FileStatus.COMPLETED))
+                    .interval(Duration.ofSeconds(1))
+                    .pollFunction(vsfb -> getOne(vsfb.getVectorStoreId(), vsfb.getId()).join())
+                    .continueIf(vsfb -> vsfb.getStatus().equals(FileStatus.IN_PROGRESS))
+                    .abortIf(vsfb -> vsfb.getStatus().equals(FileStatus.FAILED))
                     .build()
                     .execute(vectorStoreFileBatch);
         }

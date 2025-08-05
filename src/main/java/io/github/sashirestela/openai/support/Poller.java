@@ -1,10 +1,11 @@
 package io.github.sashirestela.openai.support;
 
+import io.github.sashirestela.openai.exception.PollingAbortedException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
@@ -13,27 +14,29 @@ import java.util.function.UnaryOperator;
 public class Poller<T> {
 
     @NonNull
-    private TimeUnit timeUnit;
+    private Duration interval;
 
     @NonNull
-    private Integer timeValue;
+    private UnaryOperator<T> pollFunction;
 
     @NonNull
-    private UnaryOperator<T> queryMethod;
+    private Predicate<T> continueIf;
 
-    @NonNull
-    private Predicate<T> whileMethod;
+    private Predicate<T> abortIf;
 
     public T execute(T startValue) {
         T object = startValue;
         do {
             try {
-                timeUnit.sleep(timeValue.longValue());
+                java.lang.Thread.sleep(interval.toMillis());
             } catch (InterruptedException e) {
                 java.lang.Thread.currentThread().interrupt();
             }
-            object = queryMethod.apply(object);
-        } while (whileMethod.test(object));
+            if (abortIf != null && abortIf.test(object)) {
+                throw new PollingAbortedException("Polling aborted due to abort condition.");
+            }
+            object = pollFunction.apply(object);
+        } while (continueIf.test(object));
         return object;
     }
 
