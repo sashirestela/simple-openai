@@ -160,6 +160,9 @@ public class ChatRequest {
     }
 
     public enum ReasoningEffort {
+        @JsonProperty("minimal")
+        MINIMAL,
+
         @JsonProperty("low")
         LOW,
 
@@ -167,7 +170,7 @@ public class ChatRequest {
         MEDIUM,
 
         @JsonProperty("high")
-        HIGH;
+        HIGH
     }
 
     @Getter
