@@ -13,6 +13,7 @@ import io.github.sashirestela.openai.service.AudioServices;
 import io.github.sashirestela.openai.service.BatchServices;
 import io.github.sashirestela.openai.service.ChatCompletionServices;
 import io.github.sashirestela.openai.service.CompletionServices;
+import io.github.sashirestela.openai.service.ConversationServices;
 import io.github.sashirestela.openai.service.EmbeddingServices;
 import io.github.sashirestela.openai.service.FileServices;
 import io.github.sashirestela.openai.service.FineTunningServices;
@@ -42,6 +43,7 @@ public class SimpleOpenAI extends OpenAIProvider implements
         BatchServices,
         ChatCompletionServices,
         CompletionServices,
+        ConversationServices,
         EmbeddingServices,
         FileServices,
         FineTunningServices,
@@ -149,6 +151,16 @@ public class SimpleOpenAI extends OpenAIProvider implements
     @Override
     public OpenAI.Responses responses() {
         return getOrCreateService(OpenAI.Responses.class);
+    }
+
+    @Override
+    public OpenAI.Conversations conversations() {
+        return getOrCreateService(OpenAI.Conversations.class);
+    }
+
+    @Override
+    public OpenAI.ConversationItems conversationItems() {
+        return getOrCreateService(OpenAI.ConversationItems.class);
     }
 
     @Override

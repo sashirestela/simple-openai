@@ -133,7 +133,10 @@ public class ChatRequest {
         DEFAULT,
 
         @JsonProperty("on_demand") // See https://console.groq.com/docs/flex-processing#service-tier-parameter
-        ON_DEMAND;
+        ON_DEMAND,
+
+        @JsonProperty("priority")
+        PRIORITY;
     }
 
     @Getter

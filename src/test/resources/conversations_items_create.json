@@ -1,0 +1,1 @@
+{"object":"list","data":[{"id":"msg_698abdcf77cc81939ceb02db291e2d1700648cf10f7d6d58","type":"message","status":"completed","content":[{"type":"input_text","text":"Hello, how are you?"}],"role":"user"}],"first_id":"msg_698abdcf77cc81939ceb02db291e2d1700648cf10f7d6d58","has_more":false,"last_id":"msg_698abdcf77cc81939ceb02db291e2d1700648cf10f7d6d58"}

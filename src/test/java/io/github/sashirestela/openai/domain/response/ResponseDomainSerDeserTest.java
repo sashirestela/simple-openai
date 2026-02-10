@@ -593,4 +593,12 @@ class ResponseDomainSerDeserTest {
         assertEquals(oneFunctionTool.toString(), newFunctionTool.toString());
     }
 
+    @Test
+    void testSerDeserResponseConversationParam() {
+        var oneConversation = Response.ResponseConversation.of("conv_abc123");
+        var newConversation = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneConversation),
+                Response.ResponseConversation.class);
+        assertEquals(oneConversation.toString(), newConversation.toString());
+    }
+
 }
