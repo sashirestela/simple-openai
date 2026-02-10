@@ -934,6 +934,10 @@ public abstract class Input {
                 return new SearchAction(query, null);
             }
 
+            public static SearchAction of(String query, List<String> queries) {
+                return new SearchAction(query, queries);
+            }
+
         }
 
         @NoArgsConstructor
