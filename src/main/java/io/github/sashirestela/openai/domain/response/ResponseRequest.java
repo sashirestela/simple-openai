@@ -58,6 +58,10 @@ public class ResponseRequest {
 
     private Boolean store;
 
+    @ObjectType(baseClass = String.class)
+    @ObjectType(baseClass = Response.ResponseConversation.class)
+    private Object conversation;
+
     @With
     private Boolean stream;
 

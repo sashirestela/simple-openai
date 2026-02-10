@@ -1,0 +1,29 @@
+package io.github.sashirestela.openai.domain.conversation;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import io.github.sashirestela.openai.domain.response.Input;
+import io.github.sashirestela.slimvalidator.constraints.Size;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Singular;
+
+import java.util.List;
+import java.util.Map;
+
+@Getter
+@Builder
+@JsonInclude(Include.NON_EMPTY)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ConversationRequest {
+
+    @Size(max = 20)
+    @Singular
+    private List<Input> items;
+
+    @Size(max = 16)
+    private Map<String, String> metadata;
+
+}

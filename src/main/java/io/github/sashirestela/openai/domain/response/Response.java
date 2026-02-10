@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.ServiceTier;
 import io.github.sashirestela.openai.domain.response.ResponseRequest.Truncation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -35,6 +36,7 @@ public class Response {
     private List<Input.Item> output;
     private Boolean parallelToolCalls;
     private String previousResponseId;
+    private ResponseConversation conversation;
     private Prompt prompt;
     private Reasoning reasoning;
     private ServiceTier serviceTier;
@@ -133,6 +135,21 @@ public class Response {
 
         @JsonProperty("incomplete")
         INCOMPLETE;
+
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @ToString
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class ResponseConversation {
+
+        private String id;
+
+        public static ResponseConversation of(String id) {
+            return new ResponseConversation(id);
+        }
 
     }
 

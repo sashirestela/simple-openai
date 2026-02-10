@@ -26,6 +26,11 @@ import io.github.sashirestela.openai.domain.chat.Chat;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.completion.Completion;
 import io.github.sashirestela.openai.domain.completion.CompletionRequest;
+import io.github.sashirestela.openai.domain.conversation.Conversation;
+import io.github.sashirestela.openai.domain.conversation.ConversationItem;
+import io.github.sashirestela.openai.domain.conversation.ConversationItemsRequest;
+import io.github.sashirestela.openai.domain.conversation.ConversationModifyRequest;
+import io.github.sashirestela.openai.domain.conversation.ConversationRequest;
 import io.github.sashirestela.openai.domain.embedding.Embedding;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingBase64;
 import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
@@ -952,6 +957,132 @@ public interface OpenAI {
         default CompletableFuture<InputItems> getListInputItem(@Path("responseId") String responseId) {
             return getListInputItem(responseId, null, PageRequest.builder().build());
         }
+
+    }
+
+    /**
+     * The Conversations API allows you to create and manage durable, server-managed conversation state
+     * for the Responses API. This provides an alternative to manually chaining responses via
+     * previous_response_id.
+     *
+     * @see <a href="https://platform.openai.com/docs/api-reference/conversations">OpenAI
+     *      Conversations</a>
+     */
+    @Resource("/v1/conversations")
+    interface Conversations {
+
+        /**
+         * Create a conversation.
+         *
+         * @param conversationRequest The creation request.
+         * @return A conversation object.
+         */
+        @POST
+        CompletableFuture<Conversation> create(@Body ConversationRequest conversationRequest);
+
+        /**
+         * Create a conversation with default settings (empty).
+         *
+         * @return A conversation object.
+         */
+        default CompletableFuture<Conversation> create() {
+            return create(ConversationRequest.builder().build());
+        }
+
+        /**
+         * Retrieve a conversation by ID.
+         *
+         * @param conversationId The ID of the conversation to retrieve.
+         * @return A conversation object.
+         */
+        @GET("/{conversationId}")
+        CompletableFuture<Conversation> getOne(@Path("conversationId") String conversationId);
+
+        /**
+         * Update a conversation.
+         *
+         * @param conversationId The ID of the conversation to update.
+         * @param modifyRequest  The modification request.
+         * @return The updated conversation object.
+         */
+        @POST("/{conversationId}")
+        CompletableFuture<Conversation> modify(@Path("conversationId") String conversationId,
+                @Body ConversationModifyRequest modifyRequest);
+
+        /**
+         * Delete a conversation. Items in the conversation will not be deleted.
+         *
+         * @param conversationId The ID of the conversation to delete.
+         * @return The deleted conversation object.
+         */
+        @DELETE("/{conversationId}")
+        CompletableFuture<DeletedObject> delete(@Path("conversationId") String conversationId);
+
+    }
+
+    /**
+     * Manage items within a conversation.
+     *
+     * @see <a href="https://platform.openai.com/docs/api-reference/conversations/items">OpenAI
+     *      Conversation Items</a>
+     */
+    @Resource("/v1/conversations")
+    interface ConversationItems {
+
+        /**
+         * Create items in a conversation.
+         *
+         * @param conversationId The ID of the conversation.
+         * @param itemsRequest   The items to add (up to 20).
+         * @return A list of created items.
+         */
+        @POST("/{conversationId}/items")
+        CompletableFuture<InputItems> create(@Path("conversationId") String conversationId,
+                @Body ConversationItemsRequest itemsRequest);
+
+        /**
+         * List all items for a conversation.
+         *
+         * @param conversationId The ID of the conversation.
+         * @param include        Additional fields to include in the response.
+         * @param page           The page filter to narrow the list.
+         * @return A list of conversation items.
+         */
+        @GET("/{conversationId}/items")
+        CompletableFuture<InputItems> getList(@Path("conversationId") String conversationId,
+                @Query("include") List<ResponseInclude> include, @Query PageRequest page);
+
+        /**
+         * List all items for a conversation (first page).
+         *
+         * @param conversationId The ID of the conversation.
+         * @return A list of conversation items.
+         */
+        default CompletableFuture<InputItems> getList(String conversationId) {
+            return getList(conversationId, null, PageRequest.builder().build());
+        }
+
+        /**
+         * Retrieve a single item from a conversation.
+         *
+         * @param conversationId The ID of the conversation.
+         * @param itemId         The ID of the item to retrieve.
+         * @return A conversation item.
+         */
+        @GET("/{conversationId}/items/{itemId}")
+        CompletableFuture<ConversationItem> getOne(@Path("conversationId") String conversationId,
+                @Path("itemId") String itemId);
+
+        /**
+         * Delete an item from a conversation.
+         *
+         * @param conversationId The ID of the conversation.
+         * @param itemId         The ID of the item to delete.
+         * @return The conversation object.
+         */
+        @DELETE("/{conversationId}/items/{itemId}")
+        CompletableFuture<Conversation> delete(@Path("conversationId") String conversationId,
+                @Path("itemId") String itemId);
 
     }
 
