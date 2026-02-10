@@ -418,6 +418,14 @@ class ResponseDomainSerDeserTest {
                 SearchAction.class);
         assertEquals(oneSearchAction.toString(), newSearchAction.toString());
 
+        var oneSearchActionWithQueries = SearchAction.builder()
+                .query("query")
+                .queries(List.of("query1", "query2"))
+                .build();
+        var newSearchActionWithQueries = JsonUtil.jsonToObject(
+                JsonUtil.objectToJson(oneSearchActionWithQueries), SearchAction.class);
+        assertEquals(oneSearchActionWithQueries.toString(), newSearchActionWithQueries.toString());
+
         var oneOpenPageAction = OpenPageAction.of("url");
         var newOpenPageAction = JsonUtil.jsonToObject(JsonUtil.objectToJson(oneOpenPageAction),
                 OpenPageAction.class);

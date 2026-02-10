@@ -920,13 +920,22 @@ public abstract class Input {
             @Required
             private String query;
 
-            private SearchAction(String query) {
+            @Singular
+            private List<String> queries;
+
+            @Builder
+            public SearchAction(String query, List<String> queries) {
                 this.query = query;
+                this.queries = queries;
                 this.type = WebSearchActionType.SEARCH;
             }
 
             public static SearchAction of(String query) {
-                return new SearchAction(query);
+                return new SearchAction(query, null);
+            }
+
+            public static SearchAction of(String query, List<String> queries) {
+                return new SearchAction(query, queries);
             }
 
         }
