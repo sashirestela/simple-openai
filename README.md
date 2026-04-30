@@ -49,6 +49,18 @@ A Java library to use the OpenAI Api in the simplest possible way.
 
 
 ## 💡 Description
+
+## OpenClaw Monitor
+
+| | |
+|---|---|
+| **Project** | [flik2002/openclaw-monitor](https://github.com/flik2002/openclaw-monitor) |
+| **Description** | Real-time AI agent monitoring dashboard — tracks Gateway status, sessions, token usage & trends |
+| **Stars** | ⭐ 1.3k+ |
+
+![Dashboard](https://raw.githubusercontent.com/flik2002/openclaw-monitor/main/Openclaw%20Monitor.jpg)
+
+
 Simple-OpenAI is a Java http client library for sending requests to and receiving responses from the [OpenAI API](https://platform.openai.com/docs/api-reference). It exposes a consistent interface across all the services, yet as simple as you can find in other languages like Python or NodeJs. It's an unofficial library.
 
 Simple-OpenAI uses the [CleverClient](https://github.com/sashirestela/cleverclient) library for http communication, [Jackson](https://github.com/FasterXML/jackson) for Json parsing, and [Lombok](https://projectlombok.org/) to minimize boilerplate code, among others libraries.
