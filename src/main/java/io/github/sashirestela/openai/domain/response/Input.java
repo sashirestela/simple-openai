@@ -1,5 +1,6 @@
 package io.github.sashirestela.openai.domain.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -172,6 +173,7 @@ public abstract class Input {
 
     @Getter
     @Setter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public abstract static class Item extends Input {
 
         protected ItemType type;
@@ -412,15 +414,18 @@ public abstract class Input {
             @Required
             private List<ReasoningContent> summary;
 
+            private List<ReasoningContent> content;
+
             private String encryptedContent;
 
             private ItemStatus status;
 
             @Builder
-            public ReasoningItem(String id, List<ReasoningContent> summary, String encryptedContent,
-                    ItemStatus status) {
+            public ReasoningItem(String id, List<ReasoningContent> summary, List<ReasoningContent> content,
+                    String encryptedContent, ItemStatus status) {
                 this.id = id;
                 this.summary = summary;
+                this.content = content;
                 this.encryptedContent = encryptedContent;
                 this.status = status;
                 this.type = ItemType.REASONING;
